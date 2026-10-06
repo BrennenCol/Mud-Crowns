@@ -384,6 +384,17 @@ button{font:inherit;color:inherit}
 .map-title{font:11px var(--black);fill:#2a1d14}
 .hex.sel polygon:first-child{animation:selpulse 1.6s ease-in-out infinite}
 @keyframes selpulse{50%{filter:brightness(1.3) drop-shadow(0 0 5px #fff)}}
+
+button{touch-action:manipulation;-webkit-user-select:none;user-select:none}
+html,body{overscroll-behavior:none}
+.spot{z-index:61;box-shadow:0 0 0 4px var(--gold)!important;border-radius:10px;animation:spot 1.4s ease-in-out infinite}
+@keyframes spot{50%{box-shadow:0 0 0 7px var(--gold)}}
+.stats.spot,.lifebar.spot,.ribbons.spot{position:relative}
+.modal.low{align-items:flex-start;padding-top:calc(env(safe-area-inset-top,0px) + 120px)}
+.story.plain::first-letter{float:none;font:inherit;color:inherit;padding:0}
+.tour-dots{text-align:center;color:var(--rubric);letter-spacing:4px;margin:0 0 4px}
+.inp.code{font:13px/1.35 ui-monospace,Menlo,monospace;resize:vertical;word-break:break-all}
+.crash{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;background:var(--overlay)}
 </style>
 </head>
 <body>
@@ -402,7 +413,7 @@ button{font:inherit;color:inherit}
     <button class="turn" id="ageBtn" aria-label="Turn the page: live one more year"><b>Turn the page</b><small id="nextYr">to the next year</small></button>
   </div>
   <div class="coach" id="coach" role="status" aria-live="polite" hidden></div>
-  <nav class="ribbons" aria-label="Your book">
+  <nav class="ribbons" id="ribbons" aria-label="Your book">
     <button data-panel="work"><span class="ico" aria-hidden="true">⚒️</span>Work</button>
     <button data-panel="deeds"><span class="ico" aria-hidden="true">🎲</span>Deeds<span class="pips" id="pips" aria-hidden="true"></span></button>
     <button data-panel="kin"><span class="ico" aria-hidden="true">👪</span>Kin</button>
@@ -421,7 +432,8 @@ button{font:inherit;color:inherit}
 <script>
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
-const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme';
+const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
+const APP_VERSION = '1.0.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -1338,6 +1350,8 @@ function markEv(e) { S.done[e.id] = 1; S.lastEv[e.id] = S.age; }
 function ageUp() {
   if (!S || !S.alive || modalOpen) return;
   closeSheet();
+  { const raw = store.get(KEY); if (raw) store.set(BKEY, raw); }
+  const before = { coin: S.coin, ...S.stats };
   S.age++; S.year++; S.deeds = DEEDS_PER_YEAR;
   cur();
   { const st = stageOf(S.age); if (st[0] === S.age && S.age > 0) say(`Chapter ${roman(STAGES.indexOf(st) + 1)}: ${st[1]}`, 'chapter'); }
@@ -1361,6 +1375,7 @@ function ageUp() {
     if (ev) Q.push(() => showEvent(ev));
   }
   if (!Q.length && S.alive && cur().lines.length === 0) say('A quiet year passed.', 'note');
+  if (S.alive) { const parts = []; const dc = S.coin - before.coin; if (dc) parts.push(`${dc > 0 ? '+' : '−'}${Math.abs(dc)} silver`); for (const st of STATS) { if (st.k === 'power') continue; const d = S.stats[st.k] - before[st.k]; if (d) parts.push(`${STAT_N[st.k]} ${d > 0 ? '+' : '−'}${Math.abs(d)}`); } toast(`${S.year} · age ${S.age}${parts.length ? ' · ' + parts.join(' · ') : ' · a quiet year'}`, 3600); }
   render(); save();
   if (!modalOpen) nextModal();
 }
@@ -1586,7 +1601,8 @@ function continueAs(id) {
 
 /* ---------- persistence ---------- */
 function save() { if (S) store.set(KEY, JSON.stringify(S)); }
-function loadSave() { try { const s = JSON.parse(store.get(KEY) || 'null'); return s && (s.v === 1 || s.v === 2) && s.stats ? migrate(s) : null; } catch (e) { return null; } }
+function loadSave() { const main = parseSave(store.get(KEY)); if (main) return main; const bak = parseSave(store.get(BKEY)); if (bak) { store.set(KEY, JSON.stringify(bak)); return bak; } return null; }
+function parseSave(raw) { try { const s = JSON.parse(raw || 'null'); return s && (s.v === 1 || s.v === 2) && s.stats ? migrate(s) : null; } catch (e) { return null; } }
 
 /* ================= Events ================= */
 function plague(catchP, pre) {
@@ -2217,7 +2233,7 @@ function sentence(sev, pre) {
 function trialEvent(sev) {
   const bribe = 20 * sev;
   return {
-    id: 'trial', icon: '⚖️',
+    id: 'trial', icon: '⚖️', redo: { f: 'trial', a: [sev] },
     text: () => `Caught! You stand in chains before ${sev >= 4 ? "the king's justices" : 'the sheriff'}. Outside, the crowd is already chanting for a hanging.`,
     choices: [
       { t: `Bribe the judge (${bribe} silver)`, ok: () => S.coin >= bribe, fx: () => { coin(-bribe); if (P(.75)) { heat(-10); return 'Silver speaks louder than law. You walked free.'; } return sentence(sev + 1, 'The judge took your silver and sentenced you anyway.'); } },
@@ -2491,7 +2507,7 @@ function fight(x, o) {
 }
 function spoilsEvent(x, lordName, wasCap) {
   const loot = Math.round(x.wealth * R(20, 40) / 10) + (wasCap ? R(100, 300) : 0);
-  return { id: 'spoils', icon: '💰', text: () => `${x.n} is yours. Your soldiers look at the town, and then at you. And ${cap(lordName.replace(/^the crown, under /, ''))}'s family is in your hands.`,
+  return { id: 'spoils', icon: '💰', redo: { f: 'spoils', a: [x.id, lordName, wasCap] }, text: () => `${x.n} is yours. Your soldiers look at the town, and then at you. And ${cap(lordName.replace(/^the crown, under /, ''))}'s family is in your hands.`,
     choices: [
       { t: `Let them sack the town (about ${loot} silver)`, fx: () => { coin(loot); st('renown', -5); st('piety', -6); st('happy', 3); x.wealth = Math.max(8, Math.round(x.wealth * .7)); return `Your men stripped the town bare. You took ${loot} silver. ${x.n} will pay you less rent for years.`; } },
       { t: 'Spare the townsfolk', fx: () => { st('renown', 6); st('piety', 4); return `You hanged two looters as a lesson. The people of ${x.n} bless your name.`; } },
@@ -2500,7 +2516,7 @@ function spoilsEvent(x, lordName, wasCap) {
 }
 function capturedEvent(x) {
   const ransom = 30 + Math.round(influence() * 4);
-  return { id: 'captured', icon: '⛓️', text: () => `In the rout at ${x.n} you were pulled from your horse and taken prisoner. Your captors demand ${ransom} silver for your release.`,
+  return { id: 'captured', icon: '⛓️', redo: { f: 'captured', a: [x.id] }, text: () => `In the rout at ${x.n} you were pulled from your horse and taken prisoner. Your captors demand ${ransom} silver for your release.`,
     choices: [
       { t: `Pay the ransom (${ransom} silver)`, ok: () => S.coin >= ransom, fx: () => { coin(-ransom); st('renown', -3); return 'You rode home lighter of purse and heavy of heart.'; } },
       { t: 'Try to escape', fx: () => { if (P(.4 + S.stats.wits / 300)) { st('renown', 6); return 'You picked the lock with a fishbone and were over the wall by dawn.'; } jail(R(1, 2)); return 'You were caught at the gate and thrown into a deeper cell.'; } },
@@ -2517,9 +2533,9 @@ const ARMY_ACTS = [
   { k: 'hire50', i: '🏴', n: 'Hire a free company of 50', d: 'A mixed mercenary company: men-at-arms, archers and a few horse.', cost: 110, run: () => { addTroops('foot', 30); addTroops('archer', 15); addTroops('horse', 5); return `The ${pick(['White', 'Black', 'Iron', 'Red', 'Grey'])} Company marched into ${S.village} and pledged their swords to you.`; } },
   { k: 'siege', i: '🪨', n: 'Build a siege engine', d: 'A trebuchet or ram. Each one breaks part of a county’s walls. Upkeep 2 a year.', cost: 40, can: () => troops().siege < 6 || 'Six engines is all your carpenters can manage', run: () => { addTroops('siege', 1); return `Carpenters built ${pick(['a mighty trebuchet named "Warwolf"', 'a covered battering ram', 'a mangonel that hurls dead cows', 'a siege tower three storeys high'])}. ${S.flags.gunpowder ? 'With your gunpowder, it is twice as deadly.' : ''}`.trim(); } },
   { k: 'levy', i: '📯', n: 'Raise levies from your lands', d: 'Free soldiers, once a year.', can: () => (heldTs().length || S.ruling || isLord()) ? (S.flags.levyY === S.year ? 'Already raised this year' : true) : 'You need land to raise levies', run: () => { S.flags.levyY = S.year; const n = levyCount(); addTroops('levy', n); return `Horns sounded across your lands, and ${n} farmers grabbed spears and pitchforks.`; } },
-  { k: 'rouse', i: '🔥', n: 'Rouse the commons', d: 'Free for the poor: preach rebellion in the alehouses. Soldiers grow with your Renown. Brands you a rebel. Uses a deed.', deed: 1, can: () => S.ruling ? 'You are the crown they would rise against' : !['serf', 'peasant', 'craft'].includes(S.cls) ? 'Only common folk can rouse the commons' : S.stats.renown < 30 ? `Needs Renown 30 so folk will follow you (you have ${S.stats.renown})` : S.flags.rouseY === S.year ? 'Already done this year' : true, run: () => { S.flags.rouseY = S.year; const n = 10 + Math.round(S.stats.renown / 2) + R(0, 20) + (S.cls === 'serf' ? 10 : 0); addTroops('levy', n); S.flags.rebel = 1; st('renown', 3); return `You stood on a cart in the market and cried out against the ${pick(['poll tax', "lord's bailiff", 'tithes', 'king’s purveyors'])}. ${n} ploughmen, shepherds and apprentices took up scythes and billhooks behind you. ${KT()} ${S.king} now calls you a rebel.`; } },
+  { k: 'rouse', i: '🔥', n: 'Rouse the commons', d: 'Free for the poor: preach rebellion in the alehouses. Soldiers grow with your Renown. Brands you a rebel. Uses a deed. Every other year.', deed: 1, can: () => S.ruling ? 'You are the crown they would rise against' : !['serf', 'peasant', 'craft'].includes(S.cls) ? 'Only common folk can rouse the commons' : S.stats.renown < 30 ? `Needs Renown 30 so folk will follow you (you have ${S.stats.renown})` : S.flags.rouseY && S.year - S.flags.rouseY < 2 ? `The commons need time to forget the last rising (from ${S.flags.rouseY + 2})` : true, run: () => { S.flags.rouseY = S.year; const n = 10 + Math.round(S.stats.renown / 2) + R(0, 20) + (S.cls === 'serf' ? 10 : 0); addTroops('levy', n); S.flags.rebel = 1; st('renown', 3); return `You stood on a cart in the market and cried out against the ${pick(['poll tax', "lord's bailiff", 'tithes', 'king’s purveyors'])}. ${n} ploughmen, shepherds and apprentices took up scythes and billhooks behind you. ${KT()} ${S.king} now calls you a rebel.`; } },
   { k: 'drill', i: '🎯', n: 'Drill your troops', d: 'Veterans fight harder. Uses a deed.', deed: 1, can: () => (S.army || 0) >= 10 || 'You have no army to drill', run: () => { S.armyVet = Math.min(.5, (S.armyVet || 0) + .05); return 'You drilled them in the shield wall until they could hold it in their sleep.'; } },
-  { k: 'train', i: '🛡️', n: 'Equip 10 levies as men-at-arms', d: 'Turn farmers into soldiers with mail and helmets.', cost: 15, can: () => troops().levy >= 10 || 'You need 10 levies', run: () => { syncTroops(); const T = troops(); T.levy -= 10; T.foot += 10; return 'Ten levies got mail shirts, helmets and a great deal of shouting. They are men-at-arms now.'; } },
+  { k: 'train', i: '🛡️', n: 'Equip 10 levies as men-at-arms', d: 'Turn farmers into soldiers with mail and helmets.', cost: 20, can: () => troops().levy >= 10 || 'You need 10 levies', run: () => { syncTroops(); const T = troops(); T.levy -= 10; T.foot += 10; return 'Ten levies got mail shirts, helmets and a great deal of shouting. They are men-at-arms now.'; } },
   { k: 'disband', i: '🏳️', n: 'Disband half your army', d: 'Cuts your upkeep. Levies go first.', can: () => (S.army || 0) > 0 || 'You have no army', run: () => { const n = Math.ceil(S.army / 2); loseTroops(n); return `You paid off ${n} soldiers and sent them home.`; } },
 ];
 
@@ -2563,11 +2579,11 @@ function diploHTML() {
     const p = realmPower(r), status = r === S.flags.ally ? 'Your ally' : truce(r) ? `Truce until ${S.flags.truce[r]}` : 'No treaty';
     h += `<div class="hexcard"><div class="hc-h"><span class="sw" style="background:${REALM_COL[r]}"></span><b>${esc(r)}</b><small>${esc(status)}</small></div><p class="hc-s">${esc(royalOf(r))}, ${realmTs(r).length} counties. Their strength ~${Math.round(p / 10) * 10} vs yours ~${Math.round(mine / 10) * 10}.</p><div class="duel"><i style="width:${Math.round(Math.min(1, mine / (mine + p)) * 100)}%"></i></div></div>`;
     if (r !== S.flags.ally && !truce(r)) h += btnItem('truce', r, '🕊️', `Offer a truce to ${r}`, `Costs ${truceCost(r)} silver in gifts. Five years of peace.`, S.coin >= truceCost(r) ? true : `Costs ${truceCost(r)} silver`, `${truceCost(r)} silver`);
-    if (S.ruling && r !== S.flags.ally) h += btnItem('tribute', r, '👑', `Demand tribute from ${r}`, 'If you are far stronger, they pay. If not, they may march on you.', S.flags['trib_' + r] === S.year ? 'Already demanded this year' : true);
+    if (S.ruling && r !== S.flags.ally) h += btnItem('tribute', r, '👑', `Demand tribute from ${r}`, 'If you are far stronger, they pay. If not, they may march on you.', S.flags['trib_' + r] && S.year - S.flags['trib_' + r] < 5 ? `They will not hear another demand until ${S.flags['trib_' + r] + 5}` : true);
   }
   return h;
 }
-const truceCost = r => 30 + realmTs(r).length * 10;
+const truceCost = r => 40 + realmTs(r).length * 15 + Math.round(realmPower(r) / 25);
 
 /* ---------- the War tab ---------- */
 function armyHTML() {
@@ -3274,8 +3290,8 @@ DEEDS.push(
   { k: 'favour', g: 'Power', i: '⚜️', n: 'Call in a favour', d: 'Ask someone powerful for silver or a good word. Needs Influence 25. Once a year.', min: 16, once: 1, can: () => influence() >= 25 || `Needs Influence 25 (you have ${influence()})`, run: () => { if (P(.35 + influence() / 200)) { if (P(.5)) { const g = R(20, 60) + influence(); coin(g); return `A merchant who owes you much sent ${g} silver, with his compliments.`; } st('renown', R(4, 8)); if (S.job && S.job.track !== 'crown') jobPerf(12); return 'A word from the right mouth into the right ear. Your standing rose overnight.'; } st('renown', -2); return 'The favour was refused. It seems you were owed less than you thought.'; } },
   { k: 'placekin', g: 'Power', i: '🎓', n: 'Find a post for your kin', d: 'Use your influence to set up a son, daughter, brother or sister. Needs Influence 30.', min: 25, can: () => influence() < 30 ? `Needs Influence 30 (you have ${influence()})` : S.kin.some(k => k.alive && (k.ch || k.sib) && k.age >= 14 && !k.placed) || 'No grown children or siblings to place', run: () => { const k = pick(S.kin.filter(x => x.alive && (x.ch || x.sib) && x.age >= 14 && !x.placed)); k.placed = 1; const lvl = influence(); k.job = lvl >= 60 ? pick(['Royal Adviser', 'Court Official', 'Knight', 'Abbot', 'Wealthy Merchant']) : lvl >= 45 ? pick(['Steward', 'Magistrate', 'Guild Member', 'Man-at-Arms', 'Scribe']) : pick(['Clerk', 'Shopkeeper', 'Barber', 'Cook', 'Messenger']); bond(k, R(12, 20)); st('renown', 2); return `A quiet word, a sealed letter, and ${k.name} is now ${aOr(k.job.toLowerCase())}. ${pr(k).He} will not forget it.`; } },
   { k: 'matchkin', g: 'Power', i: '💍', n: 'Arrange a grand match for a child', d: 'Marry a child into a great house for silver and Renown. Needs Influence 35.', min: 30, can: () => influence() < 35 ? `Needs Influence 35 (you have ${influence()})` : children().some(k => k.age >= 14 && !k.wed) || 'No unwed child aged 14 or more', run: () => { const k = pick(children().filter(x => x.age >= 14 && !x.wed)); k.wed = 1; const house = influence() >= 60 ? 'a royal cousin' : influence() >= 45 ? `the house of ${pick(SUR.noble)}` : `a rich ${pick(['wool', 'wine', 'spice'])} merchant’s family`; const g = R(30, 90) + influence(); coin(g); st('renown', R(3, 7)); bond(k, P(.5) ? 6 : -8); return `${k.name} was married to ${house}. The settlement brought ${g} silver and powerful new in-laws.`; } },
-  { k: 'squeeze', g: 'Power', i: '🪓', n: 'Lean on your tenants', d: 'Demand extra rent and labor. Silver now, hatred later. Needs land.', min: 18, can: () => (hasLand() || S.assets.some(a => a.key === 'land' || a.key === 'mill')) || 'You need tenants: farmland, a mill, a manor, or a county', run: () => { const g = R(15, 40) + heldTs().length * 20; coin(g); st('renown', -R(2, 5)); st('piety', -2); if (P(.12)) { st('health', -R(8, 15)); return `You squeezed ${g} silver out of them, and someone threw a rock at your head from a hedge.`; } return `You squeezed ${g} silver out of your tenants. Their curses follow you down the lane.`; } },
-  { k: 'strings', g: 'Power', i: '🗝️', n: 'Pull strings for your release', d: 'Friends in high places can open dungeon doors. The more Influence you had, the better your chances.', min: 14, jail: 1, only: () => S.jail > 0, can: () => (S.stats.renown >= 20 || friends().length > 0 || CLS_ORDER.indexOf(S.cls) >= 3) || 'You have no friends in high places (needs Renown 20, a friend, or merchant birth or better)', run: () => { if (P(.25 + (influence() + 20) / 150)) { S.jail = 0; st('renown', -2); return 'A letter with a heavy seal arrived, and the gaoler unlocked your door with a bow.'; } return 'Your friends in high places were suddenly very busy.'; } },
+  { k: 'squeeze', once: 1, g: 'Power', i: '🪓', n: 'Lean on your tenants', d: 'Demand extra rent and labor. Silver now, hatred later. Needs land. Once a year.', min: 18, can: () => (hasLand() || S.assets.some(a => a.key === 'land' || a.key === 'mill')) || 'You need tenants: farmland, a mill, a manor, or a county', run: () => { const g = R(15, 40) + heldTs().length * 20; coin(g); st('renown', -R(2, 5)); st('piety', -2); if (P(.12)) { st('health', -R(8, 15)); return `You squeezed ${g} silver out of them, and someone threw a rock at your head from a hedge.`; } return `You squeezed ${g} silver out of your tenants. Their curses follow you down the lane.`; } },
+  { k: 'strings', once: 1, g: 'Power', i: '🗝️', n: 'Pull strings for your release', d: 'Friends in high places can open dungeon doors. The more Influence you had, the better your chances.', min: 14, jail: 1, only: () => S.jail > 0, can: () => (S.stats.renown >= 20 || friends().length > 0 || CLS_ORDER.indexOf(S.cls) >= 3) || 'You have no friends in high places (needs Renown 20, a friend, or merchant birth or better)', run: () => { if (P(.25 + (influence() + 20) / 150)) { S.jail = 0; st('renown', -2); return 'A letter with a heavy seal arrived, and the gaoler unlocked your door with a bow.'; } return 'Your friends in high places were suddenly very busy.'; } },
   { k: 'disguise', g: 'Daring', i: '✂️', n: 'Cut your hair and pass as a man', d: 'Opens soldiering, the sea, and heavy labor to you. If unmasked, there will be trouble.', min: 14, only: () => hist() && S.sex === 'f' && !S.flags.disguise, can: () => !S.vows || 'Not while under holy vows', run: () => { S.flags.disguise = 1; st('happy', 4); return 'You cut off your hair, bound your chest, and practised a deeper voice. "Call me Jack," you told your reflection in the water butt.'; } },
   { k: 'undisguise', g: 'Daring', i: '👗', n: 'Give up your disguise', d: 'Live openly as a woman again.', min: 14, only: () => S.flags.disguise, run: () => { S.flags.disguise = 0; if (S.job && MEN_ONLY.has(occOfJob() ? occOfJob().k : '')) quitJob(); return 'You let your hair grow and put away the hose and doublet.'; } },
 );
@@ -3306,7 +3322,7 @@ Object.assign(OCC_BY.archbishop, { infl: 35 }); Object.assign(OCC_BY.cardinal, {
 
 /* ================= Life's surprises ================= */
 function unmaskedEvent() {
-  return { id: 'unmasked', icon: '😳', text: () => `Disaster! While bathing in the river, you were seen by ${pick(['your sergeant', 'a gossiping shipmate', 'the quartermaster', 'a priest'])}. Everyone now knows "Jack" is a woman.`,
+  return { id: 'unmasked', icon: '😳', redo: { f: 'unmasked', a: [] }, text: () => `Disaster! While bathing in the river, you were seen by ${pick(['your sergeant', 'a gossiping shipmate', 'the quartermaster', 'a priest'])}. Everyone now knows "Jack" is a woman.`,
     choices: [
       { t: 'Stand your ground and prove your worth', fx: () => { if (P(.25 + S.stats.renown / 150)) { S.flags.openWoman = 1; st('renown', 15); feat('maid'); return `You fought the next battle in the front rank with your hair unbound. Men now follow you gladly. They call you the Maid of ${S.village}.`; } quitJob(); st('renown', -6); st('happy', -8); return 'They threw you out of the company with jeers. A woman in arms! The scandal will be talked of for years.'; } },
       { t: 'Bribe the witness to keep quiet (20 silver)', ok: () => S.coin >= 20, fx: () => { coin(-20); if (P(.7)) return 'Twenty silver bought a very short memory.'; quitJob(); st('renown', -4); return 'He took your silver and told everyone anyway.'; } },
@@ -3445,8 +3461,30 @@ function chipsHTML(fx) {
   });
   return out.length ? `<div class="chips">${out.join('')}</div>` : '';
 }
+const REDO = {
+  trial: sev => trialEvent(sev),
+  captured: id => capturedEvent(TT(id)),
+  unmasked: () => unmaskedEvent(),
+  spoils: (id, lord, wasCap) => spoilsEvent(TT(id), lord, wasCap),
+};
+// Remember an open event card, so closing the app cannot dodge a trial, a debt or an invasion.
+function markPending(e) {
+  if (!S || e.id === 'confirm') return;
+  S.pend = e.redo ? e.redo : EVENTS.some(x => x.id === e.id) ? { id: e.id } : null;
+  save();
+}
+function resumePending() {
+  const p = S && S.alive && S.pend; if (!p) return false;
+  S.pend = null;
+  let e = null;
+  try { e = p.id ? EVENTS.find(x => x.id === p.id) : REDO[p.f] ? REDO[p.f](...(p.a || [])) : null; if (e && e.init) e.init(); } catch (err) { e = null; }
+  if (!e) return false;
+  Q.unshift(() => showEvent(e)); if (!modalOpen) nextModal();
+  return true;
+}
 function showEvent(e) {
   markEv(e);
+  markPending(e);
   const c = e.init ? e.init() : {};
   const card = $('card');
   card.innerHTML = `<div class="ev-icon" aria-hidden="true">${e.icon || '📜'}</div><p class="story">${esc(e.text(c))}</p><div class="choices"></div>`;
@@ -3464,6 +3502,7 @@ function showEvent(e) {
   const first = box.querySelector('.choice:not(.off)'); if (first) first.focus({ preventScroll: true });
 }
 function choose(e, ch, c) {
+  if (S) S.pend = null;
   FX = []; let out;
   try { out = ch.fx(c); } catch (err) { console.error(err); out = 'Something strange happened, and then it passed.'; }
   const fx = FX; FX = null;
@@ -3770,7 +3809,7 @@ const ACT = {
   spy: id => { const x = TT(+id); if (S.coin < 10) return toast('Costs 10 silver'); S.coin -= 10; x.spied = S.year; toast(`Your spies count ${x.gar} defenders in ${x.n}`); renderSheet(); render(); save(); },
   fortify: id => { const x = TT(+id); const why = fortifyWhy(x); if (why !== true) return toast(why); S.coin -= wallCost(x); x.walls = (x.walls || 0) + 1; x.gar += 10; say(`You built ${WALLS[x.walls]} at ${x.n}.`, 'money'); toast(`${x.n} now has ${WALLS[x.walls]}`); renderSheet(); render(); save(); },
   truce: r => { const c = truceCost(r); if (S.coin < c) return toast(`Costs ${c} silver`); S.coin -= c; S.flags.truce = S.flags.truce || {}; S.flags.truce[r] = S.year + 5; say(`You sent gifts to ${royalOf(r)} of ${r}. A truce holds until ${S.year + 5}.`, 'note'); warLog(`Truce with ${r}.`); toast(`Truce with ${r} until ${S.year + 5}`); renderSheet(); render(); save(); },
-  tribute: r => { if (S.flags['trib_' + r] === S.year) return; S.flags['trib_' + r] = S.year; closeSheet(); FX = []; const mine = armyPower() + realmPower(S.realm) * .5, theirs = realmPower(r); let t; if (mine > theirs * 1.3 && P(.75)) { const g = R(60, 160) + realmTs(r).length * 15; coin(g); st('renown', 6); t = `${royalOf(r)} of ${r} looked at your armies and paid ${g} silver in tribute.`; warLog(`${r} paid ${g} silver in tribute.`); } else { st('renown', -4); if (S.flags.truce) delete S.flags.truce[r]; t = `${royalOf(r)} of ${r} sent back your envoy's head in a basket of figs. Expect war.`; warLog(`${r} refused tribute.`); } const fx = FX; FX = null; say(t, 'deed'); showResult('👑', t, fx, 'Tribute'); render(); save(); },
+  tribute: r => { if (S.flags['trib_' + r] && S.year - S.flags['trib_' + r] < 5) return toast('Too soon to demand again'); S.flags['trib_' + r] = S.year; closeSheet(); FX = []; const mine = armyPower() + realmPower(S.realm) * .5, theirs = realmPower(r); let t; if (mine > theirs * 1.3 && P(.75)) { const g = R(60, 160) + realmTs(r).length * 15; coin(g); st('renown', 6); t = `${royalOf(r)} of ${r} looked at your armies and paid ${g} silver in tribute.`; warLog(`${r} paid ${g} silver in tribute.`); } else { st('renown', -4); if (S.flags.truce) delete S.flags.truce[r]; t = `${royalOf(r)} of ${r} sent back your envoy's head in a basket of figs. Expect war.`; warLog(`${r} refused tribute.`); } const fx = FX; FX = null; say(t, 'deed'); showResult('👑', t, fx, 'Tribute'); render(); save(); },
   attack: id => { const x = TT(+id); const why = canAttack(x); if (why !== true) return toast(why); closeSheet(); modalOpen = true; showEvent(battleEvent(x)); },
   garrison: id => { const x = TT(+id); if ((S.army || 0) < 20) return toast('Need 20 soldiers'); S.army -= 20; x.gar += 20; say(`You stationed 20 soldiers in ${x.n}.`, 'note'); toast(`20 soldiers now guard ${x.n}`); renderSheet(); render(); save(); },
   army: k => doArmy(k),
@@ -3779,6 +3818,8 @@ const ACT = {
   panel: k => { if (k === 'realm') realmTab = 'map'; openSheet(k); },
   ambition: () => { if (!S.alive || S.age < 16) return; closeSheet(); if (S.amb && S.amb.k) st('happy', -5); Q.push(() => showEvent(ambitionEvent())); if (!modalOpen) nextModal(); },
   realism: () => { S.realism = hist() ? 'relaxed' : 'hist'; toast(hist() ? 'Historical rules on' : 'Relaxed rules: anyone may do anything'); renderSheet(); render(); save(); },
+  tour: () => { closeSheet(); showTour(0); },
+  transfer: () => transferModal(),
   tips: () => { store.set(TIPKEY, tipsOn() ? 'off' : 'on'); renderSheet(); render(); },
   wfilter: f => { workFilter = f; renderSheet(); },
   job: k => { jobId = k; openSheet('job'); $('sheetBody').scrollTop = 0; },
@@ -3984,8 +4025,10 @@ function menuHTML() {
   h += btnItem('realism', '', hist() ? '☑️' : '⬜', 'Historical rules for women and men', hist() ? 'On: posts and powers follow the customs of the age. Women have their own roads, and may pass as men.' : 'Off: anyone may hold any post.', true);
   h += btnItem('tips', '', tipsOn() ? '☑️' : '⬜', 'Show the hint line', 'A short line above the buttons telling you what to do next.', true);
   [['auto', '🌗', 'Match my device'], ['light', '📜', 'Vellum (light)'], ['dark', '🕯️', 'Candlelight (dark)']].forEach(([v, i, n]) => { h += btnItem('theme', v, i, n, '', true, curTheme() === v ? '✓' : ''); });
+  h += btnItem('tour', '', '🧭', 'Show the welcome tour', 'A quick look at how the game works.', true);
+  h += btnItem('transfer', '', '📦', 'Back up or move your game', 'Get a code to restore your lives here or on another device.', true);
   h += '<h3 class="sec">About</h3>';
-  h += btnItem('noop', '', '📜', 'Mud & Crowns', 'An original medieval life game. © 2026 the Mud & Crowns authors. Fonts: EB Garamond and UnifrakturMaguntia (SIL Open Font License).', true);
+  h += btnItem('noop', '', '📜', 'Mud & Crowns', `Version ${APP_VERSION}. An original medieval life game. © 2026 the Mud & Crowns authors. Fonts: EB Garamond and UnifrakturMaguntia (SIL Open Font License).`, true);
   h += btnItem('noop', '', '🔒', 'Privacy', 'Your lives are saved only on this device. The game collects no personal data and shows no ads.', true);
   h += `<h3 class="sec">How a year works</h3><div class="howto"><p><b>1.</b> Spend your deeds (🎲 Deeds, or special work in ⚒️ Work).</p><p><b>2.</b> Turn the page. A year passes and something usually happens: answer the card that pops up.</p><p><b>3.</b> Watch your six qualities at the bottom. Health keeps you alive, Wits and Renown open better jobs, Piety helps in the Church, Looks helps in love.</p><p>From 12 you can work. At 16 you come of age, get your family’s portion of silver, and may marry, buy land, and raise an army. When you die, carry on as one of your children.</p></div>`;
   return h;
@@ -4044,7 +4087,7 @@ function showFeats(from) {
 }
 
 /* ---------- render ---------- */
-function toast(m) { const t = $('toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2200); }
+function toast(m, ms) { const t = $('toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), ms || 2200); }
 function buildStats() {
   $('stats').innerHTML = STATS.map(s => `<button class="stat" id="st-${s.k}" data-stat="${s.k}" aria-label="${STAT_N[s.k]}"><span class="ring"><span class="si" aria-hidden="true">${s.i}</span></span><span class="sv">0</span><span class="sl">${STAT_N[s.k]}</span></button>`).join('');
 }
@@ -4160,7 +4203,7 @@ function showDeath() {
   <dl class="summary"><div><dt>Station</dt><dd>${esc(roleLabel())}</dd></div><div><dt>Purse</dt><dd>${S.coin} silver</dd></div><div><dt>Counties</dt><dd>${heldTs().length}</dd></div><div><dt>Renown</dt><dd>${S.stats.renown}</dd></div><div><dt>Joy</dt><dd>${S.stats.happy}</dd></div><div><dt>Legacy</dt><dd><span class="grade">${g[1]}</span> ${g[0]}</dd></div></dl>
   ${(S.feats || []).length ? `<h3 class="sec">Seals earned in this life</h3><div class="chips">${S.feats.map(k => { const f = FEATS.find(x => x.k === k); return f ? `<span class="chip tag">${f.i} ${esc(f.n)}</span>` : ''; }).join('')}</div>` : ''}${lineage}${heirs}<div class="stack"><button class="btn${kids.length ? ' ghost' : ''}" data-s="random">Begin a new life</button><button class="btn ghost" data-s="chron">Read your chronicle</button><button class="btn ghost" data-s="grave">The graveyard</button></div></div>`);
 }
-function begin(state) { selHex = null; realmTab = 'map'; S = state; for (const k in prevStats) delete prevStats[k]; save(); hideScreen(); closeSheet(); lastLines = -1; render(); }
+function begin(state) { selHex = null; realmTab = 'map'; S = state; S.pend = S.pend || null; for (const k in prevStats) delete prevStats[k]; save(); hideScreen(); closeSheet(); lastLines = -1; render(); if (!resumePending() && store.get(TOURKEY) !== 'done' && S.alive) setTimeout(() => { if (!modalOpen) showTour(0); }, 350); }
 function screenAct(s, el) {
   switch (s) {
     case 'continue': { const sv = loadSave(); if (sv) begin(sv); break; }
@@ -4184,6 +4227,64 @@ function screenAct(s, el) {
     case 'feats': showFeats(S && S.dead && !$('screen').hidden && $('screen').querySelector('.stone') ? 'death' : 'start'); break;
   }
 }
+
+
+/* ---------- first-time tour ---------- */
+const TOUR = [
+  [null, '📖', 'Welcome to Mud & Crowns', 'You will live one whole medieval life, year by year: work, love, scheme, pray, fight, and found a dynasty. Every choice is written in your chronicle. This quick tour shows you around.'],
+  ['stats', '❤️', 'Your qualities', 'These dials are your Health, Joy, Wits, Looks, Piety, Renown and Influence. Tap any dial, any time, to learn what it does and how to raise it.'],
+  ['lifebar', '📜', 'Your chronicle', 'This bar shows your stage of life, from Infancy to Old age. Below it, everything that happens to you is written down, year by year, like a book.'],
+  ['ribbons', '🔖', 'The bookmarks', 'Work: find a job. Deeds: your three actions a year (the candles show how many are left). Kin: family, friends and rivals. Realm: the map, your holdings and war.'],
+  ['ageBtn', '❯', 'Turn the page', 'When you have spent your deeds, turn the page to live another year. Something usually happens: answer the card that appears. The line above the bookmarks always tells you what to do next.'],
+];
+function showTour(i = 0) {
+  document.querySelectorAll('.spot').forEach(el => el.classList.remove('spot'));
+  if (i >= TOUR.length) { store.set(TOURKEY, 'done'); modalOpen = false; nextModal(); return; }
+  const [target, icon, title, text] = TOUR[i];
+  if (target && $(target)) $(target).classList.add('spot');
+  modalOpen = true;
+  const card = $('card');
+  card.innerHTML = `<div class="ev-icon" aria-hidden="true">${icon}</div><h2 class="card-h">${esc(title)}</h2><p class="story plain">${esc(text)}</p><p class="tour-dots">${TOUR.map((_, j) => j === i ? '●' : '○').join(' ')}</p><div class="row"><button class="btn ghost" id="tourSkip">Skip</button><button class="btn" id="tourNext">${i === TOUR.length - 1 ? 'Begin my life' : 'Next'}</button></div>`;
+  $('tourNext').addEventListener('click', () => showTour(i + 1));
+  $('tourSkip').addEventListener('click', () => showTour(TOUR.length));
+  $('modal').classList.toggle('low', target === 'ribbons' || target === 'ageBtn');
+  openModal(); $('tourNext').focus({ preventScroll: true });
+}
+
+/* ---------- moving your game to another device ---------- */
+function exportCode() { try { return btoa(unescape(encodeURIComponent(JSON.stringify({ app: 'mudcrowns', v: APP_VERSION, s: store.get(KEY), g: store.get(GKEY), f: store.get(FKEY) })))); } catch (e) { return ''; } }
+function importCode(code) {
+  try {
+    const d = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
+    if (!d || d.app !== 'mudcrowns') return 'That is not a Mud & Crowns backup code.';
+    if (d.s && !parseSave(d.s)) return 'The saved life in that code is damaged.';
+    if (d.s) store.set(KEY, d.s); if (d.g) store.set(GKEY, d.g); if (d.f) store.set(FKEY, d.f);
+    return true;
+  } catch (e) { return 'That code could not be read. Copy the whole thing and try again.'; }
+}
+function transferModal() {
+  closeSheet(); modalOpen = true;
+  const card = $('card');
+  card.innerHTML = `<div class="ev-icon" aria-hidden="true">📦</div><h2 class="card-h">Back up your game</h2><p class="story plain">Copy this code and keep it somewhere safe, or paste it into Mud & Crowns on another device to carry on there. It holds your current life, your graveyard and your seals of fame.</p><textarea class="inp code" id="expCode" readonly rows="4">${esc(exportCode())}</textarea><div class="row"><button class="btn ghost" id="expCopy">Copy code</button><button class="btn" id="expDone">Done</button></div><h3 class="sec" style="margin:16px 0 4px">Restore from a code</h3><textarea class="inp code" id="impCode" rows="3" placeholder="Paste a backup code here"></textarea><div class="row"><button class="btn ghost" id="impGo">Restore</button></div>`;
+  $('expCopy').addEventListener('click', () => { const t = $('expCode'); t.select(); try { navigator.clipboard.writeText(t.value).then(() => toast('Copied')).catch(() => { document.execCommand('copy'); toast('Copied'); }); } catch (e) { document.execCommand('copy'); toast('Copied'); } });
+  $('expDone').addEventListener('click', () => { modalOpen = false; nextModal(); });
+  $('impGo').addEventListener('click', () => { const r = importCode($('impCode').value); if (r !== true) return toast(r); toast('Restored. Welcome back.'); modalOpen = false; hideModal(); const sv = loadSave(); if (sv) { S = sv; lastLines = -1; render(); } showStart(); });
+  openModal();
+}
+
+/* ---------- if something breaks, don't lose the player ---------- */
+let crashShown = false;
+function showCrash() {
+  if (crashShown) return; crashShown = true;
+  try { save(); } catch (e) { }
+  const d = document.createElement('div'); d.className = 'crash'; d.setAttribute('role', 'alertdialog');
+  d.innerHTML = '<div class="card"><div class="ev-icon">🕯️</div><h2 class="card-h">A blot of ink</h2><p class="story plain">Something went wrong on this page. Your life has been saved. Carry on, or reload the game if things look strange.</p><div class="row"><button class="btn ghost" id="crashGo">Carry on</button><button class="btn" id="crashReload">Reload</button></div></div>';
+  document.body.appendChild(d);
+  d.querySelector('#crashGo').addEventListener('click', () => { d.remove(); crashShown = false; modalOpen = false; hideModal(); if (S) render(); });
+  d.querySelector('#crashReload').addEventListener('click', () => location.reload());
+}
+window.addEventListener('error', e => { if (e.error) { console.error(e.error); showCrash(); } });
+window.addEventListener('unhandledrejection', e => { console.error(e.reason); });
 
 /* ---------- boot ---------- */
 function bind() {

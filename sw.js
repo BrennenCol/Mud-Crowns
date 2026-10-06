@@ -1,5 +1,5 @@
 // Offline support: keep the game's files cached so it plays without a connection.
-const CACHE = 'mudcrowns-v1';
+const CACHE = 'mudcrowns-v2';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './fonts/fonts.css',
   './fonts/EBGaramond-normal-400.woff2', './fonts/EBGaramond-italic-400.woff2', './fonts/UnifrakturMaguntia-normal-400.woff2'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting())); });

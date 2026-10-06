@@ -98,3 +98,40 @@ press Run.
 - To make money: a one-time price, or a free game with an optional purchase
   (that needs a plugin such as RevenueCat or `@capacitor-community/in-app-purchases`).
   Ads need a privacy and age-rating review of their own.
+
+## Launch checklist
+
+Already done in this repo:
+
+- [x] Works fully offline (bundled fonts, service worker)
+- [x] App icon in every size (`icons/`), source in `icons/icon.svg`
+- [x] Store screenshots: `store/ios-6.7in/` (1290×2796, for the 6.7" and
+      6.9" iPhone slots) and `store/android-phone/` (1080×2160)
+- [x] Privacy policy (`PRIVACY.md`): no data collected
+- [x] First-time welcome tour, hint line, and help in the menu
+- [x] Crash guard: if something breaks, the game saves and offers to carry on
+- [x] Save backup: the previous year is kept and restored automatically if a
+      save is damaged
+- [x] Backup codes (Menu → Back up or move your game) so players can move to
+      a new phone
+- [x] Exploits closed: reloading the app can't dodge a trial, debt, invasion,
+      capture or other event; farmable actions (tribute, truces, rousing the
+      commons, squeezing tenants, pulling strings) are limited
+- [x] Version number shown in the menu (`APP_VERSION` in `index.html`)
+
+You still need to:
+
+- [ ] Change `appId` in `capacitor.config.json` to your own (e.g.
+      `com.yourname.mudcrowns`). It can never change after release.
+- [ ] Put your name in place of "the Mud & Crowns authors" (menu About text and
+      `LEGAL_NOTES.md`)
+- [ ] Host `PRIVACY.md` (GitHub Pages works) and use its link in both stores
+- [ ] Search the name in the USPTO database and both stores
+- [ ] Write the store description. Suggested subtitle: "A medieval life, from
+      serf to sovereign". Keywords: medieval, life simulator, kingdom, knight,
+      dynasty, choices, text adventure, history. **Never** another game's name.
+- [ ] Test on a real iPhone and Android phone: notch, dark mode, closing and
+      reopening, and a backup code round trip
+- [ ] For every update: raise `APP_VERSION`, the `version` in `package.json`,
+      and the build number in Xcode / Android Studio, and change `CACHE` in
+      `sw.js` so web players get the new version
