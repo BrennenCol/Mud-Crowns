@@ -292,6 +292,43 @@ button{font:inherit;color:inherit}
   *,*::before,*::after{transition:none!important;animation:none!important}
 }
 
+/* ---------- work: posts, status, requirements ---------- */
+.pill{display:inline-block;font:600 12.5px/1.5 var(--serif);padding:0 9px;border-radius:999px;border:1px solid currentColor;white-space:nowrap;font-style:normal}
+.pill.open{background:var(--good);border-color:var(--good);color:var(--vellum)}
+.pill.near{color:var(--mid)}
+.pill.lock{color:var(--low)}
+.item.job{align-items:flex-start}
+.item.job .rt{padding-top:2px}
+.item.job.lock .ic{filter:grayscale(.7);opacity:.6}
+.item.job.lock .tx b{color:var(--ink-2)}
+.item.job.open{box-shadow:inset 4px 0 0 var(--good)}
+.item.job.near{box-shadow:inset 4px 0 0 var(--mid)}
+.reqs{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.rq{font-size:12.5px;line-height:1.5;padding:0 7px;border-radius:6px;border:1px solid currentColor;font-variant-numeric:lining-nums}
+.rq.y{color:var(--good);opacity:.85}
+.rq.n{color:var(--low);font-weight:600}
+.sumbox{margin:8px 18px 0;padding:10px 14px;border:1px solid var(--rule-2);border-radius:10px;background:var(--vellum-2);font-size:16px;line-height:1.4}
+.sumbox b{color:var(--rubric);font-size:18px}
+.warn{color:var(--low);font-style:italic;font-size:15px}
+.legend{margin:8px 20px 0;font-size:14px;line-height:2;color:var(--ink-2)}
+.legend .pill{margin-right:2px}
+.tabs button{white-space:nowrap;padding:8px 2px;font-size:15.5px}
+.tabs button small{font-size:13px}
+.seg2{display:flex;gap:6px;margin:8px 16px 0}
+.seg2 button{flex:1;padding:6px 4px;border:1px solid var(--rule-2);border-radius:8px;background:var(--vellum);cursor:pointer;font-size:15px;color:var(--ink-2)}
+.seg2 button[aria-pressed="true"]{background:var(--lapis);border-color:var(--lapis);color:var(--vellum)}
+.verdict{margin:10px 18px 0;padding:10px 14px;border-radius:10px;font-size:16px;line-height:1.4;border:1px solid}
+.verdict.yes{border-color:var(--good);color:var(--good)}
+.verdict.no{border-color:var(--low);color:var(--ink)}
+.verdict.no b:first-child{color:var(--low)}
+.reqlist,.notes{list-style:none;margin:4px 0 0;padding:0 20px}
+.reqlist li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--rule)}
+.reqlist .mk{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;color:var(--vellum)}
+.reqlist li.y .mk{background:var(--good)} .reqlist li.n .mk{background:var(--low)}
+.reqlist li.y b{font-weight:400;color:var(--ink-2)}
+.reqlist small{display:block;margin-top:2px;font-size:14.5px;line-height:1.35;color:var(--ink-2)}
+.notes li{position:relative;padding:4px 0 4px 16px;font-size:15.5px;line-height:1.4;color:var(--ink-2)}
+.notes li::before{content:'•';position:absolute;left:2px;color:var(--rubric)}
 </style>
 </head>
 <body>
@@ -563,34 +600,85 @@ function tierOfJob() {
   const near = OCC.filter(o => o.link && o.link[0] === S.job.track && o.link[1] <= S.job.level).sort((a, b) => b.link[1] - a.link[1])[0];
   return near ? near.tier : 'mid';
 }
-function occWhy(o) {
-  const [tr, lv] = occPos(o), t = TRACKS[tr], L = t.levels[lv];
+// Things that stop you applying for anything right now, whatever your qualifications.
+function occBlock(o) {
+  const [tr, lv] = occPos(o);
   if (!S.alive) return 'You are dead';
   if (S.ruling) return 'A crowned head takes no wages';
   if (S.jail) return 'You are imprisoned';
   if (S.job && S.job.track === tr && S.job.level === lv) return 'This is your post';
   if (S.job && S.job.track === tr && S.job.level > lv) return 'You already outrank this';
-  const min = o.min || t.min || 12;
-  if (S.age < min) return `From age ${min}`;
-  if (o.serfOnly && S.cls !== 'serf') return 'Only serfs owe this labor';
-  if (S.cls === 'serf' && (o.noSerf != null ? o.noSerf : t.noSerf)) return 'Serfs are bound to the land';
-  if ((o.vows || t.vows) && spouse()) return 'Cannot take vows while married';
-  if (t.guild && S.vows) return 'Not while under holy vows';
-  if (t.guild && S.crimes < 1 && S.stats.wits < 45) return 'The guild only takes known rogues. Commit a crime first';
-  if (t.highborn && S.cls !== 'noble' && S.cls !== 'royal' && S.stats.renown < 60) return 'Highborn only, or Renown 60';
-  if (o.cls && CLS_ORDER.indexOf(S.cls) < CLS_ORDER.indexOf(o.cls) && !(o.ren && S.stats.renown >= o.ren)) return o.ren ? `${CLASSES[o.cls].n} or better, or Renown ${o.ren}` : `${CLASSES[o.cls].n} or better`;
-  if (o.title && !S.titles.some(x => o.title.test(x))) return o.titleWhy;
-  if (o.land && !heldTs().length && !S.assets.some(a => ASSET[a.key].land && ASSET[a.key].income > 0)) return 'You must own farmland, a mill, a stall, an inn, or a county';
-  if (o.skill) for (const f in o.skill) if (sk(f) < o.skill[f]) return `Needs ${yrs(o.skill[f])} of ${FAM[f]} (you have ${sk(f)})`;
-  if (o.skillAny && !Object.entries(o.skillAny).some(([f, n]) => sk(f) >= n)) return `Needs ${Object.entries(o.skillAny).map(([f, n]) => `${yrs(n)} of ${FAM[f]}`).join(' or ')}`;
-  if (o.craft && maxCraft() < o.craft) return `Needs ${o.craft} years at a single craft (you have ${maxCraft()})`;
-  if (o.capital && S.coin < o.capital) return `Needs ${o.capital} silver of capital`;
-  const stake = (o.stake || 0) + (lv === 0 ? (t.stake || 0) : 0);
-  if (stake && S.coin < stake) return `Needs ${stake} silver to start`;
-  const req = Object.assign({}, t.req, o.req, L.need);
-  delete req.elect;
-  return reqOK(req);
+  return null;
 }
+const STAT_TIP = {
+  health: 'Raise Health by resting by the hearth, training at arms, or curing any illness (Deeds).',
+  happy: 'Raise Joy with feasts, the tavern, and time with family.',
+  wits: 'Raise Wits by studying (Deeds, Mind and soul). It rises faster once you can read.',
+  looks: 'Raise Looks by buying fine clothes or visiting the barber-surgeon (Deeds).',
+  piety: 'Raise Piety by praying, giving alms, or going on pilgrimage (Deeds).',
+  renown: 'Raise Renown with feasts, tourneys, duels, brave choices in events, and promotions.',
+};
+// Jobs that teach a family of work and need no prior experience in it.
+function trainers(f) {
+  return OCC.filter(x => (x.link ? TRACKS[x.link[0]].fam : x.fam) === f && !x.skill && !x.skillAny && !x.craft && !x.title && !(x.link && x.link[1] > 0));
+}
+function trainTip(f, n) {
+  if (n != null && jobFam() === f) return `Your post as ${aOr(jobTitle())} adds a year of ${FAM[f]} every year. ${yrs(Math.max(0, n - sk(f)))} to go.`;
+  const ts = trainers(f);
+  if (!ts.length) return `Gain experience in ${FAM[f]} by climbing a job in that line.`;
+  const open = ts.filter(x => occWhy(x) === true);
+  const names = (open.length ? open : ts).slice(0, 4).map(x => occTitle(x));
+  return `Every year working in ${FAM[f]} counts. Start as ${joinList(names.map(n => aOr(n)))}${open.length ? ' (open to you now)' : ''}.`;
+}
+// Every requirement of a job, with whether you meet it and how to get it.
+function occChecks(o) {
+  const [tr, lv] = occPos(o), t = TRACKS[tr], L = t.levels[lv];
+  const C = [];
+  const add = (ok, label, why, tip, never) => C.push({ ok: !!ok, label, why, tip, never: !ok && never });
+  const min = o.min || t.min || 12;
+  add(S.age >= min, `Age ${min}`, `From age ${min}`, `You are ${S.age}. Wait ${yrs(Math.max(0, min - S.age))}.`);
+  if (o.serfOnly) add(S.cls === 'serf', 'A serf', 'Only serfs owe this labor', 'Only serfs bound to a manor do this work. Free folk are never taken on, so this post is closed to you for good.', 1);
+  if (S.cls === 'serf' && (o.noSerf != null ? o.noSerf : t.noSerf)) add(false, 'Free (not a serf)', 'Serfs are bound to the land', 'Serfs may only farm, herd, labor, fight or pray. Buy your freedom for 40 silver (Work, Bondage), flee to a town, or marry up.');
+  if (o.vows || t.vows) add(!spouse(), 'Unmarried', 'Cannot take vows while married', 'Clergy take a vow of celibacy. You cannot join while you have a living spouse.');
+  if (t.guild) {
+    add(!S.vows, 'Not under holy vows', 'Not while under holy vows', 'Leave the Church first.');
+    add(S.crimes >= 1 || S.stats.wits >= 45, 'A known rogue (or Wits 45)', 'The guild only takes known rogues. Commit a crime first', 'Commit any crime first (Deeds, Mischief: poaching or cutting purses), or be clever enough to impress them.');
+  }
+  if (t.highborn) add(S.cls === 'noble' || S.cls === 'royal' || S.stats.renown >= 60, 'Noble birth, or Renown 60', 'Highborn only, or Renown 60', `Knights are drawn from noble families. You are ${CLASSES[S.cls].n.toLowerCase()}. Marry into nobility, be ennobled, or win enough Renown (${S.stats.renown}/60) that a lord will take you anyway.`);
+  if (o.cls) {
+    const ok = CLS_ORDER.indexOf(S.cls) >= CLS_ORDER.indexOf(o.cls) || (o.ren && S.stats.renown >= o.ren);
+    add(ok, `${CLASSES[o.cls].n} or better${o.ren ? `, or Renown ${o.ren}` : ''}`, o.ren ? `${CLASSES[o.cls].n} or better, or Renown ${o.ren}` : `${CLASSES[o.cls].n} or better`, `You are ${CLASSES[S.cls].n.toLowerCase()}. Rise by marrying above your station, holding posts that lift your family, or being ennobled${o.ren ? `. Or reach Renown ${o.ren} (you have ${S.stats.renown})` : ''}.`);
+  }
+  if (o.title) add(S.titles.some(x => o.title.test(x)), /Baron/.test(o.title.source) ? 'Hold a barony' : 'Hold a dukedom', o.titleWhy, /Baron/.test(o.title.source) ? 'Hold a manor, then petition the crown for a barony (Elite tab, Ranks of the realm).' : "Conquer a foreign kingdom's royal seat while sworn to your king, and he will make you a duke.");
+  if (o.land) add(heldTs().length || S.assets.some(a => ASSET[a.key].land && ASSET[a.key].income > 0), 'Own rent-paying land', 'You must own farmland, a mill, a stall, an inn, or a county', 'Buy farmland, a stall, an inn or a mill (Realm, Holdings), or win a county.');
+  const req = Object.assign({}, t.req, o.req, L.need); delete req.elect;
+  if (req.letters) add(S.flags.letters, 'Can read and write', 'Requires knowing your letters', 'Learn your letters: study as a child, accept the priest’s offer, join the Church for a year, or keep studying (Deeds).');
+  for (const [k, v] of Object.entries(req)) if (k !== 'letters') add(S.stats[k] >= v, `${STAT_N[k]} ${S.stats[k]}/${v}`, `Requires ${STAT_N[k]} ${v}`, `You need ${v - S.stats[k]} more. ${STAT_TIP[k]}`);
+  if (o.skill) for (const [f, n] of Object.entries(o.skill)) add(sk(f) >= n, `${cap(FAM[f])} ${sk(f)}/${n} yrs`, `Needs ${yrs(n)} of ${FAM[f]} (you have ${sk(f)})`, trainTip(f, n));
+  if (o.skillAny) {
+    const ok = Object.entries(o.skillAny).some(([f, n]) => sk(f) >= n);
+    add(ok, Object.entries(o.skillAny).map(([f, n]) => `${cap(FAM[f])} ${sk(f)}/${n}`).join(' or '), `Needs ${Object.entries(o.skillAny).map(([f, n]) => `${yrs(n)} of ${FAM[f]}`).join(' or ')}`, `Any one of these will do. ${Object.entries(o.skillAny).map(([f, n]) => trainTip(f, n)).filter((x, i, a) => a.indexOf(x) === i).slice(0, 2).join(' ')}`);
+  }
+  if (o.craft) add(maxCraft() >= o.craft, `One craft ${maxCraft()}/${o.craft} yrs`, `Needs ${yrs(o.craft)} at a single craft (you have ${maxCraft()})`, 'Years at any one craft count: smithing, carpentry, cloth, leather, wares, baking and brewing, bowyery, or fine metals. Find them on the Skilled tab.');
+  if (o.capital) add(S.coin >= o.capital, `${o.capital} silver on hand`, `Needs ${o.capital} silver of capital`, `You have ${S.coin}. You keep this silver; you just have to show it. Save from wages, sell holdings, or trade.`);
+  const stake = (o.stake || 0) + (lv === 0 ? (t.stake || 0) : 0);
+  if (stake) add(S.coin >= stake, `${stake} silver to start`, `Needs ${stake} silver to start`, `You have ${S.coin}. This is spent when you are taken on${o.stake ? ' (guild entry fee)' : ' (stock to sell)'}.`);
+  return C;
+}
+function occWhy(o) {
+  const b = occBlock(o); if (b) return b;
+  const miss = occChecks(o).find(c => !c.ok);
+  return miss ? miss.why : true;
+}
+// 'open', 'near' (one thing missing), or 'lock'
+function occState(o) {
+  if (occBlock(o)) return 'block';
+  const fails = occChecks(o).filter(c => !c.ok);
+  if (fails.some(c => c.never)) return 'never';
+  const n = fails.length;
+  return n === 0 ? 'open' : n === 1 ? 'near' : 'lock';
+}
+const hireOdds = o => Math.max(.05, Math.min(.97, (o.hire != null ? o.hire : TRACKS[occPos(o)[0]].hire) + S.stats.renown / 400 + (S.stats.wits - 50) / 400));
 function noteHeld(tr) {
   S.held = S.held || [];
   if (!S.held.includes(tr)) S.held.push(tr);
@@ -621,17 +709,6 @@ function hireInto(o) {
   if (ret) { S.army = (S.army || 0) + ret; if (FX) FX.push({ l: 'soldiers', d: ret }); x += ` ${ret} soldiers now march under your banner.`; }
   checkFeats();
   return x;
-}
-function reqSummary(o) {
-  const [tr, lv] = occPos(o), t = TRACKS[tr], L = t.levels[lv];
-  const parts = [];
-  const req = Object.assign({}, t.req, o.req, L.need); delete req.elect;
-  for (const [k, v] of Object.entries(req)) parts.push(k === 'letters' ? 'letters' : `${STAT_N[k]} ${v}`);
-  if (o.skill) for (const [f, n] of Object.entries(o.skill)) parts.push(`${yrs(n)} of ${FAM[f]}`);
-  if (o.skillAny) parts.push(Object.entries(o.skillAny).map(([f, n]) => `${yrs(n)} of ${FAM[f]}`).join(' or '));
-  if (o.craft) parts.push(`${yrs(o.craft)} at a craft`);
-  if (o.capital) parts.push(`${o.capital} silver capital`);
-  return parts.join(', ');
 }
 const FAM_LINES = {
   land: ['You followed the plough behind two oxen from Lady Day to Michaelmas.', 'The barley came up thick this year. So did the thistles.', 'You broke your back at harvest and danced at the harvest-home.'],
@@ -2720,7 +2797,7 @@ EVENTS.push(
 
 /* ================= Interface ================= */
 const Q = [];
-let workTab = 'low', workOpen = false;
+let workTab = 'low', workFilter = 'all', jobId = null;
 let modalOpen = false, sheetKind = null, personId = null, lastLines = -1, graveFrom = 'start', toastT = null, realmTab = 'map', selHex = null;
 const prevStats = {};
 
@@ -2809,7 +2886,7 @@ const barCls = v => v >= 60 ? 'hi' : v >= 30 ? 'md' : 'lo';
 function renderSheet() {
   if (!sheetKind || !S) return;
   const t = $('sheetTitle'), b = $('sheetBody');
-  const titles = { work: 'Work', deeds: 'Deeds', kin: 'Kin', hold: 'Holdings', realm: 'Realm', menu: 'Menu', person: '' };
+  const titles = { work: 'Work', deeds: 'Deeds', kin: 'Kin', hold: 'Holdings', realm: 'Realm', menu: 'Menu', person: '', job: 'Post' };
   let html = '';
   if (sheetKind === 'work') html = workHTML();
   else if (sheetKind === 'deeds') html = deedsHTML();
@@ -2817,6 +2894,7 @@ function renderSheet() {
   else if (sheetKind === 'hold') html = holdHTML();
   else if (sheetKind === 'realm') html = realmHTML();
   else if (sheetKind === 'menu') html = menuHTML();
+  else if (sheetKind === 'job') { const o = OCC_BY[jobId]; if (!o) { sheetKind = 'work'; return renderSheet(); } html = jobDetailHTML(o); }
   else if (sheetKind === 'person') { const k = S.kin.find(x => x.id === personId); if (!k || !k.alive) { sheetKind = 'kin'; return renderSheet(); } titles.person = fullName(k); html = personHTML(k); }
   t.textContent = titles[sheetKind];
   b.innerHTML = html;
@@ -2825,8 +2903,7 @@ function payStr(t, L) { return L.pay ? `${t.vary ? 'about ' : ''}${L.pay} silver
 function workHTML() {
   if (!S.alive) return '<div class="empty">The dead keep no trade.</div>';
   if (S.jail) return `<div class="empty">You cannot work from a dungeon cell. ${S.jail} year${S.jail > 1 ? 's' : ''} remain.</div>`;
-  if (S.age < 12 && !S.job) return '<div class="empty">You are too young to work.<small>At twelve you can seek a position. Until then, your trade is mischief.</small></div>';
-  let h = '';
+  let h = (S.age < 12 && !S.job) ? '<div class="empty">You are too young to work.<small>At twelve you can seek a position. Until then, your trade is mischief. You can still look ahead below.</small></div>' : '';
   if (S.job) {
     const t = TRACKS[S.job.track], L = t.levels[S.job.level];
     h += `<div class="jobcard"><span class="jc-i" aria-hidden="true">${t.i}</span><div><b>${esc(jobTitle())}</b><small>${t.n}, ${S.job.years} year${S.job.years === 1 ? '' : 's'}, ${payStr(t, L)}</small>`;
@@ -2835,7 +2912,7 @@ function workHTML() {
     if (S.job.track !== 'crown') {
       const next = t.levels[S.job.level + 1];
       if (next) h += `<p class="hint">Next rank: <b>${esc(lvlTitle(S.job.track, S.job.level + 1))}</b>, ${payStr(t, next)}${next.need ? `. Needs ${needStr(next.need)}` : ''}. Promotions come with high standing after two years at a rank.</p>`;
-      else if (t.up && OCC_BY[t.up]) { const o = OCC_BY[t.up], w = occWhy(o); h += `<p class="hint">Next step: <b>${esc(occTitle(o))}</b>, ${payStr(TRACKS[occPos(o)[0]], TRACKS[occPos(o)[0]].levels[occPos(o)[1]])}. ${w === true ? 'You qualify. Keep your standing high and you may be raised to it.' : `Not yet: ${esc(w.toLowerCase())}.`}</p>`; }
+      else if (t.up && OCC_BY[t.up]) { const o = OCC_BY[t.up], w = occWhy(o); h += `<p class="hint">Next step: <b>${esc(occTitle(o))}</b>, ${payStr(TRACKS[occPos(o)[0]], TRACKS[occPos(o)[0]].levels[occPos(o)[1]])}. ${w === true ? 'You qualify. Keep your standing high and you may be raised to it.' : `Not yet: ${esc(w.toLowerCase())}.`}</p>`; h += btnItem('job', t.up, '🔎', `What ${occTitle(o)} needs`, 'See every requirement and how to meet it.', true); }
       else h += '<p class="hint">You have risen as high as this trade allows. Experience you earn here can open other doors.</p>';
       h += btnItem('work', '', '💪', 'Work diligently', 'Raise your standing. Once a year.', S.workedYear === S.year ? 'Already done this year' : true);
     }
@@ -2854,28 +2931,81 @@ function workHTML() {
     h += btnItem('freedom', '', '🕊️', 'Buy your freedom', 'Pay the lord 40 silver for a charter of manumission.', S.age < 14 ? 'From age 14' : S.coin >= 40 ? true : 'Costs 40 silver');
   }
   const exp = Object.entries(S.skills || {}).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
-  if (exp.length) h += `<h3 class="sec">Your experience</h3><div class="chips" style="margin:6px 20px 0">${exp.map(([f, v]) => `<span class="chip tag">${esc(cap(FAM[f]))}: ${v} yr${v > 1 ? 's' : ''}</span>`).join('')}</div>`;
-  if (!S.ruling) {
-    h += '<h3 class="sec">Seek a position</h3>';
-    h += `<div class="tabs" role="tablist">${TIERS.map(([k, n]) => `<button role="tab" aria-selected="${workTab === k}" data-act="wtab" data-arg="${k}">${n}</button>`).join('')}</div>`;
-    const tier = TIERS.find(x => x[0] === workTab) || TIERS[0];
-    h += `<p class="hint">${esc(tier[2])} Years in a line of work count as experience and unlock better posts. ${workTab === 'high' ? 'Mind: "low", "middle" and "high" were never medieval categories. Birth, land, guild, learning and friends decided your lot, and a rich merchant could outshine a poor knight.' : ''}</p>`;
-    h += btnItem('wopen', '', workOpen ? '☑️' : '⬜', 'Only show posts open to me', '', true);
-    if (workTab === 'high') h += ranksHTML();
-    const applied = S.appliedYear === S.year;
-    let g = '', shown = 0;
-    for (const o of OCC.filter(x => x.tier === workTab)) {
-      const why = occWhy(o);
-      if (why === 'This is your post') continue;
-      if (workOpen && why !== true) continue;
-      if (o.grp !== g) { g = o.grp; h += `<h3 class="sec">${esc(workTab === 'mil' ? `${g} ranks` : g)}</h3>`; }
-      const [tr, lv] = occPos(o), t = TRACKS[tr], L = t.levels[lv];
-      const rs = reqSummary(o);
-      h += btnItem('apply', o.k, o.i, occTitle(o), `${o.d} ${cap(payStr(t, L))}${(o.stake || (lv === 0 && t.stake)) ? `, ${(o.stake || 0) + (lv === 0 ? t.stake || 0 : 0)} silver to start` : ''}${o.vows || t.vows ? ', holy vows' : ''}.${rs ? ` Needs ${rs}.` : ''}`, why !== true ? why : applied ? 'You already sought work this year' : true);
-      shown++;
-    }
-    if (!shown) h += '<div class="empty">Nothing here is open to you yet.<small>Gain experience, renown, wits, or silver, and look again.</small></div>';
+  h += `<h3 class="sec">Your experience</h3>${exp.length ? `<div class="chips" style="margin:6px 20px 0">${exp.map(([f, v]) => `<span class="chip tag">${esc(cap(FAM[f]))}: ${yrs(v)}</span>`).join('')}</div>` : '<p class="hint">None yet. Every year you spend in a job adds a year of experience in that line of work, and many better posts ask for it.</p>'}`;
+  if (!S.ruling) h += seekHTML();
+  return h;
+}
+const STATE_PILL = { open: ['open', 'Open'], near: ['near', '1 to go'], lock: ['lock', 'Locked'], block: ['lock', 'Not now'], never: ['lock', 'Not for you'] };
+function jobRow(o) {
+  const st = occState(o), [cls, word] = STATE_PILL[st];
+  const checks = occChecks(o).filter(c => !(c.ok && /^Age /.test(c.label)));
+  const miss = checks.filter(c => !c.ok).length;
+  const pill = st === 'lock' ? `${miss} missing` : word;
+  const [tr, lv] = occPos(o), t = TRACKS[tr], L = t.levels[lv];
+  const reqs = checks.length ? `<span class="reqs">${checks.map(c => `<span class="rq ${c.ok ? 'y' : 'n'}">${c.ok ? '✓' : '✗'} ${esc(c.label)}</span>`).join('')}</span>` : '<span class="reqs"><span class="rq y">✓ No requirements</span></span>';
+  return `<button class="item job ${cls}" data-act="job" data-arg="${o.k}"><span class="ic" aria-hidden="true">${o.i}</span><span class="tx"><b>${esc(occTitle(o))}</b><small>${esc(o.d)} ${esc(cap(payStr(t, L)))}.</small>${reqs}</span><span class="rt"><span class="pill ${cls}">${esc(pill)}</span></span></button>`;
+}
+function seekHTML() {
+  const applied = S.appliedYear === S.year;
+  const all = OCC.filter(o => occBlock(o) !== 'This is your post');
+  const nOpen = all.filter(o => occState(o) === 'open').length, nNear = all.filter(o => occState(o) === 'near').length;
+  let h = '<h3 class="sec">Seek a position</h3>';
+  h += `<div class="sumbox"><b>${nOpen}</b> post${nOpen === 1 ? '' : 's'} open to you now${nNear ? `, and <b>${nNear}</b> more need just one thing` : ''}.${applied ? '<br><span class="warn">You already sought work this year. Age up to try again.</span>' : S.age < 12 ? `<br><span class="warn">You can start working at 12. Look ahead and plan your road.</span>` : ' You may apply for one post a year.'}</div>`;
+  h += '<p class="legend"><span class="pill open">Open</span> you qualify <span class="pill near">1 to go</span> one requirement missing <span class="pill lock">Locked</span> several missing. Tap any post to see exactly why and how to qualify.</p>';
+  h += `<div class="tabs" role="tablist">${TIERS.map(([k, n]) => { const c = all.filter(o => o.tier === k && occState(o) === 'open').length; return `<button role="tab" aria-selected="${workTab === k}" data-act="wtab" data-arg="${k}">${n} <small>${c}</small></button>`; }).join('')}</div>`;
+  const tier = TIERS.find(x => x[0] === workTab) || TIERS[0];
+  h += `<div class="seg2" role="group" aria-label="Filter">${[['all', 'All'], ['open', 'Open'], ['near', 'Open or close']].map(([k, n]) => `<button data-act="wfilter" data-arg="${k}" aria-pressed="${workFilter === k}">${n}</button>`).join('')}</div>`;
+  h += `<p class="hint">${esc(tier[2])}${workTab === 'high' ? ' Mind: "low", "middle" and "high" were never medieval categories. Birth, land, guild, learning and friends decided your lot, and a rich merchant could outshine a poor knight.' : ''}</p>`;
+  if (workTab === 'high') h += ranksHTML();
+  let g = '', shown = 0;
+  for (const o of all.filter(x => x.tier === workTab)) {
+    const st = occState(o);
+    if (workFilter === 'open' && st !== 'open') continue;
+    if (workFilter === 'near' && st !== 'open' && st !== 'near') continue;
+    if (o.grp !== g) { g = o.grp; h += `<h3 class="sec">${esc(workTab === 'mil' ? `${g} ranks` : g)}</h3>`; }
+    h += jobRow(o); shown++;
   }
+  if (!shown) h += `<div class="empty">Nothing here matches yet.<small>Switch the filter to "All" to see every post and what each one needs.</small></div>`;
+  return h;
+}
+function jobDetailHTML(o) {
+  const [tr, lv] = occPos(o), t = TRACKS[tr], L = t.levels[lv];
+  const st = occState(o), block = occBlock(o), checks = occChecks(o);
+  const miss = checks.filter(c => !c.ok);
+  const tierName = (TIERS.find(x => x[0] === o.tier) || [])[1];
+  let h = btnItem('back2work', '', '‹', 'All posts', '', true);
+  h += `<div class="person-h"><span class="big" aria-hidden="true">${o.i}</span><div><b>${esc(occTitle(o))}</b><small>${esc(tierName)}, ${esc(o.grp.toLowerCase())}. ${esc(cap(payStr(t, L)))}.</small><span><span class="pill ${STATE_PILL[st][0]}">${esc(st === 'lock' ? `${miss.length} missing` : STATE_PILL[st][1])}</span></span></div></div>`;
+  h += `<p class="hint">${esc(o.d)}</p>`;
+  // verdict
+  if (block) h += `<div class="verdict no"><b>You can’t apply right now.</b> ${esc(block)}.</div>`;
+  else if (!miss.length) h += `<div class="verdict yes"><b>You qualify.</b> Your chance of being taken on is about <b>${Math.round(hireOdds(o) * 100)}%</b>. Higher Renown and Wits improve it.</div>`;
+  else h += `<div class="verdict no"><b>Not yet.</b> You meet ${checks.length - miss.length} of ${checks.length} requirements. Here is what is missing and how to get it.</div>`;
+  h += '<h3 class="sec">Requirements</h3><ul class="reqlist">';
+  for (const c of checks) h += `<li class="${c.ok ? 'y' : 'n'}"><span class="mk" aria-hidden="true">${c.ok ? '✓' : '✗'}</span><span><b>${esc(c.label)}</b>${c.ok ? '' : `<small>${esc(c.tip)}</small>`}</span></li>`;
+  h += '</ul>';
+  // what the job is like
+  const notes = [];
+  if (t.vary) notes.push('Pay varies a lot from year to year.');
+  if (o.board) notes.push(`You live in or eat at work, so your living costs drop by ${Math.round((1 - o.board) * 100)}%.`);
+  if (o.risk || o.die) notes.push('Dangerous work: injuries are common' + (o.die ? ' and it can kill you.' : '.'));
+  if (o.sick) notes.push('You are more likely to fall ill.');
+  if (o.vows || t.vows) notes.push('You take holy vows: no marriage, no war, and you live in the Church.');
+  if (o.raise) notes.push(`After 3 years it lifts you into the ${CLASSES[o.raise].n.toLowerCase()}.`);
+  if (o.retinue || L.retinue) notes.push(`You gain ${(o.retinue || 0) + (L.retinue || 0)} soldiers for your army (once per life).`);
+  if (L.knight) notes.push('You are dubbed a knight.');
+  if (o.gain) notes.push('Each year it may change: ' + Object.entries(o.gain).map(([k, v]) => `${STAT_N[k]} ${v > 0 ? '+' : ''}${v}`).join(', ') + '.');
+  const fam = t.fam; if (fam) notes.push(`Each year here adds a year of ${FAM[fam]} experience.`);
+  if (notes.length) h += `<h3 class="sec">What it’s like</h3><ul class="notes">${notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>`;
+  // career road
+  const leadsTo = [];
+  if (t.levels[lv + 1] && !t.levels[lv + 1].elect) leadsTo.push(lvlTitle(tr, lv + 1));
+  else if (t.up && OCC_BY[t.up]) leadsTo.push(occTitle(OCC_BY[t.up]));
+  else if (t.levels[lv + 1]) leadsTo.push(`${lvlTitle(tr, lv + 1)} (by election)`);
+  const from = OCC.filter(x => { const xt = x.link ? null : TRACKS[x.k]; return (xt && xt.up === o.k) || (x.link && x.link[0] === tr && x.link[1] === lv - 1); }).map(x => occTitle(x));
+  if (lv > 0 && !from.length) from.push(lvlTitle(tr, lv - 1));
+  if (leadsTo.length || from.length) h += `<h3 class="sec">Career road</h3><p class="hint">${from.length ? `Usually reached from: <b>${esc(joinList(from))}</b>. ` : ''}${leadsTo.length ? `With high standing after two years it can lead to: <b>${esc(joinList(leadsTo))}</b>.` : 'This is the top of its road.'}</p>`;
+  const applied = S.appliedYear === S.year;
+  h += btnItem('apply', o.k, '✍️', `Apply to be ${aOr(occTitle(o))}`, st === 'open' && !applied ? `About ${Math.round(hireOdds(o) * 100)}% chance. One application a year.` : '', block || (miss.length ? miss[0].why : applied ? 'You already sought work this year. Age up to try again' : true));
   return h;
 }
 function ranksHTML() {
@@ -3015,7 +3145,9 @@ const ACT = {
   army: k => doArmy(k),
   feats: () => { closeSheet(); showFeats('app'); },
   wtab: t => { workTab = t; renderSheet(); },
-  wopen: () => { workOpen = !workOpen; renderSheet(); },
+  wfilter: f => { workFilter = f; renderSheet(); },
+  job: k => { jobId = k; openSheet('job'); $('sheetBody').scrollTop = 0; },
+  back2work: () => { openSheet('work'); },
   barony: () => {
     const why = baronyWhy(); if (why !== true) return toast(why);
     confirmEv('📜', `Send ${BARONY_COST} silver and a humble petition to King ${S.king}, asking to be raised to the baronage?`, 'Send the petition', () => {
@@ -3059,7 +3191,7 @@ function applyJob(k) {
   const why = occWhy(o); if (why !== true) return toast(why);
   S.appliedYear = S.year;
   const [tr] = occPos(o), t = TRACKS[tr], title = occTitle(o);
-  const odds = Math.min(.97, (o.hire != null ? o.hire : t.hire) + S.stats.renown / 400 + (S.stats.wits - 50) / 400);
+  const odds = hireOdds(o);
   FX = []; let txt;
   if (P(odds)) {
     const x = hireInto(o); st('happy', 3);
@@ -3069,6 +3201,7 @@ function applyJob(k) {
     st('happy', -3);
     txt = pick(['They turned you away at the door.', '"We have no need of you," they said, not unkindly.', 'You were told to come back when you were more impressive.', 'Someone’s cousin got the post instead.']);
     say(`You sought work as ${aOr(title)}. ${txt}`, 'bad');
+    txt += ` (Your chances were about ${Math.round(odds * 100)}%. Renown and Wits improve them. You may try again next year.)`;
   }
   const fx = FX; FX = null;
   closeSheet(); showResult(o.i, txt, fx, 'Seeking work'); render(); save();
