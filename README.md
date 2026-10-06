@@ -56,3 +56,32 @@ tracks your progress on each road:
 
 A hint line above the buttons always says what to do next. You can turn it off
 in the menu.
+
+## Realism, power and fun
+
+- **The rules of the age** (set at birth, or in the menu): under *Historical*
+  rules the army, the priesthood, the universities and the offices of law are
+  closed to women, and a few trades (midwife, wet nurse, silkwoman,
+  lady-in-waiting) are women's alone. A woman may cut her hair and pass as a
+  man to serve in arms or at sea, at the risk of being unmasked. Widows can
+  run a business in their own name. *Relaxed* rules open everything to
+  everyone.
+- **Ages**: children can take small jobs from 7 (crow scarer, goose girl,
+  page, chorister), most trades open at 12, and heavy work gets harder past 55.
+- **Influence** (⚜️): your power to make things happen. It comes from your
+  station, titles, office, wealth, Renown, army and friends. High posts need
+  it, and so do the new *Power* deeds: call in favours, place your kin, arrange
+  grand marriages, lean on tenants, and pull strings to get out of prison. Tap
+  it to see what makes up yours.
+- **Ambitions**: at 16 you choose a life goal. Fulfil it for a big reward.
+- **Friends and rivals**: friends lend silver, cheer you up, put in a good
+  word, and can become spouses. Rivals cheat you and spread rumours. Make
+  peace, or ruin them.
+- Many new events: royal progresses, May Day, a secret noble father, the Feast
+  of Fools, dancing bears, secret admirers, shipwrecks, and more.
+
+## Apps
+
+See [APP_STORE.md](APP_STORE.md) to install the game from the web, or to ship
+it to the App Store and Google Play. See [PRIVACY.md](PRIVACY.md) and
+[LEGAL_NOTES.md](LEGAL_NOTES.md).

@@ -1,0 +1,17 @@
+{
+  "name": "Mud & Crowns: a medieval life",
+  "short_name": "Mud & Crowns",
+  "description": "Live a whole medieval life, from serf to sovereign.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#c7b086",
+  "theme_color": "#9b1f12",
+  "categories": ["games", "simulation"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

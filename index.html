@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mud &amp; Crowns: a medieval life</title>
+<meta name="theme-color" content="#9b1f12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mud &amp; Crowns">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
@@ -339,6 +345,8 @@ button{font:inherit;color:inherit}
 .hex.ours polygon{stroke:rgba(255,255,255,.85);stroke-width:2}
 .hex.ours.sel polygon{stroke:#fff;stroke-width:3.5}
 .tgt{font-style:normal}
+#st-power{grid-column:1/-1;cursor:pointer}
+#st-power .sl{color:var(--gold);font-style:normal;font-weight:600}
 </style>
 </head>
 <body>
@@ -628,6 +636,7 @@ const STAT_TIP = {
   looks: 'Raise Looks by buying fine clothes or visiting the barber-surgeon (Deeds).',
   piety: 'Raise Piety by praying, giving alms, or going on pilgrimage (Deeds).',
   renown: 'Raise Renown with feasts, tourneys, duels, brave choices in events, and promotions.',
+  power: 'Influence comes from your station, titles, office, wealth, Renown, army and friends. Tap Influence at the bottom of the screen to see what makes yours.',
 };
 // Jobs that teach a family of work and need no prior experience in it.
 function trainers(f) {
@@ -648,6 +657,12 @@ function occChecks(o) {
   const add = (ok, label, why, tip, never) => C.push({ ok: !!ok, label, why, tip, never: !ok && never });
   const min = o.min || t.min || 12;
   add(S.age >= min, `Age ${min}`, `From age ${min}`, `You are ${S.age}. Wait ${yrs(Math.max(0, min - S.age))}.`);
+  if (o.max) add(S.age <= o.max, `Age ${o.max} or under`, `Only for children up to ${o.max}`, 'This is children’s work. You are too old for it now.', 1);
+  const gr = genderRule(o);
+  if (gr === 'm') { const pass = S.sex === 'm' || ((S.flags.disguise || S.flags.openWoman) && DISGUISE_OK.has(o.k)) || (S.flags.openWoman && o.link && o.link[0] === 'soldier'); add(pass, S.sex === 'f' && pass ? (S.flags.openWoman ? 'Accepted as a woman in arms' : 'Passing as a man') : 'Men only, in this age', 'In this age only men were admitted', DISGUISE_OK.has(o.k) ? 'Women were barred from this in the Middle Ages. You could cut your hair and pass as a man (Deeds, Daring), at the risk of being found out. Or switch to Relaxed rules in the menu.' : 'Women were barred from this in the Middle Ages: the priesthood, the universities, and the offices of law and state were closed to them. Women still ruled abbeys, ran businesses as widows, and even reigned as queens. Or switch to Relaxed rules in the menu.', !DISGUISE_OK.has(o.k)); }
+  if (gr === 'f') add(S.sex === 'f', 'Women only, in this age', 'Women only, in this age', 'This was women’s work in the Middle Ages. Or switch to Relaxed rules in the menu.', 1);
+  if (isPhys(o) && S.age > 55) add(S.stats.health >= 65, `Strong enough at ${S.age} (Health ${S.stats.health}/65)`, 'Too old for heavy work unless Health 65', 'Heavy work is for the young and strong. Past 55 you need Health 65 to be taken on.');
+  if (o.infl) { refreshPower(); add(S.stats.power >= o.infl, `Influence ${S.stats.power}/${o.infl}`, `Requires Influence ${o.infl}`, `You need ${o.infl - S.stats.power} more. ${STAT_TIP.power}`); }
   if (o.serfOnly) add(S.cls === 'serf', 'A serf', 'Only serfs owe this labor', 'Only serfs bound to a manor do this work. Free folk are never taken on, so this post is closed to you for good.', 1);
   if (S.cls === 'serf' && (o.noSerf != null ? o.noSerf : t.noSerf)) add(false, 'Free (not a serf)', 'Serfs are bound to the land', 'Serfs may only farm, herd, labor, fight or pray. Buy your freedom for 40 silver (Work, Bondage), flee to a town, or marry up.');
   if (o.vows || t.vows) add(!spouse(), 'Unmarried', 'Cannot take vows while married', 'Clergy take a vow of celibacy. You cannot join while you have a living spouse.');
@@ -689,7 +704,7 @@ function occState(o) {
   const n = fails.length;
   return n === 0 ? 'open' : n === 1 ? 'near' : 'lock';
 }
-const hireOdds = o => Math.max(.05, Math.min(.97, (o.hire != null ? o.hire : TRACKS[occPos(o)[0]].hire) + S.stats.renown / 400 + (S.stats.wits - 50) / 400));
+const hireOdds = o => Math.max(.05, Math.min(.97, (o.hire != null ? o.hire : TRACKS[occPos(o)[0]].hire) + S.stats.renown / 400 + (S.stats.wits - 50) / 400 + influence() / 400));
 function noteHeld(tr) {
   S.held = S.held || [];
   if (!S.held.includes(tr)) S.held.push(tr);
@@ -757,6 +772,9 @@ function occYear() {
   const t = TRACKS[S.job.track], o = occOfJob();
   if (t.fam && FAM_LINES[t.fam] && P(.3)) say(pick(FAM_LINES[t.fam]), 'note');
   if (!o) return;
+  if (o.max && S.age > o.max) { say(`You have outgrown work as ${aOr(jobTitle())}. Time to find a grown-up trade.`, 'note'); quitJob(); return; }
+  if (S.flags.disguise && !S.flags.openWoman && S.sex === 'f' && hist() && (MEN_ONLY.has(o.k) || (o.link && ladderMenOnly(o.link[0], o.link[1]))) && P(.1)) Q.push(() => showEvent(unmaskedEvent()));
+  if (isPhys(o) && S.age >= 58) { S.job.perf = clamp(S.job.perf - R(2, 6)); if (P(.35)) st('health', -R(1, 3)); if (P(.3)) say(pick(['Your back is not what it was. The young ones work circles around you.', 'Your knees creak louder than the cart. Perhaps it is time to retire.', 'You are slower each year. Your master has noticed.']), 'note'); }
   if (o.gain) for (const [k, v] of Object.entries(o.gain)) if (P(.55)) st(k, v);
   if (o.die && P(o.die)) { die(o.dieAs); return; }
   if (o.risk && P(o.risk)) { st('health', -R(4, 12)); say(pick(['You were hurt at work and laid up for weeks.', 'An accident at work left you bruised and battered.', 'You took a bad injury on the job.']), 'bad'); if (P(.25)) ill('wound'); }
@@ -803,8 +821,9 @@ const STATS = [
   { k: 'looks', n: 'Looks', i: '🌹' },
   { k: 'piety', n: 'Piety', i: '🕯️' },
   { k: 'renown', n: 'Renown', i: '🛡️' },
+  { k: 'power', n: 'Influence (tap to see why)', i: '⚜️' },
 ];
-const STAT_N = { health: 'Health', happy: 'Joy', wits: 'Wits', looks: 'Looks', piety: 'Piety', renown: 'Renown' };
+const STAT_N = { health: 'Health', happy: 'Joy', wits: 'Wits', looks: 'Looks', piety: 'Piety', renown: 'Renown', power: 'Influence' };
 
 /* ---------- state ---------- */
 let S = null;
@@ -832,7 +851,7 @@ function blank(o) {
     job: null, illness: null, kin: [], assets: [], titles: [], flags: {}, done: {}, lastEv: {}, log: [],
     deeds: DEEDS_PER_YEAR, jail: 0, crimes: 0, vows: false, ruling: false,
     gen: o.gen || 1, lineage: o.lineage || [], king: o.king || '', appliedYear: -1, workedYear: -1, epithet: '', dead: null,
-    world: null, home: 0, army: 0, armyVet: 0, heat: 0, feats: [], skills: {}, held: [],
+    world: null, home: 0, army: 0, armyVet: 0, heat: 0, feats: [], skills: {}, held: [], realism: o.realism || 'hist', amb: null,
   };
 }
 
@@ -847,7 +866,7 @@ function newLife(o = {}) {
   const village = pick(VILLAGES);
   const last = o.last || (cls === 'royal' ? pick(SUR.royal) : cls === 'noble' ? pick(SUR.noble) : pick(SUR.low));
   const year = R(1190, 1340);
-  S = blank({ first: o.first || pick(NAMES[sex]), last, sex, year, cls, realm, village });
+  S = blank({ first: o.first || pick(NAMES[sex]), last, sex, year, cls, realm, village, realism: o.realism });
   if (cls === 'noble' || cls === 'royal' || cls === 'merchant') S.flags.letters = 1;
 
   const fa = person('m', R(20, 42), cls, { par: 1, sur: last });
@@ -889,6 +908,7 @@ function birthLog() {
   if (fa && mo) say(`Your father is ${fullName(fa)}, ${jobPhrase(fa.job)}. Your mother is ${fullName(mo)}, ${jobPhrase(mo.job)}.`);
   const sibs = S.kin.filter(k => k.sib);
   if (sibs.length) say(`You have ${joinList(sibs.map(k => `an older ${k.sex === 'm' ? 'brother' : 'sister'} named ${k.name}`))}.`);
+  if (hist() && S.sex === 'f') say('As a girl in this age, some doors are closed to you: the army, the priesthood, the universities, the courts of law. Others are yours alone, and a clever woman can rise far.', 'note');
   if (S.cls === 'serf') say('Your family are serfs, bound to work the lord’s land and forbidden to leave it.', 'note');
   else if (S.cls !== 'royal') say(`${S.realm} is ruled by ${KT()} ${S.king}.`, 'note');
 }
@@ -899,6 +919,8 @@ function relOf(k) {
   if (k.sib) return k.sex === 'm' ? 'Brother' : 'Sister';
   if (k.sp) return k.sex === 'm' ? 'Husband' : 'Wife';
   if (k.ch) return k.sex === 'm' ? 'Son' : 'Daughter';
+  if (k.fr) return 'Friend';
+  if (k.rv) return 'Rival';
   return 'Kin';
 }
 const father = () => S.kin.find(k => k.par && k.sex === 'm');
@@ -1064,8 +1086,8 @@ function kinCause(k) {
 function kinDies(k, cause) {
   if (!k.alive) return;
   k.alive = false; k.died = k.age; k.cause = cause;
-  say(`Your ${relOf(k).toLowerCase()} ${k.name} died ${cause}, aged ${k.age}.`, 'bad');
-  st('happy', -Math.round(k.bond / 7 + 2));
+  say(`Your ${relOf(k).toLowerCase()} ${k.name} died ${cause}, aged ${k.age}.`, k.rv ? 'note' : 'bad');
+  if (k.rv) st('happy', 2); else st('happy', -Math.round(k.bond / 7 + 2));
   if (k.ruler && k.sp) consortSucceeds();
   else if (k.ruler) succession();
   else if (k.par) parentDied(k);
@@ -1129,6 +1151,7 @@ function yearKin() {
       if (k.job && k.ch) say(`Your ${relOf(k).toLowerCase()} ${k.name} has gone to work as ${jobPhrase(k.job)}.`, 'note');
     }
   }
+  yearPeers();
   const mo = mother(), fa = father();
   if (S.age <= 15 && mo && mo.alive && mo.age <= 42 && fa && fa.alive && P(.13)) {
     const sx = pick(['m', 'f']);
@@ -1140,7 +1163,9 @@ function yearKin() {
   }
 }
 function milestones() {
+  if (S.age === 7 && S.cls !== 'royal') say('At seven you are old enough for small jobs: scaring crows, minding geese, or singing in the choir. See Work.', 'note');
   if (S.age === 12 && S.cls !== 'royal') say('You are old enough to work. Open Work to seek a position.', 'note');
+  if (S.age === 16 && !S.amb) Q.push(() => showEvent(ambitionEvent()));
   if (S.age === 16) {
     const c = CLASSES[S.cls]; const p = R(c.portion[0], c.portion[1]);
     if (p > 0) { S.coin += p; say(`You have come of age! Your family gives you a portion of ${p} silver.`, 'gold'); }
@@ -1159,7 +1184,9 @@ function yearJob() {
   if (j.track === 'church' && !S.flags.letters && j.years >= 1) { S.flags.letters = 1; say(`The ${ws('brothers', 'sisters')} have taught you to read and write.`, 'good'); }
   j.perf = clamp(j.perf + R(-7, 6) + (S.stats.wits > 60 ? 2 : 0));
   const next = t.levels[j.level + 1];
-  if (next && !next.elect && j.perf >= 68 && j.lvlYears >= 2 && reqOK(next.need) === true) {
+  const gBlock = next && hist() && S.sex === 'f' && ladderMenOnly(j.track, j.level + 1) && !(S.flags.openWoman && j.track === 'soldier') && !(S.flags.disguise && j.track === 'soldier');
+  if (gBlock && j.perf >= 68 && j.lvlYears >= 2 && P(.3)) say(`You would have been made ${lvlTitle(j.track, j.level + 1)}, but in this age that rank is closed to women.`, 'note');
+  if (next && !gBlock && !next.elect && j.perf >= 68 && j.lvlYears >= 2 && reqOK(next.need) === true) {
     j.level++; j.lvlYears = 0; j.perf = 45;
     st('renown', R(3, 6)); st('happy', R(4, 8));
     say(`You were promoted to ${lvlTitle(j.track, j.level)}!`, 'gold');
@@ -1459,7 +1486,7 @@ function epithet() {
 }
 function legacy() {
   const s = S.stats, kids = children().length;
-  const sc = Math.min(S.age, 80) * .5 + s.renown * .45 + s.happy * .35 + Math.min(Math.max(S.coin, 0) / 40, 40) + kids * 3 + S.titles.length * 8 + (S.ruling ? 15 : 0) + (S.job ? S.job.level * 4 + (TIER_PTS[tierOfJob()] || 0) : 0) + Math.min((S.held || []).length, 10) + heldTs().length * 6 + (S.feats || []).length * 4;
+  const sc = Math.min(S.age, 80) * .5 + s.renown * .45 + s.happy * .35 + Math.min(Math.max(S.coin, 0) / 40, 40) + kids * 3 + S.titles.length * 8 + (S.ruling ? 15 : 0) + (S.job ? S.job.level * 4 + (TIER_PTS[tierOfJob()] || 0) : 0) + Math.min((S.held || []).length, 10) + heldTs().length * 6 + (S.feats || []).length * 4 + (S.amb && S.amb.done ? 12 : 0);
   return sc >= 120 ? ['Legendary', 'S'] : sc >= 95 ? ['Illustrious', 'A'] : sc >= 75 ? ['Esteemed', 'B'] : sc >= 55 ? ['Respectable', 'C'] : sc >= 35 ? ['Humble', 'D'] : ['Forgotten', 'F'];
 }
 function getGraves() { try { const g = JSON.parse(store.get(GKEY) || '[]'); return Array.isArray(g) ? g : []; } catch (e) { return []; } }
@@ -1493,7 +1520,7 @@ function continueAs(id) {
   const g = k.sex === 'm' ? 'Lord' : 'Lady';
   N.assets = p.assets.filter(a => a.key !== 'dog').map(a => { const b = Object.assign({}, a); if (b.title) b.title = b.title.replace(/^(Lord|Lady)/, g); return b; });
   N.titles = lordTitles.map(t => titleFor(t, k.sex));
-  N.skills = {}; N.held = [];
+  N.skills = {}; N.held = []; N.realism = p.realism;
   N.world = p.world; N.home = p.home; N.army = p.army || 0; N.armyVet = p.armyVet || 0; N.flags.gunpowder = p.flags.gunpowder; N.flags.ally = p.flags.ally;
   if (p.flags.rebel && !wasRuler) N.flags.rebel = 1;
   S = N;
@@ -1638,7 +1665,7 @@ const EVENTS = [
 
   /* ===== youth ===== */
   { id: 'apprentice', min: 12, max: 15, once: true, w: 6, icon: '⚒️', cond: () => !S.job && ['peasant', 'craft', 'merchant'].includes(S.cls),
-    init: () => ({ tr: pick(['smith', 'mason', 'healer']), m: pick(NAMES.m) }),
+    init: () => ({ tr: pick(['smith', 'healer'].concat(hist() && S.sex === 'f' ? [] : ['mason'])), m: pick(NAMES.m) }),
     text: c => `Master ${c.m} the ${TRACKS[c.tr].master} offers to take you on as an apprentice. Seven hard years, but a trade for life.`,
     choices: [
       { t: 'Accept the apprenticeship', fx: c => { setJob(c.tr, 0); st('happy', 3); return `You are now ${aOr(jobTitle())}. Your master's first lesson: fetch more water.`; } },
@@ -1691,7 +1718,7 @@ const EVENTS = [
       { t: 'Wager on a champion (10 silver)', ok: () => S.coin >= 10, fx: () => { if (P(.45)) { coin(R(8, 20)); st('happy', 4); return 'Your champion unhorsed three rivals, and your purse grew fat!'; } coin(-10); return 'Your champion was knocked flat on the first pass. So was your purse.'; } },
       { t: 'Watch from the stands', fx: () => { st('happy', R(3, 6)); return 'Thundering hooves, splintering lances, and roast chestnuts. A glorious day out.'; } },
     ] },
-  { id: 'levy', min: 16, max: 48, w: 1.6, cool: 5, icon: '🛡️', cond: () => !S.vows && !S.ruling && !isMil() && S.cls !== 'royal',
+  { id: 'levy', min: 16, max: 48, w: 1.6, cool: 5, icon: '🛡️', cond: () => !S.vows && !S.ruling && !isMil() && S.cls !== 'royal' && !(hist() && S.sex === 'f' && !S.flags.disguise),
     init: () => ({ foe: otherRealm(), bat: pick(BATTLES) }),
     text: c => `${KT()} ${S.king} summons the levy! Every able body must march against ${c.foe}.`,
     choices: [
@@ -2413,6 +2440,8 @@ const FEATS = [
   { k: 'chancellor', i: '📜', n: 'Keeper of the Great Seal', d: 'Become Chancellor of the realm.' },
   { k: 'general', i: '🎌', n: 'Captain of Hosts', d: 'Command armies as a General or Lord High Constable.' },
   { k: 'baron', i: '🦁', n: 'By Letters Patent', d: 'Be created a Baron or Baroness.' },
+  { k: 'dream', i: '✨', n: 'Dream Fulfilled', d: 'Achieve the ambition you set for your life.' },
+  { k: 'maid', i: '🗡️', n: 'The Maid', d: 'Be unmasked as a woman in arms, and win the right to fight on.' },
 ];
 function getFeats() { try { const g = JSON.parse(store.get(FKEY) || '{}'); return g && typeof g === 'object' ? g : {}; } catch (e) { return {}; } }
 function feat(k) {
@@ -2427,6 +2456,7 @@ function feat(k) {
 }
 function checkFeats() {
   if (!S) return;
+  checkAmbition();
   if (S.ruling) feat('crowned');
   if (S.ruling && S.birthCls === 'serf') feat('mud2crown');
   if (heldTs().length >= 5) feat('conqueror');
@@ -2460,7 +2490,7 @@ function migrate(s) {
     s.home = (s.ruling || s.cls === 'royal') ? c.id : pick(realmTs(s.realm).filter(x => !x.cap)).id;
     S = keep;
   }
-  s.army = s.army || 0; s.armyVet = s.armyVet || 0; s.heat = s.heat || 0; s.feats = s.feats || []; s.skills = s.skills || {}; s.held = s.held || [];
+  s.army = s.army || 0; s.armyVet = s.armyVet || 0; s.heat = s.heat || 0; s.feats = s.feats || []; s.skills = s.skills || {}; s.held = s.held || []; s.realism = s.realism || 'relaxed';
   if (s.job && !TRACKS[s.job.track]) s.job = null;
   s.v = 2;
   return s;
@@ -2828,6 +2858,272 @@ EVENTS.push(
     ] },
 );
 
+/* ================= Realism: the rules of the age ================= */
+// Historical rules (default) close many posts to women, as they were closed then, and open a few only to women.
+// Relaxed rules let anyone do anything. Old saves without a setting play Relaxed, so nothing they had is taken away.
+const hist = () => !!(S && S.realism === 'hist');
+const MEN_ONLY = new Set(['spearman', 'footsoldier', 'archer', 'crossbow', 'manatarms', 'sergeant', 'veteran', 'captain', 'merclead', 'squire', 'knightmil', 'knightcmd', 'marshal', 'general', 'constable', 'barcmd', 'dukecmd', 'priest', 'bishop', 'archbishop', 'cardinal', 'magistrate', 'judge', 'official', 'chancellor', 'treasurer', 'diplomat', 'adviser', 'scholar', 'professor', 'physician', 'sailor', 'navigator', 'watchman', 'miner', 'docker', 'architect', 'masonmid', 'stonecut', 'quarry', 'clerk', 'scribemid', 'accountant', 'shipwright', 'teacherM']);
+const WOMEN_ONLY = new Set(['midwife', 'wetnurse', 'silkwoman', 'ladywait']);
+// Posts a woman disguised as a man might get away with.
+const DISGUISE_OK = new Set(['spearman', 'footsoldier', 'archer', 'crossbow', 'manatarms', 'sergeant', 'veteran', 'captain', 'merclead', 'sailor', 'docker', 'miner', 'quarry', 'watchman', 'stonecut', 'masonmid']);
+// Ladder ranks closed to women under historical rules (soldiers, knights, and Church ranks from Bishop up).
+function ladderMenOnly(tr, lv) { return tr === 'soldier' || tr === 'knight' || (tr === 'church' && lv >= 4) || (tr === 'mason' && lv >= 0) || (tr === 'scribe' && lv >= 1); }
+function genderRule(o) {
+  if (!hist()) return null;
+  const [tr, lv] = occPos(o);
+  if (WOMEN_ONLY.has(o.k)) return 'f';
+  if (MEN_ONLY.has(o.k) || (o.link && ladderMenOnly(tr, lv))) return 'm';
+  return null;
+}
+const PHYS_FAMS = new Set(['labor', 'stone', 'sea', 'wood', 'metal']);
+const isPhys = o => o.tier === 'mil' || PHYS_FAMS.has(o.link ? TRACKS[o.link[0]].fam : o.fam);
+
+/* ---------- influence: your power to make things happen ---------- */
+function influenceParts() {
+  const p = [];
+  const base = { serf: 0, peasant: 4, craft: 8, merchant: 16, noble: 30, royal: 48 }[S.cls] || 0;
+  p.push([`Station: ${CLASSES[S.cls].n.toLowerCase()}`, base]);
+  const tier = tierOfJob();
+  if (S.job && !S.ruling) { const o = occOfJob(); const v = { low: 0, mid: 5, high: 14 }[tier] != null ? { low: 0, mid: 5, high: 14 }[tier] : ({ Low: 1, Middle: 5, High: 14 }[o && o.grp] || 4); if (v) p.push([`Your post as ${jobTitle()}`, v]); }
+  if (S.ruling) p.push(['You wear the crown', 40]);
+  if (S.flags.consort) p.push(['Royal consort', 15]);
+  if (S.titles.some(t => /^(Lord|Lady) of /.test(t))) p.push(['Lord of a manor', 6]);
+  if (isBaron()) p.push(['Baron', 8]);
+  if (heldTs().length) p.push([`Counties held (${heldTs().length})`, Math.min(20, heldTs().length * 6)]);
+  if (S.titles.some(t => /^(Duke|Duchess) of /.test(t))) p.push(['Duke', 12]);
+  if (S.flags.knight) p.push(['Knighthood', 5]);
+  if (inTrack('church') && S.job.level >= 3) p.push(['High office in the Church', 6]);
+  const r = Math.round(S.stats.renown / 5); if (r) p.push([`Renown ${S.stats.renown}`, r]);
+  const w = S.coin > 0 ? Math.min(15, Math.round(Math.log10(1 + S.coin / 20) * 6)) : 0; if (w) p.push([`Wealth (${S.coin} silver)`, w]);
+  if ((S.army || 0) >= 20) p.push([`Your army (${S.army})`, Math.min(10, Math.round(S.army / 25))]);
+  const fr = S.kin.filter(k => k.fr && k.alive && k.bond >= 60).length; if (fr) p.push([`Loyal friends (${fr})`, fr * 2]);
+  if (S.age < 16) p.push(['Too young to be taken seriously', -Math.round(p.reduce((t, x) => t + x[1], 0) / 2)]);
+  if (S.age >= 60) p.push(['The respect due to age', 3]);
+  if (hist() && S.sex === 'f' && !S.ruling && !S.flags.consort && !(inTrack('church') && S.job.level >= 3)) {
+    const sp = spouse();
+    if (sp) p.push(['A wife’s word counts for less in law', -4]);
+    else if (S.kin.some(k => k.sp && !k.alive)) p.push(['A widow may act in her own name', 2]);
+  }
+  if (S.jail) p.push(['Rotting in a dungeon', -20]);
+  if (S.flags.rebel && !S.ruling) p.push(['Branded a rebel', -8]);
+  return p;
+}
+function influence() { return clamp(influenceParts().reduce((t, x) => t + x[1], 0)); }
+function refreshPower() { if (S && S.stats) S.stats.power = influence(); }
+function showInfluence() {
+  if (!S || modalOpen) return;
+  refreshPower();
+  const parts = influenceParts();
+  const txt = `Influence ${S.stats.power}: your power to make things happen. It opens high posts and lets you call in favours, place your kin, and bend the law. ${parts.map(([n, v]) => `${n} ${v > 0 ? '+' : '−'}${Math.abs(v)}`).join('. ')}.`;
+  showResult('⚜️', txt, null, 'Influence');
+}
+
+/* ---------- ambitions: something to live for ---------- */
+const AMBITIONS = [
+  { k: 'rich', i: '🪙', n: 'Grow rich', d: 'Hold 1,000 silver at once.', ok: () => S.coin >= 1000, prog: () => `${Math.max(0, S.coin)} of 1,000 silver` },
+  { k: 'power', i: '⚜️', n: 'Be a power in the land', d: 'Reach Influence 60.', ok: () => influence() >= 60, prog: () => `Influence ${influence()} of 60` },
+  { k: 'family', i: '👪', n: 'A full house', d: 'Be married with four living children.', ok: () => !!spouse() && children().length >= 4, prog: () => `${spouse() ? 'Married' : 'Unwed'}, ${children().length} of 4 children` },
+  { k: 'faith', i: '🕯️', n: 'Walk with God', d: 'Reach Piety 90, or rise to Abbot, Abbess, or higher.', ok: () => S.stats.piety >= 90 || (inTrack('church') && S.job.level >= 3), prog: () => `Piety ${S.stats.piety} of 90` },
+  { k: 'glory', i: '🛡️', n: 'Undying fame', d: 'Reach Renown 80.', ok: () => S.stats.renown >= 80, prog: () => `Renown ${S.stats.renown} of 80` },
+  { k: 'land', i: '🏰', n: 'Land of my own', d: 'Hold a county.', ok: () => heldTs().length > 0 || S.ruling, prog: () => `${heldTs().length} counties` },
+  { k: 'master', i: '🏅', n: 'Master of a craft', d: 'Become a Master Craftsman, Guild Master, or Master Architect.', ok: () => jobIn('mastercraft', 'guildmaster', 'architect') || (S.held || []).some(x => ['mastercraft', 'guildmaster', 'architect'].includes(x)), prog: () => `${maxCraft()} years at your best craft` },
+  { k: 'crown', i: '👑', n: 'Wear a crown', d: 'Rule a kingdom. The hardest road of all.', ok: () => S.ruling, prog: () => `${S.army || 0} soldiers, ${heldTs().length} counties` },
+];
+function ambitionEvent() {
+  const opts = AMBITIONS.filter(a => !a.ok()).sort(() => Math.random() - .5).slice(0, 4);
+  return { id: 'ambitionPick', icon: '✨', text: () => 'You lie awake under the thatch, thinking about the kind of life you want. What will you strive for? (Fulfil it for a great reward.)',
+    choices: opts.map(a => ({ t: `${a.i} ${a.n}: ${a.d}`, fx: () => { S.amb = { k: a.k, set: S.year, done: 0 }; return `You swore to yourself: ${a.n.toLowerCase()}. Whatever it takes.`; } })).concat([{ t: 'Live day to day', fx: () => { S.amb = { k: '', set: S.year, done: 0 }; return 'Ambition is for other people. You will take life as it comes.'; } }]) };
+}
+function checkAmbition() {
+  if (!S.amb || !S.amb.k || S.amb.done) return;
+  const a = AMBITIONS.find(x => x.k === S.amb.k); if (!a || !a.ok()) return;
+  S.amb.done = S.year;
+  st('happy', 15); st('renown', 6);
+  say(`Ambition fulfilled: ${a.n}! You feel a deep, rare contentment.`, 'gold');
+  feat('dream');
+}
+const ambDef = () => S.amb && S.amb.k ? AMBITIONS.find(x => x.k === S.amb.k) : null;
+
+/* ---------- friends and rivals ---------- */
+const friends = () => S.kin.filter(k => k.fr && k.alive);
+const rivals = () => S.kin.filter(k => k.rv && k.alive);
+function makePeer(extra) {
+  const sx = pick(['m', 'f']);
+  const cls = P(.7) ? S.cls : CLS_ORDER[Math.max(0, Math.min(4, CLS_ORDER.indexOf(S.cls) + pick([-1, 1])))];
+  const p = person(sx, Math.max(6, S.age + R(-5, 5)), cls === 'royal' ? 'noble' : cls, extra);
+  p.sur = cls === 'noble' ? pick(SUR.noble) : pick(SUR.low);
+  if (p.age < 14) p.job = '';
+  p.looks = R(20, 90);
+  return p;
+}
+function yearPeers() {
+  for (const k of rivals()) {
+    if (!P(.2)) continue;
+    const r = Math.random();
+    if (r < .3 && S.coin > 5) { const l = R(2, Math.min(25, Math.max(3, Math.floor(S.coin * .1)))); S.coin -= l; say(`Your rival ${k.name} cheated you out of ${l} silver.`, 'bad'); }
+    else if (r < .6) { S.stats.renown = clamp(S.stats.renown - R(1, 4)); say(`Your rival ${k.name} has been spreading vile rumours about you.`, 'bad'); }
+    else if (r < .8 && S.job && S.job.track !== 'crown') { S.job.perf = clamp(S.job.perf - R(4, 10)); say(`Your rival ${k.name} whispered against you to your superiors.`, 'bad'); }
+    else { S.stats.happy = clamp(S.stats.happy - 3); say(`${k.name} sneered at you in front of the whole ${pick(['market', 'church', 'tavern', 'guild hall'])}.`, 'bad'); }
+  }
+  for (const k of friends()) {
+    if (k.bond < 15) { k.fr = 0; k.rv = 1; say(`You and ${k.name} have fallen out for good. Your old friend is now your rival.`, 'bad'); continue; }
+    if (k.bond < 60 || !P(.16)) continue;
+    const r = Math.random();
+    if (r < .35) { const g = R(2, 12); S.coin += g; say(`Your friend ${k.name} lent you ${g} silver and told you to forget about it.`, 'good'); }
+    else if (r < .65) { S.stats.happy = clamp(S.stats.happy + R(2, 5)); say(`You and ${k.name} ${pick(['laughed until dawn at the alehouse', 'went fishing and caught nothing', 'sang terrible songs at the harvest feast', 'sat up talking about everything'])}.`, 'good'); }
+    else if (S.job && S.job.track !== 'crown') { S.job.perf = clamp(S.job.perf + R(3, 8)); say(`Your friend ${k.name} put in a good word for you at work.`, 'good'); }
+    else { S.stats.renown = clamp(S.stats.renown + 2); say(`${k.name} tells everyone what a fine friend you are.`, 'good'); }
+  }
+}
+
+/* ---------- new deeds: friends, power, and daring ---------- */
+DEEDS.push(
+  { k: 'befriend', g: 'Friends and foes', i: '🤝', n: 'Make a friend', d: 'Friends lend silver, lift your spirits, and put in a good word.', min: 6, can: () => friends().length < 5 || 'You already have five friends. Treasure them', run: () => { const p = makePeer({ fr: 1, bond: R(55, 70) }); if (!P(.75 + S.stats.looks / 400)) { st('happy', -2); return `You tried to strike up a friendship with ${p.name}, who found you very strange.`; } S.kin.push(p); st('happy', 4); return `You and ${p.name} ${p.sur} ${pick(['bonded over a stolen pie', 'discovered you hate the same people', 'won a three-legged race together', 'shared a jug of ale and a great many secrets'])}. A friend for life, perhaps.`; } },
+  { k: 'favour', g: 'Power', i: '⚜️', n: 'Call in a favour', d: 'Ask someone powerful for silver or a good word. Needs Influence 25. Once a year.', min: 16, once: 1, can: () => influence() >= 25 || `Needs Influence 25 (you have ${influence()})`, run: () => { if (P(.35 + influence() / 200)) { if (P(.5)) { const g = R(20, 60) + influence(); coin(g); return `A merchant who owes you much sent ${g} silver, with his compliments.`; } st('renown', R(4, 8)); if (S.job && S.job.track !== 'crown') jobPerf(12); return 'A word from the right mouth into the right ear. Your standing rose overnight.'; } st('renown', -2); return 'The favour was refused. It seems you were owed less than you thought.'; } },
+  { k: 'placekin', g: 'Power', i: '🎓', n: 'Find a post for your kin', d: 'Use your influence to set up a son, daughter, brother or sister. Needs Influence 30.', min: 25, can: () => influence() < 30 ? `Needs Influence 30 (you have ${influence()})` : S.kin.some(k => k.alive && (k.ch || k.sib) && k.age >= 14 && !k.placed) || 'No grown children or siblings to place', run: () => { const k = pick(S.kin.filter(x => x.alive && (x.ch || x.sib) && x.age >= 14 && !x.placed)); k.placed = 1; const lvl = influence(); k.job = lvl >= 60 ? pick(['Royal Adviser', 'Court Official', 'Knight', 'Abbot', 'Wealthy Merchant']) : lvl >= 45 ? pick(['Steward', 'Magistrate', 'Guild Member', 'Man-at-Arms', 'Scribe']) : pick(['Clerk', 'Shopkeeper', 'Barber', 'Cook', 'Messenger']); bond(k, R(12, 20)); st('renown', 2); return `A quiet word, a sealed letter, and ${k.name} is now ${aOr(k.job.toLowerCase())}. ${pr(k).He} will not forget it.`; } },
+  { k: 'matchkin', g: 'Power', i: '💍', n: 'Arrange a grand match for a child', d: 'Marry a child into a great house for silver and Renown. Needs Influence 35.', min: 30, can: () => influence() < 35 ? `Needs Influence 35 (you have ${influence()})` : children().some(k => k.age >= 14 && !k.wed) || 'No unwed child aged 14 or more', run: () => { const k = pick(children().filter(x => x.age >= 14 && !x.wed)); k.wed = 1; const house = influence() >= 60 ? 'a royal cousin' : influence() >= 45 ? `the house of ${pick(SUR.noble)}` : `a rich ${pick(['wool', 'wine', 'spice'])} merchant’s family`; const g = R(30, 90) + influence(); coin(g); st('renown', R(3, 7)); bond(k, P(.5) ? 6 : -8); return `${k.name} was married to ${house}. The settlement brought ${g} silver and powerful new in-laws.`; } },
+  { k: 'squeeze', g: 'Power', i: '🪓', n: 'Lean on your tenants', d: 'Demand extra rent and labor. Silver now, hatred later. Needs land.', min: 18, can: () => (hasLand() || S.assets.some(a => a.key === 'land' || a.key === 'mill')) || 'You need tenants: farmland, a mill, a manor, or a county', run: () => { const g = R(15, 40) + heldTs().length * 20; coin(g); st('renown', -R(2, 5)); st('piety', -2); if (P(.12)) { st('health', -R(8, 15)); return `You squeezed ${g} silver out of them, and someone threw a rock at your head from a hedge.`; } return `You squeezed ${g} silver out of your tenants. Their curses follow you down the lane.`; } },
+  { k: 'strings', g: 'Power', i: '🗝️', n: 'Pull strings for your release', d: 'Friends in high places can open dungeon doors. The more Influence you had, the better your chances.', min: 14, jail: 1, only: () => S.jail > 0, can: () => (S.stats.renown >= 20 || friends().length > 0 || CLS_ORDER.indexOf(S.cls) >= 3) || 'You have no friends in high places (needs Renown 20, a friend, or merchant birth or better)', run: () => { if (P(.25 + (influence() + 20) / 150)) { S.jail = 0; st('renown', -2); return 'A letter with a heavy seal arrived, and the gaoler unlocked your door with a bow.'; } return 'Your friends in high places were suddenly very busy.'; } },
+  { k: 'disguise', g: 'Daring', i: '✂️', n: 'Cut your hair and pass as a man', d: 'Opens soldiering, the sea, and heavy labor to you. If unmasked, there will be trouble.', min: 14, only: () => hist() && S.sex === 'f' && !S.flags.disguise, can: () => !S.vows || 'Not while under holy vows', run: () => { S.flags.disguise = 1; st('happy', 4); return 'You cut off your hair, bound your chest, and practised a deeper voice. "Call me Jack," you told your reflection in the water butt.'; } },
+  { k: 'undisguise', g: 'Daring', i: '👗', n: 'Give up your disguise', d: 'Live openly as a woman again.', min: 14, only: () => S.flags.disguise, run: () => { S.flags.disguise = 0; if (S.job && MEN_ONLY.has(occOfJob() ? occOfJob().k : '')) quitJob(); return 'You let your hair grow and put away the hose and doublet.'; } },
+);
+DEEDS.sort((a, b) => { const order = ['Daily life', 'Mind and soul', 'Body', 'Leisure', 'Love and family', 'Friends and foes', 'Power', 'Daring', 'Mischief']; return order.indexOf(a.g) - order.indexOf(b.g); });
+
+/* ---------- new occupations for the realism rules ---------- */
+O('low', 'Fields and flocks', 'scarer', 'Crow Scarer', '🐦‍⬛', 1, 'Children’s work: rattle a clapper in the fields all day.', { fam: 'land', min: 7, max: 15, hire: .97 });
+O('low', 'Fields and flocks', 'goose', mf('Gooseherd', 'Goose Girl'), '🪿', 1, 'Children’s work: drive the geese to the common and back.', { fam: 'beasts', min: 7, max: 15, hire: .97 });
+O('low', 'Household and service', 'page', mf('Page', 'Maid of Honour'), '🎀', 2, 'Serve in a great household and learn courtly ways. Highborn children only.', { fam: 'court', min: 7, max: 15, hire: .85, cls: 'noble', gain: { wits: 1 } });
+O('low', 'Household and service', 'chorister', mf('Choirboy', 'Choir Girl'), '🎶', 1, 'Sing the hours in the minster choir.', { fam: 'faith', min: 7, max: 15, hire: .8, req: { looks: 20 }, gain: { piety: 1 } });
+O('low', 'Household and service', 'wetnurse', 'Wet Nurse', '🍼', 6, "Nurse a rich family's baby. A woman's trade.", { fam: 'serve', min: 17, hire: .8, board: .2 });
+O('low', 'Household and service', 'spinner', mf('Spinner', 'Spinster'), '🧶', 3, 'Spin wool into thread by the hearth. Mostly women’s work.', { fam: 'cloth', hire: .97 });
+O('mid', 'Healing', 'midwife', 'Midwife', '🤱', 18, 'Deliver the babies of the parish. A woman’s trade, and a respected one.', { fam: 'heal', min: 18, hire: .7, req: { wits: 35 }, sick: .03 });
+O('mid', 'Cloth, clay and leather', 'silkwoman', 'Silkwoman', '🪡', 24, "Weave silk ribbons and laces. A craft run by women.", { fam: 'cloth', hire: .6, noSerf: 1, skill: { cloth: 2 } });
+O('high', 'Crown and government', 'ladywait', 'Lady-in-Waiting', '👒', 40, 'Attend the queen. Hear every secret at court.', { fam: 'court', min: 14, hire: .55, cls: 'noble', ren: 45, req: { looks: 40 }, up: 'courtier' });
+for (const k of ['scarer', 'goose', 'page', 'chorister', 'wetnurse', 'spinner', 'midwife', 'silkwoman', 'ladywait']) {
+  const o = OCC_BY[k] = OCC.find(x => x.k === k);
+  TRACKS[k] = { n: o.grp, i: o.i, min: o.min || 12, hire: o.hire, fam: o.fam, vary: o.vary, noSerf: o.noSerf, up: o.up, occ: 1, levels: [typeof o.t === 'string' ? { t: o.t, pay: o.pay } : { m: o.t.m, f: o.t.f, pay: o.pay }] };
+}
+// Keep each new post next to its neighbours in the lists.
+{ const gi = new Map(), ti = ['low', 'mid', 'high', 'mil']; OCC.forEach((x, i) => { const key = x.tier + '|' + x.grp; if (!gi.has(key)) gi.set(key, i); }); OCC.sort((a, b) => ti.indexOf(a.tier) - ti.indexOf(b.tier) || gi.get(a.tier + '|' + a.grp) - gi.get(b.tier + '|' + b.grp)); }
+// Influence needed for high posts: power to make things happen.
+Object.assign(OCC_BY.courtier, { infl: 15 }); Object.assign(OCC_BY.adviser, { infl: 35 }); Object.assign(OCC_BY.chancellor, { infl: 50 });
+Object.assign(OCC_BY.diplomat, { infl: 25 }); Object.assign(OCC_BY.official, { infl: 30 }); Object.assign(OCC_BY.treasurer, { infl: 30 });
+Object.assign(OCC_BY.judge, { infl: 20 }); Object.assign(OCC_BY.general, { infl: 35 }); Object.assign(OCC_BY.constable, { infl: 50 });
+Object.assign(OCC_BY.guildmaster, { infl: 25 }); Object.assign(OCC_BY.castellan, { infl: 20 }); Object.assign(OCC_BY.bishop, { infl: 25 });
+Object.assign(OCC_BY.archbishop, { infl: 35 }); Object.assign(OCC_BY.cardinal, { infl: 45 }); Object.assign(OCC_BY.ladywait, { infl: 15 });
+
+/* ================= Life's surprises ================= */
+function unmaskedEvent() {
+  return { id: 'unmasked', icon: '😳', text: () => `Disaster! While bathing in the river, you were seen by ${pick(['your sergeant', 'a gossiping shipmate', 'the quartermaster', 'a priest'])}. Everyone now knows "Jack" is a woman.`,
+    choices: [
+      { t: 'Stand your ground and prove your worth', fx: () => { if (P(.25 + S.stats.renown / 150)) { S.flags.openWoman = 1; st('renown', 15); feat('maid'); return `You fought the next battle in the front rank with your hair unbound. Men now follow you gladly. They call you the Maid of ${S.village}.`; } quitJob(); st('renown', -6); st('happy', -8); return 'They threw you out of the company with jeers. A woman in arms! The scandal will be talked of for years.'; } },
+      { t: 'Bribe the witness to keep quiet (20 silver)', ok: () => S.coin >= 20, fx: () => { coin(-20); if (P(.7)) return 'Twenty silver bought a very short memory.'; quitJob(); st('renown', -4); return 'He took your silver and told everyone anyway.'; } },
+      { t: 'Run before dawn', fx: () => { quitJob(); S.village = pick(VILLAGES.filter(v => v !== S.village)); st('happy', -4); return `You slipped away in the night and started over in ${S.village}, still in hose and doublet.`; } },
+    ] };
+}
+EVENTS.push(
+  { id: 'kingsProgress', min: 8, max: 90, w: 1.6, cool: 8, icon: '👑', cond: () => !S.ruling && S.cls !== 'royal',
+    text: () => `${KT()} ${S.king} is riding through ${S.village} on a royal progress, with a hundred horsemen, trumpets, and a very bored falcon.`,
+    choices: [
+      { t: 'Push through the crowd and petition the monarch', fx: () => { if (P(.15 + influence() / 120 + S.stats.renown / 300)) { const g = R(20, 80); coin(g); st('renown', 8); return `The ${KT().toLowerCase()} reined in, listened, and tossed you a purse of ${g} silver. The whole village saw it.`; } if (P(.3)) { st('health', -R(5, 10)); return 'A guard knocked you flat with the butt of his spear.'; } st('renown', -2); return 'The royal party rode on without a glance.'; } },
+      { t: 'Present a wheel of your best cheese', fx: () => { st('renown', 3); st('happy', 3); return P(.5) ? 'The monarch tasted it and nodded. You will be telling this story until you die.' : 'A steward took the cheese. You suspect he ate it.'; } },
+      { t: 'Throw a clod of mud at the royal hat', fx: () => { if (P(.5)) { st('renown', 6); st('happy', 8); return 'A perfect hit! The crowd roared. Nobody saw who threw it.'; } return 'Seized! ' + caught(3); } },
+    ] },
+  { id: 'mayDay', min: 13, max: 30, w: 2, cool: 3, icon: '🌸', cond: () => !S.vows,
+    text: () => `It is May Day. The village is choosing its May ${ws('King', 'Queen')} to lead the dancing round the maypole.`,
+    choices: [
+      { t: 'Put yourself forward', fx: () => { if (P(.2 + S.stats.looks / 160 + S.stats.renown / 300)) { st('renown', 6); st('happy', 10); st('looks', 2); return `You were crowned May ${ws('King', 'Queen')} with a wreath of hawthorn. Half the village is now a little in love with you.`; } st('happy', -3); return `The ${pick(["miller's", "reeve's", "baker's"])} ${ws('son', 'daughter')} won. Again.`; } },
+      { t: 'Dance until you drop', fx: () => { st('happy', 7); st('health', 1); if (!spouse() && P(.35)) { const p = makePeer({ fr: 1, bond: R(60, 75) }); S.kin.push(p); return `You danced with ${p.name} until the fiddler collapsed. You have a new friend, at least.`; } return 'Ribbons, ale, and a twisted ankle. A perfect day.'; } },
+      { t: 'Sneer at it all from the churchyard wall', fx: () => { st('piety', 2); st('happy', -2); return 'The priest agreed with you. That was not the company you wanted.'; } },
+    ] },
+  { id: 'secretBlood', min: 14, max: 50, once: true, w: .8, icon: '🩸', cond: () => ['serf', 'peasant', 'craft'].includes(S.cls),
+    init: () => ({ l: noblePerson('m') }),
+    text: c => `On her deathbed, old Granny ${pick(NAMES.f)} grips your wrist. "Your true father was no ${S.cls === 'serf' ? 'serf' : 'commoner'}. It was ${c.l}. I swear it on my soul."`,
+    choices: [
+      { t: 'Ride to the castle and claim your blood', fx: c => { if (P(.3 + S.stats.looks / 400)) { S.cls = 'noble'; S.flags.letters = 1; st('renown', 12); coin(R(50, 150)); return `${c.l} looked at your face, went pale, and acknowledged you as his child. You are noble now, if not quite legitimate.`; } return `${c.l} laughed and set the dogs on you. ` + caught(1); } },
+      { t: 'Quietly blackmail him', fx: c => { if (P(.55)) { const g = R(40, 120); coin(g); st('piety', -4); return `${c.l} paid ${g} silver for your silence, and will keep paying, if you are careful.`; } st('health', -R(10, 20)); return 'His men met you on a dark road. The message was clear.'; } },
+      { t: 'Keep the secret', fx: () => { st('wits', 2); st('happy', 2); return 'Blood is blood. You are who you have made yourself.'; } },
+    ] },
+  { id: 'misrule', min: 12, max: 60, w: 1.4, cool: 5, icon: '🃏', cond: () => !S.ruling,
+    text: () => 'At the Feast of Fools you are chosen Lord of Misrule. For one day, you rule the town, and everything is upside down.',
+    choices: [
+      { t: 'Make the priest wear a donkey’s head', fx: () => { st('happy', 8); st('renown', 4); if (P(.3)) { st('piety', -5); return 'Glorious! But the bishop heard of it and you must do penance.'; } return 'The whole town laughed until they cried. Even the priest, eventually.'; } },
+      { t: 'Order the rich to feast the poor', fx: () => { st('renown', 8); st('piety', 3); return 'The merchants grumbled and paid up. For one day, nobody went hungry.'; } },
+      { t: 'Crown yourself King of Everything', fx: () => { st('happy', 5); if (P(.15)) { st('renown', -5); return 'The sheriff did not find it funny. You spent the night in the stocks wearing your paper crown.'; } return 'You wore a crown of turnips and issued forty-two ridiculous decrees.'; } },
+    ] },
+  { id: 'quack', min: 14, max: 90, w: 1.4, cool: 5, icon: '🧴', init: () => ({ p: R(5, 15) }),
+    text: c => `A travelling doctor in a velvet hat sells "Theriac of Saint Luke", good for plague, warts, and broken hearts. Only ${c.p} silver a bottle.`,
+    choices: [
+      { t: c => `Buy a bottle (${c.p} silver)`, ok: c => S.coin >= c.p, fx: c => { coin(-c.p); const r = Math.random(); if (r < .25) { const n = cure(); st('health', 6); return n ? `Astonishing! It cured your ${n}.` : 'You feel marvellous. It was probably the brandy.'; } if (r < .5) { st('health', -6); return 'It was mostly brandy, some mud, and a little mouse.'; } return 'It tasted of feet. Nothing happened.'; } },
+      { t: 'Expose him as a fraud', fx: () => { if (P(.4 + S.stats.wits / 250)) { st('renown', 5); return 'You showed the crowd the dead mouse in the bottle. He was chased out of town.'; } st('renown', -3); return 'The crowd sided with the man in the velvet hat.'; } },
+      { t: 'Ask to be his apprentice', fx: () => { st('wits', 2); if (P(.5)) { coin(R(10, 30)); st('piety', -3); return 'You toured three villages selling mud in bottles, then slipped away with your share.'; } return '"I work alone," he said, and pocketed your purse on the way out.'; } },
+    ] },
+  { id: 'bear', min: 6, max: 70, w: 1.2, cool: 6, icon: '🐻', text: () => 'A travelling showman leads a dancing bear into the square. It looks miserable, and it is looking straight at you.',
+    choices: [
+      { t: 'Bet on the bear in a wrestling match (5 silver)', ok: () => S.coin >= 5, fx: () => { coin(-5); if (P(.5)) { coin(R(8, 15)); return 'The bear won, obviously. So did you.'; } return 'The bear lost interest halfway through and sat down. The bet was void, and so was your silver.'; } },
+      { t: 'Free the bear in the night', fx: () => { if (P(.6)) { st('piety', 5); st('happy', 6); return 'You cut its rope and it lumbered into the forest. It looked back once. You like to think it said thank you.'; } st('health', -R(8, 15)); return 'The bear, startled, swatted you into a water trough before leaving.'; } },
+      { t: 'Wrestle the bear yourself', fx: () => { if (P(.04)) { die('wrestling a bear at the fair, for a bet'); return 'You wrestled the bear. The bear won.'; } if (P(.35 + S.stats.health / 400)) { st('renown', 10); return 'You threw the bear! (It slipped.) Ballads are already being written.'; } st('health', -R(10, 20)); return 'Two broken ribs and the best story in the county.'; } },
+    ] },
+  { id: 'secretAdmirer', min: 15, max: 40, w: 1.6, cool: 6, icon: '💌', cond: () => !spouse() && !S.vows,
+    text: () => 'Someone has been leaving wildflowers and badly spelled love poems on your doorstep.',
+    choices: [
+      { t: 'Hide and catch them in the act', fx: () => { const p = makeSuitor(); p.age = R(Math.max(16, S.age - 4), S.age + 6); if (P(.65)) { Q.unshift(() => showEvent({ id: 'admirerMet', icon: '💘', text: () => `It was ${fullName(p)}, blushing to the ears, known for ${p.trait}. Looks: ${stars(p.looks)}.`, choices: [{ t: 'Ask for their hand', fx: () => propose(p, 0, false) }, { t: 'Be friends instead', fx: () => { p.sp = 0; p.fr = 1; p.bond = R(60, 75); S.kin.push(p); return `You and ${p.name} laughed about it, and became fast friends.`; } }, { t: 'Send them away', fx: () => 'You handed back the last poem. It rhymed "love" with "glove" four times.' }] })); return 'At dawn, a figure crept up to your door with a fistful of daisies...'; } return 'You waited all night in the cold. The poems stopped. Perhaps you were seen.'; } },
+      { t: 'Write a poem back', fx: () => { st('wits', 1); st('happy', 4); return 'You left a poem under a stone. The next morning, it was gone, and there were twice as many flowers.'; } },
+      { t: 'Feed the flowers to the goat', fx: () => 'The goat was delighted. The poems stopped.' },
+    ] },
+  { id: 'rivalAppears', min: 9, max: 70, w: 1.8, cool: 5, icon: '😠', cond: () => rivals().length < 2,
+    init: () => ({ p: makePeer({ rv: 1, bond: R(10, 22) }) }),
+    text: c => `${c.p.name} ${c.p.sur}${S.job && S.job.track !== 'crown' ? `, who wanted your post as ${jobTitle()},` : ''} has decided you are their mortal enemy, and has been ${pick(['mocking you at the well', 'kicking your dog', 'telling everyone you smell of turnips', 'stealing your customers'])}.`,
+    choices: [
+      { t: 'Win them over with kindness', fx: c => { if (P(.35 + S.stats.looks / 300)) { c.p.rv = 0; c.p.fr = 1; c.p.bond = R(55, 65); S.kin.push(c.p); st('piety', 2); return `You brought ${c.p.name} a honey cake and a sincere apology for nothing. Somehow, you are friends now.`; } S.kin.push(c.p); return `${c.p.name} threw the honey cake at your head. A rival it is.`; } },
+      { t: 'Give as good as you get', fx: c => { S.kin.push(c.p); st('happy', 3); return `War it is. You and ${c.p.name} are now sworn rivals. Find them under Kin.`; } },
+      { t: 'Challenge them to settle it now', fx: c => { if (P(.4 + S.stats.health / 300)) { st('renown', 5); return `You knocked ${c.p.name} into the duck pond in front of everyone. They will not trouble you again.`; } S.kin.push(c.p); st('health', -R(4, 10)); st('renown', -3); return `${c.p.name} knocked YOU into the duck pond. This is not over.`; } },
+    ] },
+  { id: 'friendInNeed', min: 12, max: 80, w: 2, cool: 4, icon: '🆘', cond: () => friends().length > 0,
+    init: () => ({ k: pick(friends()), n: R(15, 50) }),
+    text: c => `Your friend ${c.k.name} is in desperate trouble: ${pick(['deep in debt to a moneylender', 'accused of stealing a pig', 'about to be thrown out of their home', 'in the stocks for a crime they swear they did not do'])}. They need ${c.n} silver.`,
+    choices: [
+      { t: c => `Pay the ${c.n} silver`, ok: c => S.coin >= c.n, fx: c => { coin(-c.n); bond(c.k, 25); st('piety', 3); return `${c.k.name} wept and swore to repay you a hundredfold. True friends are rarer than silver.`; } },
+      { t: 'Speak up for them', fx: c => { if (P(.3 + influence() / 100)) { bond(c.k, 18); st('renown', 3); return `Your word was enough. ${c.k.name} walked free.`; } bond(c.k, 6); return 'Your words did not help, but they will remember you tried.'; } },
+      { t: 'Keep your distance', fx: c => { bond(c.k, -30); return `${c.k.name} looked at you with something worse than anger.`; } },
+    ] },
+  { id: 'widowChoice', min: 18, max: 55, once: true, w: 4, icon: '🖤', cond: () => S.sex === 'f' && !spouse() && S.kin.some(k => k.sp && !k.alive) && !S.vows && !S.ruling,
+    init: () => ({ h: S.kin.find(k => k.sp && !k.alive) }),
+    text: c => `${c.h.name} is in the churchyard, and your family is already whispering about a new husband. But a widow, alone among women, may own property and run a business in her own name.`,
+    choices: [
+      { t: 'Run your late husband’s affairs yourself', fx: () => { S.flags.femeSole = 1; st('renown', 6); st('happy', 4); coin(R(20, 60)); return 'You took up his ledgers and his customers. Men found you surprisingly hard to cheat.'; } },
+      { t: 'Seek a new match', fx: () => { Q.unshift(() => showEvent(suitorEvent())); return 'You sent word to the matchmaker.'; } },
+      { t: 'Retire to a convent', fx: () => { quitJob(); setJob('church', 1); st('piety', 10); return 'You gave your goods to the Church and took the veil.'; } },
+    ] },
+  { id: 'shipwreck', min: 10, max: 80, w: 1.4, cool: 6, icon: '🚢', cond: () => S.world && TT(S.home).ter === 'coast',
+    text: () => 'A ship has run aground in the storm. Barrels and bales are washing ashore, and half the village is already on the beach with handcarts.',
+    choices: [
+      { t: 'Grab what you can', fx: () => { const g = R(10, 45); coin(g); st('piety', -3); if (P(.2)) return 'The lord’s bailiff claimed the right of wreck. ' + caught(1); return `You hauled off a barrel of wine and a bale of wool, worth ${g} silver.`; } },
+      { t: 'Wade in and rescue the sailors', fx: () => { if (P(.05)) { die('in the surf, rescuing drowning sailors'); return 'You saved three men. The sea took you in exchange.'; } st('renown', 8); st('piety', 4); if (P(.5)) { const p = makePeer({ fr: 1, bond: R(70, 85) }); p.job = 'Sailor'; S.kin.push(p); return `You dragged sailors from the surf. One, ${p.name}, swears to be your friend until death.`; } return 'You dragged sailors from the surf. The captain kissed both your cheeks.'; } },
+      { t: 'Light a lantern to warn other ships', fx: () => { st('piety', 3); st('renown', 2); return 'Two more ships turned away from the rocks because of your lantern.'; } },
+    ] },
+  { id: 'wrestling', min: 15, max: 45, w: 1.4, cool: 4, icon: '🤼', text: () => 'The great fair holds a wrestling match. The prize is a fat ram and ten silver.',
+    choices: [
+      { t: 'Enter the ring', fx: () => { if (P(.25 + S.stats.health / 250)) { coin(10); st('renown', 6); st('happy', 6); return 'You threw the champion of three counties! The ram is yours. You are not sure what to do with it.'; } st('health', -R(4, 10)); return 'You were folded in half by a blacksmith named Big Wat.'; } },
+      { t: 'Bet on Big Wat (5 silver)', ok: () => S.coin >= 5, fx: () => { coin(-5); if (P(.6)) { coin(R(8, 12)); return 'Big Wat folded everyone in half. Easy money.'; } return 'Big Wat slipped on a cowpat.'; } },
+      { t: 'Just watch and eat pies', fx: () => { st('happy', 4); return 'Three pies, two bouts, one magnificent day.'; } },
+    ] },
+  { id: 'calf', min: 14, max: 90, once: true, w: 1, icon: '🐄', cond: () => S.assets.some(a => ['cow', 'goat', 'pig'].includes(a.key)),
+    text: () => 'One of your beasts has given birth to a two-headed calf. The village is divided: is it a miracle or a curse?',
+    choices: [
+      { t: 'Exhibit it at the fair', fx: () => { const g = R(20, 70); coin(g); st('renown', 4); return `Folk paid a penny each to see it. You made ${g} silver.`; } },
+      { t: 'Give it to the Church as a wonder', fx: () => { st('piety', 8); st('renown', 3); return 'The priest declared it a sign of God’s favour on the parish. And on you.'; } },
+      { t: 'Hide it before anyone calls it witchcraft', fx: () => { st('wits', 2); return 'Wise. Last year a woman in Hogsbottom was ducked for less.'; } },
+    ] },
+  { id: 'midwifeNight', min: 18, max: 80, w: 4, cool: 2, icon: '🤱', cond: () => jobIn('midwife'),
+    text: () => `You are called out at midnight: the ${pick(["reeve's", "miller's", "lord's", 'blacksmith’s'])} wife is in a hard labour, and the baby is turned wrong.`,
+    choices: [
+      { t: 'Turn the baby by hand', fx: () => { if (P(.45 + S.stats.wits / 250)) { coin(R(8, 20)); st('renown', 6); jobPerf(14); return 'A long night, but mother and child both lived. The father gave you a whole ham.'; } jobPerf(-8); st('happy', -8); return 'You did all you could. It was not enough.'; } },
+      { t: 'Send for the priest and pray', fx: () => { st('piety', 4); if (P(.4)) { jobPerf(6); return 'The baby came on its own at dawn. A miracle, the priest says.'; } jobPerf(-6); return 'The priest arrived just in time for the last rites.'; } },
+      { t: 'Use the eagle-stone charm', fx: () => { if (P(.5)) { jobPerf(8); return 'The charm was tied to her thigh, and the baby came. Who can say why?'; } jobPerf(-4); return 'The charm did nothing, but the mother lived.'; } },
+    ] },
+);
+
 /* ================= Interface ================= */
 const Q = [];
 let workTab = 'low', workFilter = 'all', jobId = null;
@@ -2939,7 +3235,7 @@ function payStr(t, L) { return L.pay ? `${t.vary ? 'about ' : ''}${L.pay} silver
 function workHTML() {
   if (!S.alive) return '<div class="empty">The dead keep no trade.</div>';
   if (S.jail) return `<div class="empty">You cannot work from a dungeon cell. ${S.jail} year${S.jail > 1 ? 's' : ''} remain.</div>`;
-  let h = (S.age < 12 && !S.job) ? '<div class="empty">You are too young to work.<small>At twelve you can seek a position. Until then, your trade is mischief. You can still look ahead below.</small></div>' : '';
+  let h = (S.age < 7 && !S.job) ? '<div class="empty">You are too young to work.<small>From seven you can do small jobs, and from twelve most trades open up. You can still look ahead below.</small></div>' : '';
   if (S.job) {
     const t = TRACKS[S.job.track], L = t.levels[S.job.level];
     h += `<div class="jobcard"><span class="jc-i" aria-hidden="true">${t.i}</span><div><b>${esc(jobTitle())}</b><small>${t.n}, ${S.job.years} year${S.job.years === 1 ? '' : 's'}, ${payStr(t, L)}</small>`;
@@ -3092,7 +3388,7 @@ function kinItem(k) {
   return `<button class="item${k.alive ? '' : ' dead'}" data-act="${k.alive ? 'person' : 'noop'}" data-arg="${k.id}"><span class="ic" aria-hidden="true">${k.alive ? faceFor(k.sex, k.age) : '🪦'}</span><span class="tx"><b>${esc(fullName(k))}</b><small>${esc(sub)}</small>${k.alive ? `<span class="bar" role="img" aria-label="Relationship ${k.bond}%"><i class="${barCls(k.bond)}" style="width:${k.bond}%"></i></span>` : ''}</span>${k.alive ? '<span class="rt chev" aria-hidden="true">›</span>' : ''}</button>`;
 }
 function kinHTML() {
-  const groups = [['Parents', k => k.par], ['Spouse', k => k.sp], ['Children', k => k.ch], ['Siblings', k => k.sib]];
+  const groups = [['Parents', k => k.par], ['Spouse', k => k.sp], ['Children', k => k.ch], ['Siblings', k => k.sib], ['Friends', k => k.fr], ['Rivals', k => k.rv]];
   let h = '';
   for (const [g, f] of groups) {
     const ks = S.kin.filter(f).sort((a, b) => (b.alive - a.alive) || (b.age - a.age));
@@ -3111,7 +3407,15 @@ function personHTML(k) {
   if (k.par && S.age >= 6) h += btnItem('kin', `${k.id}:ask`, '🪙', 'Ask for silver', 'They might say yes.', ok);
   if (k.ch && k.age >= 4) h += btnItem('kin', `${k.id}:teach`, '📖', 'Teach them something', 'Pass on what you know.', ok);
   if (k.sp) { const d = DEEDS.find(x => x.k === 'child'); h += btnItem('deed', 'child', '👶', 'Try for a child', 'Uses one of your deeds.', S.deeds <= 0 ? 'No deeds left this year' : deedWhy(d)); }
-  h += btnItem('kin', `${k.id}:quarrel`, '💢', 'Pick a quarrel', 'Vent your spleen.', ok);
+  if (k.fr) {
+    h += btnItem('kin', `${k.id}:ask`, '🪙', 'Ask to borrow silver', 'Good friends say yes.', ok);
+    if (k.sex !== S.sex && k.age >= 16 && S.age >= 16 && !spouse() && !S.vows) h += btnItem('kin', `${k.id}:woo`, '💘', 'Ask for their hand', 'Turn friendship into marriage. Better odds if they like you.', ok);
+  }
+  if (k.rv) {
+    h += btnItem('kin', `${k.id}:peace`, '🕊️', 'Try to make peace', 'Maybe this enemy could be a friend.', ok);
+    h += btnItem('kin', `${k.id}:rumour`, '🗣️', 'Spread rumours about them', 'Ruin their name. It might come back on you.', ok);
+  }
+  if (!k.rv) h += btnItem('kin', `${k.id}:quarrel`, '💢', 'Pick a quarrel', 'Vent your spleen.', ok);
   return h;
 }
 function canBuy(k) {
@@ -3174,6 +3478,8 @@ const ACT = {
   feats: () => { closeSheet(); showFeats('app'); },
   wtab: t => { workTab = t; renderSheet(); },
   panel: k => { if (k === 'realm') realmTab = 'map'; openSheet(k); },
+  ambition: () => { if (!S.alive || S.age < 16) return; closeSheet(); if (S.amb && S.amb.k) st('happy', -5); Q.push(() => showEvent(ambitionEvent())); if (!modalOpen) nextModal(); },
+  realism: () => { S.realism = hist() ? 'relaxed' : 'hist'; toast(hist() ? 'Historical rules on' : 'Relaxed rules: anyone may do anything'); renderSheet(); render(); save(); },
   tips: () => { store.set(TIPKEY, tipsOn() ? 'off' : 'on'); renderSheet(); render(); },
   wfilter: f => { workFilter = f; renderSheet(); },
   job: k => { jobId = k; openSheet('job'); $('sheetBody').scrollTop = 0; },
@@ -3299,6 +3605,9 @@ function kinAct(arg) {
   if (a === 'gift') { coin(-2); bond(k, R(6, 12)); t = `You gave ${k.name} ${pick(['a carved comb', 'a silk ribbon', 'a honey cake', 'a little wooden saint', 'a pair of gloves'])}. ${pr(k).He} was delighted.`; }
   if (a === 'ask') { const c = CLASSES[S.birthCls]; if (P(k.bond / 130)) { const amt = Math.max(1, Math.round(R(1, 6) * c.keep / 2)); coin(amt); t = `${k.name} grumbled, but gave you ${amt} silver.`; } else { bond(k, -4); t = `${k.name} laughed. "Silver? Go and earn it."`; } }
   if (a === 'teach') { bond(k, R(5, 9)); st('wits', 1); t = `You taught ${k.name} ${pick(['a few letters', 'how to tickle trout', 'the names of the stars', 'how to haggle at market', 'to ride a pony', 'a very rude song'])}.`; }
+  if (a === 'peace') { if (P(.3 + k.bond / 150 + S.stats.looks / 500)) { bond(k, R(15, 25)); if (k.bond >= 50) { k.rv = 0; k.fr = 1; t = `You and ${k.name} shook hands over a jug of ale. Old enemies make the best friends.`; } else t = `${k.name} grunted. It was almost friendly.`; } else { bond(k, -5); t = `${k.name} spat at your feet.`; } }
+  if (a === 'rumour') { if (P(.55 + S.stats.wits / 400)) { bond(k, -8); st('happy', 3); if (P(.35)) { k.rv = 0; k.gone = 1; S.kin = S.kin.filter(x => x !== k); t = `Your whispers did their work. Shamed, ${k.name} packed up and left the county.`; } else t = `Half the village now believes ${k.name} once kissed a goat.`; } else { st('renown', -4); bond(k, -6); t = `The rumour was traced back to you. Now YOU are the one being whispered about.`; } }
+  if (a === 'woo') { S.kin = S.kin.filter(x => x !== k); k.fr = 0; k.looks = k.looks || R(20, 80); if (P(.25 + k.bond / 200)) { marry(k); t = `${k.name} said yes before you finished asking. You were wed within the month.`; } else { k.fr = 1; S.kin.push(k); bond(k, -4); st('happy', -5); t = `${k.name} laughed kindly. "We are friends, you fool." It stung.`; } }
   if (a === 'quarrel') { bond(k, -R(8, 15)); st('happy', P(.5) ? 3 : -3); t = `You and ${k.name} had a blazing row about ${pick(['the inheritance', 'a missing goose', 'nothing at all', 'who left the gate open', 'your choice of friends'])}.`; }
   const fx = FX; FX = null;
   say(t); closeSheet(); showResult(faceFor(k.sex, k.age), t, fx, fullName(k)); render(); save();
@@ -3350,6 +3659,7 @@ function coachText() {
   if (S.illness && d > 0) return `🤒 You are ill and losing health each year. Open 🎲 Deeds → Body to see a healer.`;
   if (S.coin < 0) return `⚠️ You are in debt. Earn silver (⚒️ Work) or sell things (🗺️ Realm → Holdings) before the moneylender comes.`;
   if (S.age < 12) return d > 0 ? `🧒 You have ${d} deed${d > 1 ? 's' : ''} left this year. Play, study or pray in 🎲 Deeds, then press the red seal.` : '✅ Deeds done. Press the red seal to live the next year.';
+  if (S.age >= 16 && !S.amb) return '✨ You have no ambition yet. Open the menu (☰) and choose a goal for your life.';
   if (!S.job && !S.ruling && S.appliedYear !== S.year) return '⚒️ You have no job. Open Work: posts marked green are open to you right now.';
   if (d > 0) {
     const special = S.job && TRADE.some(x => (x.tr === S.job.track || (x.fams && x.fams.includes(jobFam()))) && tradeWhy(x) === true);
@@ -3376,6 +3686,10 @@ function menuHTML() {
   const o = occOfJob();
   let h = '<h3 class="sec">Right now</h3>';
   h += `<div class="sumbox"><b style="font-size:17px;color:var(--ink)">${esc(displayName())}</b>, age ${S.age}<br>${esc(roleLabel())}${S.job ? ` (${esc(TRACKS[S.job.track].n)})` : ''}. ${S.coin} silver. ${S.alive ? `${S.deeds} of ${DEEDS_PER_YEAR} deeds left this year.` : 'Deceased.'}<br><span class="warn" style="color:var(--ink-2)">${esc(coachText() || 'Your story is over. Begin a new life below, or continue as an heir.')}</span></div>`;
+  const am = ambDef();
+  h += '<h3 class="sec">Your ambition</h3>';
+  if (am) h += btnItem(S.alive && !S.amb.done ? 'ambition' : 'noop', '', S.amb.done ? '✅' : am.i, `${am.n}${S.amb.done ? ': fulfilled!' : ''}`, `${am.d} ${S.amb.done ? '' : `Progress: ${am.prog()}.`}${S.alive && !S.amb.done ? ' Tap to change (costs some Joy).' : ''}`, true, S.amb.done ? '✓' : '');
+  else h += btnItem('ambition', '', '✨', 'Choose an ambition', S.age >= 16 ? 'Pick a goal for your life. Fulfil it for Joy, Renown, a seal of fame, and a better legacy.' : 'From age 16, you can set a goal for your life.', S.alive && S.age >= 16 ? true : 'From age 16');
   h += '<h3 class="sec">What each button does</h3>';
   h += btnItem('panel', 'work', '⚒️', 'Work', 'Find a job, do special work for your trade, and climb to better posts. One application a year.', true, '›');
   h += btnItem('panel', 'deeds', '🎲', 'Deeds', `Your ${DEEDS_PER_YEAR} actions each year: study, pray, court, carouse, train, scheme. The dots under the button show what is left.`, true, '›');
@@ -3388,8 +3702,12 @@ function menuHTML() {
   h += btnItem('grave', '', '🪦', 'The graveyard', 'Every life you have lived.', true);
   h += btnItem('feats', '', '🏅', 'Seals of fame', `Achievements across all your lives. ${FEATS.filter(f => getFeats()[f.k]).length} of ${FEATS.length} earned.`, true);
   h += '<h3 class="sec">Settings</h3>';
+  h += btnItem('realism', '', hist() ? '☑️' : '⬜', 'Historical rules for women and men', hist() ? 'On: posts and powers follow the customs of the age. Women have their own roads, and may pass as men.' : 'Off: anyone may hold any post.', true);
   h += btnItem('tips', '', tipsOn() ? '☑️' : '⬜', 'Show the hint line', 'A short line above the buttons telling you what to do next.', true);
   [['auto', '🌗', 'Match my device'], ['light', '📜', 'Vellum (light)'], ['dark', '🕯️', 'Candlelight (dark)']].forEach(([v, i, n]) => { h += btnItem('theme', v, i, n, '', true, curTheme() === v ? '✓' : ''); });
+  h += '<h3 class="sec">About</h3>';
+  h += btnItem('noop', '', '📜', 'Mud & Crowns', 'An original medieval life game. © 2026 the Mud & Crowns authors. Fonts: EB Garamond and UnifrakturMaguntia (SIL Open Font License).', true);
+  h += btnItem('noop', '', '🔒', 'Privacy', 'Your lives are saved only on this device. The game collects no personal data and shows no ads.', true);
   h += `<h3 class="sec">How a year works</h3><div class="howto"><p><b>1.</b> Spend your deeds (🎲 Deeds, or special work in ⚒️ Work).</p><p><b>2.</b> Press the red seal. A year passes and something usually happens: answer the card that pops up.</p><p><b>3.</b> Watch your six qualities at the bottom. Health keeps you alive, Wits and Renown open better jobs, Piety helps in the Church, Looks helps in love.</p><p>From 12 you can work. At 16 you come of age, get your family’s portion of silver, and may marry, buy land, and raise an army. When you die, carry on as one of your children.</p></div>`;
   return h;
 }
@@ -3469,6 +3787,7 @@ function render() {
   else if (S.flags.rebel && !S.ruling) bh = `<span>⚔️ Branded a rebel by King ${esc(S.king)}.</span>`;
   else if ((S.heat || 0) >= 60) bh = `<span>🔥 The sheriff is hunting you. Heat ${S.heat}.</span>`;
   b.innerHTML = bh; b.hidden = !bh; b.classList.toggle('dead', !S.alive);
+  refreshPower();
   for (const s of STATS) {
     const el = $('st-' + s.k); if (!el) continue;
     const v = S.stats[s.k], i = el.querySelector('i');
@@ -3506,6 +3825,7 @@ function showCustom() {
   <label>Family name<input class="inp" id="cl" maxlength="22" autocomplete="off" placeholder="Leave blank for a random name"></label>
   <fieldset class="seg"><legend>Born a</legend><button type="button" data-s="sex" data-v="" aria-pressed="true">Either</button><button type="button" data-s="sex" data-v="m" aria-pressed="false">Boy</button><button type="button" data-s="sex" data-v="f" aria-pressed="false">Girl</button></fieldset>
   <label>Station<select class="inp" id="cc"><option value="">By the odds of birth</option>${CLS_ORDER.map(k => `<option value="${k}">${CLASSES[k].n}</option>`).join('')}</select></label>
+  <label>The rules of the age<select class="inp" id="cx"><option value="hist">Historical: women and men face the limits of their time</option><option value="relaxed">Relaxed: anyone may do anything</option></select></label>
   <label>Kingdom<select class="inp" id="cr"><option value="">Any</option>${REALMS.map(r => `<option>${r}</option>`).join('')}</select></label>
   <div class="stack"><button class="btn" data-s="born">Be born</button><button class="btn ghost" data-s="back">Back</button></div></div>`);
 }
@@ -3536,7 +3856,7 @@ function screenAct(s, el) {
       const sb = document.querySelector('.seg button[aria-pressed="true"]');
       const first = $('cf').value.trim().replace(/\s+/g, ' ').slice(0, 18);
       const last = $('cl').value.trim().replace(/\s+/g, ' ').slice(0, 22);
-      begin(newLife({ first: first || undefined, last: last || undefined, sex: (sb && sb.dataset.v) || undefined, cls: $('cc').value || undefined, realm: $('cr').value || undefined }));
+      begin(newLife({ first: first || undefined, last: last || undefined, sex: (sb && sb.dataset.v) || undefined, cls: $('cc').value || undefined, realm: $('cr').value || undefined, realism: $('cx').value }));
       break;
     }
     case 'back': showStart(); break;
@@ -3558,6 +3878,7 @@ function bind() {
     if (!S.alive && b.dataset.panel !== 'kin' && b.dataset.panel !== 'realm') { showDeath(); return; }
     openSheet(b.dataset.panel);
   }));
+  $('stats').addEventListener('click', e => { if (e.target.closest('#st-power')) showInfluence(); });
   $('menuBtn').addEventListener('click', () => { if (S && !modalOpen) openSheet('menu'); });
   $('sheetClose').addEventListener('click', closeSheet);
   $('scrim').addEventListener('click', e => { if (e.target === $('scrim')) closeSheet(); });
@@ -3577,6 +3898,8 @@ function boot() {
 }
 
 boot();
+// Offline play when installed from the web. Skipped inside the native app and when opened as a local file.
+try { if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !window.Capacitor) navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) { }
 </script>
 </body>
 </html>
