@@ -78,8 +78,10 @@ button{font:inherit;color:inherit}
   box-shadow:0 0 0 1px var(--rule-2),0 0 60px rgba(0,0,0,.22);
 }
 .top{display:flex;align-items:center;gap:12px;padding:12px 12px 10px 14px;background:var(--vellum-2);border-bottom:3px double var(--rule-2)}
-.avatar{position:relative;flex:none;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:30px;background:var(--vellum);border:2px solid var(--gold);box-shadow:inset 0 0 0 3px var(--vellum-2),0 0 0 1px var(--rule-2)}
-.avatar .badge{position:absolute;right:-6px;bottom:-4px;font-size:17px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}
+.arms{position:relative;flex:none;width:56px;height:64px;display:grid;place-items:center;font-size:28px;border-radius:7px 7px 50% 50% / 7px 7px 62% 62%;background:var(--arm,#9b1f12);box-shadow:inset 0 0 0 3px var(--gold),inset 0 0 0 5px rgba(0,0,0,.25),0 3px 8px rgba(60,34,8,.3)}
+.arms .face{display:grid;place-items:center;width:38px;height:38px;margin-top:-6px;border-radius:50%;background:var(--vellum);box-shadow:0 0 0 2px var(--gold)}
+.arms .badge{position:absolute;right:-7px;bottom:-2px;font-size:17px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+.stone .arms{margin:0 auto 6px}
 .who{flex:1;min-width:0}
 .who h1{margin:0;font:600 20px/1.15 var(--serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .who .meta{margin-top:2px;font-size:14px;line-height:1.3;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -95,7 +97,8 @@ button{font:inherit;color:inherit}
 .mini{flex:none;border:1px solid var(--rubric);background:none;color:var(--rubric);border-radius:999px;padding:3px 12px;font-size:14px;cursor:pointer}
 
 /* ---------- chronicle with marginal years ---------- */
-.chron{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:6px 18px 28px 0}
+.chron{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:6px 18px 116px 0}
+@property --p{syntax:'<number>';inherits:true;initial-value:0}
 .yr{display:grid;grid-template-columns:60px 1fr;column-gap:12px;padding-top:10px}
 .yr-m{text-align:right;padding-top:1px;border-right:1px solid var(--rule);padding-right:10px}
 .yr-a{display:block;font:30px/1 var(--black);color:var(--rubric)}
@@ -112,39 +115,60 @@ button{font:inherit;color:inherit}
 .ln.ev{color:var(--ink)}
 .ln.deed{color:var(--lapis)}
 
-/* ---------- stats ---------- */
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:7px 18px;padding:10px 16px 30px;background:var(--vellum-2);border-top:3px double var(--rule-2)}
-.stat{display:grid;grid-template-columns:22px 1fr 28px;align-items:end;gap:7px;border-radius:6px}
-.si{font-size:16px;line-height:1;padding-bottom:1px}
-.sb{display:flex;flex-direction:column;gap:3px;min-width:0}
-.sl{font-size:13.5px;line-height:1;color:var(--ink-2);font-style:italic}
-.sv{font:600 15px/1 var(--serif);text-align:right;font-variant-numeric:lining-nums tabular-nums}
-.bar{display:block;height:8px;border-radius:5px;background:var(--vellum-3);box-shadow:inset 0 0 0 1px var(--rule-2);overflow:hidden}
-.bar i{display:block;height:100%;border-radius:5px;transition:width .5s ease,background-color .5s}
-.bar i.hi{background:var(--good)} .bar i.md{background:var(--mid)} .bar i.lo{background:var(--low)}
+/* ---------- roundels: your qualities ---------- */
+.stats{display:flex;justify-content:space-between;gap:2px;padding:8px 10px 6px;background:var(--vellum-2);border-bottom:1px solid var(--rule)}
+.stat{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;padding:2px 0;border:0;background:none;cursor:pointer;border-radius:10px;color:inherit;font:inherit}
+.stat:hover{background:var(--vellum-3)}
+.ring{--c:var(--good);position:relative;width:42px;height:42px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p,0)*1%),var(--vellum-3) 0);transition:--p .5s;box-shadow:0 0 0 1px var(--rule-2)}
+.ring::after{content:'';position:absolute;inset:5px;border-radius:50%;background:var(--vellum);box-shadow:inset 0 0 0 1px var(--rule)}
+.ring .si{position:absolute;inset:0;z-index:1;display:grid;place-items:center;font-size:17px;line-height:1}
+.stat[data-lv="md"] .ring{--c:var(--mid)} .stat[data-lv="lo"] .ring{--c:var(--low)}
+.stat#st-power .ring{--c:var(--gold)}
+.sv{font:600 14px/1 var(--serif);font-variant-numeric:lining-nums tabular-nums}
+.sl{font-size:11.5px;line-height:1;color:var(--ink-3);font-style:italic;white-space:nowrap}
 .stat.up .sv{animation:pulseUp 1s ease} .stat.dn .sv{animation:pulseDn 1s ease}
-@keyframes pulseUp{0%{color:var(--good);transform:scale(1.35)}100%{color:inherit;transform:none}}
-@keyframes pulseDn{0%{color:var(--low);transform:scale(1.35)}100%{color:inherit;transform:none}}
+@keyframes pulseUp{0%{color:var(--good);transform:scale(1.4)}100%{color:inherit;transform:none}}
+@keyframes pulseDn{0%{color:var(--low);transform:scale(1.4)}100%{color:inherit;transform:none}}
 
-/* ---------- dock and the seal ---------- */
-.dock{display:grid;grid-template-columns:1fr 1fr auto 1fr 1fr;align-items:end;padding:4px 6px 8px;background:var(--vellum-3);border-top:1px solid var(--rule-2)}
-.dock>button:not(.seal){position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;padding:8px 2px 4px;border:0;background:none;cursor:pointer;font-size:14px;color:var(--ink-2);border-radius:10px}
-.dock>button:not(.seal):hover{color:var(--ink);background:var(--vellum-2)}
-.dock .ico{font-size:22px;line-height:1.1}
-.pips{position:absolute;left:0;right:0;bottom:-4px;text-align:center;font-size:9px;letter-spacing:2px;color:var(--lapis);line-height:9px}
-.seal{
-  position:relative;width:84px;height:84px;margin:-38px 6px 0;border:0;border-radius:50%;cursor:pointer;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fbe6cc;
-  background:radial-gradient(circle at 36% 30%,var(--seal-hi) 0 10%,var(--seal) 50%,var(--seal-lo) 100%);
-  box-shadow:0 5px 0 var(--seal-lo),0 12px 22px rgba(0,0,0,.35),inset 0 2px 3px rgba(255,255,255,.25),inset 0 -9px 14px rgba(0,0,0,.32);
-  transition:transform .08s ease,box-shadow .08s ease;
-}
-.seal::before{content:'';position:absolute;inset:8px;border-radius:50%;border:2px dashed rgba(255,226,190,.38)}
-.seal .big{font:34px/.9 var(--black);text-shadow:0 1px 0 rgba(0,0,0,.35)}
-.seal .small{font-size:12px;font-style:italic;letter-spacing:.02em;line-height:1.1;opacity:.92}
-.seal:active{transform:translateY(4px);box-shadow:0 1px 0 var(--seal-lo),0 5px 10px rgba(0,0,0,.3),inset 0 -6px 12px rgba(0,0,0,.3)}
-.seal:disabled{filter:grayscale(.85);opacity:.55;cursor:not-allowed}
-.seal:focus-visible{outline-offset:4px}
+/* ---------- ages of life ---------- */
+.lifebar{display:flex;align-items:center;gap:8px;padding:0 12px 7px;background:var(--vellum-2);border-bottom:3px double var(--rule-2)}
+.lifebar .lb{flex:none;min-width:82px;font:600 13px/1 var(--serif);color:var(--rubric);font-variant-numeric:lining-nums}
+.lifebar .track{flex:1;display:flex;gap:2px;height:8px}
+.lifebar .track span{flex:var(--w);background:var(--vellum-3);border-radius:3px;box-shadow:inset 0 0 0 1px var(--rule)}
+.lifebar .track span.past{background:var(--rule-2)}
+.lifebar .track span.now{background:linear-gradient(90deg,var(--rule-2) var(--f),var(--vellum-3) var(--f));box-shadow:inset 0 0 0 1.5px var(--rubric)}
+
+/* ---------- the open book ---------- */
+.page{position:relative;flex:1;min-height:0;display:flex;flex-direction:column}
+.chron{flex:1}
+.chron.flip{animation:flip .55s ease}
+@keyframes flip{0%{opacity:.25;transform:perspective(900px) rotateY(-14deg);transform-origin:left center}100%{opacity:1;transform:none}}
+.ln.chapter{margin:6px 0 10px;text-align:center;font:24px/1.1 var(--black);color:var(--rubric)}
+.ln.chapter::before,.ln.chapter::after{content:'❧';display:inline-block;margin:0 10px;font:16px var(--serif);color:var(--gold);vertical-align:3px}
+.ln.chapter::before{transform:scaleX(-1)}
+.turn{position:absolute;right:12px;bottom:12px;z-index:5;width:max-content;min-width:150px;padding:9px 16px 9px 22px;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:flex-end;text-align:right;color:#fff3e2;
+  background:linear-gradient(160deg,#b7301f,#8a1a0e);clip-path:polygon(16px 0,100% 0,100% 100%,0 100%,0 16px);box-shadow:0 6px 14px rgba(60,20,8,.35);transition:transform .12s ease}
+.turn::before{content:'';position:absolute;left:0;top:0;width:16px;height:16px;background:linear-gradient(135deg,transparent 50%,#f2d9b5 50%);box-shadow:1px 1px 2px rgba(0,0,0,.3)}
+.turn b{font:21px/1.05 var(--black);letter-spacing:.01em;white-space:nowrap}
+@media (max-width:380px){.turn b{font-size:18px}.turn{min-width:0;padding:8px 12px 8px 20px}}
+.turn b::after{content:' ❯';font:600 17px var(--serif)}
+.turn small{font-size:13px;font-style:italic;line-height:1.2;opacity:.92;white-space:nowrap}
+.turn:hover{transform:translateY(-2px)}
+.turn:active{transform:translateY(1px)}
+.turn:disabled{filter:grayscale(.9);opacity:.5;cursor:not-allowed}
+
+/* ---------- bookmark ribbons ---------- */
+.ribbons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:0 10px calc(env(safe-area-inset-bottom,0px) + 8px);background:var(--vellum-3);border-top:1px solid var(--rule-2)}
+.ribbons button{--rb:var(--rubric);position:relative;display:flex;flex-direction:column;align-items:center;gap:0;padding:6px 2px 14px;border:0;cursor:pointer;color:#fff7ea;font-size:14px;font-weight:600;letter-spacing:.02em;background:var(--rb);
+  clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%);box-shadow:inset 0 2px 0 rgba(255,255,255,.15);text-shadow:0 1px 0 rgba(0,0,0,.3);transition:padding .12s ease}
+.ribbons button:hover{padding-top:9px}
+.ribbons button{--rb:#9b1f12}
+.ribbons button[data-panel="deeds"]{--rb:#23427a} .ribbons button[data-panel="kin"]{--rb:#2f6a4c} .ribbons button[data-panel="realm"]{--rb:#85600f}
+.ribbons .ico{font-size:20px;line-height:1.2}
+.pips{display:flex;gap:3px;height:12px;margin-top:1px}
+.cd{width:5px;height:11px;border-radius:1px;background:#f1e4c6;position:relative}
+.cd.on::before{content:'';position:absolute;left:-1px;top:-6px;width:7px;height:7px;border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;background:radial-gradient(circle at 50% 70%,#fff3b0,#f0a020 60%,transparent 70%)}
+.cd:not(.on){opacity:.45}
 
 /* ---------- sheets ---------- */
 .scrim{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;background:var(--overlay);opacity:0;pointer-events:none;transition:opacity .2s ease}
@@ -292,8 +316,8 @@ button{font:inherit;color:inherit}
   body{font-size:17px}
   .yr{grid-template-columns:48px 1fr;column-gap:10px}
   .yr-a{font-size:26px}
-  .stats{gap:6px 12px;padding:9px 12px 26px}
-  .seal{width:76px;height:76px;margin-top:-32px}
+  .ring{width:38px;height:38px}
+  .sl{font-size:10.5px}
 }
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{transition:none!important;animation:none!important}
@@ -352,19 +376,22 @@ button{font:inherit;color:inherit}
 <body>
 <div id="app">
   <header class="top">
-    <div class="avatar" id="avatar" aria-hidden="true">👶</div>
+    <div class="arms" id="arms" aria-hidden="true"><span class="face" id="avatar">👶</span></div>
     <div class="who"><h1 id="name">Mud &amp; Crowns</h1><div class="meta" id="meta"></div></div>
     <div class="purse" aria-label="Silver"><b id="coin">0</b><small>silver</small></div>
-    <button class="iconbtn" id="menuBtn" aria-label="Menu">☰</button>
+    <button class="iconbtn" id="menuBtn" aria-label="Menu">⚜️</button>
   </header>
+  <section class="stats" id="stats" aria-label="Your qualities. Tap one to learn about it."></section>
+  <div class="lifebar" id="lifebar" aria-hidden="true"></div>
   <div class="banner" id="banner" hidden></div>
-  <main class="chron" id="chron"></main>
-  <section class="stats" id="stats" aria-label="Your qualities"></section>
+  <div class="page">
+    <main class="chron" id="chron"></main>
+    <button class="turn" id="ageBtn" aria-label="Turn the page: live one more year"><b>Turn the page</b><small id="nextYr">to the next year</small></button>
+  </div>
   <div class="coach" id="coach" role="status" aria-live="polite" hidden></div>
-  <nav class="dock" aria-label="Actions">
+  <nav class="ribbons" aria-label="Your book">
     <button data-panel="work"><span class="ico" aria-hidden="true">⚒️</span>Work</button>
     <button data-panel="deeds"><span class="ico" aria-hidden="true">🎲</span>Deeds<span class="pips" id="pips" aria-hidden="true"></span></button>
-    <button class="seal" id="ageBtn" aria-label="Age one year"><span class="small">age</span><span class="big">+1</span><span class="small">year</span></button>
     <button data-panel="kin"><span class="ico" aria-hidden="true">👪</span>Kin</button>
     <button data-panel="realm"><span class="ico" aria-hidden="true">🗺️</span>Realm</button>
   </nav>
@@ -1300,6 +1327,8 @@ function ageUp() {
   closeSheet();
   S.age++; S.year++; S.deeds = DEEDS_PER_YEAR;
   cur();
+  { const st = stageOf(S.age); if (st[0] === S.age && S.age > 0) say(`Chapter ${roman(STAGES.indexOf(st) + 1)}: ${st[1]}`, 'chapter'); }
+  { const ch = $('chron'); ch.classList.remove('flip'); void ch.offsetWidth; ch.classList.add('flip'); }
   yearKin();
   milestones();
   if (S.jail) yearJail();
@@ -3395,6 +3424,7 @@ function kinHTML() {
     if (!ks.length) continue;
     h += `<h3 class="sec">${g}</h3>` + ks.map(kinItem).join('');
   }
+  if (S.lineage && S.lineage.length) h += `<h3 class="sec">Your line</h3><ul class="realms">${S.lineage.map((x, i) => `<li><span class="arms" style="${armsStyle(S.last)};width:22px;height:26px;font-size:0;box-shadow:inset 0 0 0 2px var(--gold)"></span><span><b>${esc(x.n)} ${esc(x.e)}</b><small>Generation ${i + 1}</small></span></li>`).join('')}<li><span class="arms" style="${armsStyle(S.last)};width:22px;height:26px;font-size:0;box-shadow:inset 0 0 0 2px var(--gold)"></span><span><b>${esc(S.first)} ${esc(S.last)}</b><small>Generation ${S.gen}: you</small></span></li></ul>`;
   return h || '<div class="empty">You are alone in the world.</div>';
 }
 function personHTML(k) {
@@ -3654,18 +3684,18 @@ const tipsOn = () => store.get(TIPKEY) !== 'off';
 function coachText() {
   if (!S || !S.alive) return '';
   const d = S.deeds;
-  if (S.jail) return `⛓️ You are in the dungeon (${yrs(S.jail)} left). Try 🎲 Deeds → Attempt escape, or press the red seal to wait it out.`;
-  if (S.age < 3) return '👶 You are a baby. Press the red seal (+1 year) to grow up.';
+  if (S.jail) return `⛓️ You are in the dungeon (${yrs(S.jail)} left). Try 🎲 Deeds → Attempt escape, or turn the page to wait it out.`;
+  if (S.age < 3) return '👶 You are a baby. Turn the page (bottom right) to grow up.';
   if (S.illness && d > 0) return `🤒 You are ill and losing health each year. Open 🎲 Deeds → Body to see a healer.`;
   if (S.coin < 0) return `⚠️ You are in debt. Earn silver (⚒️ Work) or sell things (🗺️ Realm → Holdings) before the moneylender comes.`;
-  if (S.age < 12) return d > 0 ? `🧒 You have ${d} deed${d > 1 ? 's' : ''} left this year. Play, study or pray in 🎲 Deeds, then press the red seal.` : '✅ Deeds done. Press the red seal to live the next year.';
+  if (S.age < 12) return d > 0 ? `🧒 You have ${d} deed${d > 1 ? 's' : ''} left this year. Play, study or pray in 🎲 Deeds, then turn the page.` : '✅ Deeds done. Turn the page to live the next year.';
   if (S.age >= 16 && !S.amb) return '✨ You have no ambition yet. Open the menu (☰) and choose a goal for your life.';
   if (!S.job && !S.ruling && S.appliedYear !== S.year) return '⚒️ You have no job. Open Work: posts marked green are open to you right now.';
   if (d > 0) {
     const special = S.job && TRADE.some(x => (x.tr === S.job.track || (x.fams && x.fams.includes(jobFam()))) && tradeWhy(x) === true);
-    return `🎲 ${d} deed${d > 1 ? 's' : ''} left this year. Spend ${d > 1 ? 'them' : 'it'} in Deeds${special ? ', or on special work for your trade in ⚒️ Work' : ''}. Then press the red seal.`;
+    return `🎲 ${d} deed${d > 1 ? 's' : ''} left this year. Spend ${d > 1 ? 'them' : 'it'} in Deeds${special ? ', or on special work for your trade in ⚒️ Work' : ''}. Then turn the page.`;
   }
-  return '✅ All deeds used. Press the red seal to live the next year: wages are paid and things happen.';
+  return '✅ All deeds used. Turn the page to live the next year: wages are paid and things happen.';
 }
 function crownRoadsHTML() {
   const poor = ['serf', 'peasant', 'craft'].includes(S.cls);
@@ -3692,8 +3722,8 @@ function menuHTML() {
   else h += btnItem('ambition', '', '✨', 'Choose an ambition', S.age >= 16 ? 'Pick a goal for your life. Fulfil it for Joy, Renown, a seal of fame, and a better legacy.' : 'From age 16, you can set a goal for your life.', S.alive && S.age >= 16 ? true : 'From age 16');
   h += '<h3 class="sec">What each button does</h3>';
   h += btnItem('panel', 'work', '⚒️', 'Work', 'Find a job, do special work for your trade, and climb to better posts. One application a year.', true, '›');
-  h += btnItem('panel', 'deeds', '🎲', 'Deeds', `Your ${DEEDS_PER_YEAR} actions each year: study, pray, court, carouse, train, scheme. The dots under the button show what is left.`, true, '›');
-  h += btnItem('noop', '', '🔴', 'The red seal: +1 year', 'Ends the year. Wages and rents are paid, living costs are taken, people age, and events happen. Your deeds refill.', true);
+  h += btnItem('panel', 'deeds', '🎲', 'Deeds', `Your ${DEEDS_PER_YEAR} actions each year: study, pray, court, carouse, train, scheme. The candles on the Deeds ribbon show what is left.`, true, '›');
+  h += btnItem('noop', '', '📖', 'Turn the page (bottom-right corner)', 'Ends the year. Wages and rents are paid, living costs are taken, people age, and events happen. Your deeds refill.', true);
   h += btnItem('panel', 'kin', '👪', 'Kin', 'Your family. Spend time, give gifts, ask for silver, raise children. Heirs let you play on after death.', true, '›');
   h += btnItem('panel', 'realm', '🗺️', 'Realm', 'The map of the seven kingdoms, your Holdings (buy animals, land, houses) and your Army.', true, '›');
   h += '<h3 class="sec">Roads to the crown</h3>' + crownRoadsHTML();
@@ -3708,7 +3738,7 @@ function menuHTML() {
   h += '<h3 class="sec">About</h3>';
   h += btnItem('noop', '', '📜', 'Mud & Crowns', 'An original medieval life game. © 2026 the Mud & Crowns authors. Fonts: EB Garamond and UnifrakturMaguntia (SIL Open Font License).', true);
   h += btnItem('noop', '', '🔒', 'Privacy', 'Your lives are saved only on this device. The game collects no personal data and shows no ads.', true);
-  h += `<h3 class="sec">How a year works</h3><div class="howto"><p><b>1.</b> Spend your deeds (🎲 Deeds, or special work in ⚒️ Work).</p><p><b>2.</b> Press the red seal. A year passes and something usually happens: answer the card that pops up.</p><p><b>3.</b> Watch your six qualities at the bottom. Health keeps you alive, Wits and Renown open better jobs, Piety helps in the Church, Looks helps in love.</p><p>From 12 you can work. At 16 you come of age, get your family’s portion of silver, and may marry, buy land, and raise an army. When you die, carry on as one of your children.</p></div>`;
+  h += `<h3 class="sec">How a year works</h3><div class="howto"><p><b>1.</b> Spend your deeds (🎲 Deeds, or special work in ⚒️ Work).</p><p><b>2.</b> Turn the page. A year passes and something usually happens: answer the card that pops up.</p><p><b>3.</b> Watch your six qualities at the bottom. Health keeps you alive, Wits and Renown open better jobs, Piety helps in the Church, Looks helps in love.</p><p>From 12 you can work. At 16 you come of age, get your family’s portion of silver, and may marry, buy land, and raise an army. When you die, carry on as one of your children.</p></div>`;
   return h;
 }
 
@@ -3766,7 +3796,37 @@ function showFeats(from) {
 /* ---------- render ---------- */
 function toast(m) { const t = $('toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2200); }
 function buildStats() {
-  $('stats').innerHTML = STATS.map(s => `<div class="stat" id="st-${s.k}"><span class="si" aria-hidden="true">${s.i}</span><span class="sb"><span class="sl">${s.n}</span><span class="bar"><i></i></span></span><span class="sv">0</span></div>`).join('');
+  $('stats').innerHTML = STATS.map(s => `<button class="stat" id="st-${s.k}" data-stat="${s.k}" aria-label="${STAT_N[s.k]}"><span class="ring"><span class="si" aria-hidden="true">${s.i}</span></span><span class="sv">0</span><span class="sl">${STAT_N[s.k]}</span></button>`).join('');
+}
+// The family's coat of arms, drawn from the surname so a dynasty keeps its colours.
+function armsStyle(name) {
+  let h = 0; for (const ch of String(name || '')) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  const tinct = ['#9b1f12', '#23427a', '#2f6a4c', '#5c2a6e', '#262220', '#8a3a12'][h % 6];
+  const metal = (h >> 3) % 2 ? '#d9b44a' : '#e9e4d6';
+  const field = [`${tinct}`, `linear-gradient(90deg,${tinct} 50%,${metal} 50%)`, `linear-gradient(180deg,${metal} 50%,${tinct} 50%)`, `linear-gradient(135deg,${tinct} 50%,${metal} 50%)`, `conic-gradient(${tinct} 0 25%,${metal} 0 50%,${tinct} 0 75%,${metal} 0)`, `repeating-linear-gradient(90deg,${tinct} 0 9px,${metal} 9px 18px)`][(h >> 5) % 6];
+  return `--arm:${field}`;
+}
+const STAGES = [[0, 'Infancy', 3], [3, 'Childhood', 10], [13, 'Youth', 8], [21, 'Prime', 25], [46, 'Middle age', 15], [61, 'Old age', 25]];
+const stageOf = a => STAGES.filter(x => a >= x[0]).pop();
+function lifebarHTML() {
+  const cur = stageOf(S.age);
+  const f = Math.min(100, Math.round((S.age - cur[0]) / cur[2] * 100));
+  return `<b class="lb">${esc(cur[1])}</b><span class="track">${STAGES.map(st => `<span style="--w:${st[2]};--f:${f}%" class="${st === cur ? 'now' : S.age >= st[0] ? 'past' : ''}"></span>`).join('')}</span>`;
+}
+const STAT_INFO = {
+  health: ['Health', 'Keeps you alive. When it reaches zero you die, and low Health makes illness and death more likely each year. Heavy work and soldiering need it.'],
+  happy: ['Joy', 'How content you are. Low Joy brings gloom and a poor legacy. Family, friends, feasts and fulfilled ambitions raise it.'],
+  wits: ['Wits', 'Cleverness and learning. Opens skilled and elite posts, wins arguments, and helps you get hired and promoted.'],
+  looks: ['Looks', 'Your face and bearing. Helps in love, at court, as a minstrel, and in talking your way out of trouble.'],
+  piety: ['Piety', 'Your standing with God and the Church. Needed to rise in the Church, and it helps in trials and miracles.'],
+  renown: ['Renown', 'How famous you are. Opens high posts, makes kings listen, lets the poor rouse the commons, and raises your Influence.'],
+};
+function showStatInfo(k) {
+  if (!S || modalOpen) return;
+  if (k === 'power') return showInfluence();
+  const [n, d] = STAT_INFO[k];
+  const v = S.stats[k];
+  showResult(STATS.find(x => x.k === k).i, `${n} ${v} of 100. ${d} ${STAT_TIP[k] || ''}`, null, n);
 }
 function chronHTML() {
   return S.log.map(y => `<section class="yr"><div class="yr-m"><span class="yr-a">${y.age === 0 && y.lines[0] && y.lines[0].c === 'first' ? '✦' : y.age}</span><span class="yr-y">${y.year}</span></div><div class="yr-t">${y.lines.map(l => `<p class="ln ${l.c}">${esc(l.t)}</p>`).join('')}</div></section>`).join('');
@@ -3775,9 +3835,11 @@ function render() {
   if (!S) return;
   const royalFace = (S.ruling || S.cls === 'royal') && S.age >= 15;
   const bdg = badge();
-  $('avatar').innerHTML = `${faceFor(S.sex, S.age, royalFace)}${bdg ? `<span class="badge">${bdg}</span>` : ''}`;
+  $('avatar').textContent = faceFor(S.sex, S.age, royalFace);
+  const ob = $('arms').querySelector('.badge'); if (ob) ob.remove();
+  if (bdg) $('arms').insertAdjacentHTML('beforeend', `<span class="badge">${bdg}</span>`);
   $('name').textContent = displayName();
-  $('meta').innerHTML = `${S.alive ? `Age ${S.age}, ${esc(roleLabel())}` : `${S.born}–${S.year}`}<br>A.D. ${S.year}, ${esc(S.village)}, ${esc(S.realm)}${S.gen > 1 ? `, generation ${S.gen}` : ''}`;
+  $('meta').innerHTML = `${S.alive ? `Age ${S.age} · ${esc(roleLabel())}` : `${S.born}–${S.year}`}<br>A.D. ${S.year} · ${esc(S.village)}, ${esc(S.realm)}${S.gen > 1 ? ` · gen. ${S.gen}` : ''}`;
   const cEl = $('coin'); cEl.textContent = S.coin; cEl.parentElement.classList.toggle('neg', S.coin < 0);
   const b = $('banner'); let bh = '';
   if (!S.alive) bh = '<span>You have died.</span><button class="mini" data-s="epitaph">Read your epitaph</button>';
@@ -3790,15 +3852,18 @@ function render() {
   refreshPower();
   for (const s of STATS) {
     const el = $('st-' + s.k); if (!el) continue;
-    const v = S.stats[s.k], i = el.querySelector('i');
-    i.style.width = v + '%'; i.className = barCls(v);
+    const v = S.stats[s.k];
+    el.style.setProperty('--p', v); el.dataset.lv = barCls(v);
     el.querySelector('.sv').textContent = v;
     const pv = prevStats[s.k];
     if (pv != null && pv !== v) { el.classList.remove('up', 'dn'); void el.offsetWidth; el.classList.add(v > pv ? 'up' : 'dn'); }
     prevStats[s.k] = v;
   }
-  $('pips').textContent = S.alive ? '●'.repeat(Math.max(0, S.deeds)) + '○'.repeat(Math.max(0, DEEDS_PER_YEAR - S.deeds)) : '';
+  $('pips').innerHTML = S.alive ? Array.from({ length: DEEDS_PER_YEAR }, (_, i) => `<i class="cd${i < S.deeds ? ' on' : ''}"></i>`).join('') : '';
   $('ageBtn').disabled = !S.alive;
+  $('nextYr').textContent = S.alive ? `to ${S.year + 1} · age ${S.age + 1}` : 'the book is closed';
+  $('arms').setAttribute('style', armsStyle(S.last));
+  $('lifebar').innerHTML = lifebarHTML();
   const n = S.log.reduce((t, y) => t + y.lines.length, 0);
   if (n !== lastLines) {
     const ch = $('chron');
@@ -3841,7 +3906,7 @@ function showDeath() {
   const g = S.dead.grade || legacy(), kids = children();
   const lineage = S.lineage.length ? `<p class="hint center">Of the line of ${esc(S.lineage.map(x => `${x.n} ${x.e}`).join(', then '))}.</p>` : '';
   const heirs = kids.length ? `<h3 class="sec">Continue your line</h3>${kids.sort((a, b) => b.age - a.age).map(k => `<button class="item" data-s="heir" data-id="${k.id}"><span class="ic" aria-hidden="true">${faceFor(k.sex, k.age)}</span><span class="tx"><b>Live as ${esc(k.name)}</b><small>Your ${relOf(k).toLowerCase()}, age ${k.age}</small></span><span class="rt chev" aria-hidden="true">›</span></button>`).join('')}` : '<p class="hint center">You leave no living children. Your line ends here.</p>';
-  showScreen(`<div class="start"><div class="stone"><div class="rip">Here lies</div><h2>${esc(displayName())}</h2><div class="epi">${esc(S.epithet)}</div><div class="yrs">${S.born} – ${S.year}</div><p class="cause">Died ${esc(S.dead.cause)}, aged ${S.age}.</p></div><div class="grass" aria-hidden="true"></div>
+  showScreen(`<div class="start"><div class="stone"><div class="arms" style="${armsStyle(S.last)}"><span class="face">✝️</span></div><div class="rip">Here lies</div><h2>${esc(displayName())}</h2><div class="epi">${esc(S.epithet)}</div><div class="yrs">${S.born} – ${S.year}</div><p class="cause">Died ${esc(S.dead.cause)}, aged ${S.age}.</p></div><div class="grass" aria-hidden="true"></div>
   <dl class="summary"><div><dt>Station</dt><dd>${esc(roleLabel())}</dd></div><div><dt>Purse</dt><dd>${S.coin} silver</dd></div><div><dt>Counties</dt><dd>${heldTs().length}</dd></div><div><dt>Renown</dt><dd>${S.stats.renown}</dd></div><div><dt>Joy</dt><dd>${S.stats.happy}</dd></div><div><dt>Legacy</dt><dd><span class="grade">${g[1]}</span> ${g[0]}</dd></div></dl>
   ${(S.feats || []).length ? `<h3 class="sec">Seals earned in this life</h3><div class="chips">${S.feats.map(k => { const f = FEATS.find(x => x.k === k); return f ? `<span class="chip tag">${f.i} ${esc(f.n)}</span>` : ''; }).join('')}</div>` : ''}${lineage}${heirs}<div class="stack"><button class="btn${kids.length ? ' ghost' : ''}" data-s="random">Begin a new life</button><button class="btn ghost" data-s="chron">Read your chronicle</button><button class="btn ghost" data-s="grave">The graveyard</button></div></div>`);
 }
@@ -3878,7 +3943,7 @@ function bind() {
     if (!S.alive && b.dataset.panel !== 'kin' && b.dataset.panel !== 'realm') { showDeath(); return; }
     openSheet(b.dataset.panel);
   }));
-  $('stats').addEventListener('click', e => { if (e.target.closest('#st-power')) showInfluence(); });
+  $('stats').addEventListener('click', e => { const b = e.target.closest('[data-stat]'); if (b) showStatInfo(b.dataset.stat); });
   $('menuBtn').addEventListener('click', () => { if (S && !modalOpen) openSheet('menu'); });
   $('sheetClose').addEventListener('click', closeSheet);
   $('scrim').addEventListener('click', e => { if (e.target === $('scrim')) closeSheet(); });
