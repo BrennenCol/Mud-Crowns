@@ -85,3 +85,23 @@ in the menu.
 See [APP_STORE.md](APP_STORE.md) to install the game from the web, or to ship
 it to the App Store and Google Play. See [PRIVACY.md](PRIVACY.md) and
 [LEGAL_NOTES.md](LEGAL_NOTES.md).
+
+## War
+
+- **Troops**: levies, archers, crossbowmen, men-at-arms, knights on horse, and
+  siege engines, each with its own power, cost and upkeep. Casualties fall
+  hardest on levies.
+- **Terrain and walls**: horse charges win on plains and fail in marsh and
+  forest. Archers love hills. Counties can have a palisade, stone walls or a
+  great castle; siege engines (and gunpowder) break them down.
+- **Tactics**: storm, siege, arrow volley, cavalry charge, night attack,
+  mining, sending a captain, or demanding surrender, each showing its odds.
+  Battles can turn on a traitor, fog, panic or a heroic stand.
+- **After the battle**: sack the town, spare it, or ransom the lord (who may
+  become your rival). Lose while leading and you may be captured.
+- **Raids, spies, walls, diplomacy**: raid neighbours for loot, send spies to
+  count a garrison, fortify your counties, offer truces, and demand tribute
+  as a ruler. A war chronicle records it all.
+- **The map** is drawn like an old chart, with terrain, borders, coastlines,
+  a compass and kingdom names. It has three views: Kingdoms, Counties, and
+  Battle odds, which colours every county by your chance of taking it.

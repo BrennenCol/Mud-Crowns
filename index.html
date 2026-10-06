@@ -371,6 +371,19 @@ button{font:inherit;color:inherit}
 .tgt{font-style:normal}
 #st-power{grid-column:1/-1;cursor:pointer}
 #st-power .sl{color:var(--gold);font-style:normal;font-weight:600}
+
+.roster{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 16px 0}
+.unit{display:flex;flex-direction:column;align-items:center;padding:7px 4px;border:1px solid var(--rule-2);border-radius:10px;background:var(--vellum-2);text-align:center}
+.unit .ui{font-size:22px;line-height:1.1}
+.unit b{font:600 18px/1.1 var(--serif);font-variant-numeric:lining-nums}
+.unit small{font-size:12.5px;line-height:1.2;color:var(--ink-2)}
+.unit em{font-size:11.5px;color:var(--ink-3)}
+.hex .tex,.hex .castle{pointer-events:none}
+.hx-n.big{font-size:12px}
+.realm-n{font:17px var(--black);text-anchor:middle;fill:#fff8e8;stroke:rgba(30,15,5,.75);stroke-width:3px;paint-order:stroke;pointer-events:none;letter-spacing:.03em}
+.map-title{font:11px var(--black);fill:#2a1d14}
+.hex.sel polygon:first-child{animation:selpulse 1.6s ease-in-out infinite}
+@keyframes selpulse{50%{filter:brightness(1.3) drop-shadow(0 0 5px #fff)}}
 </style>
 </head>
 <body>
@@ -759,7 +772,7 @@ function hireInto(o) {
   if (L.knight && !S.flags.knight) { S.flags.knight = 1; x += ` You knelt and rose as ${ws('Sir', 'Dame')} ${S.first}.`; }
   const ret = S.flags['ret_' + o.k] ? 0 : (L.retinue || 0) + (o.retinue || 0);
   if (ret) S.flags['ret_' + o.k] = 1;
-  if (ret) { S.army = (S.army || 0) + ret; if (FX) FX.push({ l: 'soldiers', d: ret }); x += ` ${ret} soldiers now march under your banner.`; }
+  if (ret) { addTroops(tr === 'knight' ? 'horse' : 'foot', ret); if (FX) FX.push({ l: 'soldiers', d: ret }); x += ` ${ret} soldiers now march under your banner.`; }
   checkFeats();
   return x;
 }
@@ -1218,7 +1231,7 @@ function yearJob() {
     st('renown', R(3, 6)); st('happy', R(4, 8));
     say(`You were promoted to ${lvlTitle(j.track, j.level)}!`, 'gold');
     if (next.knight) { S.flags.knight = 1; say(`You knelt before your lord and rose as ${ws('Sir', 'Dame')} ${S.first}.`, 'gold'); }
-    if (next.retinue) { S.army = (S.army || 0) + next.retinue; say(`${next.retinue} men-at-arms now ride beneath your banner.`, 'good'); }
+    if (next.retinue) { addTroops('horse', next.retinue); say(`${next.retinue} men-at-arms now ride beneath your banner.`, 'good'); }
     jobFeats();
   } else if (!next && t.up && OCC_BY[t.up] && j.perf >= 70 && j.lvlYears >= 2 && occWhy(OCC_BY[t.up]) === true && P(.6)) {
     const o = OCC_BY[t.up], from = jobTitle();
@@ -1256,10 +1269,10 @@ function yearEconomy() {
   if (lands.length) { const l = lands.reduce((t, x) => t + Math.round(x.wealth * R(80, 120) / 100), 0); inc += l; parts.push(`${l} from your counties`); }
   let keep = 0;
   if (S.age >= 16 && !S.vows) { keep = cl.keep; if (homeAsset()) keep = Math.round(keep * .4); if (S.ruling) keep = Math.round(keep * 1.5); const o = occOfJob(); if (o && o.board) keep = Math.round(keep * o.board); }
-  const up = Math.ceil((S.army || 0) / 5);
+  const up = upkeepCost();
   S.coin += inc - keep - up;
   if (inc || keep || up) say(`Income: ${parts.length ? joinList(parts) : 'nothing'}. Living costs: ${keep}.${up ? ` Army upkeep: ${up}.` : ''}`, 'money');
-  if (up && S.coin < 0) { const d = Math.ceil(S.army * .3); S.army -= d; say(`Unpaid, ${d} of your soldiers deserted.`, 'bad'); }
+  if (up && S.coin < 0) { const d = Math.ceil(S.army * .3); loseTroops(d); say(`Unpaid, ${d} of your soldiers deserted.`, 'bad'); }
   // the dog grows old
   const dog = S.assets.find(a => a.key === 'dog');
   if (dog && S.year - (dog.since || S.year) > 9 && P(.3)) { S.assets = S.assets.filter(a => a !== dog); say(`Your faithful ${dog.label || 'hound'} died of old age, curled by the hearth.`, 'bad'); st('happy', -6); }
@@ -1550,7 +1563,7 @@ function continueAs(id) {
   N.assets = p.assets.filter(a => a.key !== 'dog').map(a => { const b = Object.assign({}, a); if (b.title) b.title = b.title.replace(/^(Lord|Lady)/, g); return b; });
   N.titles = lordTitles.map(t => titleFor(t, k.sex));
   N.skills = {}; N.held = []; N.realism = p.realism;
-  N.world = p.world; N.home = p.home; N.army = p.army || 0; N.armyVet = p.armyVet || 0; N.flags.gunpowder = p.flags.gunpowder; N.flags.ally = p.flags.ally;
+  N.world = p.world; N.home = p.home; N.army = p.army || 0; N.troops = Object.assign({}, p.troops || {}); N.armyVet = p.armyVet || 0; N.warlog = (p.warlog || []).slice(); N.flags.gunpowder = p.flags.gunpowder; N.flags.ally = p.flags.ally;
   if (p.flags.rebel && !wasRuler) N.flags.rebel = 1;
   S = N;
   cur();
@@ -2072,7 +2085,7 @@ function genWorld() {
     capital.cap = 1; capital.wealth = R(70, 95);
     k[realm] = `${pick(NAMES.m)} ${roman(R(1, 5))}`;
   }
-  for (const x of t) { x.base = x.cap ? R(170, 240) : R(40, 110); x.gar = x.base; }
+  for (const x of t) { x.base = x.cap ? R(170, 240) : R(40, 110); x.gar = x.base; x.walls = x.cap ? 1 : P(.3) ? 1 : 0; }
   return { t, k, merged: [] };
 }
 
@@ -2129,17 +2142,6 @@ function loseLand(x, foe) {
 }
 
 /* ---------- armies ---------- */
-function armyPower() {
-  let m = 1 + S.stats.renown / 250 + S.stats.wits / 600 + (S.armyVet || 0);
-  if (S.flags.knight) m += .2;
-  if (inTrack('soldier')) m += S.job.level * .06;
-  if (inTrack('knight')) m += S.job.level * .05;
-  if (isMil() && TRACKS[S.job.track].occ) m += { Low: .02, Middle: .1, High: .25 }[occOfJob().grp] || 0;
-  if (S.flags.gunpowder) m += .3;
-  return (S.army || 0) * m;
-}
-const defenseOf = x => x.gar * (x.cap ? 1.35 : 1) * TERR[x.ter].def;
-const approx = n => n < 15 ? 'a handful of' : `about ${Math.round(n / 10) * 10}`;
 function levyCount() {
   let n = heldTs().reduce((t, x) => t + Math.round(x.wealth / 2), 0);
   if (isLord()) n += 8;
@@ -2162,49 +2164,12 @@ function canAttack(x) {
   else if (!touching) return 'Not next to your lands';
   return true;
 }
-const oddsText = q => q > 1.5 ? 'The odds look strongly in your favor.' : q > 1.1 ? 'The odds look good.' : q > .85 ? 'It could go either way.' : 'The odds look grim.';
 function camp() { if (S.flags.warYear !== S.year) { S.flags.warYear = S.year; S.deeds = Math.max(0, S.deeds - 1); } }
-function battleEvent(x) {
-  const rebel = x.realm === S.realm && !S.ruling;
-  const siege = 10 + Math.round(x.gar / 4);
-  return {
-    id: 'battle', icon: '⚔️',
-    text: () => `${x.n}: ${TERR[x.ter].n}${x.cap ? ' guarded by a royal castle' : ''}, held by ${lordOf(x)}. Your scouts count ${approx(defenseOf(x))} defenders against your ${S.army} soldiers. ${oddsText(armyPower() / Math.max(1, defenseOf(x)))}${rebel ? ` Attacking land sworn to ${KT()} ${S.king} is open rebellion.` : ''}`,
-    choices: [
-      { t: 'Storm the walls, leading from the front', fx: () => fight(x, { mult: 1.15, lead: 1, loss: 1.25 }) },
-      { t: `Lay siege and starve them out (${siege} silver)`, ok: () => S.coin >= siege, fx: () => { coin(-siege); return fight(x, { mult: 1.05, loss: .6 }); } },
-      { t: 'Send your captain in your place', fx: () => fight(x, { mult: .9, loss: 1 }) },
-      { t: 'Demand their surrender', fx: () => { camp(); if (armyPower() > defenseOf(x) * 1.6 && P(.45 + S.stats.renown / 300)) return conquer(x, 'The gates swung open without a single arrow loosed.'); st('renown', -2); return `The defenders of ${x.n} jeered from the walls and emptied a chamber pot on your herald.`; } },
-      { t: 'Call off the campaign', fx: () => null },
-    ],
-  };
-}
-function fight(x, o) {
-  camp();
-  const atk = armyPower() * o.mult * R(75, 125) / 100;
-  const def = defenseOf(x) * R(75, 125) / 100;
-  const win = atk > def;
-  const lost = Math.min(S.army, Math.round(S.army * (win ? R(10, 30) : R(35, 65)) / 100 * o.loss));
-  S.army -= lost; if (FX && lost) FX.push({ l: 'soldiers', d: -lost });
-  if (o.lead) {
-    if (P(win ? .02 : .07)) { die(`storming the walls of ${x.n}`); return `You were first up the ladder at ${x.n}, and the last thing you saw was a falling stone.`; }
-    if (P(.3)) st('health', -R(5, 15));
-    st('renown', R(2, 5));
-  }
-  if (x.realm === S.realm && !S.ruling) S.flags.rebel = 1;
-  if (!win) {
-    st('renown', -R(3, 7)); st('happy', -4);
-    x.gar = Math.max(10, Math.round(x.gar * R(70, 90) / 100));
-    return `The assault on ${x.n} failed. You lost ${lost} soldiers and limped home, though the defenders are weakened.`;
-  }
-  S.armyVet = Math.min(.5, (S.armyVet || 0) + .04);
-  return conquer(x, `${x.n} has fallen! You lost ${lost} soldiers taking it.`);
-}
 function conquer(x, pre) {
   camp();
   const prevRealm = x.realm, wasCap = !!x.cap, prev = lordOf(x);
   let txt = `${pre} ${cap(prev.replace(/^the crown, under /, ''))} fled ${wasCap ? 'into exile' : 'by the back gate'}.`;
-  x.you = 1; x.gar = R(20, 40);
+  x.you = 1; x.gar = R(20, 40); x.walls = Math.max(0, (x.walls || 0) - 1);
   st('renown', R(8, 14)); st('happy', 6);
   addTitle(countTitle(x));
   if (prevRealm === S.realm && !S.ruling) {
@@ -2226,17 +2191,17 @@ function conquer(x, pre) {
 }
 function invasionTargets() {
   if (!S.world) return [];
-  return S.world.t.filter(x => (x.you || (S.ruling && x.realm === S.realm)) && !x.cap && x.adj.some(i => { const y = TT(i); return y.realm !== S.realm && S.world.k[y.realm] && y.realm !== S.flags.ally; }));
+  return S.world.t.filter(x => (x.you || (S.ruling && x.realm === S.realm)) && !x.cap && x.adj.some(i => { const y = TT(i); return y.realm !== S.realm && S.world.k[y.realm] && y.realm !== S.flags.ally && !truce(y.realm); }));
 }
 function defendLand(c, field) {
   const x = c.x;
-  const mine = (field ? armyPower() : armyPower() * .7) + x.gar * (field ? 1 : 1.3) * TERR[x.ter].def;
+  const mine = (field ? armyPower(x.ter) : armyPower(x.ter) * .7) + x.gar * (field ? 1 : 1.3 * wallMult(x)) * TERR[x.ter].def;
   const win = mine * R(80, 120) / 100 > c.n * R(80, 120) / 100;
   const lost = Math.round((S.army || 0) * (win ? R(8, 25) : R(30, 60)) / 100);
-  S.army = (S.army || 0) - lost; if (FX && lost) FX.push({ l: 'soldiers', d: -lost });
-  if (win) { st('renown', R(6, 12)); S.armyVet = Math.min(.5, (S.armyVet || 0) + .03); return `You drove the army of ${c.foe} back across the border! ${x.n} stands.`; }
+  loseTroops(lost); if (FX && lost) FX.push({ l: 'soldiers', d: -lost });
+  if (win) { warLog(`Held ${x.n} against ${c.foe}.`); st('renown', R(6, 12)); S.armyVet = Math.min(.5, (S.armyVet || 0) + .03); return `You drove the army of ${c.foe} back across the border! ${x.n} stands.`; }
   if (field && P(.04)) { die(`defending ${x.n} against ${c.foe}`); return `You fell defending ${x.n}.`; }
-  loseLand(x, c.foe); st('renown', -6); st('happy', -6);
+  loseLand(x, c.foe); warLog(`Lost ${x.n} to ${c.foe}.`); st('renown', -6); st('happy', -6);
   return `${x.n} fell to ${c.foe}.${lost ? ` You lost ${lost} soldiers.` : ''}`;
 }
 
@@ -2390,14 +2355,310 @@ function tradeWhy(d) {
   return deedWhy(d);
 }
 
-const ARMY_ACTS = [
-  { k: 'hire10', i: '🗡️', n: 'Hire 10 sellswords', d: 'Hard men who fight for silver.', cost: 15, run: () => { S.army = (S.army || 0) + 10; return 'Ten scarred sellswords swore to fight for you, at least until the silver runs out.'; } },
-  { k: 'hire50', i: '⚔️', n: 'Hire a free company of 50', d: 'A whole company, banners and all.', cost: 70, run: () => { S.army = (S.army || 0) + 50; return `The ${pick(['White', 'Black', 'Iron', 'Red', 'Grey'])} Company marched into ${S.village} and pledged their swords to you.`; } },
-  { k: 'levy', i: '📯', n: 'Raise levies from your lands', d: 'Free soldiers, once a year.', can: () => (heldTs().length || S.ruling || isLord()) ? (S.flags.levyY === S.year ? 'Already raised this year' : true) : 'You need land to raise levies', run: () => { S.flags.levyY = S.year; const n = levyCount(); S.army = (S.army || 0) + n; return `Horns sounded across your lands, and ${n} farmers grabbed spears and pitchforks.`; } },
-  { k: 'rouse', i: '🔥', n: 'Rouse the commons', d: 'Free for the poor: preach rebellion in the alehouses. Soldiers grow with your Renown. Brands you a rebel. Uses a deed.', deed: 1, can: () => S.ruling ? 'You are the crown they would rise against' : !['serf', 'peasant', 'craft'].includes(S.cls) ? 'Only common folk can rouse the commons' : S.stats.renown < 30 ? `Needs Renown 30 so folk will follow you (you have ${S.stats.renown})` : S.flags.rouseY === S.year ? 'Already done this year' : true, run: () => { S.flags.rouseY = S.year; const n = 10 + Math.round(S.stats.renown / 2) + R(0, 20) + (S.cls === 'serf' ? 10 : 0); S.army = (S.army || 0) + n; S.flags.rebel = 1; st('renown', 3); return `You stood on a cart in the market and cried out against the ${pick(['poll tax', "lord's bailiff", 'tithes', 'king’s purveyors'])}. ${n} ploughmen, shepherds and apprentices took up scythes and billhooks behind you. ${KT()} ${S.king} now calls you a rebel.`; } },
-  { k: 'drill', i: '🎯', n: 'Drill your troops', d: 'Veterans fight harder. Uses a deed.', deed: 1, can: () => (S.army || 0) >= 10 || 'You have no army to drill', run: () => { S.armyVet = Math.min(.5, (S.armyVet || 0) + .05); return 'You drilled them in the shield wall until they could hold it in their sleep.'; } },
-  { k: 'disband', i: '🏳️', n: 'Disband half your army', d: 'Cuts your upkeep.', can: () => (S.army || 0) > 0 || 'You have no army', run: () => { const n = Math.ceil(S.army / 2); S.army -= n; return `You paid off ${n} soldiers and sent them home.`; } },
+/* ================= War: troops, tactics, sieges ================= */
+// S.army is the head-count of soldiers; S.troops splits it into kinds. Siege engines are counted apart.
+const TROOPS = {
+  levy: { n: 'Levies', i: '🔱', pow: .7, up: .1, frail: 1.6, d: 'Farmers with spears and pitchforks. Cheap, brave for an hour, then gone.' },
+  archer: { n: 'Archers', i: '🏹', pow: 1, up: .2, frail: 1, d: 'Longbowmen. Deadly in a volley, useless in the rain.' },
+  xbow: { n: 'Crossbowmen', i: '🎯', pow: 1.2, up: .25, frail: .9, d: 'Slow to load, but a bolt punches through plate. Good on walls.' },
+  foot: { n: 'Men-at-arms', i: '⚔️', pow: 1.35, up: .25, frail: .8, d: 'Armoured professionals. The backbone of any host.' },
+  horse: { n: 'Knights and horse', i: '🐎', pow: 2.4, up: .6, frail: .6, d: 'A charge that breaks armies on open ground. Bogs down in marsh and forest.' },
+};
+const SOLDIER_KINDS = Object.keys(TROOPS);
+const troops = () => { const T = S.troops || (S.troops = {}); for (const k of SOLDIER_KINDS.concat('siege')) T[k] = T[k] || 0; return T; };
+function syncTroops() {
+  const T = troops(); S.army = Math.max(0, Math.round(S.army || 0));
+  let sum = SOLDIER_KINDS.reduce((t, k) => t + T[k], 0);
+  if (S.army > sum) { T.levy += S.army - sum; return; }
+  if (S.army < sum) {
+    const f = S.army / sum; let left = S.army;
+    for (const k of SOLDIER_KINDS) { T[k] = Math.floor(T[k] * f); left -= T[k]; }
+    for (const k of SOLDIER_KINDS) { if (left <= 0) break; if (T[k] || k === 'levy') { T[k]++; left--; } }
+  }
+}
+function addTroops(kind, n) {
+  syncTroops(); const T = troops();
+  if (kind === 'siege') { T.siege += n; return; }
+  T[kind] += n; S.army = (S.army || 0) + n;
+}
+// Casualties fall hardest on the levies.
+function loseTroops(n) {
+  syncTroops(); const T = troops(); n = Math.min(n, S.army); let left = n;
+  const w = SOLDIER_KINDS.map(k => T[k] * TROOPS[k].frail), tw = w.reduce((a, b) => a + b, 0) || 1;
+  SOLDIER_KINDS.forEach((k, i) => { const d = Math.min(T[k], Math.round(n * w[i] / tw)); T[k] -= d; left -= d; });
+  for (const k of SOLDIER_KINDS) { while (left > 0 && T[k] > 0) { T[k]--; left--; } }
+  S.army = SOLDIER_KINDS.reduce((t, k) => t + T[k], 0);
+  return n;
+}
+function commandMult() {
+  let m = 1 + S.stats.renown / 250 + S.stats.wits / 600 + (S.armyVet || 0);
+  if (S.flags.knight) m += .2;
+  if (inTrack('soldier')) m += S.job.level * .06;
+  if (inTrack('knight')) m += S.job.level * .05;
+  if (isMil() && TRACKS[S.job.track].occ) m += { Low: .02, Middle: .1, High: .25 }[occOfJob().grp] || 0;
+  if (S.flags.gunpowder) m += .15;
+  return m;
+}
+const TERR_MOD = { forest: { horse: .55, archer: 1.15 }, hills: { horse: .8, archer: 1.2, xbow: 1.1 }, plains: { horse: 1.3 }, marsh: { horse: .45, levy: .9 }, coast: { horse: 1.1 } };
+function armyPower(ter) {
+  syncTroops(); const T = troops(), mod = (ter && TERR_MOD[ter]) || {};
+  return SOLDIER_KINDS.reduce((t, k) => t + T[k] * TROOPS[k].pow * (mod[k] || 1), 0) * commandMult();
+}
+const share = k => { syncTroops(); return S.army ? troops()[k] / S.army : 0; };
+const WALLS = ['no walls', 'a palisade', 'stone walls', 'a great castle'];
+const wallMult = x => [1, 1.25, 1.55, 1.9][x.walls || 0] + (x.cap ? .35 : 0);
+// Siege engines and gunpowder knock down part of the walls' advantage.
+const breach = x => Math.min(wallMult(x) - 1, troops().siege * (S.flags.gunpowder ? .16 : .09));
+const defenseOf = x => x.gar * TERR[x.ter].def * wallMult(x);
+const siegeDefense = x => x.gar * TERR[x.ter].def * (wallMult(x) - breach(x));
+function upkeepCost() { syncTroops(); const T = troops(); return Math.ceil(SOLDIER_KINDS.reduce((t, k) => t + T[k] * TROOPS[k].up, 0) + T.siege * 2); }
+const approx = n => n < 15 ? 'a handful of' : `about ${Math.round(n / 10) * 10}`;
+const known = x => x.spied && S.year - x.spied < 3;
+const defText = x => known(x) ? `exactly ${x.gar}` : approx(x.gar);
+const oddsWord = q => q > 1.5 ? 'strong' : q > 1.1 ? 'good' : q > .85 ? 'even' : q > .6 ? 'poor' : 'grim';
+const oddsTag = q => ` · odds ${oddsWord(q)}`;
+const warLog = t => { S.warlog = (S.warlog || []).concat([`${S.year}: ${t}`]).slice(-8); };
+
+// Every way to take a county, with its strength multiplier against that county.
+function tactics(x) {
+  const ter = x.ter, def = defenseOf(x), sdef = siegeDefense(x);
+  const base = armyPower(ter);
+  const siegeCost = 10 + Math.round(x.gar / 4);
+  const rangedShare = share('archer') + share('xbow');
+  return [
+    { k: 'storm', t: 'Storm the walls, leading from the front', d: 'Bloody but quick. Your engines batter the gates.', q: base * 1.1 / sdef, run: () => fight(x, { atk: base * 1.1, def: sdef, loss: 1.25, lead: 1, how: 'storm' }) },
+    { k: 'siege', t: `Lay siege and starve them out (${siegeCost} silver)`, d: 'Slow and costly, but few of your men die.', ok: () => S.coin >= siegeCost, why: `Costs ${siegeCost} silver`, q: base * 1.05 / (sdef * .9), run: () => { coin(-siegeCost); return fight(x, { atk: base * 1.05, def: sdef * .9, loss: .55, how: 'siege' }); } },
+    { k: 'volley', t: 'Rain arrows on them, then advance', d: 'Needs archers or crossbowmen to be a fifth of your army. Rain ruins it.', ok: () => rangedShare >= .2, why: 'Needs archers or crossbowmen (a fifth of your army)', q: base * (1 + rangedShare * .7) / sdef, run: () => { const rain = P(.25); return fight(x, { atk: base * (1 + rangedShare * (rain ? .1 : .7)), def: sdef, loss: .85, how: 'volley', note: rain ? 'Rain soaked the bowstrings, and the volley fell short.' : 'The arrows fell like black hail.' }); } },
+    { k: 'charge', t: 'Lead a cavalry charge', d: 'Needs 10 horse. Devastating on plains and coast, hopeless in marsh and forest.', ok: () => troops().horse >= 10, why: 'Needs at least 10 knights and horse', q: base * (1 + share('horse') * (TERR_MOD[ter].horse || 1) * .8) / def, run: () => fight(x, { atk: base * (1 + share('horse') * (TERR_MOD[ter].horse || 1) * .8), def, loss: 1, lead: 1, how: 'charge' }) },
+    { k: 'night', t: 'Attack by night', d: 'Cunning beats numbers, sometimes. Your Wits matter.', q: base * (.85 + S.stats.wits / 220) * .92 / def, run: () => fight(x, { atk: base * (.85 + S.stats.wits / 220) * (P(.2) ? .6 : 1), def, loss: .7, how: 'night' }) },
+    { k: 'mine', t: 'Dig a mine under the walls', d: 'Needs a siege engine or Wits 50. Ignores most of the walls.', ok: () => troops().siege > 0 || S.stats.wits >= 50, why: 'Needs a siege engine or Wits 50', q: base / (x.gar * TERR[x.ter].def * 1.05), run: () => fight(x, { atk: base, def: x.gar * TERR[x.ter].def * 1.05, loss: .8, how: 'mine' }) },
+    { k: 'captain', t: 'Send your captain in your place', d: 'Safe for you, worse for them.', q: base * .9 / sdef, run: () => fight(x, { atk: base * .9, def: sdef, loss: 1, how: 'captain' }) },
+  ];
+}
+function battleEvent(x) {
+  const rebel = x.realm === S.realm && !S.ruling;
+  syncTroops(); const T = troops();
+  const host = SOLDIER_KINDS.filter(k => T[k]).map(k => `${T[k]} ${TROOPS[k].n.toLowerCase()}`).concat(T.siege ? [`${T.siege} siege engine${T.siege > 1 ? 's' : ''}`] : []);
+  return {
+    id: 'battle', icon: '⚔️',
+    text: () => `${x.n}: ${TERR[x.ter].n} behind ${WALLS[x.walls || 0]}${x.cap ? ', the royal castle' : ''}, held by ${lordOf(x)} with ${defText(x)} defenders. Your host: ${joinList(host)}. Choose how to fight.${rebel ? ` Attacking land sworn to ${KT()} ${S.king} is open rebellion.` : ''}`,
+    choices: tactics(x).map(c => ({ t: `${c.t}${oddsTag(c.q)}`, ok: c.ok, why: c.why, fx: c.run }))
+      .concat([{ t: `Demand their surrender${oddsTag(armyPower(x.ter) / (defenseOf(x) * 1.6))}`, fx: () => { camp(); if (armyPower(x.ter) > defenseOf(x) * 1.6 && P(.45 + S.stats.renown / 300)) { warLog(`${x.n} surrendered without a fight.`); return conquer(x, 'The gates swung open without a single arrow loosed.'); } st('renown', -2); return `The defenders of ${x.n} jeered from the walls and emptied a chamber pot on your herald.`; } },
+        { t: 'Call off the campaign', fx: () => null }]),
+  };
+}
+const TWISTS = [
+  [.08, 'A traitor opened a postern gate in the night!', 1.35],
+  [.07, 'Thick fog rolled in. Nobody could see a thing.', .85],
+  [.07, 'Your levies broke and ran at the first charge.', .8],
+  [.06, 'A heroic stand by your banner-bearer rallied the line.', 1.2],
+  [.05, 'Dysentery swept through the camp before the battle.', .8],
+  [.05, 'Their commander fell from his horse in the first clash.', 1.25],
 ];
+function fight(x, o) {
+  camp();
+  let twist = '', tm = 1;
+  for (const [p, t, m] of TWISTS) if (P(p)) { twist = t; tm = m; break; }
+  if (o.how === 'mine' && P(.15)) { twist = 'The mine collapsed on your sappers.'; tm = .7; }
+  const atk = o.atk * tm * R(80, 120) / 100, def = o.def * R(80, 120) / 100;
+  const win = atk > def, margin = atk / Math.max(1, def);
+  const pct = win ? Math.max(5, 30 - margin * 8) : Math.min(70, 35 + 20 / Math.max(.3, margin));
+  const lost = loseTroops(Math.round(S.army * R(Math.round(pct * .7), Math.round(pct * 1.1)) / 100 * o.loss));
+  if (FX && lost) FX.push({ l: 'soldiers', d: -lost });
+  const pre = [o.note, twist].filter(Boolean).join(' ');
+  if (o.lead) {
+    if (P(win ? .02 : .07)) { die(`storming the walls of ${x.n}`); return `${pre} You were first into the breach at ${x.n}, and the last thing you saw was a falling stone.`.trim(); }
+    if (P(.3)) st('health', -R(5, 15));
+    st('renown', R(2, 5));
+  }
+  if (x.realm === S.realm && !S.ruling) S.flags.rebel = 1;
+  S.flags.battles = (S.flags.battles || 0) + 1;
+  if (!win) {
+    st('renown', -R(3, 7)); st('happy', -4);
+    x.gar = Math.max(10, Math.round(x.gar * R(70, 90) / 100));
+    warLog(`Beaten at ${x.n}, losing ${lost} men.`);
+    if (o.lead && P(.25)) Q.unshift(() => showEvent(capturedEvent(x)));
+    return `${pre} The assault on ${x.n} failed. You lost ${lost} soldiers and fell back, though the defenders are weakened.`.trim();
+  }
+  S.flags.victories = (S.flags.victories || 0) + 1; if (S.flags.victories >= 10) feat('warlord');
+  S.armyVet = Math.min(.5, (S.armyVet || 0) + .04);
+  warLog(`Took ${x.n} by ${({ storm: 'storm', siege: 'siege', volley: 'arrows', charge: 'a charge', night: 'night attack', mine: 'mining', captain: 'your captain' })[o.how]}, losing ${lost} men.`);
+  if (troops().siege && x.walls >= 2) feat('trebuchet');
+  const wasCap = !!x.cap, lordName = lordOf(x);
+  const txt = conquer(x, `${pre} ${x.n} has fallen! You lost ${lost} soldiers taking it.`.trim());
+  if (S.alive) Q.unshift(() => showEvent(spoilsEvent(x, lordName, wasCap)));
+  return txt;
+}
+function spoilsEvent(x, lordName, wasCap) {
+  const loot = Math.round(x.wealth * R(20, 40) / 10) + (wasCap ? R(100, 300) : 0);
+  return { id: 'spoils', icon: '💰', text: () => `${x.n} is yours. Your soldiers look at the town, and then at you. And ${cap(lordName.replace(/^the crown, under /, ''))}'s family is in your hands.`,
+    choices: [
+      { t: `Let them sack the town (about ${loot} silver)`, fx: () => { coin(loot); st('renown', -5); st('piety', -6); st('happy', 3); x.wealth = Math.max(8, Math.round(x.wealth * .7)); return `Your men stripped the town bare. You took ${loot} silver. ${x.n} will pay you less rent for years.`; } },
+      { t: 'Spare the townsfolk', fx: () => { st('renown', 6); st('piety', 4); return `You hanged two looters as a lesson. The people of ${x.n} bless your name.`; } },
+      { t: 'Ransom the captured lord', fx: () => { const g = R(40, 160) + (wasCap ? 200 : 0); coin(g); if (P(.4)) { const p = makePeer({ rv: 1, bond: R(5, 15) }); p.sur = pick(SUR.noble); p.job = 'Dispossessed lord'; S.kin.push(p); return `The family paid ${g} silver. Their heir, ${p.name}, swore vengeance on you.`; } return `The family paid ${g} silver for their lord's return.`; } },
+    ] };
+}
+function capturedEvent(x) {
+  const ransom = 30 + Math.round(influence() * 4);
+  return { id: 'captured', icon: '⛓️', text: () => `In the rout at ${x.n} you were pulled from your horse and taken prisoner. Your captors demand ${ransom} silver for your release.`,
+    choices: [
+      { t: `Pay the ransom (${ransom} silver)`, ok: () => S.coin >= ransom, fx: () => { coin(-ransom); st('renown', -3); return 'You rode home lighter of purse and heavy of heart.'; } },
+      { t: 'Try to escape', fx: () => { if (P(.4 + S.stats.wits / 300)) { st('renown', 6); return 'You picked the lock with a fishbone and were over the wall by dawn.'; } jail(R(1, 2)); return 'You were caught at the gate and thrown into a deeper cell.'; } },
+      { t: 'Refuse and rot', fx: () => { jail(R(1, 3)); st('renown', 3); return '"I would sooner rot," you said. They obliged.'; } },
+    ] };
+}
+
+/* ---------- the army roster: what you can recruit ---------- */
+const ARMY_ACTS = [
+  { k: 'hire10', i: '⚔️', n: 'Hire 10 men-at-arms', d: 'Armoured professionals. Power 1.35 each, upkeep 2.5 a year per ten.', cost: 25, run: () => { addTroops('foot', 10); return 'Ten scarred men-at-arms swore to fight for you, at least until the silver runs out.'; } },
+  { k: 'archers', i: '🏹', n: 'Hire 10 archers', d: 'Needed for a volley. Strong in hills and forest.', cost: 18, run: () => { addTroops('archer', 10); return 'Ten longbowmen joined you, each with a sheaf of arrows and an opinion about the French.'; } },
+  { k: 'xbows', i: '🎯', n: 'Hire 10 Genoese crossbowmen', d: 'Expensive foreigners who never miss a wall.', cost: 30, run: () => { addTroops('xbow', 10); return 'Ten Genoese crossbowmen arrived with their great shields and their greater fees.'; } },
+  { k: 'horse', i: '🐎', n: 'Raise 5 mounted knights', d: 'The hammer of any army. Needs Influence 20 or a knighthood, because knights serve lords.', cost: 45, can: () => (influence() >= 20 || S.flags.knight || CLS_ORDER.indexOf(S.cls) >= 4) || `Needs Influence 20 or a knighthood (you have ${influence()})`, run: () => { addTroops('horse', 5); return `Five knights in polished harness rode into ${S.village}, their squires trailing behind.`; } },
+  { k: 'hire50', i: '🏴', n: 'Hire a free company of 50', d: 'A mixed mercenary company: men-at-arms, archers and a few horse.', cost: 110, run: () => { addTroops('foot', 30); addTroops('archer', 15); addTroops('horse', 5); return `The ${pick(['White', 'Black', 'Iron', 'Red', 'Grey'])} Company marched into ${S.village} and pledged their swords to you.`; } },
+  { k: 'siege', i: '🪨', n: 'Build a siege engine', d: 'A trebuchet or ram. Each one breaks part of a county’s walls. Upkeep 2 a year.', cost: 40, can: () => troops().siege < 6 || 'Six engines is all your carpenters can manage', run: () => { addTroops('siege', 1); return `Carpenters built ${pick(['a mighty trebuchet named "Warwolf"', 'a covered battering ram', 'a mangonel that hurls dead cows', 'a siege tower three storeys high'])}. ${S.flags.gunpowder ? 'With your gunpowder, it is twice as deadly.' : ''}`.trim(); } },
+  { k: 'levy', i: '📯', n: 'Raise levies from your lands', d: 'Free soldiers, once a year.', can: () => (heldTs().length || S.ruling || isLord()) ? (S.flags.levyY === S.year ? 'Already raised this year' : true) : 'You need land to raise levies', run: () => { S.flags.levyY = S.year; const n = levyCount(); addTroops('levy', n); return `Horns sounded across your lands, and ${n} farmers grabbed spears and pitchforks.`; } },
+  { k: 'rouse', i: '🔥', n: 'Rouse the commons', d: 'Free for the poor: preach rebellion in the alehouses. Soldiers grow with your Renown. Brands you a rebel. Uses a deed.', deed: 1, can: () => S.ruling ? 'You are the crown they would rise against' : !['serf', 'peasant', 'craft'].includes(S.cls) ? 'Only common folk can rouse the commons' : S.stats.renown < 30 ? `Needs Renown 30 so folk will follow you (you have ${S.stats.renown})` : S.flags.rouseY === S.year ? 'Already done this year' : true, run: () => { S.flags.rouseY = S.year; const n = 10 + Math.round(S.stats.renown / 2) + R(0, 20) + (S.cls === 'serf' ? 10 : 0); addTroops('levy', n); S.flags.rebel = 1; st('renown', 3); return `You stood on a cart in the market and cried out against the ${pick(['poll tax', "lord's bailiff", 'tithes', 'king’s purveyors'])}. ${n} ploughmen, shepherds and apprentices took up scythes and billhooks behind you. ${KT()} ${S.king} now calls you a rebel.`; } },
+  { k: 'drill', i: '🎯', n: 'Drill your troops', d: 'Veterans fight harder. Uses a deed.', deed: 1, can: () => (S.army || 0) >= 10 || 'You have no army to drill', run: () => { S.armyVet = Math.min(.5, (S.armyVet || 0) + .05); return 'You drilled them in the shield wall until they could hold it in their sleep.'; } },
+  { k: 'train', i: '🛡️', n: 'Equip 10 levies as men-at-arms', d: 'Turn farmers into soldiers with mail and helmets.', cost: 15, can: () => troops().levy >= 10 || 'You need 10 levies', run: () => { syncTroops(); const T = troops(); T.levy -= 10; T.foot += 10; return 'Ten levies got mail shirts, helmets and a great deal of shouting. They are men-at-arms now.'; } },
+  { k: 'disband', i: '🏳️', n: 'Disband half your army', d: 'Cuts your upkeep. Levies go first.', can: () => (S.army || 0) > 0 || 'You have no army', run: () => { const n = Math.ceil(S.army / 2); loseTroops(n); return `You paid off ${n} soldiers and sent them home.`; } },
+];
+
+/* ---------- raids, spies and walls ---------- */
+function raidWhy(x) {
+  if (!S.alive) return 'You are dead';
+  if (S.jail) return 'You are imprisoned';
+  if (S.vows) return 'Holy vows forbid it';
+  if (S.age < 16) return 'From age 16';
+  if (x.you || (S.ruling && x.realm === S.realm)) return 'You would be raiding your own people';
+  if (!mapReach(x)) return 'Too far away to raid';
+  if (S.flags.raidY === S.year) return 'You already raided this year';
+  if ((S.army || 0) < 10) return 'Needs at least 10 soldiers';
+  if (S.deeds <= 0) return 'No deeds left this year';
+  return true;
+}
+function doRaid(x) {
+  S.flags.raidY = S.year; S.deeds--;
+  FX = [];
+  const q = armyPower(x.ter) * 1.6 / Math.max(1, defenseOf(x));
+  let t;
+  if (P(Math.min(.9, .25 + q * .35))) { const g = R(10, 30) + Math.round(x.wealth / 2); coin(g); st('renown', 2); st('piety', -2); x.gar = Math.max(10, Math.round(x.gar * .9)); loseTroops(R(0, 3)); t = `You burned barns, drove off cattle, and came home from ${x.n} with ${g} silver of plunder.`; warLog(`Raided ${x.n} for ${g} silver.`); }
+  else { const l = loseTroops(R(5, 15)); FX.push({ l: 'soldiers', d: -l }); st('renown', -2); t = `The men of ${x.n} were waiting for you. You lost ${l} soldiers in the ambush.`; warLog(`Ambushed raiding ${x.n}.`); }
+  if (x.realm === S.realm && !S.ruling) S.flags.rebel = 1;
+  const fx = FX; FX = null;
+  say(t, 'deed'); showResult('🔥', t, fx, `Raid on ${x.n}`); render(); save();
+}
+const wallCost = x => [60, 150, 320][x.walls || 0];
+function fortifyWhy(x) { if (!S.alive) return 'You are dead'; if ((x.walls || 0) >= 3) return 'Already a great castle'; if (S.coin < wallCost(x)) return `Costs ${wallCost(x)} silver`; return true; }
+
+/* ---------- diplomacy, for those who hold land ---------- */
+const realmPower = r => realmTs(r).reduce((t, x) => t + defenseOf(x), 0);
+const truce = r => S.flags.truce && S.flags.truce[r] && S.flags.truce[r] > S.year;
+function diploHTML() {
+  if (!S.ruling && !heldTs().length) return '<h3 class="sec">Diplomacy</h3><p class="hint">Diplomacy is for rulers and lords of counties. Win a county first.</p>';
+  const foes = Object.keys(S.world.k);
+  let h = '<h3 class="sec">Diplomacy</h3><p class="hint">Foreign kingdoms may invade your lands. A truce keeps them off for five years. A strong ruler can demand tribute.</p>';
+  if (!foes.length) return h + '<div class="empty">No foreign kingdoms remain. The known world is yours.</div>';
+  const mine = armyPower() + heldTs().reduce((t, x) => t + defenseOf(x), 0) + (S.ruling ? realmPower(S.realm) * .5 : 0);
+  for (const r of foes) {
+    const p = realmPower(r), status = r === S.flags.ally ? 'Your ally' : truce(r) ? `Truce until ${S.flags.truce[r]}` : 'No treaty';
+    h += `<div class="hexcard"><div class="hc-h"><span class="sw" style="background:${REALM_COL[r]}"></span><b>${esc(r)}</b><small>${esc(status)}</small></div><p class="hc-s">${esc(royalOf(r))}, ${realmTs(r).length} counties. Their strength ~${Math.round(p / 10) * 10} vs yours ~${Math.round(mine / 10) * 10}.</p><div class="duel"><i style="width:${Math.round(Math.min(1, mine / (mine + p)) * 100)}%"></i></div></div>`;
+    if (r !== S.flags.ally && !truce(r)) h += btnItem('truce', r, '🕊️', `Offer a truce to ${r}`, `Costs ${truceCost(r)} silver in gifts. Five years of peace.`, S.coin >= truceCost(r) ? true : `Costs ${truceCost(r)} silver`, `${truceCost(r)} silver`);
+    if (S.ruling && r !== S.flags.ally) h += btnItem('tribute', r, '👑', `Demand tribute from ${r}`, 'If you are far stronger, they pay. If not, they may march on you.', S.flags['trib_' + r] === S.year ? 'Already demanded this year' : true);
+  }
+  return h;
+}
+const truceCost = r => 30 + realmTs(r).length * 10;
+
+/* ---------- the War tab ---------- */
+function armyHTML() {
+  syncTroops(); const T = troops(), up = upkeepCost();
+  let h = `<div class="jobcard"><span class="jc-i" aria-hidden="true">🛡️</span><div><b>${S.army || 0} soldiers${T.siege ? `, ${T.siege} siege engine${T.siege > 1 ? 's' : ''}` : ''}</b><small>Fighting strength ${Math.round(armyPower())} (×${commandMult().toFixed(2)} for your command). Upkeep ${up} silver a year.${S.flags.gunpowder ? ' You have gunpowder.' : ''}</small><div class="bar" role="img" aria-label="Veterancy"><i class="hi" style="width:${Math.round((S.armyVet || 0) / .5 * 100)}%"></i></div><small>Veterancy: drill and battle make them fight harder</small></div></div>`;
+  h += '<div class="roster">' + SOLDIER_KINDS.map(k => `<div class="unit"><span class="ui">${TROOPS[k].i}</span><b>${T[k]}</b><small>${TROOPS[k].n}</small><em>power ${TROOPS[k].pow}</em></div>`).join('') + `<div class="unit"><span class="ui">🪨</span><b>${T.siege}</b><small>Siege engines</small><em>break walls</em></div></div>`;
+  h += '<p class="hint">Different troops win different fights: archers for a volley, horse for a charge on open ground, engines against walls. Soldiers you cannot pay will desert. Pick a county on the map to march on.</p>';
+  h += '<h3 class="sec">Recruit and train</h3>';
+  for (const a of ARMY_ACTS) h += btnItem('army', a.k, a.i, a.n, a.d, armyWhy(a), a.cost ? `${a.cost} silver` : '');
+  h += diploHTML();
+  if ((S.warlog || []).length) h += `<h3 class="sec">War chronicle</h3><ul class="notes">${S.warlog.slice().reverse().map(t => `<li>${esc(t)}</li>`).join('')}</ul>`;
+  return h;
+}
+
+/* ---------- the map: an old hand-drawn chart ---------- */
+let mapMode = 'realm';
+function hexOddsColor(x) {
+  if (x.you) return '#d9a83a';
+  if (S.ruling && x.realm === S.realm) return '#9a9284';
+  const q = armyPower(x.ter) / Math.max(1, defenseOf(x));
+  return q > 1.5 ? '#3f8a52' : q > 1.1 ? '#8fae4a' : q > .85 ? '#d1a93a' : q > .6 ? '#c9743a' : '#b0422e';
+}
+function mapSVG() {
+  const r = 34, w = Math.sqrt(3) * r, pad = 14, top = 18;
+  const W = pad * 2 + w * 7.5, H = pad * 2 + top + r * 2 + r * 1.5 * (MAP_ROWS.length - 1);
+  const pos = x => [pad + w / 2 + w * (x.c + .5 * (x.r & 1)), pad + top + r + r * 1.5 * x.r];
+  const vtx = (cx, cy, i, k = 1) => { const a = Math.PI / 180 * (60 * i - 30); return [cx + r * k * Math.cos(a), cy + r * k * Math.sin(a)]; };
+  const grid = {}; for (const x of S.world.t) grid[x.r + ',' + x.c] = x;
+  const nb = (x, i) => { const d = (x.r & 1) ? [[0, 1], [1, 1], [1, 0], [0, -1], [-1, 0], [-1, 1]] : [[0, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0]]; return grid[(x.r + d[i][0]) + ',' + (x.c + d[i][1])]; };
+  const f = n => n.toFixed(1);
+  let s = `<svg class="map" viewBox="0 0 ${W.toFixed(0)} ${H.toFixed(0)}" role="img" aria-label="Map of the seven kingdoms"><defs>
+    <pattern id="p-sea" width="28" height="16" patternUnits="userSpaceOnUse"><path d="M2 10 q5 -5 10 0 t10 0" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="1.1"/></pattern>
+    <pattern id="p-forest" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M7 2 L11 10 H3 Z" fill="rgba(0,40,0,.32)"/><rect x="6.3" y="10" width="1.4" height="2.5" fill="rgba(40,20,0,.35)"/></pattern>
+    <pattern id="p-hills" width="18" height="12" patternUnits="userSpaceOnUse"><path d="M1 10 q4 -8 8 0 M9 10 q4 -8 8 0" fill="none" stroke="rgba(40,20,0,.38)" stroke-width="1.2"/></pattern>
+    <pattern id="p-plains" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(-25)"><line x1="0" y1="5" x2="10" y2="5" stroke="rgba(60,40,0,.2)" stroke-width="1"/></pattern>
+    <pattern id="p-marsh" width="14" height="10" patternUnits="userSpaceOnUse"><path d="M2 8 h6 M4 8 v-4 M6 8 v-3 M10 4 h3" stroke="rgba(0,40,40,.35)" stroke-width="1" fill="none"/></pattern>
+    <pattern id="p-coast" width="16" height="12" patternUnits="userSpaceOnUse"><path d="M1 8 q3.5 -3 7 0 t7 0" fill="none" stroke="rgba(0,30,60,.3)" stroke-width="1"/></pattern>
+    <radialGradient id="g-vig" cx="50%" cy="50%" r="75%"><stop offset=".6" stop-color="rgba(0,0,0,0)"/><stop offset="1" stop-color="rgba(60,40,10,.35)"/></radialGradient>
+  </defs>`;
+  s += `<rect class="sea" x="0" y="0" width="${W.toFixed(0)}" height="${H.toFixed(0)}" rx="10"/><rect x="0" y="0" width="${W.toFixed(0)}" height="${H.toFixed(0)}" rx="10" fill="url(#p-sea)"/>`;
+  // land shadow, then the counties
+  for (const x of S.world.t) { const [cx, cy] = pos(x); s += `<polygon points="${[0, 1, 2, 3, 4, 5].map(i => vtx(cx + 2, cy + 3, i).map(f).join(',')).join(' ')}" fill="rgba(40,25,5,.28)"/>`; }
+  for (const x of S.world.t) {
+    const [cx, cy] = pos(x);
+    const pts = [0, 1, 2, 3, 4, 5].map(i => vtx(cx, cy, i, .995).map(f).join(',')).join(' ');
+    const reach = S.alive && mapReach(x);
+    const fill = mapMode === 'war' ? hexOddsColor(x) : REALM_COL[x.realm];
+    const dim = mapMode === 'war' && !reach && !x.you ? ' style="opacity:.45"' : '';
+    const cls = ['hex', x.realm === S.realm && !x.you ? 'ours' : '', x.you ? 'mine' : '', x.id === selHex ? 'sel' : ''].join(' ');
+    s += `<g class="${cls}" data-act="hex" data-arg="${x.id}" tabindex="0" role="button" aria-label="${esc(x.n)}, ${x.realm}${x.you ? ', yours' : ''}"${dim}><polygon points="${pts}" fill="${fill}"/><polygon points="${pts}" fill="url(#p-${x.ter})" class="tex"/>`;
+    if (x.cap) s += `<g transform="translate(${f(cx - 9)} ${f(cy - 21)})" class="castle"><path d="M0 18 V6 h3 v-4 h3 v4 h6 v-4 h3 v4 h3 V18 Z" fill="#efe6d2" stroke="#2a1d14" stroke-width="1.2"/><rect x="7" y="11" width="4" height="7" fill="#2a1d14"/><path d="M9 2 V-6 l6 2.5 -6 2.5" fill="#9b1f12" stroke="#2a1d14" stroke-width=".8"/></g>`;
+    if (x.walls) s += `<text class="hx-b" x="${f(cx)}" y="${f(cy + r * .62)}">${'▪'.repeat(x.walls)}</text>`;
+    if (mapMode === 'counties') {
+      const words = x.n.split(' ');
+      s += `<text class="hx-n" x="${f(cx)}" y="${f(cy + (x.cap ? 9 : 3))}">${words.length > 1 ? `<tspan x="${f(cx)}" dy="0">${esc(words[0])}</tspan><tspan x="${f(cx)}" dy="9">${esc(words.slice(1).join(' '))}</tspan>` : esc(x.n)}</text>`;
+    } else if (mapMode === 'war' && !x.you && !(S.ruling && x.realm === S.realm)) {
+      s += `<text class="hx-n big" x="${f(cx)}" y="${f(cy + (x.cap ? 12 : 4))}">${known(x) ? x.gar : '~' + Math.round(defenseOf(x) / 10) * 10}</text>`;
+    }
+    if (x.you) s += `<g transform="translate(${f(cx + r * .3)} ${f(cy - r * .62)})"><line x1="0" y1="0" x2="0" y2="16" stroke="#2a1d14" stroke-width="1.6"/><path d="M0 0 h11 l-3 4 3 4 h-11 Z" fill="#f3c95a" stroke="#2a1d14" stroke-width=".8"/></g>`;
+    if (x.id === S.home) s += `<text class="hx-b" x="${f(cx - r * .42)}" y="${f(cy - r * .36)}">📍</text>`;
+    if (reach && mapMode !== 'realm') s += `<text class="hx-b" x="${f(cx + r * .45)}" y="${f(cy + r * .32)}">⚔️</text>`;
+    s += '</g>';
+  }
+  // coastlines and kingdom borders
+  let coast = '', border = '';
+  for (const x of S.world.t) {
+    const [cx, cy] = pos(x);
+    for (let i = 0; i < 6; i++) {
+      const y = nb(x, i), [x1, y1] = vtx(cx, cy, i), [x2, y2] = vtx(cx, cy, (i + 1) % 6);
+      const seg = `M${f(x1)} ${f(y1)}L${f(x2)} ${f(y2)}`;
+      if (!y) coast += seg; else if (y.realm !== x.realm && x.id < y.id) border += seg;
+    }
+  }
+  s += `<path d="${coast}" fill="none" stroke="rgba(30,45,50,.55)" stroke-width="2.4" stroke-linecap="round" pointer-events="none"/>`;
+  s += `<path d="${border}" fill="none" stroke="#2a1d14" stroke-width="3" stroke-linecap="round" pointer-events="none"/><path d="${border}" fill="none" stroke="rgba(255,240,200,.7)" stroke-width="1" stroke-dasharray="3 4" pointer-events="none"/>`;
+  // kingdom names
+  if (mapMode === 'realm') {
+    for (const realm of [...new Set(S.world.t.map(x => x.realm))]) {
+      const ts = realmTs(realm); const cx = ts.reduce((t, x) => t + pos(x)[0], 0) / ts.length, cy = ts.reduce((t, x) => t + pos(x)[1], 0) / ts.length;
+      s += `<text class="realm-n" x="${f(cx)}" y="${f(cy + 5)}">${esc(realm)}</text>`;
+    }
+  }
+  // compass rose, title, and a sea beast
+  s += `<g transform="translate(${f(pad + 30)} ${f(H - 34)})" class="compass" pointer-events="none"><circle r="20" fill="rgba(242,231,201,.85)" stroke="#2a1d14" stroke-width="1"/><path d="M0 -19 L4 0 L0 19 L-4 0 Z" fill="#9b1f12"/><path d="M-19 0 L0 -4 L19 0 L0 4 Z" fill="#2a1d14"/><text y="-23" text-anchor="middle" font-size="9" font-weight="700" fill="#2a1d14">N</text></g>`;
+  s += `<g transform="translate(${f(W - 92)} ${f(14)})" pointer-events="none"><rect width="82" height="24" rx="4" fill="rgba(242,231,201,.92)" stroke="#a88c5b"/><text x="41" y="16.5" text-anchor="middle" class="map-title">The Seven Kingdoms</text></g>`;
+  s += `<text x="${f(pad + w * 3.6)}" y="${f(H - 16)}" font-size="20" opacity=".55" pointer-events="none">🐋</text>`;
+  s += `<rect x="0" y="0" width="${W.toFixed(0)}" height="${H.toFixed(0)}" rx="10" fill="url(#g-vig)" pointer-events="none"/>`;
+  return s + '</svg>';
+}
+
+const oddsText = q => q > 1.5 ? 'The odds look strongly in your favor.' : q > 1.1 ? 'The odds look good.' : q > .85 ? 'It could go either way.' : 'The odds look grim.';
 function armyWhy(a) {
   if (!S.alive) return 'You are dead';
   if (S.age < 16) return 'From age 16';
@@ -2469,6 +2730,8 @@ const FEATS = [
   { k: 'chancellor', i: '📜', n: 'Keeper of the Great Seal', d: 'Become Chancellor of the realm.' },
   { k: 'general', i: '🎌', n: 'Captain of Hosts', d: 'Command armies as a General or Lord High Constable.' },
   { k: 'baron', i: '🦁', n: 'By Letters Patent', d: 'Be created a Baron or Baroness.' },
+  { k: 'warlord', i: '🎌', n: 'Warlord', d: 'Win ten battles in one life.' },
+  { k: 'trebuchet', i: '🪨', n: 'Breaker of Walls', d: 'Take a walled county with siege engines.' },
   { k: 'dream', i: '✨', n: 'Dream Fulfilled', d: 'Achieve the ambition you set for your life.' },
   { k: 'maid', i: '🗡️', n: 'The Maid', d: 'Be unmasked as a woman in arms, and win the right to fight on.' },
 ];
@@ -2543,7 +2806,7 @@ EVENTS.push(
 
   /* ----- war and the map ----- */
   { id: 'invasion', min: 16, max: 120, w: () => invasionTargets().length ? 2.6 : 0, cool: 3, icon: '🏹',
-    init: () => { const x = pick(invasionTargets()); const foes = x.adj.map(TT).filter(y => y.realm !== S.realm && S.world.k[y.realm] && y.realm !== S.flags.ally); const foe = pick(foes).realm; return { x, foe, n: R(50, 140) + realmTs(foe).length * 12 }; },
+    init: () => { const x = pick(invasionTargets()); const foes = x.adj.map(TT).filter(y => y.realm !== S.realm && S.world.k[y.realm] && y.realm !== S.flags.ally && !truce(y.realm)); const foe = pick(foes).realm; return { x, foe, n: R(50, 140) + realmTs(foe).length * 12 }; },
     text: c => `${royalOf(c.foe)} of ${c.foe} has crossed the border with ${c.n} soldiers and is marching on ${c.x.n}${c.x.you ? ', your county' : ''}!`,
     choices: [
       { t: 'Meet them in the field', fx: c => defendLand(c, true) },
@@ -3502,6 +3765,12 @@ const ACT = {
   trade: k => doTrade(k),
   rtab: t => { realmTab = t; renderSheet(); $('sheetBody').scrollTop = 0; },
   hex: id => { selHex = +id; renderSheet(); },
+  mapmode: m => { mapMode = m; renderSheet(); },
+  raid: id => { const x = TT(+id); const why = raidWhy(x); if (why !== true) return toast(why); closeSheet(); doRaid(x); },
+  spy: id => { const x = TT(+id); if (S.coin < 10) return toast('Costs 10 silver'); S.coin -= 10; x.spied = S.year; toast(`Your spies count ${x.gar} defenders in ${x.n}`); renderSheet(); render(); save(); },
+  fortify: id => { const x = TT(+id); const why = fortifyWhy(x); if (why !== true) return toast(why); S.coin -= wallCost(x); x.walls = (x.walls || 0) + 1; x.gar += 10; say(`You built ${WALLS[x.walls]} at ${x.n}.`, 'money'); toast(`${x.n} now has ${WALLS[x.walls]}`); renderSheet(); render(); save(); },
+  truce: r => { const c = truceCost(r); if (S.coin < c) return toast(`Costs ${c} silver`); S.coin -= c; S.flags.truce = S.flags.truce || {}; S.flags.truce[r] = S.year + 5; say(`You sent gifts to ${royalOf(r)} of ${r}. A truce holds until ${S.year + 5}.`, 'note'); warLog(`Truce with ${r}.`); toast(`Truce with ${r} until ${S.year + 5}`); renderSheet(); render(); save(); },
+  tribute: r => { if (S.flags['trib_' + r] === S.year) return; S.flags['trib_' + r] = S.year; closeSheet(); FX = []; const mine = armyPower() + realmPower(S.realm) * .5, theirs = realmPower(r); let t; if (mine > theirs * 1.3 && P(.75)) { const g = R(60, 160) + realmTs(r).length * 15; coin(g); st('renown', 6); t = `${royalOf(r)} of ${r} looked at your armies and paid ${g} silver in tribute.`; warLog(`${r} paid ${g} silver in tribute.`); } else { st('renown', -4); if (S.flags.truce) delete S.flags.truce[r]; t = `${royalOf(r)} of ${r} sent back your envoy's head in a basket of figs. Expect war.`; warLog(`${r} refused tribute.`); } const fx = FX; FX = null; say(t, 'deed'); showResult('👑', t, fx, 'Tribute'); render(); save(); },
   attack: id => { const x = TT(+id); const why = canAttack(x); if (why !== true) return toast(why); closeSheet(); modalOpen = true; showEvent(battleEvent(x)); },
   garrison: id => { const x = TT(+id); if ((S.army || 0) < 20) return toast('Need 20 soldiers'); S.army -= 20; x.gar += 20; say(`You stationed 20 soldiers in ${x.n}.`, 'note'); toast(`20 soldiers now guard ${x.n}`); renderSheet(); render(); save(); },
   army: k => doArmy(k),
@@ -3652,31 +3921,11 @@ function doArmy(k) {
   say(t, 'deed'); closeSheet(); showResult(a.i, t, fx, a.n); render(); save();
 }
 function realmHTML() {
-  const tabs = [['map', 'Map'], ['hold', 'Holdings'], ['army', 'Army']];
+  const tabs = [['map', 'Map'], ['hold', 'Holdings'], ['army', 'War']];
   const h = `<div class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" aria-selected="${realmTab === k}" data-act="rtab" data-arg="${k}">${n}${k === 'army' && S.army ? ` <small>${S.army}</small>` : ''}</button>`).join('')}</div>`;
   if (realmTab === 'hold') return h + holdHTML();
   if (realmTab === 'army') return h + armyHTML();
   return h + mapHTML();
-}
-function mapSVG() {
-  const r = 34, w = Math.sqrt(3) * r, pad = 6;
-  const W = pad * 2 + w * 7.5, H = pad * 2 + r * 2 + r * 1.5 * (MAP_ROWS.length - 1);
-  let s = `<svg class="map" viewBox="0 0 ${W.toFixed(0)} ${H.toFixed(0)}" role="img" aria-label="Map of the seven kingdoms"><rect class="sea" x="0" y="0" width="${W.toFixed(0)}" height="${H.toFixed(0)}" rx="10"/>`;
-  for (const x of S.world.t) {
-    const cx = pad + w / 2 + w * (x.c + .5 * (x.r & 1)), cy = pad + r + r * 1.5 * x.r;
-    const pts = [0, 1, 2, 3, 4, 5].map(i => { const a = Math.PI / 180 * (60 * i - 30); return `${(cx + r * .96 * Math.cos(a)).toFixed(1)},${(cy + r * .96 * Math.sin(a)).toFixed(1)}`; }).join(' ');
-    const cls = ['hex', x.realm === S.realm && !x.you ? 'ours' : '', x.you ? 'mine' : '', S.ruling && x.realm === S.realm && !x.you ? 'crown' : '', x.id === selHex ? 'sel' : ''].join(' ');
-    const words = x.n.split(' ');
-    const name = words.length > 1 ? `<tspan x="${cx.toFixed(1)}" dy="0">${esc(words[0])}</tspan><tspan x="${cx.toFixed(1)}" dy="9">${esc(words.slice(1).join(' '))}</tspan>` : esc(x.n);
-    s += `<g class="${cls}" data-act="hex" data-arg="${x.id}" tabindex="0" role="button" aria-label="${esc(x.n)}, ${x.realm}${x.you ? ', yours' : ''}"><polygon points="${pts}" fill="${REALM_COL[x.realm]}"/>`;
-    s += `<text class="hx-i" x="${cx.toFixed(1)}" y="${(cy - 7).toFixed(1)}">${x.cap ? '🏰' : TERR[x.ter].i}</text>`;
-    s += `<text class="hx-n" x="${cx.toFixed(1)}" y="${(cy + (words.length > 1 ? 8 : 12)).toFixed(1)}">${name}</text>`;
-    if (x.you) s += `<text class="hx-b" x="${(cx + r * .42).toFixed(1)}" y="${(cy - r * .36).toFixed(1)}">🚩</text>`;
-    if (x.id === S.home) s += `<text class="hx-b" x="${(cx - r * .42).toFixed(1)}" y="${(cy - r * .36).toFixed(1)}">📍</text>`;
-    if (S.alive && mapReach(x)) s += `<text class="hx-b" x="${(cx + r * .42).toFixed(1)}" y="${(cy - r * .36).toFixed(1)}">⚔️</text>`;
-    s += '</g>';
-  }
-  return s + '</svg>';
 }
 /* ---------- guidance: coach line, roads to the crown ---------- */
 const TIPKEY = 'mudcrowns.tips';
@@ -3755,35 +4004,36 @@ function mapHTML() {
   const home = TT(S.home);
   let h = `<div class="sumbox"><span class="sw" style="background:${REALM_COL[S.realm]};vertical-align:-1px"></span> You live in <b style="font-size:inherit">${esc(S.realm)}</b>, ${esc(royalOf(S.realm))}. Your home 📍 is ${esc(home.n)}, held by ${esc(lordOf(home))}.${heldTs().length ? ` You hold <b style="font-size:inherit">${heldTs().length}</b> count${heldTs().length === 1 ? 'y' : 'ies'} 🚩.` : ''}${S.flags.rebel && !S.ruling ? `<br><span class="warn">${esc(KT())} ${esc(S.king)} has branded you a rebel.</span>` : ''}</div>`;
   h += '<p class="hint">Each hexagon is a <b>county</b>. Its colour shows which kingdom owns it. Tap one to see who holds it and whether you can take it. Swipe the map sideways to see it all.</p>';
+  h += `<div class="seg2" role="group" aria-label="Map view">${[['realm', '👑 Kingdoms'], ['counties', '🏘️ Counties'], ['war', '⚔️ Battle odds']].map(([k, n]) => `<button data-act="mapmode" data-arg="${k}" aria-pressed="${mapMode === k}">${n}</button>`).join('')}</div>`;
   h += `<div class="mapwrap">${mapSVG()}</div>`;
-  h += '<p class="maplegend">📍 your home · 🚩 yours · 🏰 royal seat (take it to topple a king) · <span class="tgt">⚔️</span> you could march here · white outline: your kingdom</p>';
+  h += mapMode === 'war' ? '<p class="maplegend">Colours show your odds with your army now: <span style="color:#3f8a52">■</span> strong <span style="color:#8fae4a">■</span> good <span style="color:#d1a93a">■</span> even <span style="color:#c9743a">■</span> poor <span style="color:#b0422e">■</span> grim. Numbers are defenders. Faded counties are out of reach. ⚔️ you could march here.</p>' : mapMode === 'counties' ? '<p class="maplegend">📍 your home · 🚩 your counties · 🏰 royal seat · ▪ walls · ⚔️ you could march here. Patterns show the land: trees, hills, fields, marsh, coast.</p>' : '<p class="maplegend">Thick lines are kingdom borders. 📍 your home · 🚩 your counties · 🏰 royal seat (take it to topple a king). Switch to Counties or Battle odds to plan a war.</p>';
   h += hexCard(TT(selHex));
   h += `<h3 class="sec">How conquest works</h3><ol class="steps"><li><b>Raise an army</b> in the Army tab: hire sellswords with silver${['serf', 'peasant', 'craft'].includes(S.cls) ? ', or rouse the commons for free' : ''}${hasLand() ? ', or call up levies from your lands' : ''}.</li><li><b>Pick a target</b> marked ⚔️. With no land, you can only rise against the lord of your own home county.</li><li><b>March</b>: it costs one deed, once a year. Compare your strength with the defenders first.</li><li><b>Win</b> and the county is yours, paying you rent. Take your own king’s 🏰 royal seat and you are crowned. Take a foreign king’s and his whole kingdom falls to you.</li></ol>`;
   h += `<h3 class="sec">The kingdoms</h3><ul class="realms">${realms.map(r => `<li><span class="sw" style="background:${REALM_COL[r]}"></span><span><b>${esc(r)}</b>${r === S.realm ? ' (your kingdom)' : r === S.flags.ally ? ' (your ally)' : ''}<small>${esc(royalOf(r))}, ${realmTs(r).length} ${realmTs(r).length === 1 ? 'county' : 'counties'}</small></span></li>`).join('')}</ul>`;
   return h;
 }
+const TERR_FX = { forest: 'Forest: defenders +10%. Horse fight badly here, archers well.', hills: 'Hills: defenders +25%. Archers strong, horse weak.', plains: 'Open farmland: perfect ground for a cavalry charge.', marsh: 'Marsh: defenders +15%. Horse are nearly useless.', coast: 'Coast: firm sand, good for horse.' };
 function hexCard(x) {
-  const mine = armyPower(), def = defenseOf(x), q = mine / Math.max(1, def);
+  const def = defenseOf(x), mine = armyPower(x.ter), q = mine / Math.max(1, def);
   let h = `<div class="hexcard"><div class="hc-h"><span class="sw" style="background:${REALM_COL[x.realm]}"></span><b>${esc(x.n)}</b><small>${x.cap ? 'royal seat' : esc(TERR[x.ter].n)}${x.id === S.home ? ', your home' : ''}</small></div>`;
   h += `<p>Kingdom: <b>${esc(x.realm)}</b>${x.realm === S.realm ? ' (yours)' : ''}, ruled by ${esc(royalOf(x.realm))}.<br>Held by: <b>${esc(cap(lordOf(x)))}</b>. Pays its lord about ${x.wealth} silver a year.</p>`;
-  if (!x.you) {
+  h += `<p class="hc-s">${esc(TERR_FX[x.ter])} Defences: ${WALLS[x.walls || 0]}${x.cap ? ' and the royal castle' : ''}. Garrison: ${defText(x)}${known(x) ? ' (your spies counted)' : ''}.</p>`;
+  if (!x.you && !(S.ruling && x.realm === S.realm)) {
     const pct = Math.round(Math.min(1, q / 2) * 100);
-    h += `<p class="hc-s">Your army ${Math.round(mine)} strength vs. defenders ${approx(def).replace('about ', '~')}${TERR[x.ter].def > 1 ? ` (${TERR[x.ter].n} helps them)` : ''}. <b>${esc(oddsText(q))}</b></p><div class="duel" role="img" aria-label="Your strength against theirs"><i style="width:${pct}%"></i></div>`;
-  } else h += `<p class="hc-s">Garrison: ${approx(x.gar)} soldiers.</p>`;
-  h += '</div>';
-  if (x.you) h += btnItem('garrison', x.id, '🛡️', `Station 20 soldiers in ${x.n}`, 'Stronger walls against invaders.', S.alive ? ((S.army || 0) >= 20 ? true : 'Need 20 soldiers in your army') : 'You are dead');
-  else {
-    const why = canAttack(x);
-    h += btnItem('attack', x.id, '⚔️', `March on ${x.n}`, why === true ? 'Uses one deed. One campaign a year.' : '', why);
-    if (why !== true && /soldiers|Army/.test(why)) h += btnItem('rtab', 'army', '🛡️', 'Go to the Army tab', 'Raise soldiers first.', true, '›');
+    const best = tactics(x).filter(t => !t.ok || t.ok()).sort((a, b) => b.q - a.q)[0];
+    h += `<p class="hc-s">Your strength here ${Math.round(mine)} vs. their defence ~${Math.round(def / 10) * 10}. <b>${esc(oddsText(q))}</b>${best && S.army ? ` Best plan: <b>${esc(best.t.replace(/ \(.+\)$/, ''))}</b> (odds ${oddsWord(best.q)}).` : ''}</p><div class="duel" role="img" aria-label="Your strength against theirs"><i style="width:${pct}%"></i></div>`;
   }
-  return h;
-}
-function armyHTML() {
-  const up = Math.ceil((S.army || 0) / 5);
-  let h = `<div class="jobcard"><span class="jc-i" aria-hidden="true">🛡️</span><div><b>${S.army || 0} soldiers</b><small>Upkeep ${up} silver a year. Fighting strength ${Math.round(armyPower())}.${S.flags.gunpowder ? ' You have gunpowder.' : ''}</small><div class="bar" role="img" aria-label="Veterancy"><i class="hi" style="width:${Math.round((S.armyVet || 0) / .5 * 100)}%"></i></div><small>Veterancy</small></div></div>`;
-  h += '<p class="hint">Raise an army here, then pick a county on the map to march on. With no land, you can only rise against your own lord. Soldiers you cannot pay will desert.</p>';
-  for (const a of ARMY_ACTS) h += btnItem('army', a.k, a.i, a.n, a.d, armyWhy(a), a.cost ? `${a.cost} silver` : '');
+  h += '</div>';
+  if (x.you) {
+    h += btnItem('garrison', x.id, '🛡️', `Station 20 soldiers in ${x.n}`, 'A bigger garrison against invaders.', S.alive ? ((S.army || 0) >= 20 ? true : 'Need 20 soldiers in your army') : 'You are dead');
+    h += btnItem('fortify', x.id, '🧱', (x.walls || 0) >= 3 ? 'A great castle stands here' : `Build ${WALLS[(x.walls || 0) + 1]}`, 'Stronger walls make invaders pay dearly.', fortifyWhy(x), (x.walls || 0) < 3 ? `${wallCost(x)} silver` : '');
+  } else if (!(S.ruling && x.realm === S.realm)) {
+    const why = canAttack(x);
+    h += btnItem('attack', x.id, '⚔️', `March on ${x.n}`, why === true ? 'Choose your tactics in the next card. Uses one deed. One campaign a year.' : '', why);
+    h += btnItem('raid', x.id, '🔥', `Raid ${x.n}`, 'Burn, loot and ride home. Silver, not land. Uses a deed. Once a year.', raidWhy(x));
+    h += btnItem('spy', x.id, '🕵️', 'Send spies', 'Learn the exact size of the garrison for three years.', known(x) ? 'Your spies already know' : S.coin >= 10 ? true : 'Costs 10 silver', '10 silver');
+    if (why !== true && /soldiers|Army/.test(why)) h += btnItem('rtab', 'army', '🛡️', 'Go to the War tab', 'Raise soldiers first.', true, '›');
+  }
   return h;
 }
 function showFeats(from) {
