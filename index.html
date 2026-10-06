@@ -247,7 +247,8 @@ button{font:inherit;color:inherit}
 .tabs button{flex:1;padding:8px 6px;border:0;border-radius:9px;background:none;cursor:pointer;color:var(--ink-2);font-weight:600}
 .tabs button small{font-weight:400;color:var(--ink-3)}
 .tabs button[aria-selected="true"]{background:var(--vellum);color:var(--rubric);box-shadow:0 1px 0 var(--rule-2)}
-.mapwrap{margin:4px 12px 0}
+.mapwrap{margin:4px 12px 0;overflow-x:auto;overscroll-behavior-x:contain;border-radius:10px;-webkit-overflow-scrolling:touch}
+@media (max-width:540px){.map{width:540px!important;max-width:none}}
 .map{display:block;width:100%;height:auto;border-radius:10px;box-shadow:inset 0 0 0 1px var(--rule-2)}
 .map .sea{fill:var(--sea)}
 .hex{cursor:pointer}
@@ -329,6 +330,15 @@ button{font:inherit;color:inherit}
 .reqlist small{display:block;margin-top:2px;font-size:14.5px;line-height:1.35;color:var(--ink-2)}
 .notes li{position:relative;padding:4px 0 4px 16px;font-size:15.5px;line-height:1.4;color:var(--ink-2)}
 .notes li::before{content:'•';position:absolute;left:2px;color:var(--rubric)}
+
+.coach{padding:7px 14px;font-size:15px;line-height:1.35;background:var(--vellum-2);border-top:1px solid var(--rule);color:var(--ink-2)}
+.steps{margin:4px 20px 0;padding-left:20px;font-size:15.5px;line-height:1.45;color:var(--ink-2)}
+.steps li{margin-bottom:6px}
+.duel{height:8px;margin-top:6px;border-radius:5px;background:var(--low);overflow:hidden}
+.duel i{display:block;height:100%;background:var(--good)}
+.hex.ours polygon{stroke:rgba(255,255,255,.85);stroke-width:2}
+.hex.ours.sel polygon{stroke:#fff;stroke-width:3.5}
+.tgt{font-style:normal}
 </style>
 </head>
 <body>
@@ -342,6 +352,7 @@ button{font:inherit;color:inherit}
   <div class="banner" id="banner" hidden></div>
   <main class="chron" id="chron"></main>
   <section class="stats" id="stats" aria-label="Your qualities"></section>
+  <div class="coach" id="coach" role="status" aria-live="polite" hidden></div>
   <nav class="dock" aria-label="Actions">
     <button data-panel="work"><span class="ico" aria-hidden="true">⚒️</span>Work</button>
     <button data-panel="deeds"><span class="ico" aria-hidden="true">🎲</span>Deeds<span class="pips" id="pips" aria-hidden="true"></span></button>
@@ -800,6 +811,7 @@ let S = null;
 let FX = null; // collects visible effects during an outcome
 
 const ws = (m, f) => (S && S.sex === 'f') ? f : m;
+const KT = () => (S && S.flags && S.flags.queenReg) ? 'Queen' : 'King';
 
 function baseStats(cls) {
   const hi = cls === 'noble' || cls === 'royal', lo = cls === 'serf';
@@ -844,7 +856,7 @@ function newLife(o = {}) {
     fa.ruler = 1; fa.job = `King of ${realm}`; mo.job = `Queen of ${realm}`;
     S.king = `${fa.name} ${roman(R(1, 4))}`;
   } else {
-    S.king = `${pick(NAMES.m)} ${roman(R(1, 5))}`;
+    S.flags.queenReg = 0; S.king = `${pick(NAMES.m)} ${roman(R(1, 5))}`;
   }
   if (cls === 'noble') { fa.titled = 1; fa.job = `Lord of ${village}`; mo.job = `Lady of ${village}`; }
   S.kin.push(fa, mo);
@@ -878,7 +890,7 @@ function birthLog() {
   const sibs = S.kin.filter(k => k.sib);
   if (sibs.length) say(`You have ${joinList(sibs.map(k => `an older ${k.sex === 'm' ? 'brother' : 'sister'} named ${k.name}`))}.`);
   if (S.cls === 'serf') say('Your family are serfs, bound to work the lord’s land and forbidden to leave it.', 'note');
-  else if (S.cls !== 'royal') say(`${S.realm} is ruled by King ${S.king}.`, 'note');
+  else if (S.cls !== 'royal') say(`${S.realm} is ruled by ${KT()} ${S.king}.`, 'note');
 }
 
 /* ---------- kin helpers ---------- */
@@ -966,6 +978,7 @@ function jobTitle() { if (!S.job) return ''; if (S.job.track === 'crown') return
 function honor() {
   if (S.ruling) return S.flags.emperor ? ws('Emperor', 'Empress') : ws('King', 'Queen');
   if (inTrack('church') && S.job.level >= 4) return lvlTitle('church', S.job.level);
+  if (S.flags.consort) return ws('Prince', 'Queen');
   if (S.cls === 'royal') return ws('Prince', 'Princess');
   if (S.titles.some(t => /^(Duke|Duchess) of /.test(t))) return ws('Duke', 'Duchess');
   if (S.titles.some(t => /^(Count|Countess) of /.test(t))) return ws('Count', 'Countess');
@@ -981,6 +994,7 @@ const displayName = () => { const h = honor(); return `${h ? h + ' ' : ''}${S.fi
 function roleLabel() {
   if (S.jail) return 'Prisoner';
   if (S.job) return jobTitle();
+  if (S.flags.consort) return `${ws('Prince Consort', 'Queen Consort')} of ${S.realm}`;
   if (S.cls === 'royal') return `${ws('Prince', 'Princess')} of ${S.realm}`;
   if (S.age < 3) return 'Babe in arms';
   if (S.age < 13) return 'Child';
@@ -1026,6 +1040,7 @@ function quitJob() { if (!S.job) return; if (TRACKS[S.job.track] && TRACKS[S.job
 function freeSerf() { S.cls = 'peasant'; S.flags.free = 1; st('happy', 12); st('renown', 3); say('You are a serf no longer. Free to work, wed, and wander as you please.', 'gold'); }
 
 function crown() {
+  S.flags.queenReg = 0; S.flags.consort = 0;
   S.ruling = true; S.flags.crownAt = 0; quitJob(); setJob('crown', 0); S.vows = false; S.cls = 'royal';
   S.king = `${S.first} ${roman(R(1, 4))}`;
   addTitle(`${ws('King', 'Queen')} of ${S.realm}`);
@@ -1051,9 +1066,15 @@ function kinDies(k, cause) {
   k.alive = false; k.died = k.age; k.cause = cause;
   say(`Your ${relOf(k).toLowerCase()} ${k.name} died ${cause}, aged ${k.age}.`, 'bad');
   st('happy', -Math.round(k.bond / 7 + 2));
-  if (k.ruler) succession();
+  if (k.ruler && k.sp) consortSucceeds();
+  else if (k.ruler) succession();
   else if (k.par) parentDied(k);
   if (k.sp) say(`You are now ${ws('a widower', 'a widow')}.`, 'note');
+}
+function consortSucceeds() {
+  if (S.ruling) return;
+  if (S.age >= 16) { say(`With no one to stand in your way, the barons swear fealty to you.`, 'gold'); crown(); }
+  else { S.flags.crownAt = 16; say(`You are now the rightful ${ws('King', 'Queen')} of ${S.realm}! A regent will rule until you come of age.`, 'gold'); }
 }
 function succession() {
   if (S.ruling) return;
@@ -1525,7 +1546,7 @@ const EVENTS = [
   { id: 'saintday', passive: true, min: 2, w: 2, cool: 3, fx: () => { st('happy', 3); return `On Saint ${pick(SAINTS)}'s Day the whole village feasted on roast goose and danced around a bonfire.`; } },
   { id: 'comet', passive: true, min: 3, w: .6, cool: 25, fx: () => { st('piety', 2); return `A fiery comet hung in the sky for nine nights. The priest says it portends ${pick(['the death of a king', 'war', 'plague', 'the end of days', 'a very good harvest'])}.`; } },
   { id: 'eclipse', passive: true, min: 3, w: .4, cool: 30, fx: () => 'The sun went black at noon. Everyone screamed. Then it came back, looking slightly embarrassed.' },
-  { id: 'kingnews', passive: true, min: 8, w: 1, cool: 10, cond: () => !S.ruling && S.cls !== 'royal', fx: () => { const old = S.king; if (P(.4)) { S.king = `${pick(NAMES.m)} ${roman(R(1, 5))}`; const pardon = S.flags.rebel ? ' The new king has pardoned all rebels, including you.' : ''; S.flags.rebel = 0; return `News from the capital: King ${old} is dead. Long live King ${S.king}!${pardon}`; } return `News from the capital: King ${old} has ${pick(['married a foreign princess', 'raised taxes again', 'fallen off his horse', 'built a new castle', 'banned football', 'declared war on the weather'])}.`; } },
+  { id: 'kingnews', passive: true, min: 8, w: 1, cool: 10, cond: () => !S.ruling && S.cls !== 'royal', fx: () => { const old = S.king; if (P(.4)) { S.flags.queenReg = 0; S.king = `${pick(NAMES.m)} ${roman(R(1, 5))}`; const pardon = S.flags.rebel ? ' The new king has pardoned all rebels, including you.' : ''; S.flags.rebel = 0; return `News from the capital: King ${old} is dead. Long live ${KT()} ${S.king}!${pardon}`; } return `News from the capital: King ${old} has ${pick(['married a foreign princess', 'raised taxes again', 'fallen off his horse', 'built a new castle', 'banned football', 'declared war on the weather'])}.`; } },
   { id: 'hanging', passive: true, min: 6, w: 1, cool: 6, fx: () => `A ${pick(['horse thief', 'sheep stealer', 'counterfeiter', 'highwayman'])} was hanged at the crossroads. The crowd brought pies.` },
   { id: 'mummers', passive: true, min: 3, w: 1.5, cool: 5, fx: () => { st('happy', 2); return 'A troupe of mummers performed a play about Saint George. The dragon was two men in a blanket.'; } },
   { id: 'knees', passive: true, min: 60, w: 2, cool: 8, fx: () => 'Your knees now predict the weather more accurately than the priest.' },
@@ -1672,7 +1693,7 @@ const EVENTS = [
     ] },
   { id: 'levy', min: 16, max: 48, w: 1.6, cool: 5, icon: '🛡️', cond: () => !S.vows && !S.ruling && !isMil() && S.cls !== 'royal',
     init: () => ({ foe: otherRealm(), bat: pick(BATTLES) }),
-    text: c => `King ${S.king} summons the levy! Every able body must march against ${c.foe}.`,
+    text: c => `${KT()} ${S.king} summons the levy! Every able body must march against ${c.foe}.`,
     choices: [
       { t: 'Answer the call', fx: c => { const r = Math.random(); if (r < .09) { die(`in battle at ${c.bat}, fighting ${c.foe}`); return `You marched to ${c.bat} and never came home.`; } if (r < .38) { st('health', -R(12, 24)); if (P(.4)) ill('wound'); st('renown', 5); return `You survived the slaughter at ${c.bat}, but came home with a wound that aches when it rains.`; } const g = R(5, 35); coin(g); st('renown', 8); return `${c.foe} was routed at ${c.bat}! You came home with ${g} silver in plunder and a swagger in your step.`; } },
       { t: 'Pay scutage to stay home (15 silver)', ok: () => S.coin >= 15, fx: () => { coin(-15); st('renown', -2); return 'You paid the king for the privilege of not dying. Money well spent.'; } },
@@ -1918,9 +1939,9 @@ const EVENTS = [
 
   /* ===== nobility & the crown ===== */
   { id: 'plot', min: 20, max: 75, once: true, w: 2, icon: '🗝️', cond: () => S.cls === 'noble' || (S.cls === 'royal' && !S.ruling),
-    text: () => `Over wine, a duke's steward murmurs that great men plan to "free the realm" from King ${S.king}. Your sword and silence would be richly rewarded.`,
+    text: () => `Over wine, a duke's steward murmurs that great men plan to "free the realm" from ${KT()} ${S.king}. Your sword and silence would be richly rewarded.`,
     choices: [
-      { t: 'Join the conspiracy', fx: () => { const r = Math.random(); if (r < .3) { coin(R(200, 500)); st('renown', 15); S.king = `${pick(NAMES.m)} ${roman(R(1, 4))}`; return `The coup succeeded! King ${S.king} showered you with lands and gold.`; } if (r < .65) { coin(-Math.floor(Math.max(0, S.coin) * .6)); st('renown', -15); return 'The plot was uncovered. You escaped the axe only by forfeiting most of your fortune.'; } die("at the headsman's block, for treason"); return 'The plot was uncovered. Your head now decorates the city gate.'; } },
+      { t: 'Join the conspiracy', fx: () => { const r = Math.random(); if (r < .3) { coin(R(200, 500)); st('renown', 15); S.kin.forEach(k => { k.ruler = 0; }); S.flags.consort = 0; S.flags.queenReg = 0; S.king = `${pick(NAMES.m)} ${roman(R(1, 4))}`; return `The coup succeeded! ${KT()} ${S.king} showered you with lands and gold.`; } if (r < .65) { coin(-Math.floor(Math.max(0, S.coin) * .6)); st('renown', -15); return 'The plot was uncovered. You escaped the axe only by forfeiting most of your fortune.'; } die("at the headsman's block, for treason"); return 'The plot was uncovered. Your head now decorates the city gate.'; } },
       { t: 'Warn the king', fx: () => { if (P(.7)) { st('renown', 12); coin(R(50, 150)); return 'The plotters were rounded up. The king embraced you as a true friend.'; } st('health', -15); st('renown', -5); return 'The king did not believe you, and the plotters learned you had talked. You had a very convenient accident on the stairs.'; } },
       { t: 'Pretend you heard nothing', fx: () => 'You changed the subject to falconry, rather abruptly.' },
     ] },
@@ -2005,7 +2026,7 @@ const heldTs = () => S.world ? S.world.t.filter(x => x.you) : [];
 const realmTs = r => S.world.t.filter(x => x.realm === r);
 const capOf = r => S.world.t.find(x => x.realm === r && x.cap);
 function royalOf(r) {
-  if (r === S.realm) return S.ruling ? `${S.flags.emperor ? ws('Emperor', 'Empress') : ws('King', 'Queen')} ${S.king}` : `King ${S.king}`;
+  if (r === S.realm) return S.ruling ? `${S.flags.emperor ? ws('Emperor', 'Empress') : ws('King', 'Queen')} ${S.king}` : `${KT()} ${S.king}`;
   return S.world.k[r] ? `King ${S.world.k[r]}` : 'no one';
 }
 function lordOf(x) {
@@ -2040,7 +2061,7 @@ function annex(x, toYou) {
 }
 function emigrate(r) {
   S.world.k[S.realm] = S.king;
-  S.realm = r; S.king = S.world.k[r]; delete S.world.k[r];
+  S.flags.queenReg = 0; S.realm = r; S.king = S.world.k[r]; delete S.world.k[r];
   const opts = realmTs(r).filter(x => !x.cap && !x.you);
   S.home = (opts.length ? pick(opts) : capOf(r) || realmTs(r)[0]).id;
   S.village = pick(VILLAGES);
@@ -2092,7 +2113,7 @@ function battleEvent(x) {
   const siege = 10 + Math.round(x.gar / 4);
   return {
     id: 'battle', icon: '⚔️',
-    text: () => `${x.n}: ${TERR[x.ter].n}${x.cap ? ' guarded by a royal castle' : ''}, held by ${lordOf(x)}. Your scouts count ${approx(defenseOf(x))} defenders against your ${S.army} soldiers. ${oddsText(armyPower() / Math.max(1, defenseOf(x)))}${rebel ? ` Attacking land sworn to King ${S.king} is open rebellion.` : ''}`,
+    text: () => `${x.n}: ${TERR[x.ter].n}${x.cap ? ' guarded by a royal castle' : ''}, held by ${lordOf(x)}. Your scouts count ${approx(defenseOf(x))} defenders against your ${S.army} soldiers. ${oddsText(armyPower() / Math.max(1, defenseOf(x)))}${rebel ? ` Attacking land sworn to ${KT()} ${S.king} is open rebellion.` : ''}`,
     choices: [
       { t: 'Storm the walls, leading from the front', fx: () => fight(x, { mult: 1.15, lead: 1, loss: 1.25 }) },
       { t: `Lay siege and starve them out (${siege} silver)`, ok: () => S.coin >= siege, fx: () => { coin(-siege); return fight(x, { mult: 1.05, loss: .6 }); } },
@@ -2132,7 +2153,7 @@ function conquer(x, pre) {
   addTitle(countTitle(x));
   if (prevRealm === S.realm && !S.ruling) {
     if (wasCap) { const old = S.king; crown(); feat('usurper'); txt += ` You have taken the royal seat itself. King ${old} is deposed, and the crown is yours!`; }
-    else { S.flags.rebel = 1; txt += ` King ${S.king} has declared you a traitor.`; }
+    else { S.flags.rebel = 1; txt += ` ${KT()} ${S.king} has declared you a traitor.`; }
   } else if (prevRealm !== S.realm) {
     x.realm = S.realm;
     if (wasCap) {
@@ -2141,7 +2162,7 @@ function conquer(x, pre) {
       delete S.world.k[prevRealm];
       st('renown', 15);
       if (S.ruling) { S.world.merged.push(prevRealm); addTitle(`${ws('King', 'Queen')} of ${prevRealm}`); txt += ` The kingdom of ${prevRealm} has fallen. All its lands now bow to you, and you are crowned ${ws('King', 'Queen')} of ${prevRealm} as well!`; }
-      else { addTitle(`${ws('Duke', 'Duchess')} of ${prevRealm}`); txt += ` The kingdom of ${prevRealm} has collapsed into ${S.realm}, and King ${S.king} names you ${ws('Duke', 'Duchess')} of ${prevRealm}!`; }
+      else { addTitle(`${ws('Duke', 'Duchess')} of ${prevRealm}`); txt += ` The kingdom of ${prevRealm} has collapsed into ${S.realm}, and ${KT()} ${S.king} names you ${ws('Duke', 'Duchess')} of ${prevRealm}!`; }
     }
   }
   checkFeats();
@@ -2239,7 +2260,7 @@ function petition() {
   const opts = grantable();
   if (!opts.length) return 'The king says he has no land to spare. Every county is spoken for.';
   if (S.flags.rebel) return 'The king does not grant land to rebels.';
-  if (P(S.stats.renown / 160 + (S.job.level - 1) * .1)) { const x = pick(opts); grantCounty(x); return `King ${S.king} was moved by your deeds. He grants you the county of ${x.n}. You are now ${countTitle(x)}!`; }
+  if (P(S.stats.renown / 160 + (S.job.level - 1) * .1)) { const x = pick(opts); grantCounty(x); return `${KT()} ${S.king} was moved by your deeds. He grants you the county of ${x.n}. You are now ${countTitle(x)}!`; }
   st('renown', -2); return '"Prove yourself further," said the king, and went back to his falcons.';
 }
 function voyageEvent() {
@@ -2317,6 +2338,7 @@ const ARMY_ACTS = [
   { k: 'hire10', i: '🗡️', n: 'Hire 10 sellswords', d: 'Hard men who fight for silver.', cost: 15, run: () => { S.army = (S.army || 0) + 10; return 'Ten scarred sellswords swore to fight for you, at least until the silver runs out.'; } },
   { k: 'hire50', i: '⚔️', n: 'Hire a free company of 50', d: 'A whole company, banners and all.', cost: 70, run: () => { S.army = (S.army || 0) + 50; return `The ${pick(['White', 'Black', 'Iron', 'Red', 'Grey'])} Company marched into ${S.village} and pledged their swords to you.`; } },
   { k: 'levy', i: '📯', n: 'Raise levies from your lands', d: 'Free soldiers, once a year.', can: () => (heldTs().length || S.ruling || isLord()) ? (S.flags.levyY === S.year ? 'Already raised this year' : true) : 'You need land to raise levies', run: () => { S.flags.levyY = S.year; const n = levyCount(); S.army = (S.army || 0) + n; return `Horns sounded across your lands, and ${n} farmers grabbed spears and pitchforks.`; } },
+  { k: 'rouse', i: '🔥', n: 'Rouse the commons', d: 'Free for the poor: preach rebellion in the alehouses. Soldiers grow with your Renown. Brands you a rebel. Uses a deed.', deed: 1, can: () => S.ruling ? 'You are the crown they would rise against' : !['serf', 'peasant', 'craft'].includes(S.cls) ? 'Only common folk can rouse the commons' : S.stats.renown < 30 ? `Needs Renown 30 so folk will follow you (you have ${S.stats.renown})` : S.flags.rouseY === S.year ? 'Already done this year' : true, run: () => { S.flags.rouseY = S.year; const n = 10 + Math.round(S.stats.renown / 2) + R(0, 20) + (S.cls === 'serf' ? 10 : 0); S.army = (S.army || 0) + n; S.flags.rebel = 1; st('renown', 3); return `You stood on a cart in the market and cried out against the ${pick(['poll tax', "lord's bailiff", 'tithes', 'king’s purveyors'])}. ${n} ploughmen, shepherds and apprentices took up scythes and billhooks behind you. ${KT()} ${S.king} now calls you a rebel.`; } },
   { k: 'drill', i: '🎯', n: 'Drill your troops', d: 'Veterans fight harder. Uses a deed.', deed: 1, can: () => (S.army || 0) >= 10 || 'You have no army to drill', run: () => { S.armyVet = Math.min(.5, (S.armyVet || 0) + .05); return 'You drilled them in the shield wall until they could hold it in their sleep.'; } },
   { k: 'disband', i: '🏳️', n: 'Disband half your army', d: 'Cuts your upkeep.', can: () => (S.army || 0) > 0 || 'You have no army', run: () => { const n = Math.ceil(S.army / 2); S.army -= n; return `You paid off ${n} soldiers and sent them home.`; } },
 ];
@@ -2472,29 +2494,29 @@ EVENTS.push(
     ] },
   { id: 'reprisal', min: 16, max: 120, w: () => (S.flags.rebel && !S.ruling && heldTs().length) ? 6 : 0, cool: 2, icon: '👑',
     init: () => ({ n: R(120, 260) }),
-    text: c => `King ${S.king}'s royal army, ${c.n} strong, has come to crush your rebellion.`,
+    text: c => `${KT()} ${S.king}'s royal army, ${c.n} strong, has come to crush your rebellion.`,
     choices: [
       { t: 'Fight for your cause', fx: c => {
         const mine = armyPower() + heldTs().reduce((t, x) => t + x.gar, 0) * .6;
-        if (mine * R(80, 120) / 100 > c.n * R(80, 120) / 100) { S.army = Math.round(S.army * R(70, 88) / 100); st('renown', 10); return `Against all odds, your rebels routed the royal army! King ${S.king} is humiliated.`; }
+        if (mine * R(80, 120) / 100 > c.n * R(80, 120) / 100) { S.army = Math.round(S.army * R(70, 88) / 100); st('renown', 10); return `Against all odds, your rebels routed the royal army! ${KT()} ${S.king} is humiliated.`; }
         S.army = Math.round((S.army || 0) * R(20, 45) / 100);
         const lost = heldTs(); lost.forEach(x => loseLand(x));
         if (P(.35)) { die("at the headsman's block, for rebellion"); return 'Your army was crushed and you were dragged in chains before the king. He was not merciful.'; }
         S.flags.rebel = 0; S.flags.outlaw = 1; checkFeats();
         return `Your rebellion was crushed. You lost ${joinList(lost.map(x => x.n))} and fled into the forest as an outlaw.`; } },
       { t: 'Beg for a royal pardon', fx: () => { const lost = heldTs(); lost.forEach(x => loseLand(x)); S.flags.rebel = 0; coin(-Math.floor(Math.max(0, S.coin) * .4)); st('renown', -10); return 'You knelt before the king with a rope around your neck. He spared you, but took your lands and much of your silver.'; } },
-      { t: 'Flee to a foreign court', ok: () => Object.keys(S.world.k).length > 0, fx: () => { const lost = heldTs(); lost.forEach(x => loseLand(x)); const r = pick(Object.keys(S.world.k)); emigrate(r); S.flags.rebel = 0; st('renown', -4); return `You slipped across the border with what you could carry and swore yourself to King ${S.king} of ${S.realm}.`; } },
+      { t: 'Flee to a foreign court', ok: () => Object.keys(S.world.k).length > 0, fx: () => { const lost = heldTs(); lost.forEach(x => loseLand(x)); const r = pick(Object.keys(S.world.k)); emigrate(r); S.flags.rebel = 0; st('renown', -4); return `You slipped across the border with what you could carry and swore yourself to ${KT()} ${S.king} of ${S.realm}.`; } },
     ] },
   { id: 'grant', min: 18, max: 80, w: 1.6, cool: 6, icon: '📜', cond: () => !S.ruling && !S.flags.rebel && S.stats.renown >= 55 && ((inTrack('knight') && S.job.level >= 1) || (inTrack('soldier') && S.job.level >= 2) || (isMil() && TRACKS[S.job.track].occ && occOfJob().grp !== 'Low')) && grantable().length > 0,
     init: () => ({ x: pick(grantable()) }),
-    text: c => `The old Count of ${c.x.n} has died without heirs. For your valor, King ${S.king} offers you the county.`,
+    text: c => `The old Count of ${c.x.n} has died without heirs. For your valor, ${KT()} ${S.king} offers you the county.`,
     choices: [
       { t: 'Kneel and accept', fx: c => { grantCounty(c.x); return `You swore fealty with your hands between the king's. You are now ${countTitle(c.x)}!`; } },
       { t: 'Humbly decline', fx: () => { st('renown', 4); st('piety', 4); return 'The court murmured at your humility. The king was baffled.'; } },
     ] },
   { id: 'summons', min: 17, max: 60, w: 2, cool: 4, icon: '🎺', cond: () => !S.ruling && !S.flags.rebel && !S.jail && (inTrack('knight') || isBaron() || S.cls === 'noble' || heldTs().length > 0) && Object.keys(S.world.k).some(r => borderTarget(r)),
     init: () => { const foes = Object.keys(S.world.k).filter(r => borderTarget(r)); const foe = pick(foes); return { foe, x: borderTarget(foe) }; },
-    text: c => `King ${S.king} summons his vassals: the army marches on ${c.x.n}, a county of ${c.foe}. Every sworn sword must ride.`,
+    text: c => `${KT()} ${S.king} summons his vassals: the army marches on ${c.x.n}, a county of ${c.foe}. Every sworn sword must ride.`,
     choices: [
       { t: 'Ride in the vanguard', fx: c => { if (P(.05)) { die(`in the vanguard at ${c.x.n}`); return `You rode first into the enemy at ${c.x.n}, and fell there.`; } if (P(.55 + S.stats.renown / 400)) { st('renown', R(8, 14)); jobPerf(15); const toYou = P(.35) && !S.vows; return `Victory! ${annex(c.x, toYou)}`; } st('health', -R(10, 22)); return `The attack on ${c.x.n} was beaten back. You came home bloodied.`; } },
       { t: 'Send soldiers in your place', ok: () => (S.army || 0) >= 20, why: 'You need 20 soldiers', fx: c => { S.army -= 20; if (FX) FX.push({ l: 'soldiers', d: -20 }); if (P(.5)) { st('renown', 4); return `Your soldiers fought well. ${annex(c.x, false)}`; } return 'Your soldiers fought, and the campaign failed. Few came home.'; } },
@@ -2700,7 +2722,7 @@ EVENTS.push(
       { t: c => `Cover it yourself (${c.gap} silver)`, ok: c => S.coin >= c.gap, fx: c => { coin(-c.gap); jobPerf(20); st('renown', 4); return 'You quietly paid in from your own purse. Your loyalty has been noted at the highest level.'; } },
     ] },
   { id: 'kingsCouncil', min: 20, max: 90, w: 4, cool: 3, icon: '👑', cond: () => jobIn('adviser', 'chancellor', 'official', 'courtier', 'treasurer'),
-    text: () => `King ${S.king} turns to you in council: should the crown raise a new tax to pay for war?`,
+    text: () => `${KT()} ${S.king} turns to you in council: should the crown raise a new tax to pay for war?`,
     choices: [
       { t: 'Counsel for the tax', fx: () => { jobPerf(10); st('renown', 2); if (P(.3)) { st('renown', -8); return 'The tax was passed, and the commons now burn your effigy on feast days.'; } return 'The king nodded. The treasury is full; the commons are grumbling.'; } },
       { t: 'Counsel for peace', fx: () => { if (P(.5)) { st('renown', 6); st('piety', 3); jobPerf(6); return 'The king heeded you. Peace, and lower taxes. The commons bless your name.'; } jobPerf(-12); return 'The war party mocked you as a coward. The king agreed with them.'; } },
@@ -2773,11 +2795,22 @@ EVENTS.push(
       { t: 'Bet on the favourite (5 silver)', ok: () => S.coin >= 5, fx: () => { coin(-5); if (P(.5)) { coin(R(8, 14)); return 'The favourite won, and so did you.'; } return 'The favourite sneezed at the crucial moment.'; } },
     ] },
   { id: 'ennoble', min: 25, max: 85, once: true, w: 5, icon: '📜', cond: () => !['noble', 'royal'].includes(S.cls) && !S.ruling && tierOfJob() === 'high' && S.stats.renown >= 45,
-    text: () => `King ${S.king}, impressed by your service as ${aOr(jobTitle())}, offers you letters patent of nobility. You would be the first of your blood to bear a coat of arms. The heralds charge 200 silver.`,
+    text: () => `${KT()} ${S.king}, impressed by your service as ${aOr(jobTitle())}, offers you letters patent of nobility. You would be the first of your blood to bear a coat of arms. The heralds charge 200 silver.`,
     choices: [
       { t: 'Accept the patent (200 silver)', ok: () => S.coin >= 200, fx: () => { coin(-200); S.cls = 'noble'; S.flags.ennobled = 1; st('renown', 12); st('happy', 8); feat('ennobled'); return 'The heralds painted your new arms. Old families sneer at "new men", but your grandchildren will be lords.'; } },
       { t: 'Ask for a knighthood instead', fx: () => { if (S.flags.knight) { st('renown', 3); return 'You are already a knight. The king laughed and gave you a gold cup instead.'; } S.flags.knight = 1; st('renown', 8); checkFeats(); return `You knelt, the king touched your shoulders with his sword, and you rose as ${ws('Sir', 'Dame')} ${S.first}.`; } },
       { t: 'Decline with thanks', fx: () => { st('piety', 3); st('renown', 2); return 'You said you were content as you are. The court was astonished.'; } },
+    ] },
+  { id: 'royalSuitor', min: 16, max: 40, once: true, w: 4, icon: '👑', cond: () => !spouse() && !S.vows && !S.ruling && S.cls !== 'royal' && !S.jail && S.stats.renown >= 55 && S.stats.looks >= 60,
+    text: () => S.sex === 'f' ? `${KT()} ${S.king} of ${S.realm}, a widower, saw you at the Michaelmas feast and cannot stop speaking of you. His chamberlain brings a ring.` : `The old king has died, and his daughter rules as Queen of ${S.realm}. She saw you at the tourney and has sent her chamberlain with a ring.`,
+    choices: [
+      { t: 'Accept and marry the monarch', fx: () => {
+        const p = person(S.sex === 'm' ? 'f' : 'm', R(Math.max(18, S.age - 2), S.age + (S.sex === 'f' ? 25 : 8)), 'royal', { sp: 1 });
+        p.sur = pick(SUR.royal); p.ruler = 1; p.job = `${p.sex === 'm' ? 'King' : 'Queen'} of ${S.realm}`; p.dowry = 0;
+        S.king = `${p.name} ${roman(R(1, 4))}`; S.flags.queenReg = p.sex === 'f' ? 1 : 0;
+        marry(p); S.cls = 'royal'; S.flags.consort = 1; S.flags.rebel = 0; st('renown', 15); coin(R(100, 300));
+        return `You were wed in the cathedral before the whole court. You are now ${ws('Prince Consort', 'Queen')} of ${S.realm}. Should your royal spouse die before you, the crown passes to you.`; } },
+      { t: 'Refuse the crown', fx: () => { st('renown', 6); st('piety', 2); return 'You refused a crown. The whole kingdom talks of nothing else.'; } },
     ] },
   { id: 'parishWedding', min: 20, max: 90, w: 3, cool: 3, icon: '💒', cond: () => jobIn('priest'),
     text: () => 'Two families want you to marry their children at the church door. You know the pair are cousins, closer than the Church allows.',
@@ -2897,7 +2930,10 @@ function renderSheet() {
   else if (sheetKind === 'job') { const o = OCC_BY[jobId]; if (!o) { sheetKind = 'work'; return renderSheet(); } html = jobDetailHTML(o); }
   else if (sheetKind === 'person') { const k = S.kin.find(x => x.id === personId); if (!k || !k.alive) { sheetKind = 'kin'; return renderSheet(); } titles.person = fullName(k); html = personHTML(k); }
   t.textContent = titles[sheetKind];
+  const keep = b.querySelector('.mapwrap'), keepX = keep ? keep.scrollLeft : null;
   b.innerHTML = html;
+  const mw = b.querySelector('.mapwrap');
+  if (mw) { if (keepX != null && sheetKind === 'realm') mw.scrollLeft = keepX; else { const sel = mw.querySelector('.hex.sel'); if (sel) { const r = sel.getBoundingClientRect(), m = mw.getBoundingClientRect(); mw.scrollLeft += (r.left + r.width / 2) - (m.left + m.width / 2); } } }
 }
 function payStr(t, L) { return L.pay ? `${t.vary ? 'about ' : ''}${L.pay} silver a year` : 'no wage'; }
 function workHTML() {
@@ -2919,9 +2955,9 @@ function workHTML() {
     const fam = jobFam();
     const acts = TRADE.filter(d => d.tr === S.job.track || (d.fams && d.fams.includes(fam)));
     if (acts.length) {
-      h += `<h3 class="sec">${S.job.track === 'thief' ? 'Jobs for the Guild' : 'Your trade'}</h3>`;
+      h += `<h3 class="sec">${S.job.track === 'thief' ? 'Jobs for the Guild' : 'Special work for your trade'}</h3>`;
       if (S.job.track === 'thief') h += `<div class="heat"><span>Heat ${S.heat || 0}</span><span class="bar" role="img" aria-label="Heat ${S.heat || 0} of 100"><i class="${(S.heat || 0) >= 60 ? 'lo' : (S.heat || 0) >= 30 ? 'md' : 'hi'}" style="width:${S.heat || 0}%"></i></span></div><p class="hint">The hotter you are, the likelier the noose. Heat cools a little every year. Each job uses one deed.</p>`;
-      else h += '<p class="hint">Each of these uses one deed.</p>';
+      else h += `<p class="hint">Extra things your trade lets you do: earn silver on the side, raise your standing, or take a gamble. Each one <b>uses one of your ${DEEDS_PER_YEAR} deeds</b> for the year (you have ${S.deeds} left), just like actions in Deeds. Your wage is paid anyway when the year ends.</p>`;
       for (const d of acts) { const c = deedCost(d); h += btnItem('trade', d.k, d.i, d.n, d.d, S.deeds <= 0 ? 'No deeds left this year' : tradeWhy(d), c ? `${c} silver` : ''); }
     }
     h += btnItem('quit', '', '🚪', S.job.track === 'crown' ? 'Abdicate the throne' : 'Quit your post', TRACKS[S.job.track].vows ? 'Renounce your vows.' : 'Walk away.', true);
@@ -3020,6 +3056,7 @@ function ranksHTML() {
   ];
   let h = '<h3 class="sec">Ranks of the realm</h3><p class="hint">These are not posts you apply for. They are won by birth, land, marriage, favour, or the sword.</p>';
   for (const [i, n, got, how] of rows) h += btnItem('noop', '', i, n, how, true, got ? '✓ yours' : '');
+  h += '<h3 class="sec">Roads to the crown</h3>' + crownRoadsHTML();
   if (!isBaron() && !S.ruling) h += btnItem('barony', '', '📜', `Petition for a barony (${BARONY_COST} silver)`, 'Needs a manor, Renown 50, and the king’s good will.', baronyWhy(), `${BARONY_COST} silver`);
   return h;
 }
@@ -3106,15 +3143,6 @@ function holdHTML() {
 }
 function curTheme() { return store.get(TKEY) || 'auto'; }
 function applyTheme(t) { if (t === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', t); store.set(TKEY, t); }
-function menuHTML() {
-  let h = btnItem('confirmNew', '', '🌱', 'Begin a new life', S.alive ? 'Abandon this one and start over.' : 'Start over from birth.', true);
-  h += btnItem('grave', '', '🪦', 'The graveyard', 'Every life you have lived.', true);
-  h += btnItem('feats', '', '🏅', 'Seals of fame', `${FEATS.filter(f => getFeats()[f.k]).length} of ${FEATS.length} earned.`, true);
-  h += '<h3 class="sec">Appearance</h3>';
-  [['auto', '🌗', 'Match my device'], ['light', '📜', 'Vellum (light)'], ['dark', '🕯️', 'Candlelight (dark)']].forEach(([v, i, n]) => { h += btnItem('theme', v, i, n, '', true, curTheme() === v ? '✓' : ''); });
-  h += `<h3 class="sec">How to play</h3><div class="howto"><p>Press the wax seal to live another year. Each year brings three deeds: pray, train, court, carouse, or cause trouble.</p><p>Seek work from twelve. Come of age at sixteen, take your family’s portion, and make your way. Wed, raise heirs, buy land, and try to avoid the plague.</p><p>Open Realm to see the map: who rules what, and whose land you live on. Hire soldiers, then march on a neighboring county. Take your own king's royal seat and the crown is yours. Take a foreign king's and his whole kingdom falls to you.</p><p>Work is a ladder. Over a hundred posts, from ditch digger and washerwoman to chancellor, cardinal, and general, sit under Common, Skilled, Elite, and Military. Every year in a line of work is experience: a smith’s assistant becomes a blacksmith, then a weaponsmith or armorer; a clerk becomes a magistrate, then a judge. Some posts lift your whole family’s standing, because wealth and office mattered as much as birth.</p><p>Every trade has its own road. Thieves pull heists and dodge the noose. Knights quest and win land. Clergy can climb all the way to Pope. When you die, you may carry on your line as one of your children.</p></div>`;
-  return h;
-}
 
 /* ---------- actions ---------- */
 function onAct(e) {
@@ -3145,12 +3173,14 @@ const ACT = {
   army: k => doArmy(k),
   feats: () => { closeSheet(); showFeats('app'); },
   wtab: t => { workTab = t; renderSheet(); },
+  panel: k => { if (k === 'realm') realmTab = 'map'; openSheet(k); },
+  tips: () => { store.set(TIPKEY, tipsOn() ? 'off' : 'on'); renderSheet(); render(); },
   wfilter: f => { workFilter = f; renderSheet(); },
   job: k => { jobId = k; openSheet('job'); $('sheetBody').scrollTop = 0; },
   back2work: () => { openSheet('work'); },
   barony: () => {
     const why = baronyWhy(); if (why !== true) return toast(why);
-    confirmEv('📜', `Send ${BARONY_COST} silver and a humble petition to King ${S.king}, asking to be raised to the baronage?`, 'Send the petition', () => {
+    confirmEv('📜', `Send ${BARONY_COST} silver and a humble petition to ${KT()} ${S.king}, asking to be raised to the baronage?`, 'Send the petition', () => {
       coin(-BARONY_COST);
       if (!P(.35 + S.stats.renown / 200 + (S.flags.knight ? .1 : 0))) { st('renown', -2); return 'The king kept your silver and sent back a letter full of compliments and nothing else.'; }
       const t = `${ws('Baron', 'Baroness')} of ${S.village}`; addTitle(t); st('renown', 10); st('happy', 6);
@@ -3218,7 +3248,7 @@ function confirmQuit() {
   if (!S.job) return;
   const crownJob = S.job.track === 'crown', title = jobTitle();
   confirmEv(crownJob ? '👑' : '🚪', crownJob ? 'Lay down the crown? Your barons will be astonished, and not in a good way.' : TRACKS[S.job.track].vows ? 'Renounce your holy vows and leave the Church?' : `Give up your post as ${title}?`, crownJob ? 'Abdicate' : 'Quit', () => {
-    if (crownJob) { S.ruling = false; removeTitle(`${ws('King', 'Queen')} of ${S.realm}`); quitJob(); st('renown', -15); st('happy', 5); S.king = `${pick(NAMES.m)} ${roman(R(1, 5))}`; return `You laid the crown upon the altar and walked out into the rain. ${S.king} now rules ${S.realm}.`; }
+    if (crownJob) { S.ruling = false; removeTitle(`${ws('King', 'Queen')} of ${S.realm}`); quitJob(); st('renown', -15); st('happy', 5); S.flags.queenReg = 0; S.king = `${pick(NAMES.m)} ${roman(R(1, 5))}`; return `You laid the crown upon the altar and walked out into the rain. ${S.king} now rules ${S.realm}.`; }
     if (TRACKS[S.job.track].vows) { quitJob(); st('piety', -8); st('renown', -3); return 'You hung up your habit and walked out of the cloister gate into the world.'; }
     quitJob(); st('happy', 2); return `You gave up your post as ${title}.`;
   });
@@ -3296,7 +3326,7 @@ function mapSVG() {
   for (const x of S.world.t) {
     const cx = pad + w / 2 + w * (x.c + .5 * (x.r & 1)), cy = pad + r + r * 1.5 * x.r;
     const pts = [0, 1, 2, 3, 4, 5].map(i => { const a = Math.PI / 180 * (60 * i - 30); return `${(cx + r * .96 * Math.cos(a)).toFixed(1)},${(cy + r * .96 * Math.sin(a)).toFixed(1)}`; }).join(' ');
-    const cls = ['hex', x.you ? 'mine' : '', S.ruling && x.realm === S.realm && !x.you ? 'crown' : '', x.id === selHex ? 'sel' : ''].join(' ');
+    const cls = ['hex', x.realm === S.realm && !x.you ? 'ours' : '', x.you ? 'mine' : '', S.ruling && x.realm === S.realm && !x.you ? 'crown' : '', x.id === selHex ? 'sel' : ''].join(' ');
     const words = x.n.split(' ');
     const name = words.length > 1 ? `<tspan x="${cx.toFixed(1)}" dy="0">${esc(words[0])}</tspan><tspan x="${cx.toFixed(1)}" dy="9">${esc(words.slice(1).join(' '))}</tspan>` : esc(x.n);
     s += `<g class="${cls}" data-act="hex" data-arg="${x.id}" tabindex="0" role="button" aria-label="${esc(x.n)}, ${x.realm}${x.you ? ', yours' : ''}"><polygon points="${pts}" fill="${REALM_COL[x.realm]}"/>`;
@@ -3304,26 +3334,101 @@ function mapSVG() {
     s += `<text class="hx-n" x="${cx.toFixed(1)}" y="${(cy + (words.length > 1 ? 8 : 12)).toFixed(1)}">${name}</text>`;
     if (x.you) s += `<text class="hx-b" x="${(cx + r * .42).toFixed(1)}" y="${(cy - r * .36).toFixed(1)}">🚩</text>`;
     if (x.id === S.home) s += `<text class="hx-b" x="${(cx - r * .42).toFixed(1)}" y="${(cy - r * .36).toFixed(1)}">📍</text>`;
+    if (S.alive && mapReach(x)) s += `<text class="hx-b" x="${(cx + r * .42).toFixed(1)}" y="${(cy - r * .36).toFixed(1)}">⚔️</text>`;
     s += '</g>';
   }
   return s + '</svg>';
 }
-function hexCard(x) {
-  let h = `<div class="hexcard"><div class="hc-h"><span class="sw" style="background:${REALM_COL[x.realm]}"></span><b>${esc(x.n)}</b>${x.cap ? '<small>royal seat</small>' : ''}</div>`;
-  h += `<p>${esc(cap(TERR[x.ter].n))} in the kingdom of ${esc(x.realm)}, ruled by ${esc(royalOf(x.realm))}. Held by ${esc(lordOf(x))}.${x.id === S.home ? ' You live here.' : ''}</p>`;
-  h += `<p class="hc-s">Defenders: ${approx(x.gar)}. Yields about ${x.wealth} silver a year to its lord.</p></div>`;
-  if (x.you) h += btnItem('garrison', x.id, '🛡️', `Station 20 soldiers in ${x.n}`, 'Stronger walls against invaders.', S.alive ? ((S.army || 0) >= 20 ? true : 'Need 20 soldiers in your army') : 'You are dead');
-  else h += btnItem('attack', x.id, '⚔️', `March on ${x.n}`, 'Uses one deed. One campaign a year.', canAttack(x));
+/* ---------- guidance: coach line, roads to the crown ---------- */
+const TIPKEY = 'mudcrowns.tips';
+const tipsOn = () => store.get(TIPKEY) !== 'off';
+function coachText() {
+  if (!S || !S.alive) return '';
+  const d = S.deeds;
+  if (S.jail) return `⛓️ You are in the dungeon (${yrs(S.jail)} left). Try 🎲 Deeds → Attempt escape, or press the red seal to wait it out.`;
+  if (S.age < 3) return '👶 You are a baby. Press the red seal (+1 year) to grow up.';
+  if (S.illness && d > 0) return `🤒 You are ill and losing health each year. Open 🎲 Deeds → Body to see a healer.`;
+  if (S.coin < 0) return `⚠️ You are in debt. Earn silver (⚒️ Work) or sell things (🗺️ Realm → Holdings) before the moneylender comes.`;
+  if (S.age < 12) return d > 0 ? `🧒 You have ${d} deed${d > 1 ? 's' : ''} left this year. Play, study or pray in 🎲 Deeds, then press the red seal.` : '✅ Deeds done. Press the red seal to live the next year.';
+  if (!S.job && !S.ruling && S.appliedYear !== S.year) return '⚒️ You have no job. Open Work: posts marked green are open to you right now.';
+  if (d > 0) {
+    const special = S.job && TRADE.some(x => (x.tr === S.job.track || (x.fams && x.fams.includes(jobFam()))) && tradeWhy(x) === true);
+    return `🎲 ${d} deed${d > 1 ? 's' : ''} left this year. Spend ${d > 1 ? 'them' : 'it'} in Deeds${special ? ', or on special work for your trade in ⚒️ Work' : ''}. Then press the red seal.`;
+  }
+  return '✅ All deeds used. Press the red seal to live the next year: wages are paid and things happen.';
+}
+function crownRoadsHTML() {
+  const poor = ['serf', 'peasant', 'craft'].includes(S.cls);
+  const touchCap = S.world && heldTs().some(x => x.adj.some(i => TT(i).cap && TT(i).realm === S.realm));
+  const roads = [
+    ['🔥', 'Rise in rebellion', S.ruling ? 'done' : `Anyone can do it, even a serf. 1) Win Renown and silver. 2) Build an army: hire sellswords, or Rouse the commons if you are poor (Realm → Army). 3) March on the county you live in (Realm → Map). 4) From there, march on your king’s royal seat 🏰. Take it and the crown is yours. Right now: ${S.army || 0} soldiers, ${heldTs().length} count${heldTs().length === 1 ? 'y' : 'ies'} held${touchCap ? ', and your land touches the royal seat!' : '.'}`],
+    ['💍', 'Marry the monarch', S.flags.consort ? 'done' : `If you are famous and fair (Renown 55 and Looks 60), unmarried and 16 to 40, the monarch may court you. Become ${ws('consort', 'queen')}, and if your royal spouse dies first, you inherit the throne. You: Renown ${S.stats.renown}, Looks ${S.stats.looks}.`],
+    ['🗡️', 'Draw the sword from the anvil', S.done && S.done.swordStone ? 'tried' : 'A rare event between 12 and 45. Pull it, and you may be crowned on the spot. Very few succeed.'],
+    ['👑', 'Be born to it, or inherit', S.cls === 'royal' && !S.flags.consort ? (isHeir() ? 'You are the heir' : 'Your older siblings come first') : 'Born royal? When the monarch dies the eldest living child takes the crown. Your own children carry on your line when you die.'],
+  ];
+  let h = `<p class="hint">${poor ? 'Yes, even you can wear a crown. ' : ''}There are four roads to a throne.</p>`;
+  for (const [i, n, d] of roads) h += btnItem('noop', '', i, n, d, true, d === 'done' ? '✓' : '');
   return h;
+}
+
+/* ---------- the menu ---------- */
+function menuHTML() {
+  const o = occOfJob();
+  let h = '<h3 class="sec">Right now</h3>';
+  h += `<div class="sumbox"><b style="font-size:17px;color:var(--ink)">${esc(displayName())}</b>, age ${S.age}<br>${esc(roleLabel())}${S.job ? ` (${esc(TRACKS[S.job.track].n)})` : ''}. ${S.coin} silver. ${S.alive ? `${S.deeds} of ${DEEDS_PER_YEAR} deeds left this year.` : 'Deceased.'}<br><span class="warn" style="color:var(--ink-2)">${esc(coachText() || 'Your story is over. Begin a new life below, or continue as an heir.')}</span></div>`;
+  h += '<h3 class="sec">What each button does</h3>';
+  h += btnItem('panel', 'work', '⚒️', 'Work', 'Find a job, do special work for your trade, and climb to better posts. One application a year.', true, '›');
+  h += btnItem('panel', 'deeds', '🎲', 'Deeds', `Your ${DEEDS_PER_YEAR} actions each year: study, pray, court, carouse, train, scheme. The dots under the button show what is left.`, true, '›');
+  h += btnItem('noop', '', '🔴', 'The red seal: +1 year', 'Ends the year. Wages and rents are paid, living costs are taken, people age, and events happen. Your deeds refill.', true);
+  h += btnItem('panel', 'kin', '👪', 'Kin', 'Your family. Spend time, give gifts, ask for silver, raise children. Heirs let you play on after death.', true, '›');
+  h += btnItem('panel', 'realm', '🗺️', 'Realm', 'The map of the seven kingdoms, your Holdings (buy animals, land, houses) and your Army.', true, '›');
+  h += '<h3 class="sec">Roads to the crown</h3>' + crownRoadsHTML();
+  h += '<h3 class="sec">Your lives</h3>';
+  h += btnItem('confirmNew', '', '🌱', 'Begin a new life', S.alive ? 'Abandon this one and start over.' : 'Start over from birth.', true);
+  h += btnItem('grave', '', '🪦', 'The graveyard', 'Every life you have lived.', true);
+  h += btnItem('feats', '', '🏅', 'Seals of fame', `Achievements across all your lives. ${FEATS.filter(f => getFeats()[f.k]).length} of ${FEATS.length} earned.`, true);
+  h += '<h3 class="sec">Settings</h3>';
+  h += btnItem('tips', '', tipsOn() ? '☑️' : '⬜', 'Show the hint line', 'A short line above the buttons telling you what to do next.', true);
+  [['auto', '🌗', 'Match my device'], ['light', '📜', 'Vellum (light)'], ['dark', '🕯️', 'Candlelight (dark)']].forEach(([v, i, n]) => { h += btnItem('theme', v, i, n, '', true, curTheme() === v ? '✓' : ''); });
+  h += `<h3 class="sec">How a year works</h3><div class="howto"><p><b>1.</b> Spend your deeds (🎲 Deeds, or special work in ⚒️ Work).</p><p><b>2.</b> Press the red seal. A year passes and something usually happens: answer the card that pops up.</p><p><b>3.</b> Watch your six qualities at the bottom. Health keeps you alive, Wits and Renown open better jobs, Piety helps in the Church, Looks helps in love.</p><p>From 12 you can work. At 16 you come of age, get your family’s portion of silver, and may marry, buy land, and raise an army. When you die, carry on as one of your children.</p></div>`;
+  return h;
+}
+
+/* ---------- the map ---------- */
+function mapReach(x) {
+  if (x.you || (S.ruling && x.realm === S.realm)) return false;
+  if (!heldTs().length && !S.ruling) return x.id === S.home;
+  return x.adj.some(i => TT(i).you) || (S.ruling && x.adj.some(i => TT(i).realm === S.realm));
 }
 function mapHTML() {
   if (!S.world) return '<div class="empty">The map has been lost.</div>';
   if (selHex == null || !S.world.t[selHex]) selHex = S.home;
-  const realms = [...new Set(S.world.t.map(x => x.realm))].sort((a, b) => realmTs(b).length - realmTs(a).length);
-  let h = `<p class="hint">${esc(liegeText())}${S.flags.rebel && !S.ruling ? ` King ${esc(S.king)} has branded you a rebel.` : ''}</p>`;
-  h += `<div class="mapwrap">${mapSVG()}</div><p class="maplegend">🚩 your counties, 📍 your home, 🏰 royal seats. Tap a county.</p>`;
+  const realms = [...new Set(S.world.t.map(x => x.realm))].sort((a, b) => (b === S.realm) - (a === S.realm) || realmTs(b).length - realmTs(a).length);
+  const home = TT(S.home);
+  let h = `<div class="sumbox"><span class="sw" style="background:${REALM_COL[S.realm]};vertical-align:-1px"></span> You live in <b style="font-size:inherit">${esc(S.realm)}</b>, ${esc(royalOf(S.realm))}. Your home 📍 is ${esc(home.n)}, held by ${esc(lordOf(home))}.${heldTs().length ? ` You hold <b style="font-size:inherit">${heldTs().length}</b> count${heldTs().length === 1 ? 'y' : 'ies'} 🚩.` : ''}${S.flags.rebel && !S.ruling ? `<br><span class="warn">${esc(KT())} ${esc(S.king)} has branded you a rebel.</span>` : ''}</div>`;
+  h += '<p class="hint">Each hexagon is a <b>county</b>. Its colour shows which kingdom owns it. Tap one to see who holds it and whether you can take it. Swipe the map sideways to see it all.</p>';
+  h += `<div class="mapwrap">${mapSVG()}</div>`;
+  h += '<p class="maplegend">📍 your home · 🚩 yours · 🏰 royal seat (take it to topple a king) · <span class="tgt">⚔️</span> you could march here · white outline: your kingdom</p>';
   h += hexCard(TT(selHex));
-  h += `<h3 class="sec">The kingdoms</h3><ul class="realms">${realms.map(r => `<li><span class="sw" style="background:${REALM_COL[r]}"></span><span><b>${esc(r)}</b>${r === S.realm ? ' (yours)' : ''}<small>${esc(royalOf(r))}, ${realmTs(r).length} ${realmTs(r).length === 1 ? 'county' : 'counties'}</small></span></li>`).join('')}</ul>`;
+  h += `<h3 class="sec">How conquest works</h3><ol class="steps"><li><b>Raise an army</b> in the Army tab: hire sellswords with silver${['serf', 'peasant', 'craft'].includes(S.cls) ? ', or rouse the commons for free' : ''}${hasLand() ? ', or call up levies from your lands' : ''}.</li><li><b>Pick a target</b> marked ⚔️. With no land, you can only rise against the lord of your own home county.</li><li><b>March</b>: it costs one deed, once a year. Compare your strength with the defenders first.</li><li><b>Win</b> and the county is yours, paying you rent. Take your own king’s 🏰 royal seat and you are crowned. Take a foreign king’s and his whole kingdom falls to you.</li></ol>`;
+  h += `<h3 class="sec">The kingdoms</h3><ul class="realms">${realms.map(r => `<li><span class="sw" style="background:${REALM_COL[r]}"></span><span><b>${esc(r)}</b>${r === S.realm ? ' (your kingdom)' : r === S.flags.ally ? ' (your ally)' : ''}<small>${esc(royalOf(r))}, ${realmTs(r).length} ${realmTs(r).length === 1 ? 'county' : 'counties'}</small></span></li>`).join('')}</ul>`;
+  return h;
+}
+function hexCard(x) {
+  const mine = armyPower(), def = defenseOf(x), q = mine / Math.max(1, def);
+  let h = `<div class="hexcard"><div class="hc-h"><span class="sw" style="background:${REALM_COL[x.realm]}"></span><b>${esc(x.n)}</b><small>${x.cap ? 'royal seat' : esc(TERR[x.ter].n)}${x.id === S.home ? ', your home' : ''}</small></div>`;
+  h += `<p>Kingdom: <b>${esc(x.realm)}</b>${x.realm === S.realm ? ' (yours)' : ''}, ruled by ${esc(royalOf(x.realm))}.<br>Held by: <b>${esc(cap(lordOf(x)))}</b>. Pays its lord about ${x.wealth} silver a year.</p>`;
+  if (!x.you) {
+    const pct = Math.round(Math.min(1, q / 2) * 100);
+    h += `<p class="hc-s">Your army ${Math.round(mine)} strength vs. defenders ${approx(def).replace('about ', '~')}${TERR[x.ter].def > 1 ? ` (${TERR[x.ter].n} helps them)` : ''}. <b>${esc(oddsText(q))}</b></p><div class="duel" role="img" aria-label="Your strength against theirs"><i style="width:${pct}%"></i></div>`;
+  } else h += `<p class="hc-s">Garrison: ${approx(x.gar)} soldiers.</p>`;
+  h += '</div>';
+  if (x.you) h += btnItem('garrison', x.id, '🛡️', `Station 20 soldiers in ${x.n}`, 'Stronger walls against invaders.', S.alive ? ((S.army || 0) >= 20 ? true : 'Need 20 soldiers in your army') : 'You are dead');
+  else {
+    const why = canAttack(x);
+    h += btnItem('attack', x.id, '⚔️', `March on ${x.n}`, why === true ? 'Uses one deed. One campaign a year.' : '', why);
+    if (why !== true && /soldiers|Army/.test(why)) h += btnItem('rtab', 'army', '🛡️', 'Go to the Army tab', 'Raise soldiers first.', true, '›');
+  }
   return h;
 }
 function armyHTML() {
@@ -3382,6 +3487,8 @@ function render() {
     lastLines = n;
     ch.scrollTop = ch.scrollHeight;
   }
+  const co = $('coach'), ct = tipsOn() ? coachText() : '';
+  co.textContent = ct; co.hidden = !ct;
   if (sheetKind) renderSheet();
 }
 

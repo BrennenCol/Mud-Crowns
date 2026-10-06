@@ -40,3 +40,19 @@ blacksmith, master blacksmith, guild member, master craftsman, guild master).
 Some posts raise your family's social class. A wealthy merchant or a
 chancellor can outrank a poor knight, because in the Middle Ages wealth and
 office counted for as much as birth.
+
+## From mud to crown
+
+Anyone can become king or queen. The menu's **Roads to the crown** section
+tracks your progress on each road:
+
+1. **Rebellion**: raise an army (poor folk can *Rouse the commons* for free once
+   they have Renown 30), take your home county, then march on your king's royal
+   seat.
+2. **Royal marriage**: with Renown 55 and Looks 60, the monarch may court you.
+   Outlive your royal spouse and the crown is yours.
+3. **The sword in the anvil**: a rare event between 12 and 45.
+4. **Inheritance**: be born royal, or carry on as your children.
+
+A hint line above the buttons always says what to do next. You can turn it off
+in the menu.
