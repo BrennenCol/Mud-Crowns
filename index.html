@@ -395,6 +395,14 @@ html,body{overscroll-behavior:none}
 .tour-dots{text-align:center;color:var(--rubric);letter-spacing:4px;margin:0 0 4px}
 .inp.code{font:13px/1.35 ui-monospace,Menlo,monospace;resize:vertical;word-break:break-all}
 .crash{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;background:var(--overlay)}
+
+.pt{display:block;width:100%;height:100%}
+.pt.dead{filter:grayscale(1) sepia(.35);opacity:.85}
+.arms .face{overflow:hidden;width:42px;height:42px;margin-top:-5px}
+.pic{display:block;overflow:hidden;border-radius:50%;background:radial-gradient(circle at 50% 35%,var(--vellum),var(--vellum-3));box-shadow:0 0 0 1.5px var(--rule-2)}
+.item .ic.pic{width:44px;height:44px}
+.person-h .big.pic{flex:none;width:76px;height:76px;box-shadow:0 0 0 2px var(--gold)}
+.pic.ev{width:84px;height:84px;margin:0 auto;box-shadow:0 0 0 2px var(--gold)}
 </style>
 </head>
 <body>
@@ -2600,6 +2608,24 @@ function armyHTML() {
 
 /* ---------- the map: an old hand-drawn chart ---------- */
 let mapMode = 'realm';
+// Little drawn symbols for each kind of land, placed around the county's name.
+function terrIcons(x, cx, cy) {
+  const f = n => n.toFixed(1), rnd = seeded('t' + x.id);
+  const spots = x.cap ? [[-13, 15], [12, 16]] : [[-12, -13], [12, -12], [-13, 15], [13, 15]];
+  const tree = (a, b) => rnd() < .5 ? `<path d="M${f(a)} ${f(b - 7)} l4.2 7.5 h-8.4 Z" fill="#2f5a2a" stroke="#1d2f18" stroke-width=".7"/><path d="M${f(a)} ${f(b - 4)} l3.6 6 h-7.2 Z" fill="#3c6e34"/><rect x="${f(a - .7)}" y="${f(b + .4)}" width="1.4" height="2.4" fill="#4a3020"/>` : `<rect x="${f(a - .7)}" y="${f(b - 1)}" width="1.4" height="3.6" fill="#4a3020"/><circle cx="${f(a)}" cy="${f(b - 3.6)}" r="3.6" fill="#47783a" stroke="#1d2f18" stroke-width=".7"/><circle cx="${f(a - 1.2)}" cy="${f(b - 4.6)}" r="1.3" fill="#6a9a50"/>`;
+  const mount = (a, b) => `<path d="M${f(a - 7)} ${f(b + 3)} L${f(a)} ${f(b - 7)} L${f(a + 7)} ${f(b + 3)} Z" fill="#c9b48e" stroke="#4a3622" stroke-width=".8" stroke-linejoin="round"/><path d="M${f(a)} ${f(b - 7)} L${f(a + 7)} ${f(b + 3)} H${f(a + 1)} Z" fill="rgba(60,40,20,.28)"/><path d="M${f(a - 2.2)} ${f(b - 3.8)} L${f(a)} ${f(b - 7)} L${f(a + 2.2)} ${f(b - 3.8)} L${f(a + .8)} ${f(b - 4.6)} L${f(a - .6)} ${f(b - 3.6)} Z" fill="#f5f1e6"/>`;
+  const field = (a, b) => `<path d="M${f(a - 7)} ${f(b + 2)} L${f(a - 3)} ${f(b - 4)} L${f(a + 7)} ${f(b - 4)} L${f(a + 3)} ${f(b + 2)} Z" fill="#d9c27a" stroke="#7a5f2a" stroke-width=".6"/><path d="M${f(a - 4.7)} ${f(b)} l3 -4 M${f(a - 1.5)} ${f(b + 1)} l3.6 -5 M${f(a + 1.8)} ${f(b + 1)} l3.6 -5" stroke="#9c7f38" stroke-width=".6"/>`;
+  const reeds = (a, b) => `<ellipse cx="${f(a)}" cy="${f(b + 2)}" rx="6.5" ry="2" fill="#7fa3a0" opacity=".8"/><path d="M${f(a - 3)} ${f(b + 2)} v-6 M${f(a - 1)} ${f(b + 2)} v-8 M${f(a + 1.4)} ${f(b + 2)} v-5.5 M${f(a + 3.4)} ${f(b + 2)} v-7" stroke="#3f5a2a" stroke-width=".9" stroke-linecap="round"/><ellipse cx="${f(a - 1)}" cy="${f(b - 6.4)}" rx=".9" ry="2" fill="#6b4526"/>`;
+  const waves = (a, b) => `<path d="M${f(a - 7)} ${f(b)} q2 -2.4 4 0 t4 0 t4 0" fill="none" stroke="#2f5468" stroke-width=".9" stroke-linecap="round"/><path d="M${f(a - 4)} ${f(b + 3.4)} q2 -2.4 4 0 t4 0" fill="none" stroke="#2f5468" stroke-width=".9" stroke-linecap="round" opacity=".7"/>`;
+  const draw = { forest: tree, hills: mount, plains: field, marsh: reeds, coast: waves }[x.ter];
+  let out = '';
+  for (const [dx, dy] of spots) {
+    if (x.ter === 'forest') { out += tree(cx + dx - 3, cy + dy + 1) + tree(cx + dx + 3, cy + dy + 2); }
+    else if (rnd() < (x.ter === 'plains' ? .55 : .8)) out += draw(cx + dx, cy + dy);
+  }
+  return `<g class="tex" pointer-events="none">${out}</g>`;
+}
+
 function hexOddsColor(x) {
   if (x.you) return '#d9a83a';
   if (S.ruling && x.realm === S.realm) return '#9a9284';
@@ -2622,10 +2648,14 @@ function mapSVG() {
     <pattern id="p-marsh" width="14" height="10" patternUnits="userSpaceOnUse"><path d="M2 8 h6 M4 8 v-4 M6 8 v-3 M10 4 h3" stroke="rgba(0,40,40,.35)" stroke-width="1" fill="none"/></pattern>
     <pattern id="p-coast" width="16" height="12" patternUnits="userSpaceOnUse"><path d="M1 8 q3.5 -3 7 0 t7 0" fill="none" stroke="rgba(0,30,60,.3)" stroke-width="1"/></pattern>
     <radialGradient id="g-vig" cx="50%" cy="50%" r="75%"><stop offset=".6" stop-color="rgba(0,0,0,0)"/><stop offset="1" stop-color="rgba(60,40,10,.35)"/></radialGradient>
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="4.5"/></filter>
+    <filter id="paper"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="2"/><feColorMatrix values="0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .12 0 0 0 .09 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
   </defs>`;
   s += `<rect class="sea" x="0" y="0" width="${W.toFixed(0)}" height="${H.toFixed(0)}" rx="10"/><rect x="0" y="0" width="${W.toFixed(0)}" height="${H.toFixed(0)}" rx="10" fill="url(#p-sea)"/>`;
+  // portolan rhumb lines fanning out from the compass
+  { const ox = pad + 30, oy = H - 34; let rl = ''; for (let i = 0; i < 16; i++) { const a = Math.PI * 2 * i / 16; rl += `M${f(ox)} ${f(oy)}L${f(ox + Math.cos(a) * 900)} ${f(oy + Math.sin(a) * 900)}`; } s += `<path d="${rl}" stroke="rgba(90,50,20,.16)" stroke-width=".8" pointer-events="none"/>`; }
   // land shadow, then the counties
-  for (const x of S.world.t) { const [cx, cy] = pos(x); s += `<polygon points="${[0, 1, 2, 3, 4, 5].map(i => vtx(cx + 2, cy + 3, i).map(f).join(',')).join(' ')}" fill="rgba(40,25,5,.28)"/>`; }
+  s += '<g filter="url(#rough)">'; for (const x of S.world.t) { const [cx, cy] = pos(x); s += `<polygon points="${[0, 1, 2, 3, 4, 5].map(i => vtx(cx + 2, cy + 3, i, 1.06).map(f).join(',')).join(' ')}" fill="rgba(40,25,5,.3)"/>`; } s += '</g>';
   for (const x of S.world.t) {
     const [cx, cy] = pos(x);
     const pts = [0, 1, 2, 3, 4, 5].map(i => vtx(cx, cy, i, .995).map(f).join(',')).join(' ');
@@ -2633,7 +2663,7 @@ function mapSVG() {
     const fill = mapMode === 'war' ? hexOddsColor(x) : REALM_COL[x.realm];
     const dim = mapMode === 'war' && !reach && !x.you ? ' style="opacity:.45"' : '';
     const cls = ['hex', x.realm === S.realm && !x.you ? 'ours' : '', x.you ? 'mine' : '', x.id === selHex ? 'sel' : ''].join(' ');
-    s += `<g class="${cls}" data-act="hex" data-arg="${x.id}" tabindex="0" role="button" aria-label="${esc(x.n)}, ${x.realm}${x.you ? ', yours' : ''}"${dim}><polygon points="${pts}" fill="${fill}"/><polygon points="${pts}" fill="url(#p-${x.ter})" class="tex"/>`;
+    s += `<g class="${cls}" data-act="hex" data-arg="${x.id}" tabindex="0" role="button" aria-label="${esc(x.n)}, ${x.realm}${x.you ? ', yours' : ''}"${dim}><polygon points="${pts}" fill="${fill}" filter="url(#rough)"/>${mapMode !== 'war' ? terrIcons(x, cx, cy) : `<polygon points="${pts}" fill="url(#p-${x.ter})" class="tex" opacity=".6"/>`}`;
     if (x.cap) s += `<g transform="translate(${f(cx - 9)} ${f(cy - 21)})" class="castle"><path d="M0 18 V6 h3 v-4 h3 v4 h6 v-4 h3 v4 h3 V18 Z" fill="#efe6d2" stroke="#2a1d14" stroke-width="1.2"/><rect x="7" y="11" width="4" height="7" fill="#2a1d14"/><path d="M9 2 V-6 l6 2.5 -6 2.5" fill="#9b1f12" stroke="#2a1d14" stroke-width=".8"/></g>`;
     if (x.walls) s += `<text class="hx-b" x="${f(cx)}" y="${f(cy + r * .62)}">${'▪'.repeat(x.walls)}</text>`;
     if (mapMode === 'counties') {
@@ -2657,8 +2687,8 @@ function mapSVG() {
       if (!y) coast += seg; else if (y.realm !== x.realm && x.id < y.id) border += seg;
     }
   }
-  s += `<path d="${coast}" fill="none" stroke="rgba(30,45,50,.55)" stroke-width="2.4" stroke-linecap="round" pointer-events="none"/>`;
-  s += `<path d="${border}" fill="none" stroke="#2a1d14" stroke-width="3" stroke-linecap="round" pointer-events="none"/><path d="${border}" fill="none" stroke="rgba(255,240,200,.7)" stroke-width="1" stroke-dasharray="3 4" pointer-events="none"/>`;
+  s += `<g filter="url(#rough)" pointer-events="none"><path d="${coast}" fill="none" stroke="rgba(30,60,70,.22)" stroke-width="7" stroke-linecap="round"/><path d="${coast}" fill="none" stroke="rgba(30,45,50,.7)" stroke-width="2.2" stroke-linecap="round"/></g>`;
+  s += `<path d="${border}" fill="none" stroke="#2a1d14" stroke-width="3" stroke-linecap="round" pointer-events="none" filter="url(#rough)"/><path d="${border}" fill="none" stroke="rgba(255,240,200,.7)" stroke-width="1" stroke-dasharray="3 4" pointer-events="none"/>`;
   // kingdom names
   if (mapMode === 'realm') {
     for (const realm of [...new Set(S.world.t.map(x => x.realm))]) {
@@ -2670,6 +2700,9 @@ function mapSVG() {
   s += `<g transform="translate(${f(pad + 30)} ${f(H - 34)})" class="compass" pointer-events="none"><circle r="20" fill="rgba(242,231,201,.85)" stroke="#2a1d14" stroke-width="1"/><path d="M0 -19 L4 0 L0 19 L-4 0 Z" fill="#9b1f12"/><path d="M-19 0 L0 -4 L19 0 L0 4 Z" fill="#2a1d14"/><text y="-23" text-anchor="middle" font-size="9" font-weight="700" fill="#2a1d14">N</text></g>`;
   s += `<g transform="translate(${f(W - 92)} ${f(14)})" pointer-events="none"><rect width="82" height="24" rx="4" fill="rgba(242,231,201,.92)" stroke="#a88c5b"/><text x="41" y="16.5" text-anchor="middle" class="map-title">The Seven Kingdoms</text></g>`;
   s += `<text x="${f(pad + w * 3.6)}" y="${f(H - 16)}" font-size="20" opacity=".55" pointer-events="none">🐋</text>`;
+  // a cog under sail, and a double frame like a printed chart
+  s += `<g transform="translate(${f(W - 44)} ${f(pad + top + r * 1.5 * 2 + 6)})" pointer-events="none"><path d="M-13 4 h26 l-5 6 h-16 Z" fill="#7a4e2a" stroke="#2a1d14" stroke-width=".8"/><path d="M0 4 V-18" stroke="#2a1d14" stroke-width="1.1"/><path d="M1 -17 q10 9 0 19 Z" fill="#f2e7c9" stroke="#2a1d14" stroke-width=".8"/><path d="M0 -18 l7 2 -7 2" fill="#9b1f12"/><path d="M-16 12 q3 -2 6 0 t6 0 t6 0 t6 0 t6 0" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="1"/></g>`;
+  s += `<rect x="3" y="3" width="${f(W - 6)}" height="${f(H - 6)}" rx="8" fill="none" stroke="#6b4e2a" stroke-width="1.6" pointer-events="none"/><rect x="7" y="7" width="${f(W - 14)}" height="${f(H - 14)}" rx="6" fill="none" stroke="#6b4e2a" stroke-width=".6" pointer-events="none"/>`;
   s += `<rect x="0" y="0" width="${W.toFixed(0)}" height="${H.toFixed(0)}" rx="10" fill="url(#g-vig)" pointer-events="none"/>`;
   return s + '</svg>';
 }
@@ -3432,6 +3465,138 @@ EVENTS.push(
     ] },
 );
 
+/* ================= Portraits: painted in the manner of a manuscript ================= */
+// Each person gets a face drawn from a seed (their name or id), so they look the same all their life,
+// and the face changes with age, sex, station and trade: crowns, mitres, veils, helms and straw hats.
+function seeded(str) {
+  let h = 1779033703 ^ String(str).length;
+  for (let i = 0; i < String(str).length; i++) { h = Math.imul(h ^ String(str).charCodeAt(i), 3432918353); h = (h << 13) | (h >>> 19); }
+  return () => { h = Math.imul(h ^ (h >>> 16), 2246822507); h = Math.imul(h ^ (h >>> 13), 3266489909); h ^= h >>> 16; return (h >>> 0) / 4294967296; };
+}
+const SKINS = ['#f3d9c0', '#ecc8a6', '#e0b48c', '#cf9b72', '#b07a52', '#8a5a3a'];
+const HAIRS = ['#2a1d14', '#4a3020', '#6b4526', '#8c5a2b', '#b5823c', '#d9b25e', '#a5432a'];
+const GOLD = '#d9a83a', GOLD_D = '#7a5410', INK = '#2a1d14';
+function roleOf(p) {
+  const j = (p.job || '').toLowerCase();
+  if (p.crown) return 'crown';
+  if (/^(king|queen|emperor|empress)\b/.test(j)) return 'crown';
+  if (/prince|princess|maid of honour|lady-in-waiting/.test(j) || p.cls === 'royal') return 'circlet';
+  if (/bishop|archbishop|cardinal|pope/.test(j)) return 'mitre';
+  if (/nun|prioress|abbess|novice/.test(j)) return 'veil';
+  if (/monk|prior|abbot|priest|chorister|choirboy/.test(j)) return p.sex === 'm' ? 'tonsure' : 'veil';
+  if (/knight|marshal|squire|baron at arms|duke at|constable|general/.test(j)) return 'helm';
+  if (/soldier|spear|archer|crossbow|man-at-arms|sergeant|captain|watchman|mercenary|veteran|camp/.test(j)) return 'kettle';
+  if (/^(lord|lady|count|duke|baron)/.test(j) || p.cls === 'noble') return p.sex === 'm' ? 'noblehat' : 'circlet';
+  if (/merchant|trader|vintner|goldsmith|jeweler|silk|guild|innkeeper|shopkeeper|apothecary|physician|chancellor|adviser|treasurer|judge|magistrate|diplomat|steward/.test(j)) return 'hood';
+  if (/farm|peasant|serf|plough|shepherd|herd|swine|cow|goose|scarer|hay|thatcher/.test(j)) return 'straw';
+  if (/miner|quarry|ditch|road|porter|hauler|dock|smith|mason|stone|carpenter|woodcutter|charcoal|labor|builder|tanner|butcher|miller/.test(j)) return p.sex === 'm' ? 'coif' : 'kerchief';
+  if (/scholar|professor|clerk|scribe|copyist|teacher|schoolmaster/.test(j)) return 'cap';
+  return '';
+}
+function clothesOf(p, role) {
+  if (role === 'crown' || p.cls === 'royal') return 'royal';
+  if (['mitre', 'tonsure'].includes(role) || (role === 'veil' && /nun|prioress|abbess|novice/i.test(p.job || ''))) return 'clergy';
+  if (role === 'helm' || role === 'kettle') return 'mail';
+  if (p.cls === 'noble') return 'noble';
+  if (p.cls === 'merchant' || role === 'hood') return 'merchant';
+  return 'common';
+}
+const CLOTH = { serf: '#6b5238', peasant: '#5f6b3a', craft: '#4c5d70', merchant: '#7a2430', noble: '#23427a', royal: '#5c2a6e' };
+function portraitSVG(p) {
+  const rnd = seeded(p.seed || p.name || 'x');
+  const skin = SKINS[Math.floor(rnd() * SKINS.length)];
+  let hair = HAIRS[Math.floor(rnd() * HAIRS.length)];
+  const age = p.age || 0, m = p.sex === 'm';
+  if (age >= 68) hair = '#e8e4dc'; else if (age >= 52) hair = '#a59a8c';
+  let role = p.role != null ? p.role : roleOf(p);
+  if (!role && p.sex === 'f' && age >= 48 && p.cls !== 'royal' && p.cls !== 'noble') role = 'veil';
+  const clothes = clothesOf(p, role);
+  const beard = m && age >= 19 && rnd() < .62, bald = m && age >= 45 && rnd() < .4;
+  const longHair = !m && rnd() < .85, braids = !m && age < 14 && rnd() < .5;
+  const mood = p.mood == null ? 1 : p.mood; // 0 sad, 1 calm, 2 smile
+  const baby = age < 3, child = age < 13;
+  const hx = 32, hy = baby ? 33 : child ? 31 : 28, rx = baby ? 12.5 : child ? 11.5 : 10.5, ry = baby ? 12 : child ? 12.5 : 13;
+  let s = '';
+  // body and clothes
+  const cloth = clothes === 'royal' ? CLOTH.royal : clothes === 'noble' ? CLOTH.noble : clothes === 'merchant' ? CLOTH.merchant : clothes === 'clergy' ? (role === 'mitre' ? '#f2eee4' : '#3a2e26') : clothes === 'mail' ? '#8a8f96' : CLOTH[p.cls] || CLOTH.peasant;
+  if (baby) {
+    s += `<path d="M10 64 C12 50 20 44 32 44 C44 44 52 50 54 64 Z" fill="#efe8da" stroke="${INK}" stroke-width=".8"/><path d="M14 56 q18 -8 36 0" fill="none" stroke="#c9bfae" stroke-width="1.2"/>`;
+  } else {
+    s += `<rect x="${hx - 4}" y="${hy + ry - 4}" width="8" height="9" fill="${skin}"/>`;
+    s += `<path d="M6 64 C8 ${child ? 52 : 50} 19 ${child ? 46 : 44} 32 ${child ? 46 : 44} C45 ${child ? 46 : 44} 56 ${child ? 52 : 50} 58 64 Z" fill="${cloth}" stroke="${INK}" stroke-width=".8"/>`;
+    if (clothes === 'mail') s += `<path d="M10 64 C12 52 21 46 32 46 C43 46 52 52 54 64" fill="url(#pt-mail)" opacity=".7"/><path d="M26 47 L32 64 L38 47" fill="${p.tabard || '#9b1f12'}" stroke="${INK}" stroke-width=".6"/>`;
+    if (clothes === 'royal') s += `<path d="M15 52 C20 47 26 46 32 46 C38 46 44 47 49 52 L46 55 C41 51 36 50 32 50 C28 50 23 51 18 55 Z" fill="#f4f0e6" stroke="${INK}" stroke-width=".5"/><circle cx="22" cy="51.5" r=".8" fill="#111"/><circle cx="28" cy="49.5" r=".8" fill="#111"/><circle cx="36" cy="49.5" r=".8" fill="#111"/><circle cx="42" cy="51.5" r=".8" fill="#111"/>`;
+    if (clothes === 'noble') s += `<path d="M20 49 Q32 54 44 49" fill="none" stroke="${GOLD}" stroke-width="1.6"/><circle cx="32" cy="55" r="1.8" fill="${GOLD}" stroke="${GOLD_D}" stroke-width=".5"/>`;
+    if (clothes === 'merchant') s += `<path d="M17 52 C22 47 27 46 32 46 C37 46 42 47 47 52" fill="none" stroke="#8a6a4a" stroke-width="3"/>`;
+    if (clothes === 'clergy' && role !== 'mitre') s += `<path d="M27 46 h10 v3 h-10 z" fill="#f2eee4"/>`;
+    if (clothes === 'clergy' && role === 'mitre') s += `<path d="M30 46 v18 M24 52 h16" stroke="${GOLD}" stroke-width="2"/>`;
+    if (clothes === 'common') s += `<path d="M27 45 L32 52 L37 45" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="1"/>`;
+  }
+  // hair behind the head
+  if (!baby && longHair && !['veil', 'helm', 'kettle'].includes(role)) s += `<path d="M${hx - rx - 2} ${hy - 2} C${hx - rx - 4} ${hy + 14} ${hx - rx - 1} ${hy + 20} ${hx - rx + 2} ${hy + 21} L${hx + rx - 2} ${hy + 21} C${hx + rx + 1} ${hy + 20} ${hx + rx + 4} ${hy + 14} ${hx + rx + 2} ${hy - 2} Z" fill="${hair}"/>`;
+  if (role === 'veil') s += `<path d="M${hx - rx - 4} ${hy - 6} C${hx - rx - 6} ${hy + 14} ${hx - rx - 3} ${hy + 22} ${hx - rx} ${hy + 24} L${hx + rx} ${hy + 24} C${hx + rx + 3} ${hy + 22} ${hx + rx + 6} ${hy + 14} ${hx + rx + 4} ${hy - 6} C${hx + rx} ${hy - 18} ${hx - rx} ${hy - 18} ${hx - rx - 4} ${hy - 6} Z" fill="${/nun|abbess|prioress|novice/i.test(p.job || '') ? '#2b2420' : '#efe9dc'}" stroke="${INK}" stroke-width=".6"/>`;
+  // ears and head
+  if (!baby) s += `<ellipse cx="${hx - rx}" cy="${hy + 1}" rx="2" ry="3" fill="${skin}" stroke="rgba(0,0,0,.25)" stroke-width=".5"/><ellipse cx="${hx + rx}" cy="${hy + 1}" rx="2" ry="3" fill="${skin}" stroke="rgba(0,0,0,.25)" stroke-width=".5"/>`;
+  s += `<ellipse cx="${hx}" cy="${hy}" rx="${rx}" ry="${ry}" fill="${skin}" stroke="${INK}" stroke-width=".8"/>`;
+  if (role === 'veil') s += `<path d="M${hx - rx + 1} ${hy + 6} C${hx - rx + 2} ${hy + 15} ${hx + rx - 2} ${hy + 15} ${hx + rx - 1} ${hy + 6} L${hx + rx + 1} ${hy + 14} C${hx + 6} ${hy + 20} ${hx - 6} ${hy + 20} ${hx - rx - 1} ${hy + 14} Z" fill="#f7f3ea" stroke="${INK}" stroke-width=".5"/>`;
+  // cheeks
+  s += `<circle cx="${hx - 6}" cy="${hy + 4}" r="2.4" fill="#d9605a" opacity="${child ? .32 : .2}"/><circle cx="${hx + 6}" cy="${hy + 4}" r="2.4" fill="#d9605a" opacity="${child ? .32 : .2}"/>`;
+  // eyes, brows, nose, mouth
+  const ey = hy + (baby ? 0 : 1), es = baby ? 1.5 : child ? 1.6 : 1.3;
+  if (p.dead) s += `<path d="M${hx - 6} ${ey} h3 M${hx + 3} ${ey} h3" stroke="${INK}" stroke-width="1.1"/>`;
+  else s += `<ellipse cx="${hx - 4.5}" cy="${ey}" rx="${es + .7}" ry="${es}" fill="#fff"/><ellipse cx="${hx + 4.5}" cy="${ey}" rx="${es + .7}" ry="${es}" fill="#fff"/><circle cx="${hx - 4.3}" cy="${ey + .1}" r="${es * .75}" fill="${INK}"/><circle cx="${hx + 4.7}" cy="${ey + .1}" r="${es * .75}" fill="${INK}"/>`;
+  if (!baby) s += `<path d="M${hx - 7} ${ey - 3.5} q2.5 -1.6 5 -.4 M${hx + 2} ${ey - 3.9} q2.5 -1.2 5 .4" fill="none" stroke="${age >= 52 ? '#8f877c' : hair === '#e8e4dc' ? '#bbb' : hair}" stroke-width="1.2" stroke-linecap="round"/>`;
+  s += `<path d="M${hx} ${ey + 1} q-1.6 3.6 .2 4.4" fill="none" stroke="rgba(60,30,10,.55)" stroke-width=".9" stroke-linecap="round"/>`;
+  const my = hy + (baby ? 6 : 8);
+  s += mood >= 2 ? `<path d="M${hx - 3} ${my} q3 2.6 6 0" fill="none" stroke="#8c3a2a" stroke-width="1.1" stroke-linecap="round"/>` : mood <= 0 ? `<path d="M${hx - 3} ${my + 1} q3 -2 6 0" fill="none" stroke="#8c3a2a" stroke-width="1.1" stroke-linecap="round"/>` : `<path d="M${hx - 2.6} ${my} h5.2" stroke="#8c3a2a" stroke-width="1.1" stroke-linecap="round"/>`;
+  if (age >= 50) s += `<path d="M${hx - 9} ${ey + 1} l-1.6 -.6 M${hx - 9} ${ey + 2.2} l-1.6 .5 M${hx + 9} ${ey + 1} l1.6 -.6 M${hx + 9} ${ey + 2.2} l1.6 .5 M${hx - 4} ${hy - 9} q4 -1 8 0" fill="none" stroke="rgba(60,30,10,.35)" stroke-width=".7"/>`;
+  // beard and moustache
+  if (beard && role !== 'veil') {
+    const full = rnd() < .6;
+    s += full ? `<path d="M${hx - rx + .5} ${hy + 2} C${hx - rx + 1} ${hy + ry + 5} ${hx + rx - 1} ${hy + ry + 5} ${hx + rx - .5} ${hy + 2} C${hx + rx - 3} ${hy + 9} ${hx + 4} ${hy + 10} ${hx} ${hy + 10.5} C${hx - 4} ${hy + 10} ${hx - rx + 3} ${hy + 9} ${hx - rx + .5} ${hy + 2} Z" fill="${hair}" stroke="${INK}" stroke-width=".5"/>` : `<path d="M${hx - 3} ${hy + 10} q3 6 6 0 q-3 1.6 -6 0" fill="${hair}"/>`;
+    s += `<path d="M${hx - 4.5} ${my - 1} q2.2 -1.8 4.5 -.6 q2.3 -1.2 4.5 .6 q-2.2 .6 -4.5 -.1 q-2.3 .7 -4.5 .1" fill="${hair}" stroke="${INK}" stroke-width=".4"/>`;
+  }
+  // hair on top
+  const top = hy - ry;
+  if (baby) s += `<path d="M${hx - rx - 1} ${hy + 2} C${hx - rx - 2} ${top - 4} ${hx + rx + 2} ${top - 4} ${hx + rx + 1} ${hy + 2} C${hx + 7} ${top + 3} ${hx - 7} ${top + 3} ${hx - rx - 1} ${hy + 2} Z" fill="#f7f3ea" stroke="${INK}" stroke-width=".7"/><path d="M${hx - rx} ${hy + 3} q-2 4 -4 5 M${hx + rx} ${hy + 3} q2 4 4 5" stroke="#c9bfae" stroke-width="1.2" fill="none"/>`;
+  else if (role === 'tonsure') s += `<path d="M${hx - rx - .5} ${hy - 2} C${hx - rx} ${top + 4} ${hx - 6} ${top + 1} ${hx - 5} ${top + 4} C${hx - 2} ${top + 6} ${hx + 2} ${top + 6} ${hx + 5} ${top + 4} C${hx + 6} ${top + 1} ${hx + rx} ${top + 4} ${hx + rx + .5} ${hy - 2} C${hx + rx - 2} ${hy - 6} ${hx - rx + 2} ${hy - 6} ${hx - rx - .5} ${hy - 2} Z" fill="${hair}" stroke="${INK}" stroke-width=".5"/>`;
+  else if (!['veil', 'helm', 'kettle'].includes(role)) {
+    if (bald) s += `<path d="M${hx - rx - .5} ${hy - 1} C${hx - rx} ${hy - 7} ${hx - rx + 3} ${hy - 7} ${hx - rx + 4} ${hy - 4} M${hx + rx + .5} ${hy - 1} C${hx + rx} ${hy - 7} ${hx + rx - 3} ${hy - 7} ${hx + rx - 4} ${hy - 4}" fill="${hair}" stroke="${hair}" stroke-width="2.4"/>`;
+    else if (m) { const fringe = rnd() < .5; s += `<path d="M${hx - rx - 1} ${hy - 1} C${hx - rx - 2} ${top - 3} ${hx + rx + 2} ${top - 3} ${hx + rx + 1} ${hy - 1} C${hx + rx - 1} ${hy - 5} ${hx + 5} ${top + (fringe ? 7 : 4)} ${hx + 1} ${top + (fringe ? 8 : 5)} C${hx - 3} ${top + (fringe ? 9 : 5)} ${hx - rx + 1} ${hy - 6} ${hx - rx - 1} ${hy - 1} Z" fill="${hair}" stroke="${INK}" stroke-width=".6"/>`; }
+    else s += `<path d="M${hx - rx - 1.5} ${hy + 1} C${hx - rx - 3} ${top - 3} ${hx + rx + 3} ${top - 3} ${hx + rx + 1.5} ${hy + 1} C${hx + rx - 1} ${hy - 5} ${hx + 3} ${top + 3} ${hx} ${top + 4} C${hx - 3} ${top + 3} ${hx - rx + 1} ${hy - 5} ${hx - rx - 1.5} ${hy + 1} Z" fill="${hair}" stroke="${INK}" stroke-width=".6"/>${braids ? `<path d="M${hx - rx - 1} ${hy + 4} v12 M${hx + rx + 1} ${hy + 4} v12" stroke="${hair}" stroke-width="3.4" stroke-linecap="round"/>` : ''}`;
+  }
+  // headwear
+  if (role === 'crown') s += `<path d="M${hx - 11} ${top + 5} L${hx - 12} ${top - 6} L${hx - 6} ${top - 1} L${hx} ${top - 9} L${hx + 6} ${top - 1} L${hx + 12} ${top - 6} L${hx + 11} ${top + 5} Z" fill="${GOLD}" stroke="${GOLD_D}" stroke-width=".9"/><circle cx="${hx}" cy="${top + 1.5}" r="1.8" fill="#9b1f12"/><circle cx="${hx - 6.5}" cy="${top + 2}" r="1.3" fill="#23427a"/><circle cx="${hx + 6.5}" cy="${top + 2}" r="1.3" fill="#2f7253"/><circle cx="${hx}" cy="${top - 9}" r="1.3" fill="${GOLD}" stroke="${GOLD_D}" stroke-width=".5"/>`;
+  if (role === 'circlet') s += `<path d="M${hx - rx + .5} ${top + 7} Q${hx} ${top + 3} ${hx + rx - .5} ${top + 7}" fill="none" stroke="${GOLD}" stroke-width="2"/><circle cx="${hx}" cy="${top + 4.6}" r="1.4" fill="#9b1f12" stroke="${GOLD_D}" stroke-width=".4"/>`;
+  if (role === 'mitre') s += `<path d="M${hx - 9} ${top + 6} L${hx - 7} ${top - 12} L${hx} ${top - 6} L${hx + 7} ${top - 12} L${hx + 9} ${top + 6} Z" fill="#f2eee4" stroke="${INK}" stroke-width=".8"/><path d="M${hx} ${top - 4} v9 M${hx - 3} ${top} h6" stroke="${GOLD}" stroke-width="1.6"/><path d="M${hx - 9} ${top + 4} h18" stroke="${GOLD}" stroke-width="1.6"/>`;
+  if (role === 'noblehat') s += `<path d="M${hx - 12} ${top + 4} C${hx - 12} ${top - 7} ${hx + 12} ${top - 7} ${hx + 12} ${top + 4} Z" fill="${p.hatColor || '#23427a'}" stroke="${INK}" stroke-width=".7"/><path d="M${hx - 12.5} ${top + 4} h25" stroke="#e8e0cf" stroke-width="3" stroke-linecap="round"/><path d="M${hx + 6} ${top - 2} q6 -6 9 -2" fill="none" stroke="#e9e4d6" stroke-width="1.6"/>`;
+  if (role === 'hood') s += `<path d="M${hx - rx - 4} ${hy + 10} C${hx - rx - 6} ${top - 4} ${hx + rx + 6} ${top - 4} ${hx + rx + 4} ${hy + 10} L${hx + rx} ${hy + 10} C${hx + rx + 1} ${top + 2} ${hx - rx - 1} ${top + 2} ${hx - rx} ${hy + 10} Z" fill="${p.cls === 'merchant' ? '#7a2430' : '#3f5f3a'}" stroke="${INK}" stroke-width=".7"/><path d="M${hx + rx + 2} ${top + 2} q8 2 10 10" fill="none" stroke="${p.cls === 'merchant' ? '#7a2430' : '#3f5f3a'}" stroke-width="3" stroke-linecap="round"/>`;
+  if (role === 'straw') s += `<ellipse cx="${hx}" cy="${top + 4}" rx="${rx + 9}" ry="3.6" fill="#e2c46a" stroke="${GOLD_D}" stroke-width=".8"/><path d="M${hx - 8} ${top + 4} C${hx - 8} ${top - 6} ${hx + 8} ${top - 6} ${hx + 8} ${top + 4} Z" fill="#e8cd7a" stroke="${GOLD_D}" stroke-width=".8"/><path d="M${hx - 8} ${top + 1.5} h16" stroke="#9b1f12" stroke-width="1.4"/>`;
+  if (role === 'coif') s += `<path d="M${hx - rx - 1} ${hy + 4} C${hx - rx - 2} ${top - 3} ${hx + rx + 2} ${top - 3} ${hx + rx + 1} ${hy + 4} C${hx + rx - 1} ${top + 4} ${hx - rx + 1} ${top + 4} ${hx - rx - 1} ${hy + 4} Z" fill="#efe8da" stroke="${INK}" stroke-width=".6"/><path d="M${hx - rx} ${hy + 4} q2 8 6 10 M${hx + rx} ${hy + 4} q-2 8 -6 10" stroke="#efe8da" stroke-width="1.4" fill="none"/>`;
+  if (role === 'kerchief') s += `<path d="M${hx - rx - 2} ${hy} C${hx - rx - 2} ${top - 4} ${hx + rx + 2} ${top - 4} ${hx + rx + 2} ${hy} C${hx + 5} ${top + 3} ${hx - 5} ${top + 3} ${hx - rx - 2} ${hy} Z" fill="#b8452f" stroke="${INK}" stroke-width=".6"/><circle cx="${hx - 3}" cy="${top + 1}" r=".8" fill="#f3e2b0"/><circle cx="${hx + 3}" cy="${top}" r=".8" fill="#f3e2b0"/>`;
+  if (role === 'cap') s += `<path d="M${hx - rx} ${top + 5} C${hx - rx} ${top - 4} ${hx + rx} ${top - 4} ${hx + rx} ${top + 5} Z" fill="#1f1a17" stroke="${INK}" stroke-width=".6"/>`;
+  if (role === 'kettle') s += `<ellipse cx="${hx}" cy="${top + 5}" rx="${rx + 7}" ry="3" fill="#8f949b" stroke="${INK}" stroke-width=".8"/><path d="M${hx - rx} ${top + 5} C${hx - rx} ${top - 7} ${hx + rx} ${top - 7} ${hx + rx} ${top + 5} Z" fill="#a8adb4" stroke="${INK}" stroke-width=".8"/><path d="M${hx - 3} ${top - 3} q3 -2 6 0" stroke="#dfe3e8" stroke-width="1.2" fill="none"/>`;
+  if (role === 'helm') s += `<path d="M${hx - rx - 2} ${hy + 12} C${hx - rx - 3} ${top - 6} ${hx + rx + 3} ${top - 6} ${hx + rx + 2} ${hy + 12} L${hx + rx - 1} ${hy + 12} C${hx + rx} ${hy - 3} ${hx + 7} ${top + 6} ${hx} ${top + 6} C${hx - 7} ${top + 6} ${hx - rx} ${hy - 3} ${hx - rx + 1} ${hy + 12} Z" fill="#9aa0a8" stroke="${INK}" stroke-width=".8"/><path d="M${hx - rx - 2} ${hy + 10} C${hx - 8} ${hy + 18} ${hx + 8} ${hy + 18} ${hx + rx + 2} ${hy + 10}" fill="url(#pt-mail)" stroke="${INK}" stroke-width=".6"/><path d="M${hx} ${top - 5} q8 -6 13 1" fill="none" stroke="${p.plume || '#9b1f12'}" stroke-width="2.4" stroke-linecap="round"/>`;
+  const defs = '<defs><pattern id="pt-mail" width="3" height="3" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r="1.1" fill="none" stroke="#5e636a" stroke-width=".6"/></pattern></defs>';
+  return `<svg class="pt${p.dead ? ' dead' : ''}" viewBox="10 5 44 50" aria-hidden="true">${defs}${s}</svg>`;
+}
+// Portrait of the player, or of anyone in their kin.
+function playerPortrait() {
+  const role = S.ruling || S.flags.consort ? 'crown' : (inTrack('church') && S.job.level >= 4) ? 'mitre' : (inTrack('church') || inTrack('priest')) ? (S.sex === 'm' && S.job.level >= 1 ? 'tonsure' : 'veil') : (S.flags.knight || inTrack('knight')) && S.age >= 16 ? 'helm' : isMil() ? 'kettle' : S.flags.disguise ? 'coif' : null;
+  const p = { seed: `${S.first} ${S.last} ${S.born}`, sex: S.flags.disguise ? 'm' : S.sex, age: S.age, cls: S.cls, job: S.job ? jobTitle() : (S.cls === 'royal' ? ws('Prince', 'Princess') : ''), dead: !S.alive, mood: S.stats.happy >= 60 ? 2 : S.stats.happy < 30 ? 0 : 1, tabard: REALM_COL[S.realm] };
+  if (role) p.role = role;
+  if (S.age < 3) p.role = '';
+  if (hist() && S.sex === 'f' && !role && S.age >= 18 && S.kin.some(k => k.sp) && S.cls !== 'royal') p.role = 'veil';
+  return portraitSVG(p);
+}
+function kinPortrait(k) {
+  const role = k.ruler ? 'crown' : null;
+  const p = { seed: k.id + k.name, sex: k.sex, age: k.age, cls: k.cls, job: k.job || '', dead: !k.alive, mood: k.rv ? 0 : k.bond >= 65 ? 2 : k.bond < 30 ? 0 : 1 };
+  if (role) p.role = role;
+  if (k.age < 3) p.role = '';
+  return portraitSVG(p);
+}
+
 /* ================= Interface ================= */
 const Q = [];
 let workTab = 'low', workFilter = 'all', jobId = null;
@@ -3716,7 +3881,7 @@ function deedsHTML() {
 }
 function kinItem(k) {
   const sub = k.alive ? `${relOf(k)}, age ${k.age}${k.job ? `, ${/^(King|Queen|Lord|Lady)\b/.test(k.job) ? k.job : k.job.toLowerCase()}` : ''}` : `${relOf(k)}, died ${k.cause || ''} aged ${k.died}`;
-  return `<button class="item${k.alive ? '' : ' dead'}" data-act="${k.alive ? 'person' : 'noop'}" data-arg="${k.id}"><span class="ic" aria-hidden="true">${k.alive ? faceFor(k.sex, k.age) : '🪦'}</span><span class="tx"><b>${esc(fullName(k))}</b><small>${esc(sub)}</small>${k.alive ? `<span class="bar" role="img" aria-label="Relationship ${k.bond}%"><i class="${barCls(k.bond)}" style="width:${k.bond}%"></i></span>` : ''}</span>${k.alive ? '<span class="rt chev" aria-hidden="true">›</span>' : ''}</button>`;
+  return `<button class="item${k.alive ? '' : ' dead'}" data-act="${k.alive ? 'person' : 'noop'}" data-arg="${k.id}"><span class="ic pic" aria-hidden="true">${kinPortrait(k)}</span><span class="tx"><b>${esc(fullName(k))}</b><small>${esc(sub)}</small>${k.alive ? `<span class="bar" role="img" aria-label="Relationship ${k.bond}%"><i class="${barCls(k.bond)}" style="width:${k.bond}%"></i></span>` : ''}</span>${k.alive ? '<span class="rt chev" aria-hidden="true">›</span>' : ''}</button>`;
 }
 function kinHTML() {
   const groups = [['Parents', k => k.par], ['Spouse', k => k.sp], ['Children', k => k.ch], ['Siblings', k => k.sib], ['Friends', k => k.fr], ['Rivals', k => k.rv]];
@@ -3733,7 +3898,7 @@ function personHTML(k) {
   const used = k.lastYear === S.year;
   const ok = !S.alive ? 'You are dead' : S.jail ? 'You are imprisoned' : used ? `You have already spent time with ${k.name} this year` : true;
   let h = btnItem('back', '', '‹', 'All kin', '', true);
-  h += `<div class="person-h"><span class="big" aria-hidden="true">${faceFor(k.sex, k.age)}</span><div><b>${esc(relOf(k))}, age ${k.age}</b>${k.job ? `<small>${esc(k.job)}</small>` : ''}<div class="bar" role="img" aria-label="Relationship ${k.bond}%"><i class="${barCls(k.bond)}" style="width:${k.bond}%"></i></div><small>Relationship: ${k.bond}%</small></div></div>`;
+  h += `<div class="person-h"><span class="big pic" aria-hidden="true">${kinPortrait(k)}</span><div><b>${esc(relOf(k))}, age ${k.age}</b>${k.job ? `<small>${esc(k.job)}</small>` : ''}<div class="bar" role="img" aria-label="Relationship ${k.bond}%"><i class="${barCls(k.bond)}" style="width:${k.bond}%"></i></div><small>Relationship: ${k.bond}%</small></div></div>`;
   h += btnItem('kin', `${k.id}:time`, '🫂', 'Spend time together', 'A walk, a meal, a story.', ok);
   h += btnItem('kin', `${k.id}:gift`, '🎁', 'Give a gift', 'Costs 2 silver.', ok !== true ? ok : S.coin < 2 ? 'Costs 2 silver' : true);
   if (k.par && S.age >= 6) h += btnItem('kin', `${k.id}:ask`, '🪙', 'Ask for silver', 'They might say yes.', ok);
@@ -3950,7 +4115,7 @@ function kinAct(arg) {
   if (a === 'woo') { S.kin = S.kin.filter(x => x !== k); k.fr = 0; k.looks = k.looks || R(20, 80); if (P(.25 + k.bond / 200)) { marry(k); t = `${k.name} said yes before you finished asking. You were wed within the month.`; } else { k.fr = 1; S.kin.push(k); bond(k, -4); st('happy', -5); t = `${k.name} laughed kindly. "We are friends, you fool." It stung.`; } }
   if (a === 'quarrel') { bond(k, -R(8, 15)); st('happy', P(.5) ? 3 : -3); t = `You and ${k.name} had a blazing row about ${pick(['the inheritance', 'a missing goose', 'nothing at all', 'who left the gate open', 'your choice of friends'])}.`; }
   const fx = FX; FX = null;
-  say(t); closeSheet(); showResult(faceFor(k.sex, k.age), t, fx, fullName(k)); render(); save();
+  say(t); closeSheet(); showResult(`<span class="pic ev">${kinPortrait(k)}</span>`, t, fx, fullName(k)); render(); save();
 }
 
 function doArmy(k) {
@@ -4128,7 +4293,7 @@ function render() {
   if (!S) return;
   const royalFace = (S.ruling || S.cls === 'royal') && S.age >= 15;
   const bdg = badge();
-  $('avatar').textContent = faceFor(S.sex, S.age, royalFace);
+  $('avatar').innerHTML = playerPortrait();
   const ob = $('arms').querySelector('.badge'); if (ob) ob.remove();
   if (bdg) $('arms').insertAdjacentHTML('beforeend', `<span class="badge">${bdg}</span>`);
   $('name').textContent = displayName();
@@ -4198,8 +4363,8 @@ function showDeath() {
   closeSheet();
   const g = S.dead.grade || legacy(), kids = children();
   const lineage = S.lineage.length ? `<p class="hint center">Of the line of ${esc(S.lineage.map(x => `${x.n} ${x.e}`).join(', then '))}.</p>` : '';
-  const heirs = kids.length ? `<h3 class="sec">Continue your line</h3>${kids.sort((a, b) => b.age - a.age).map(k => `<button class="item" data-s="heir" data-id="${k.id}"><span class="ic" aria-hidden="true">${faceFor(k.sex, k.age)}</span><span class="tx"><b>Live as ${esc(k.name)}</b><small>Your ${relOf(k).toLowerCase()}, age ${k.age}</small></span><span class="rt chev" aria-hidden="true">›</span></button>`).join('')}` : '<p class="hint center">You leave no living children. Your line ends here.</p>';
-  showScreen(`<div class="start"><div class="stone"><div class="arms" style="${armsStyle(S.last)}"><span class="face">✝️</span></div><div class="rip">Here lies</div><h2>${esc(displayName())}</h2><div class="epi">${esc(S.epithet)}</div><div class="yrs">${S.born} – ${S.year}</div><p class="cause">Died ${esc(S.dead.cause)}, aged ${S.age}.</p></div><div class="grass" aria-hidden="true"></div>
+  const heirs = kids.length ? `<h3 class="sec">Continue your line</h3>${kids.sort((a, b) => b.age - a.age).map(k => `<button class="item" data-s="heir" data-id="${k.id}"><span class="ic pic" aria-hidden="true">${kinPortrait(k)}</span><span class="tx"><b>Live as ${esc(k.name)}</b><small>Your ${relOf(k).toLowerCase()}, age ${k.age}</small></span><span class="rt chev" aria-hidden="true">›</span></button>`).join('')}` : '<p class="hint center">You leave no living children. Your line ends here.</p>';
+  showScreen(`<div class="start"><div class="stone"><div class="arms" style="${armsStyle(S.last)}"><span class="face">${playerPortrait()}</span></div><div class="rip">Here lies</div><h2>${esc(displayName())}</h2><div class="epi">${esc(S.epithet)}</div><div class="yrs">${S.born} – ${S.year}</div><p class="cause">Died ${esc(S.dead.cause)}, aged ${S.age}.</p></div><div class="grass" aria-hidden="true"></div>
   <dl class="summary"><div><dt>Station</dt><dd>${esc(roleLabel())}</dd></div><div><dt>Purse</dt><dd>${S.coin} silver</dd></div><div><dt>Counties</dt><dd>${heldTs().length}</dd></div><div><dt>Renown</dt><dd>${S.stats.renown}</dd></div><div><dt>Joy</dt><dd>${S.stats.happy}</dd></div><div><dt>Legacy</dt><dd><span class="grade">${g[1]}</span> ${g[0]}</dd></div></dl>
   ${(S.feats || []).length ? `<h3 class="sec">Seals earned in this life</h3><div class="chips">${S.feats.map(k => { const f = FEATS.find(x => x.k === k); return f ? `<span class="chip tag">${f.i} ${esc(f.n)}</span>` : ''; }).join('')}</div>` : ''}${lineage}${heirs}<div class="stack"><button class="btn${kids.length ? ' ghost' : ''}" data-s="random">Begin a new life</button><button class="btn ghost" data-s="chron">Read your chronicle</button><button class="btn ghost" data-s="grave">The graveyard</button></div></div>`);
 }
