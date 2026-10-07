@@ -105,3 +105,27 @@ it to the App Store and Google Play. See [PRIVACY.md](PRIVACY.md) and
 - **The map** is drawn like an old chart, with terrain, borders, coastlines,
   a compass and kingdom names. It has three views: Kingdoms, Counties, and
   Battle odds, which colours every county by your chance of taking it.
+
+## Characters, careers and connections (v1.1)
+
+- **Painted portraits** for everyone, drawn from each person's own "genes":
+  skin, hair and eye colour, face shape, nose, hairstyle, beard and freckles.
+  Children inherit a mix of both parents, so a dynasty keeps its family face.
+  Portraits change with age, mood, illness, prison, battle scars (and the odd
+  eye-patch), and dress by station and trade, on an illuminated backdrop.
+- **Character creator** in "Choose your birth", with a live preview.
+- **14 more careers**: rat catcher, tinker, mummer, hermit, moneylender, tax
+  collector, executioner, jester, falconer, herald, alchemist, pardoner, ship's
+  captain and spymaster.
+- **Every line of work has its own story**: a first-day scene when you are
+  hired, story events for each trade, multi-part career stories (the
+  sky-metal sword, the comrade-in-arms), and a promotion card when you rise.
+- **Connections**: mentors teach you faster, apprentices you train may make you
+  proud or rob you, patrons send silver, and secret lovers bring joy and scandal.
+- **New holdings**: hounds, falcon, sheep, orchard, warhorse, library,
+  vineyard, a casket of jewels, warehouse, private chapel and a merchant cog,
+  each with its own benefits and risks.
+- **New dangers**: burglars, lightning, assassins, mad dogs, thin ice, bad
+  pies, kidnappers, inquisitors, stampedes, collapsing houses and outbreaks.
+
+See [TESTING_ON_PHONE.md](TESTING_ON_PHONE.md) to play it on your phone.
