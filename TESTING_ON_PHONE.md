@@ -34,9 +34,22 @@ offline. Your repo is public, so GitHub Pages is free.
 7. Open it from the new crown icon on your home screen. It opens full screen,
    and after the first visit it works without internet.
 
-Every time new work is pushed, the site updates by itself within a couple of
-minutes. Close and reopen the app (or pull to refresh in the browser) to get
-the new version.
+### Getting updates on your phone
+
+- **Your saved lives are safe.** They are stored on your phone, not in the
+  game's code, so an update never wipes them. A life you are already playing
+  carries on with its own map; new lives get the new features in full.
+- Every time new work is pushed, GitHub Pages rebuilds the site within a
+  couple of minutes.
+- The home-screen app keeps a copy of the game so it works offline, so the
+  update arrives in the background: open the app once (it downloads the new
+  version quietly), then **close it completely and open it again**.
+  - iPhone: swipe up from the bottom and hold, then swipe the game away.
+  - Android: open the recent-apps view and swipe the game away.
+- From version 1.2 on, the game also reloads itself into the new version the
+  next time you switch away from it, and a short "New in this version" card
+  shows you what changed.
+- To check which version you have: Menu (⚜️), then scroll to **About**.
 
 ## Way 3: build the real app and install it on your own phone
 

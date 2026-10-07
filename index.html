@@ -3303,6 +3303,8 @@ function checkAmbition() {
   feat('dream');
 }
 const ambDef = () => S.amb && S.amb.k ? AMBITIONS.find(x => x.k === S.amb.k) : null;
+// Trials: hard goals for a whole life, chosen from the menu. { k, i, n, d, hint, ok: () => bool, prog: () => text }
+const TRIALS = [];
 
 /* ---------- friends and rivals ---------- */
 const friends = () => S.kin.filter(k => k.fr && k.alive);
@@ -3499,13 +3501,21 @@ O('mid', 'Healing', 'alchemist', mf('Alchemist', 'Alchemist'), '⚗️', 20, 'Ch
 O('mid', 'The Church', 'pardoner', mf('Pardoner', 'Pardoner'), '📃', 18, 'Sell pardons and relics of doubtful origin. Lucrative, if you can sleep.', { fam: 'faith', hire: .7, req: { looks: 30 }, gain: { piety: -2 } });
 O('high', 'Commerce and craft', 'shipcaptain', "Ship's Captain", '⛵', 70, 'Command a cog on the sea roads to Flanders, Bordeaux and the Baltic.', { fam: 'sea', hire: .45, skill: { sea: 6 }, req: { wits: 45, renown: 30 }, risk: .05, die: .005, dieAs: 'when your ship went down with all hands' });
 O('high', 'Crown and government', 'spymaster', 'Spymaster', '🕵️', 130, "Run the crown's web of informers. Know everything. Trust no one.", { fam: 'court', hire: .3, skillAny: { court: 4, crime: 5 }, req: { wits: 65 }, infl: 40, risk: .04, die: .008, dieAs: 'with a knife in the back in a dark corridor' });
-for (const k of ['ratcatcher', 'tinker', 'mummer', 'hermit', 'moneylender', 'taxman', 'executioner', 'jester', 'falconer', 'herald', 'alchemist', 'pardoner', 'shipcaptain', 'spymaster']) {
-  const o = OCC_BY[k] = OCC.find(x => x.k === k);
-  TRACKS[k] = { n: o.grp, i: o.i, min: o.min || 12, hire: o.hire, fam: o.fam, vary: o.vary, noSerf: o.noSerf, up: o.up, occ: 1, levels: [typeof o.t === 'string' ? { t: o.t, pay: o.pay } : { m: o.t.m, f: o.t.f, pay: o.pay }] };
+// Register occupations added after the main list: give each its own career track, then keep the list grouped.
+function regOcc(keys) {
+  for (const k of keys) {
+    const o = OCC.find(x => x.k === k); if (!o) continue;
+    OCC_BY[k] = o;
+    if (o.link) continue;
+    TRACKS[k] = { n: o.tier === 'mil' ? 'Military' : o.grp, i: o.i, min: o.min || 12, hire: o.hire == null ? .8 : o.hire, fam: o.fam, mil: o.mil || (o.tier === 'mil' ? 1 : 0), vary: o.vary, vows: o.vows, noSerf: o.noSerf, up: o.up, occ: 1, levels: [typeof o.t === 'string' ? { t: o.t, pay: o.pay } : { m: o.t.m, f: o.t.f, pay: o.pay }] };
+  }
+  const gi = new Map(), ti = ['low', 'mid', 'high', 'mil'];
+  OCC.forEach((x, i) => { const key = x.tier + '|' + x.grp; if (!gi.has(key)) gi.set(key, i); });
+  OCC.sort((a, b) => ti.indexOf(a.tier) - ti.indexOf(b.tier) || gi.get(a.tier + '|' + a.grp) - gi.get(b.tier + '|' + b.grp));
 }
+regOcc(['ratcatcher', 'tinker', 'mummer', 'hermit', 'moneylender', 'taxman', 'executioner', 'jester', 'falconer', 'herald', 'alchemist', 'pardoner', 'shipcaptain', 'spymaster']);
 TRACKS.navigator.up = 'shipcaptain'; OCC_BY.navigator.up = 'shipcaptain';
 ['executioner', 'herald', 'spymaster', 'shipcaptain', 'taxman'].forEach(k => MEN_ONLY.add(k));
-{ const gi = new Map(), ti = ['low', 'mid', 'high', 'mil']; OCC.forEach((x, i) => { const key = x.tier + '|' + x.grp; if (!gi.has(key)) gi.set(key, i); }); OCC.sort((a, b) => ti.indexOf(a.tier) - ti.indexOf(b.tier) || gi.get(a.tier + '|' + a.grp) - gi.get(b.tier + '|' + b.grp)); }
 
 /* ---------- connections: mentors, apprentices, patrons, lovers ---------- */
 const mentors = () => S.kin.filter(k => k.mt && k.alive);
