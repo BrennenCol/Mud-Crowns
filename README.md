@@ -128,4 +128,41 @@ it to the App Store and Google Play. See [PRIVACY.md](PRIVACY.md) and
 - **New dangers**: burglars, lightning, assassins, mad dogs, thin ice, bad
   pies, kidnappers, inquisitors, stampedes, collapsing houses and outbreaks.
 
+## Crowns, courts and a wider world (v1.2)
+
+- **The line of succession** is shown in Kin: who wears the crown, who is
+  first, second and third in line, and why (in historical mode sons inherit
+  before daughters, then the eldest). When a monarch dies a card explains who
+  inherits, and you choose: kneel, ask for lands of your own, claim the crown
+  with the barons behind you, or leave court. Regencies, royal babies, wicked
+  uncles and nephews on the throne are all possible. The game warns you before
+  anything costs you your claim (holy vows, abdication, fleeing abroad); your
+  job never does.
+- **Royal life**: sit on the council, win barons over, plot against those
+  ahead of you, host tourneys, travel abroad as envoy, hear petitions, and go
+  on royal progresses.
+- **The Court** (Realm, Court): everyone can see the king's council. Rule a
+  kingdom and you choose your own Chancellor, Lord Treasurer, Marshal,
+  Spymaster, Chaplain, Physician and Jester: hire from candidates, appoint
+  relatives, or dismiss them (and live with the consequences). Lords keep a
+  smaller household. Rulers also set taxes, watch the realm's unrest, issue
+  decrees, and build great works such as cathedrals, universities, roads and
+  harbours.
+- **Holdings you run**: 55 things to own, from geese to a silver mine and a
+  stone castle. Each grows through three levels, has a plan to choose every
+  year (breed or sell, gamble on a cash crop, water the ale...), and can be
+  given a manager.
+- **Your counties**: set rents, build markets, mills, churches, schools and
+  barracks, and keep your people content, or face a rising.
+- **A wider world**: new lives begin in nine kingdoms and 89 counties, each
+  county known for something (silver mines, abbeys, ports, haunted ruins).
+  The map can be zoomed to fit the screen.
+- **Twice the life**: 286 occupations on dozens of career roads (pirate to
+  admiral, constable to high sheriff, burgess to lord mayor, friar to papal
+  legate, Templar to grand master, hedge witch to court astrologer, and many
+  more), shown in a new Roads tab; 448 events, many with stories that unfold
+  over years; 76 deeds, including hobbies and skills you level up, travel and
+  social life; 102 kinds of special work; commissions with deadlines; 86 seals
+  of fame; 16 ambitions; and 20 Trials, hard goals for a whole life (Menu).
+
 See [TESTING_ON_PHONE.md](TESTING_ON_PHONE.md) to play it on your phone.
