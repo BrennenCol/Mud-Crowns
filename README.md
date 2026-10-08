@@ -165,4 +165,44 @@ it to the App Store and Google Play. See [PRIVACY.md](PRIVACY.md) and
   social life; 102 kinds of special work; commissions with deadlines; 86 seals
   of fame; 16 ambitions; and 20 Trials, hard goals for a whole life (Menu).
 
+## Lands, love, fleets and high office (v1.3)
+
+- **Treason has a price.** Attack land sworn to your own king and you are
+  declared a traitor at once: you lose any post in his service, your
+  knighthood and your barony. Take his royal seat and the crown is yours anyway.
+- **Tidier pages.** Every long page (Work, Deeds, Menu, Holdings, Court,
+  Lands) folds into sections you open and close like dropdowns, with a count
+  on each. The game remembers which ones you left open.
+- **Your lands** (Realm, Lands): each county has sliders for taxes, how much
+  to reinvest, and how many men to keep under arms, plus a focus (farms,
+  trade, walls or the Church) that slowly builds it up. Station a lord, a
+  relative or your spouse to run it; their skill and character change the
+  results. Rulers see their vassal lords with loyalty and dues, and can honour,
+  replace or dispossess them. At the end of each year a report shows what
+  every county paid, how its people feel, and what was built.
+- **Battles in rounds.** After choosing a plan you order the clash (throw in
+  reserves, hold the line, flank with horse, feign a retreat) and then the
+  decisive moment (lead the charge, single combat with their champion, press
+  on, or retreat to save your men). Feast your soldiers to keep them loyal.
+- **Courtship.** Suitors come to court, most of all to royals and nobles, each
+  bringing something different: peace with a foreign kingdom, the great lords'
+  support, a fortune, fame, or love. Write letters, send gifts, walk together,
+  hold a feast in their honour, then ask for their hand. Your spouse's
+  character, your children and your friends now change your years.
+- **Fleets.** Pirates, smugglers, privateers, ship's captains and admirals
+  command real ships (cogs, caravels, galleys, great carracks): raid coastal
+  counties, hunt merchantmen, sell plunder, ransom prisoners, keep a crew fed
+  and loyal, and live with Notoriety or royal favour.
+- **Trade runs.** Merchants read the year's prices for eight goods across six
+  markets, pick a stake, and face the road: pirates, storms, tolls, rich buyers
+  and cheating factors. Keep a warehouse, take contracts, join the merchants'
+  guild, and lend to the king.
+- **High office.** 71 top posts ask for more (age, years of experience,
+  Wits, Renown and Influence), and promotion up a ladder now asks the same.
+  Each year in office brings a duty to perform, chosen from three (126 in all),
+  with rewards for doing it well: a stipend, a patron, fame, even land.
+- **Every life your own.** 507 events, many written for one station, and more
+  of them come up for the life you are living. Roads of fortune (Menu) shows
+  every way up, down and sideways from where you stand.
+
 See [TESTING_ON_PHONE.md](TESTING_ON_PHONE.md) to play it on your phone.
