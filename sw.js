@@ -1,5 +1,5 @@
 // Offline support: keep the game's files cached so it plays without a connection.
-const CACHE = 'mudcrowns-v7';
+const CACHE = 'mudcrowns-v8';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './fonts/fonts.css',
   './fonts/EBGaramond-normal-400.woff2', './fonts/EBGaramond-italic-400.woff2', './fonts/UnifrakturMaguntia-normal-400.woff2'];
 // Fetch fresh copies (not the browser's HTTP cache) so an update is never a stale mix of old and new files.

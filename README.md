@@ -234,4 +234,14 @@ it to the App Store and Google Play. See [PRIVACY.md](PRIVACY.md) and
   Suitors fit your station, and nobody courts a nun.
 - **Work in tabs.** My job, Find work and Career roads.
 
+### Polish (v1.4.1)
+
+- Newest lines in the chronicle always come into view after a page turn.
+- Monks and nuns keep their vow of poverty: no inns or manors (bees and a herb
+  garden are allowed). Only grown, unrelated friends can be courted.
+- Silver shows with thousands separators; the Lands tab appears once you hold
+  land; "Turn the page" wording everywhere; feuds and matches read right for
+  nobles; the welcome tour shows the new picture and the news.
+- What's New appears only for feature releases, not small fixes.
+
 See [TESTING_ON_PHONE.md](TESTING_ON_PHONE.md) to play it on your phone.

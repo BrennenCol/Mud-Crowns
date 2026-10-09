@@ -457,6 +457,7 @@ html,body{overscroll-behavior:none}
 @keyframes spot{50%{box-shadow:0 0 0 7px var(--gold)}}
 .stats.spot,.lifebar.spot,.ribbons.spot{position:relative}
 .modal.low{align-items:flex-start;padding-top:calc(env(safe-area-inset-top,0px) + 120px)}
+.modal.below{align-items:flex-end;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 96px)}
 .story.plain::first-letter{float:none;font:inherit;color:inherit;padding:0}
 .tour-dots{text-align:center;color:var(--rubric);letter-spacing:4px;margin:0 0 4px}
 .inp.code{font:13px/1.35 ui-monospace,Menlo,monospace;resize:vertical;word-break:break-all}
@@ -519,7 +520,7 @@ html,body{overscroll-behavior:none}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.4.0';
+const APP_VERSION = '1.4.1';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -2684,7 +2685,7 @@ const truceCost = r => 40 + realmTs(r).length * 15 + Math.round(realmPower(r) / 
 /* ---------- the War tab ---------- */
 function armyHTML() {
   syncTroops(); const T = troops(), up = upkeepCost();
-  let h = `<div class="jobcard"><span class="jc-i" aria-hidden="true">🛡️</span><div><b>${S.army || 0} soldiers${T.siege ? `, ${T.siege} siege engine${T.siege > 1 ? 's' : ''}` : ''}</b><small>Fighting strength ${Math.round(armyPower())} (×${commandMult().toFixed(2)} for your command). Upkeep ${up} silver a year.${S.flags.gunpowder ? ' You have gunpowder.' : ''}</small><div class="bar" role="img" aria-label="Veterancy"><i class="hi" style="width:${Math.round((S.armyVet || 0) / .5 * 100)}%"></i></div><small>Veterancy: drill and battle make them fight harder</small></div></div>`;
+  let h = `<div class="jobcard"><span class="jc-i" aria-hidden="true">🛡️</span><div><b>${S.army || 0} soldiers${T.siege ? `, ${T.siege} siege engine${T.siege > 1 ? 's' : ''}` : ''}</b><small>Fighting strength ${Math.round(armyPower())} (×${commandMult().toFixed(2)} for your command). Upkeep ${up} silver a year.${S.flags.gunpowder ? ' You have gunpowder.' : ''}</small><div class="bar" role="img" aria-label="Veterancy"><i class="hi" style="width:${Math.round((S.armyVet || 0) / .5 * 100)}%"></i></div><small>Experience: drill and battle make them fight harder.</small></div></div>`;
   h += '<div class="roster">' + SOLDIER_KINDS.map(k => `<div class="unit"><span class="ui">${TROOPS[k].i}</span><b>${T[k]}</b><small>${TROOPS[k].n}</small><em>power ${TROOPS[k].pow}</em></div>`).join('') + `<div class="unit"><span class="ui">🪨</span><b>${T.siege}</b><small>Siege engines</small><em>break walls</em></div></div>`;
   h += '<p class="hint">Different troops win different fights: archers for a volley, horse for a charge on open ground, engines against walls. Soldiers you cannot pay will desert. Pick a county on the map to march on.</p>';
   h += '<h3 class="sec">Recruit and train</h3>';
@@ -3414,7 +3415,7 @@ DEEDS.push(
   { k: 'befriend', g: 'Friends and foes', i: '🤝', n: 'Make a friend', d: 'Friends lend silver, lift your spirits, and put in a good word.', min: 6, can: () => friends().length < 5 || 'You already have five friends. Treasure them', run: () => { const p = makePeer({ fr: 1, bond: R(55, 70) }); if (!P(.75 + S.stats.looks / 400)) { st('happy', -2); return `You tried to strike up a friendship with ${p.name}, who found you very strange.`; } S.kin.push(p); st('happy', 4); return `You and ${p.name} ${p.sur} ${pick(['bonded over a stolen pie', 'discovered you hate the same people', 'won a three-legged race together', 'shared a jug of ale and a great many secrets'])}. A friend for life, perhaps.`; } },
   { k: 'favour', g: 'Power', i: '⚜️', n: 'Call in a favour', d: 'Ask someone powerful for silver or a good word. Needs Influence 25. Once a year.', min: 16, once: 1, can: () => influence() >= 25 || `Needs Influence 25 (you have ${influence()})`, run: () => { if (P(.35 + influence() / 200)) { if (P(.5)) { const g = R(20, 60) + influence(); coin(g); return `A merchant who owes you much sent ${g} silver, with his compliments.`; } st('renown', R(4, 8)); if (S.job && S.job.track !== 'crown') jobPerf(12); return 'A word from the right mouth into the right ear. Your standing rose overnight.'; } st('renown', -2); return 'The favour was refused. It seems you were owed less than you thought.'; } },
   { k: 'placekin', g: 'Power', i: '🎓', n: 'Find a post for your kin', d: 'Use your influence to set up a son, daughter, brother or sister. Needs Influence 30.', min: 25, can: () => influence() < 30 ? `Needs Influence 30 (you have ${influence()})` : S.kin.some(k => k.alive && (k.ch || k.sib) && k.age >= 14 && !k.placed) || 'No grown children or siblings to place', run: () => { const k = pick(S.kin.filter(x => x.alive && (x.ch || x.sib) && x.age >= 14 && !x.placed)); k.placed = 1; const lvl = influence(); k.job = lvl >= 60 ? pick(['Royal Adviser', 'Court Official', 'Knight', 'Abbot', 'Wealthy Merchant']) : lvl >= 45 ? pick(['Steward', 'Magistrate', 'Guild Member', 'Man-at-Arms', 'Scribe']) : pick(['Clerk', 'Shopkeeper', 'Barber', 'Cook', 'Messenger']); bond(k, R(12, 20)); st('renown', 2); return `A quiet word, a sealed letter, and ${k.name} is now ${aOr(k.job.toLowerCase())}. ${pr(k).He} will not forget it.`; } },
-  { k: 'matchkin', g: 'Power', i: '💍', n: 'Arrange a grand match for a child', d: 'Marry a child into a great house for silver and Renown. Needs Influence 35.', min: 30, can: () => influence() < 35 ? `Needs Influence 35 (you have ${influence()})` : children().some(k => k.age >= 14 && !k.wed) || 'No unwed child aged 14 or more', run: () => { const k = pick(children().filter(x => x.age >= 14 && !x.wed)); k.wed = 1; const house = influence() >= 60 ? 'a royal cousin' : influence() >= 45 ? `the house of ${pick(SUR.noble)}` : `a rich ${pick(['wool', 'wine', 'spice'])} merchant’s family`; const g = R(30, 90) + influence(); coin(g); st('renown', R(3, 7)); bond(k, P(.5) ? 6 : -8); return `${k.name} was married to ${house}. The settlement brought ${g} silver and powerful new in-laws.`; } },
+  { k: 'matchkin', g: 'Power', i: '💍', n: 'Arrange a grand match for a child', d: 'Marry a child into a great house for silver and Renown. Needs Influence 35.', min: 30, can: () => influence() < 35 ? `Needs Influence 35 (you have ${influence()})` : children().some(k => k.age >= 14 && !k.wed) || 'No unwed child aged 14 or more', run: () => { const k = pick(children().filter(x => x.age >= 14 && !x.wed)); k.wed = 1; const house = influence() >= 60 ? 'a royal cousin' : influence() >= 45 ? (hn => /^of /.test(hn) ? `the house ${hn}` : `the ${hn} family`)(pick(SUR.noble)) : `a rich ${pick(['wool', 'wine', 'spice'])} merchant’s family`; const g = R(30, 90) + influence(); coin(g); st('renown', R(3, 7)); bond(k, P(.5) ? 6 : -8); return `${k.name} was married to ${house}. The settlement brought ${g} silver and powerful new in-laws.`; } },
   { k: 'squeeze', once: 1, g: 'Power', i: '🪓', n: 'Lean on your tenants', d: 'Demand extra rent and labor. Silver now, hatred later. Needs land. Once a year.', min: 18, can: () => (hasLand() || S.assets.some(a => a.key === 'land' || a.key === 'mill')) || 'You need tenants: farmland, a mill, a manor, or a county', run: () => { const g = R(15, 40) + heldTs().length * 20; coin(g); st('renown', -R(2, 5)); st('piety', -2); if (P(.12)) { st('health', -R(8, 15)); return `You squeezed ${g} silver out of them, and someone threw a rock at your head from a hedge.`; } return `You squeezed ${g} silver out of your tenants. Their curses follow you down the lane.`; } },
   { k: 'strings', once: 1, g: 'Power', i: '🗝️', n: 'Pull strings for your release', d: 'Friends in high places can open dungeon doors. The more Influence you had, the better your chances.', min: 14, jail: 1, only: () => S.jail > 0, can: () => (S.stats.renown >= 20 || friends().length > 0 || CLS_ORDER.indexOf(S.cls) >= 3) || 'You have no friends in high places (needs Renown 20, a friend, or merchant birth or better)', run: () => { if (P(.25 + (influence() + 20) / 150)) { S.jail = 0; st('renown', -2); return 'A letter with a heavy seal arrived, and the gaoler unlocked your door with a bow.'; } return 'Your friends in high places were suddenly very busy.'; } },
   { k: 'disguise', g: 'Daring', i: '✂️', n: 'Cut your hair and pass as a man', d: 'Opens soldiering, the sea, and heavy labor to you. If unmasked, there will be trouble.', min: 14, only: () => hist() && S.sex === 'f' && !S.flags.disguise, can: () => !S.vows || 'Not while under holy vows', run: () => { S.flags.disguise = 1; S.flags.alias = S.flags.alias || 'Jack'; st('happy', 4); return 'You cut off your hair, bound your chest, and practised a deeper voice. "Call me Jack," you told your reflection in the water butt.'; } },
@@ -5436,12 +5437,14 @@ function showWhatsNew() {
     ['✂️', 'A life that fits', 'in disguise the world sees a man; at sea you live a sailor’s life; suitors fit your station.'],
     ['⚒️', 'Work in tabs', 'My job, Find work and Career roads, each on its own page.'],
   ];
-  $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(APP_VERSION)}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">See the world</button></div>`;
+  $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">See the world</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
   $('wnCourt').addEventListener('click', () => { modalOpen = false; hideModal(); realmTab = 'world'; openSheet('realm'); });
   openModal(); $('wnOk').focus({ preventScroll: true });
 }
-function maybeWhatsNew() { if (store.get(NEWKEY) !== APP_VERSION && !modalOpen) showWhatsNew(); }
+// Only a new feature release (1.4, 1.5...) shows the card; small fixes (1.4.1) do not.
+const verMinor = v => String(v || '').split('.').slice(0, 2).join('.');
+function maybeWhatsNew() { if (verMinor(store.get(NEWKEY)) !== verMinor(APP_VERSION) && !modalOpen) showWhatsNew(); }
 
 
 /* ================= Career roads: every path from a first job to the top ================= */
@@ -6520,6 +6523,28 @@ function lifeWrap(e) {
 }
 // A new life (or an heir's) starts with no cards left over from the last one.
 { const _b = begin; begin = function () { Q.length = 0; return _b.apply(this, arguments); }; }
+// Only a free, grown, unrelated friend can be courted, whatever button is on the screen.
+{
+  const _ka = kinAct;
+  kinAct = function (arg) {
+    const [id, a] = String(arg).split(':');
+    if (a === 'woo') {
+      const k = S.kin.find(x => x.id === id);
+      const why = !k ? '' : (k.sib || k.ch || k.par || k.sp) ? 'Not with your own family' : k.age < 16 || S.age < 16 ? 'From age 16' : spouse() ? 'You are already married' : S.vows ? 'You are under holy vows' : disguised() ? 'Not while you pass as a man' : '';
+      if (why) return toast(why);
+    }
+    return _ka.apply(this, arguments);
+  };
+}
+// After a page turns, show the newest lines even when the picture above them is still being drawn.
+{
+  const _r = render;
+  render = function () {
+    const n0 = lastLines, r = _r.apply(this, arguments);
+    if (lastLines !== n0) { const ch = $('chron'); if (ch) requestAnimationFrame(() => requestAnimationFrame(() => { ch.scrollTop = ch.scrollHeight; })); }
+    return r;
+  };
+}
 
 
 /* ================= Tidy sheets: every section folds up like a dropdown ================= */
@@ -9322,7 +9347,7 @@ function dxGossipEvent() {
 }
 function dxFeudEvent() {
   const p = makePeer({ rv: 1, bond: R(5, 15) });
-  const sin = pick(['let a goat eat your washing', 'moved the boundary stone a hand’s breadth into your strip', 'said your pottage tastes of boots', 'sat in your place at Mass, twice', 'named a pig after you']);
+  const sin = pick(['noble', 'royal'].includes(S.cls) || S.ruling ? ['poached a stag from your park', 'moved a boundary stone a hand’s breadth into your demesne', 'mocked your coat of arms at the bishop’s feast', 'sat in your place at Mass, twice', 'named a hound after you'] : ['let a goat eat your washing', 'moved the boundary stone a hand’s breadth into your strip', 'said your pottage tastes of boots', 'sat in your place at Mass, twice', 'named a pig after you']);
   const feud = x => { S.kin.push(p); dxAdd('dx_feuds'); dxCheck(); return x; };
   return { id: 'dx_evFeud', icon: '😠',
     text: () => `Your neighbour ${p.name} ${p.sur} has ${sin}. This cannot stand. How will you begin?`,
@@ -18520,7 +18545,7 @@ function seekHTML() {
   const all = OCC.filter(o => occBlock(o) !== 'This is your post');
   const nOpen = all.filter(o => occState(o) === 'open').length, nNear = all.filter(o => occState(o) === 'near').length;
   let h = '<h3 class="sec">Seek a position</h3>';
-  h += `<div class="sumbox"><b>${nOpen}</b> post${nOpen === 1 ? '' : 's'} open to you now${nNear ? `, and <b>${nNear}</b> more need just one thing` : ''}.${applied ? '<br><span class="warn">You already sought work this year. Age up to try again.</span>' : S.age < 12 ? `<br><span class="warn">You can start working at 12. Look ahead and plan your road.</span>` : ' You may apply for one post a year.'}</div>`;
+  h += `<div class="sumbox"><b>${nOpen}</b> post${nOpen === 1 ? '' : 's'} open to you now${nNear ? `, and <b>${nNear}</b> more need just one thing` : ''}.${applied ? '<br><span class="warn">You already sought work this year. Turn the page to try again.</span>' : S.age < 12 ? `<br><span class="warn">You can start working at 12. Look ahead and plan your road.</span>` : ' You may apply for one post a year.'}</div>`;
   h += '<p class="legend"><span class="pill open">Open</span> you qualify <span class="pill near">1 to go</span> one requirement missing <span class="pill lock">Locked</span> several missing. Tap any post to see exactly why and how to qualify.</p>';
   h += `<div class="tabs" role="tablist">${TIERS.map(([k, n]) => { const c = all.filter(o => o.tier === k && occState(o) === 'open').length; return `<button role="tab" aria-selected="${workTab === k}" data-act="wtab" data-arg="${k}">${n} <small>${c}</small></button>`; }).join('')}<button role="tab" aria-selected="${workTab === 'roads'}" data-act="wtab" data-arg="roads">Roads</button></div>`;
   if (workTab === 'roads') return h + roadsHTML();
@@ -18577,7 +18602,7 @@ function jobDetailHTML(o) {
   if (lv > 0 && !from.length) from.push(lvlTitle(tr, lv - 1));
   if (leadsTo.length || from.length) h += `<h3 class="sec">Career road</h3><p class="hint">${from.length ? `Usually reached from: <b>${esc(joinList(from))}</b>. ` : ''}${leadsTo.length ? `With high standing after two years it can lead to: <b>${esc(joinList(leadsTo))}</b>.` : 'This is the top of its road.'}</p>`;
   const applied = S.appliedYear === S.year;
-  h += btnItem('apply', o.k, '✍️', `Apply to be ${aOr(occTitle(o))}`, st === 'open' && !applied ? `About ${Math.round(hireOdds(o) * 100)}% chance. One application a year.` : '', block || (miss.length ? miss[0].why : applied ? 'You already sought work this year. Age up to try again' : true));
+  h += btnItem('apply', o.k, '✍️', `Apply to be ${aOr(occTitle(o))}`, st === 'open' && !applied ? `About ${Math.round(hireOdds(o) * 100)}% chance. One application a year.` : '', block || (miss.length ? miss[0].why : applied ? 'You already sought work this year. Turn the page to try again' : true));
   return h;
 }
 function ranksHTML() {
@@ -18610,7 +18635,7 @@ function baronyWhy() {
 }
 function deedsHTML() {
   if (!S.alive) return '<div class="empty">The dead do no deeds.</div>';
-  let h = `<p class="hint">You have <b>${S.deeds}</b> of ${DEEDS_PER_YEAR} deeds left this year. Age up to renew them.</p>`;
+  let h = `<p class="hint">You have <b>${S.deeds}</b> of ${DEEDS_PER_YEAR} deeds left this year. Turn the page to renew them.</p>`;
   let g = '';
   for (const d of DEEDS) {
     if (d.only && !d.only()) continue;
@@ -18673,6 +18698,7 @@ function canBuy(k) {
   if (S.age < 14) return 'From age 14';
   if (d.uniq && hasAsset(k)) return 'You already own one';
   if (d.land && S.cls === 'serf') return 'Serfs may not own land or houses';
+  if (S.vows && !['herbgarden', 'bees'].includes(k)) return 'Your vow of poverty forbids owning property';
   if (d.home && S.vows) return 'You live in the cloister';
   if (d.need) { const r = d.need(); if (r !== true) return r; }
   if (S.coin < d.cost) return `Costs ${d.cost} silver`;
@@ -18738,7 +18764,7 @@ const ACT = {
 function doDeed(k) { const d = DEEDS.find(x => x.k === k); if (d) runDeed(d, () => deedWhy(d)); }
 function doTrade(k) { const d = TRADE.find(x => x.k === k); if (d) runDeed(d, () => tradeWhy(d)); }
 function runDeed(d, whyFn) {
-  if (S.deeds <= 0) { toast('You have done enough this year. Age up!'); return; }
+  if (S.deeds <= 0) { toast('You have done enough this year. Turn the page!'); return; }
   const why = whyFn(); if (why !== true) { toast(why); return; }
   if (d.once) S.flags['y_' + d.k] = S.year;
   const cost = deedCost(d);
@@ -18874,7 +18900,8 @@ function doArmy(k) {
   say(t, 'deed'); closeSheet(); showResult(a.i, t, fx, a.n); render(); save();
 }
 function realmHTML() {
-  const tabs = [['map', 'Map'], ['world', 'World'], ['court', 'Court'], ['lands', 'Lands'], ['hold', 'Holdings'], ['army', 'War']];
+  const tabs = [['map', 'Map'], ['world', 'World'], ['court', 'Court'], ['lands', 'Lands'], ['hold', 'Holdings'], ['army', 'War']].filter(([k]) => k !== 'lands' || S.ruling || heldTs().length);
+  if (!tabs.some(t => t[0] === realmTab)) realmTab = 'map';
   const h = `<div class="tabs" role="tablist">${tabs.map(([k, n]) => `<button role="tab" aria-selected="${realmTab === k}" data-act="rtab" data-arg="${k}">${n}${k === 'army' && S.army ? ` <small>${S.army}</small>` : ''}</button>`).join('')}</div>`;
   if (realmTab === 'hold') return h + holdHTML();
   if (realmTab === 'court') return h + courtHTML();
@@ -19053,7 +19080,7 @@ function render() {
   if (bdg) $('arms').insertAdjacentHTML('beforeend', `<span class="badge">${bdg}</span>`);
   $('name').textContent = displayName();
   $('meta').innerHTML = `${S.alive ? `Age ${S.age} · ${esc(metaRole())}` : `${S.born}–${S.year}`}<br>A.D. ${S.year} · ${esc(S.village)}, ${esc(S.realm)}${S.gen > 1 ? ` · gen. ${S.gen}` : ''}`;
-  const cEl = $('coin'); cEl.textContent = S.coin; cEl.parentElement.classList.toggle('neg', S.coin < 0);
+  const cEl = $('coin'); cEl.textContent = S.coin.toLocaleString('en-GB'); cEl.parentElement.classList.toggle('neg', S.coin < 0);
   const b = $('banner'); let bh = '';
   if (!S.alive) bh = '<span>You have died.</span><button class="mini" data-s="epitaph">Read your epitaph</button>';
   else if (S.jail) bh = `<span>⛓️ Imprisoned. ${S.jail} year${S.jail > 1 ? 's' : ''} remain.</span>`;
@@ -19170,12 +19197,13 @@ const TOUR = [
   [null, '📖', 'Welcome to Mud & Crowns', 'You will live one whole medieval life, year by year: work, love, scheme, pray, fight, and found a dynasty. Every choice is written in your chronicle. This quick tour shows you around.'],
   ['stats', '❤️', 'Your qualities', 'These dials are your Health, Joy, Wits, Looks, Piety, Renown and Influence. Tap any dial, any time, to learn what it does and how to raise it.'],
   ['lifebar', '📜', 'Your chronicle', 'This bar shows your stage of life, from Infancy to Old age. Below it, everything that happens to you is written down, year by year, like a book.'],
-  ['ribbons', '🔖', 'The bookmarks', 'Work: find a job. Deeds: your three actions a year (the candles show how many are left). Kin: family, friends, rivals and the line of succession. Realm: the map, the royal court, your holdings and lands, and war.'],
+  ['sc_scene', '🖼️', 'Your world', 'This picture is your home as it is this year: its season, its weather, and whatever the world brings to your door. Tap it for the news of the world.'],
+  ['ribbons', '🔖', 'The bookmarks', 'Work: your job, and new work to find. Deeds: your three actions a year (the candles show how many are left). Kin: family, friends, rivals and the line of succession. Realm: the map, the news of the world, the royal court, your holdings and lands, and war.'],
   ['ageBtn', '❯', 'Turn the page', 'When you have spent your deeds, turn the page to live another year. Something usually happens: answer the card that appears. The line above the bookmarks always tells you what to do next.'],
 ];
 function showTour(i = 0) {
   document.querySelectorAll('.spot').forEach(el => el.classList.remove('spot'));
-  if (i >= TOUR.length) { store.set(TOURKEY, 'done'); store.set(NEWKEY, APP_VERSION); modalOpen = false; nextModal(); return; }
+  if (i >= TOUR.length) { $('modal').classList.remove('low', 'below'); store.set(TOURKEY, 'done'); store.set(NEWKEY, APP_VERSION); modalOpen = false; nextModal(); return; }
   const [target, icon, title, text] = TOUR[i];
   if (target && $(target)) $(target).classList.add('spot');
   modalOpen = true;
@@ -19184,6 +19212,7 @@ function showTour(i = 0) {
   $('tourNext').addEventListener('click', () => showTour(i + 1));
   $('tourSkip').addEventListener('click', () => showTour(TOUR.length));
   $('modal').classList.toggle('low', target === 'ribbons' || target === 'ageBtn');
+  $('modal').classList.toggle('below', target === 'sc_scene');
   openModal(); $('tourNext').focus({ preventScroll: true });
 }
 
