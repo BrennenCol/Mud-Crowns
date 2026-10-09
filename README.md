@@ -244,4 +244,18 @@ it to the App Store and Google Play. See [PRIVACY.md](PRIVACY.md) and
   nobles; the welcome tour shows the new picture and the news.
 - What's New appears only for feature releases, not small fixes.
 
+## Careers have steps (v1.5)
+
+A post now needs the one below it on its career road: you serve as a Castle
+Guard (or a soldier, or in the town watch) before the Royal Guard, as a Pirate
+before you captain a pirate ship, as a Prior before you are made Abbot, and as
+a Wealthy Merchant before you lead the guild. Years of training from deeds,
+mentors or neighbours still count toward experience, but they no longer stand
+in for having done the job. There are ways around it where history had them:
+noble birth opens officers' and courtiers' posts, and the king's favour
+(Renown 60 and Influence 40) or a patron who thinks well of you can open
+others. Every post's page shows the step below it, and Work, Career roads
+shows the whole ladder. 151 of 286 posts have a step below; every post can
+still be reached from a first job.
+
 See [TESTING_ON_PHONE.md](TESTING_ON_PHONE.md) to play it on your phone.

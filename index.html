@@ -520,7 +520,7 @@ html,body{overscroll-behavior:none}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.4.1';
+const APP_VERSION = '1.5.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -787,7 +787,7 @@ function trainTip(f, n) {
   if (!ts.length) return `Gain experience in ${FAM[f]} by climbing a job in that line.`;
   const open = ts.filter(x => occWhy(x) === true);
   const names = (open.length ? open : ts).slice(0, 4).map(x => occTitle(x));
-  return `Every year working in ${FAM[f]} counts. Start as ${joinList(names.map(n => aOr(n)))}${open.length ? ' (open to you now)' : ''}.`;
+  return `Every year working in ${FAM[f]} counts. Start as ${(a => a.length > 1 ? `${a.slice(0, -1).join(', ')} or ${a[a.length - 1]}` : a[0] || '')(names.map(n => aOr(n)))}${open.length ? ' (open to you now)' : ''}.`;
 }
 // Every requirement of a job, with whether you meet it and how to get it.
 function occChecks(o) {
@@ -5430,16 +5430,13 @@ function showWhatsNew() {
   store.set(NEWKEY, APP_VERSION);
   modalOpen = true;
   const items = [
-    ['🌍', 'A living world', 'kings age, marry and die, wars are won and lost, plague spreads. See Realm, World.'],
-    ['🏘️', 'Your neighbours', 'the same people year after year: they marry, quarrel, die, and pass on their trades.'],
-    ['🖼️', 'A moving picture', 'your home on the main screen, with its seasons, weather, wars and plagues.'],
-    ['📯', 'The world comes to you', 'the levy, refugees, crusades, famous folk, and foreign courts for rulers.'],
-    ['✂️', 'A life that fits', 'in disguise the world sees a man; at sea you live a sailor’s life; suitors fit your station.'],
-    ['⚒️', 'Work in tabs', 'My job, Find work and Career roads, each on its own page.'],
+    ['🪜', 'Careers have steps', 'a post now needs the one below it: guard before Royal Guard, pirate before Pirate Captain, prior before abbot. Years of training alone are not enough.'],
+    ['👑', 'Ways around', 'noble birth opens officers’ and courtiers’ posts, and the king’s favour (Renown 60, Influence 40) or a patron can open others.'],
+    ['🧭', 'Where to look', 'every post’s page shows the step below it. Work, Career roads shows the whole ladder.'],
   ];
-  $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">See the world</button></div>`;
+  $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">See career roads</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
-  $('wnCourt').addEventListener('click', () => { modalOpen = false; hideModal(); realmTab = 'world'; openSheet('realm'); });
+  $('wnCourt').addEventListener('click', () => { modalOpen = false; hideModal(); openSheet('work'); XACT.wpane('roads'); });
   openModal(); $('wnOk').focus({ preventScroll: true });
 }
 // Only a new feature release (1.4, 1.5...) shows the card; small fixes (1.4.1) do not.
@@ -6544,6 +6541,94 @@ function lifeWrap(e) {
     if (lastLines !== n0) { const ch = $('chron'); if (ch) requestAnimationFrame(() => requestAnimationFrame(() => { ch.scrollTop = ch.scrollHeight; })); }
     return r;
   };
+}
+
+
+/* ================= Careers have steps: a post needs the one below it, or a real way around it ================= */
+// Side doors that history allows: a sailor can turn pirate, an old soldier can join the guard.
+// 'track' means any rank of it; 'track:2' means at least that rank; '@fam' means any post in that line of work.
+const PATH_SIDE = {
+  jb_pirate: ['sailor', 'navigator'],
+  jb_royalguard: ['soldier', 'watchman'],
+  spymaster: ['thief', 'courtier', 'herald'],
+  diplomat: ['courtier', 'herald', 'ja_mercer', 'merchant:1'],
+  jb_astronomer: ['scholar', 'professor'],
+  jb_tutor: ['scholar', 'professor', 'scribe:1'],
+  jb_painter: ['@arts', 'scribe:1'],
+  jb_poet: ['@arts', 'minstrel', 'jester', 'scribe:1'],
+  jb_wardrobe: ['tailor', 'ja_draper', 'ja_mercer', 'page', 'courtier'],
+  jb_cupbearer: ['page', 'courtier'],
+  priest: ['church', 'chorister', 'jb_friar', 'scribe:1'],
+  jb_chantry: ['priest', 'church:1', 'chorister'],
+  jb_vintenar: ['archer', 'crossbow'],
+  jb_quartermaster: ['soldier', 'campporter', 'camplab', 'jb_castleguard'],
+  jb_kingscapt: ['shipcaptain', 'navigator', 'jb_privateer'],
+  constable: ['general', 'knight:3'],
+  jb_knighterrant: ['knight:1', 'jb_tknight'],
+};
+// Who may skip a step: the highborn into officers' and courtiers' posts, the king's favourites into his service.
+const PATH_NAVY = new Set(['jb_kingscapt', 'jb_admiral', 'jb_admiralfleet']);
+const PATH_OUTLAW = new Set(['thief', 'jb_smuggler', 'jb_pirate', 'jb_piratecap', 'jb_privateer', 'jb_sellsword', 'jb_condottiero']);
+let PATH_FEED = null;
+function pathFeeders() {
+  if (PATH_FEED) return PATH_FEED;
+  const F = {}, add = (k, tr, lv) => { const a = F[k] = F[k] || []; if (!a.some(f => f.tr === tr && f.lv === lv)) a.push({ tr, lv }); };
+  // the top rank of a career leads up to the next post (a Wealthy Merchant, not a Peddler, becomes Guild Master)
+  const top = t => { let i = t.levels.length - 1; while (i > 0 && t.levels[i].elect) i--; return i; };
+  for (const [tr, t] of Object.entries(TRACKS)) if (t.up && OCC_BY[t.up] && t.up !== tr) add(t.up, tr, t.levels.length > 1 ? top(t) : -1);
+  for (const o of OCC) if (o.link && o.link[1] > 0) add(o.k, o.link[0], o.link[1] - 1);
+  for (const [k, ds] of Object.entries(PATH_SIDE)) if (OCC_BY[k]) for (const d of ds) {
+    if (d[0] === '@') { add(k, d, -2); continue; }
+    const [tr, lv] = d.split(':'); if (TRACKS[tr]) add(k, tr, lv == null ? -1 : +lv);
+  }
+  return (PATH_FEED = F);
+}
+// The highest rank you have reached in each track, kept from now on.
+function pathNote() {
+  if (!S) return; const h = S.hiLv = S.hiLv || {};
+  if (S.job && TRACKS[S.job.track]) h[S.job.track] = Math.max(h[S.job.track] == null ? -1 : h[S.job.track], S.job.level || 0);
+  for (const tr of S.held || []) if (h[tr] == null) h[tr] = 0;
+}
+function pathHeld(f) {
+  pathNote();
+  if (f.lv === -2) { const fam = f.tr.slice(1); return Object.keys(S.hiLv).some(tr => TRACKS[tr] && TRACKS[tr].fam === fam); }
+  const hi = S.hiLv[f.tr];
+  return f.lv < 0 ? hi != null || (S.held || []).includes(f.tr) : hi != null && hi >= f.lv;
+}
+function pathName(f) {
+  if (f.lv === -2) return `any post in ${FAM[f.tr.slice(1)] || f.tr.slice(1)}`;
+  if (f.lv >= 0) return lvlTitle(f.tr, f.lv);
+  const o = OCC_BY[f.tr]; return o ? occTitle(o) : lvlTitle(f.tr, 0);
+}
+const orList = a => a.length <= 1 ? (a[0] || '') : `${a.slice(0, -1).join(', ')} or ${a[a.length - 1]}`;
+// The other doors into a post, as [open?, description]
+function pathWaivers(o) {
+  const [tr] = occPos(o), fam = TRACKS[tr] && TRACKS[tr].fam, out = [];
+  if (PATH_OUTLAW.has(o.k) || (o.link && ['church', 'thief'].includes(o.link[0]))) return out;
+  const crown = ['war', 'court', 'law', 'civic', 'estate'].includes(fam) || PATH_NAVY.has(o.k);
+  if (crown && (['war', 'court', 'estate', 'law'].includes(fam) || PATH_NAVY.has(o.k))) out.push([['noble', 'royal'].includes(S.birthCls) || ['noble', 'royal'].includes(S.cls), 'noble birth']);
+  if (crown) { refreshPower(); out.push([S.stats.renown >= 60 && S.stats.power >= 40, 'the king’s favour (Renown 60 and Influence 40)']); }
+  if (['court', 'estate', 'arts', 'learn', 'letters', 'heal', 'civic', 'law'].includes(fam)) { const pt = patrons().find(k => k.bond >= 60); out.push([!!pt, pt ? `the word of your patron ${pt.name}` : 'a patron who thinks well of you (bond 60)']); }
+  return out;
+}
+{
+  const _oc = occChecks;
+  occChecks = function (o) {
+    const C = _oc.apply(this, arguments);
+    const fs = pathFeeders()[o.k]; if (!fs || !fs.length || !S) return C;
+    const names = [...new Set(fs.map(pathName))];
+    const held = fs.filter(pathHeld);
+    if (held.length) { C.push({ ok: true, label: `Served as ${pathName(held[0])}`, why: '', tip: 'You learned the work in the post below this one.' }); return C; }
+    const ws = pathWaivers(o), open = ws.find(w => w[0]);
+    if (open) { C.push({ ok: true, label: `No apprenticeship needed: ${open[1]}`, why: '', tip: `Most people must first serve as ${orList(names)}, but ${open[1]} opens this door for you.` }); return C; }
+    const alt = ws.map(w => w[1]);
+    C.push({ ok: false, label: `Served as ${orList(names)}`, why: `Serve first as ${orList(names)}${alt.length ? `, or have ${orList(alt)}` : ''}`,
+      tip: `Nobody walks into this post untrained. Work first as ${orList(names)}: that is where the work is learned.${alt.length ? ` The other way in: ${orList(alt)}.` : ''}` });
+    return C;
+  };
+  const _sj = setJob;
+  setJob = function () { const r = _sj.apply(this, arguments); try { pathNote(); } catch (e) { } return r; };
+  YEARLY.push(pathNote);
 }
 
 
