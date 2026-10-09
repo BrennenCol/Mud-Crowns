@@ -46,7 +46,7 @@ logo, art, wording, or the specific look and layout of its screens.
 | Stat bars along the bottom (Happiness, Health, Smarts, Looks) | Round dials across the top, with different qualities (Joy, Wits, Piety, Renown, Influence) |
 | Emoji or cartoon avatars | Hand-drawn portraits with heraldic backgrounds, inherited family looks, and a coat of arms |
 | Ribbons | Seals of fame |
-| (BitLife's own systems) | Medieval systems of its own: nearly 300 historical posts on career roads, social class, historical gender rules, a line of succession, a royal council you appoint, estates and counties to run with stationed lords and vassals, a hex map of nine kingdoms with conquest, sieges and battles fought in rounds, fleets to command, trade runs, courtship, duties of high office, troops, dynasties, ambitions, mentors and apprentices |
+| (BitLife's own systems) | Medieval systems of its own: nearly 300 historical posts on career roads, social class, historical gender rules, a line of succession, a royal council you appoint, estates and counties to run with stationed lords and vassals, a hex map of nine kingdoms with conquest, sieges and battles fought in rounds, fleets to command, trade runs, courtship, duties of high office, a living world of rulers, wars, plagues and neighbours, troops, dynasties, ambitions, mentors and apprentices |
 
 All of the game's text, art and code were written for this game. None of it is
 copied from BitLife.

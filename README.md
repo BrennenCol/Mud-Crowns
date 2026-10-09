@@ -205,4 +205,33 @@ it to the App Store and Google Play. See [PRIVACY.md](PRIVACY.md) and
   of them come up for the life you are living. Roads of fortune (Menu) shows
   every way up, down and sideways from where you stand.
 
+## A living world (v1.4)
+
+- **The world moves on its own.** Every kingdom's monarch ages, marries, has
+  heirs and dies; a child may be crowned under a regent, and a death with no
+  heir can start a civil war. Kingdoms declare wars that last for years, fought
+  county by county on the map, and end in peace treaties. Plague, famine and
+  murrain break out and spread from county to county. Famous folk (a champion
+  knight, a preacher, a pirate, a merchant prince, a scholar, an outlaw, a
+  troubadour) do things everyone talks about, and the year has its weather.
+  News reaches your chronicle, and Realm, World shows it all.
+- **Your neighbours.** The same people live around you year after year: the
+  priest, the reeve, the smith, the alewife, or for the great, a household of
+  steward, cook, nurse and fool. They marry, quarrel, have children, die and
+  pass on their trades. Tap one to chat, help, ask a favour or quarrel. Your
+  friends and family lead lives of their own too: weddings, babies, ruin,
+  and marching off to war.
+- **A moving picture.** A small illuminated scene of your home sits at the top
+  of the page and changes with your station (hovel, town, manor, castle, abbey,
+  camp, ship, greenwood, prison) and with the world: seasons, weather, smoke
+  from a war, crows in a plague year, a comet.
+- **The world comes to you.** The king's levy, war taxes, raiders, refugees,
+  the plague next door, crusades, coronations and the famous folk passing
+  through. Rulers deal with the real foreign monarchs in Foreign courts:
+  embassies, alliances, royal matches, truces and tribute.
+- **A life that fits your choices.** In disguise, strangers see a man called
+  Jack. At sea, home life gives way to a sailor's life and letters from home.
+  Suitors fit your station, and nobody courts a nun.
+- **Work in tabs.** My job, Find work and Career roads.
+
 See [TESTING_ON_PHONE.md](TESTING_ON_PHONE.md) to play it on your phone.
