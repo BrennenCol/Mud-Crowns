@@ -7,6 +7,11 @@ repo: `package.json`, `capacitor.config.json`, the offline fonts in `fonts/`,
 the app icons in `icons/`, and `scripts/build-www.mjs`, which builds the app's
 files into `www/`.
 
+**On Windows, or without a Mac?** Follow [APPLE_SETUP.md](APPLE_SETUP.md)
+for the App Store. GitHub builds and uploads the iPhone app for you
+(`.github/workflows/ios.yml`), and the iPhone project in `ios/` is already
+set up: iPhone only, portrait, icon and launch screen.
+
 ## Step 0: the quick option (no app store)
 
 Turn on **GitHub Pages** for this repo (Settings → Pages → deploy from your
@@ -31,33 +36,30 @@ npm install
 # Pick a unique app ID you control, e.g. com.yourname.mudcrowns,
 # and put it in capacitor.config.json ("appId") first. It can't change later.
 npm run build
-npx cap add ios        # on a Mac
-npx cap add android
+npx cap add android    # ios/ is already in the repo
 ```
 
-This creates `ios/` and `android/` folders holding real Xcode and Android
-Studio projects. Commit them.
+This creates an `android/` folder holding a real Android Studio project.
+Commit it. The `ios/` Xcode project is already here, with iPad turned off,
+portrait only, and the encryption answer (`ITSAppUsesNonExemptEncryption`
+= NO) set.
 
-Then, once, in the new projects:
+Then, once, in the Android project:
 
-- **Xcode** (open with `npx cap open ios`), target *App*, tab *General*:
-  under *Supported Destinations* remove **iPad** (or Apple will also ask for
-  iPad screenshots), and under *Deployment Info* tick **Portrait** only. In
-  *Info*, add the key `ITSAppUsesNonExemptEncryption` set to `NO`, so you
-  aren't asked about encryption on every upload.
 - **Android Studio**: in `android/app/src/main/AndroidManifest.xml`, add
   `android:screenOrientation="portrait"` to the `<activity>` line.
 
-**No Mac?** You can still build for iPhone with a cloud Mac service such as
-Codemagic (it has a free tier) or by renting a Mac online. Android works on
-any computer.
+**No Mac?** Use [APPLE_SETUP.md](APPLE_SETUP.md): GitHub builds and uploads
+the iPhone app on its own Macs. Android works on any computer.
 
 ## Step 2: icons and splash screen
+
+The iPhone app already has its icon and launch screen. For Android:
 
 ```sh
 npm install -D @capacitor/assets
 mkdir -p assets && cp icons/icon-1024.png assets/icon.png
-npx capacitor-assets generate
+npx capacitor-assets generate --android
 ```
 
 ## Step 3: build and test

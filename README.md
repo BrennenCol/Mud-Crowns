@@ -83,7 +83,8 @@ in the menu.
 ## Apps
 
 See [APP_STORE.md](APP_STORE.md) to install the game from the web, or to ship
-it to the App Store and Google Play. [STORE_LISTING.md](STORE_LISTING.md) has
+it to the App Store and Google Play. [APPLE_SETUP.md](APPLE_SETUP.md) puts it
+on the App Store from Windows: GitHub builds the iPhone app on its own Macs. [STORE_LISTING.md](STORE_LISTING.md) has
 the store text to paste, and `store/` the screenshots. See
 [PRIVACY.md](PRIVACY.md) and [LEGAL_NOTES.md](LEGAL_NOTES.md).
 
