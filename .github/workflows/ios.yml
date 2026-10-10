@@ -1,0 +1,140 @@
+# Builds the iPhone app on one of GitHub's Macs and sends it to App Store Connect.
+# No Mac needed: run it from the Actions tab (iPhone app → Run workflow).
+# Without the four Apple secrets it only checks that the app builds.
+name: iPhone app
+
+on:
+  workflow_dispatch:
+    inputs:
+      upload:
+        description: Send the build to App Store Connect (needs the Apple secrets)
+        type: boolean
+        default: true
+  push:
+    paths:
+      - 'ios/**'
+      - '.github/workflows/ios.yml'
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 45
+    env:
+      ASC_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+      ASC_KEY_P8: ${{ secrets.APPSTORE_KEY_P8 }}
+      TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      WANT_UPLOAD: ${{ github.event_name == 'workflow_dispatch' && inputs.upload }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Check Xcode
+        run: |
+          xcodebuild -version
+          major=$(xcodebuild -version | head -1 | sed -E 's/Xcode ([0-9]+).*/\1/')
+          if [ "$major" -lt 26 ]; then echo "::error::Apple needs Xcode 26 or later for uploads, this Mac has Xcode $major."; exit 1; fi
+
+      - name: Build the game files
+        run: |
+          npm ci
+          npm run build
+          npx cap sync ios
+
+      - name: Read the app ID and version
+        run: |
+          APP_ID=$(node -p "require('./capacitor.config.json').appId")
+          VERSION=$(node -p "require('./package.json').version")
+          echo "APP_ID=$APP_ID" >> "$GITHUB_ENV"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "BUILD=${{ github.run_number }}" >> "$GITHUB_ENV"
+          UPLOAD=false
+          if [ "$WANT_UPLOAD" = "true" ]; then
+            if [ -z "$ASC_KEY_ID" ] || [ -z "$ASC_ISSUER_ID" ] || [ -z "$ASC_KEY_P8" ] || [ -z "$TEAM_ID" ]; then
+              echo "::warning::The Apple secrets are not all set (APPSTORE_KEY_ID, APPSTORE_ISSUER_ID, APPSTORE_KEY_P8, APPLE_TEAM_ID), so this run only checks the build."
+            elif [ "$APP_ID" = "com.example.mudcrowns" ]; then
+              echo "::error::Set your own appId in capacitor.config.json before uploading."; exit 1
+            else
+              UPLOAD=true
+            fi
+          fi
+          echo "UPLOAD=$UPLOAD" >> "$GITHUB_ENV"
+          echo "Mud & Crowns $VERSION (build ${{ github.run_number }}), app ID $APP_ID, upload: $UPLOAD"
+
+      - name: Archive
+        run: |
+          set -o pipefail
+          xcodebuild archive \
+            -project ios/App/App.xcodeproj -scheme App -configuration Release \
+            -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/App.xcarchive" \
+            MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="$BUILD" PRODUCT_BUNDLE_IDENTIFIER="$APP_ID" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            | tee "$RUNNER_TEMP/archive.log" | grep -E "error:|ARCHIVE SUCCEEDED|ARCHIVE FAILED" || true
+          test -d "$RUNNER_TEMP/App.xcarchive/Products/Applications/App.app"
+
+      - name: Sign and send to App Store Connect
+        if: env.UPLOAD == 'true'
+        run: |
+          set -o pipefail
+          KEY="$RUNNER_TEMP/AuthKey_$ASC_KEY_ID.p8"
+          printf '%s\n' "$ASC_KEY_P8" > "$KEY"
+          AUTH=(-allowProvisioningUpdates -authenticationKeyPath "$KEY" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict>
+            <key>method</key><string>app-store-connect</string>
+            <key>destination</key><string>upload</string>
+            <key>signingStyle</key><string>automatic</string>
+            <key>teamID</key><string>$TEAM_ID</string>
+            <key>uploadSymbols</key><true/>
+            <key>manageAppVersionAndBuildNumber</key><false/>
+          </dict></plist>
+          EOF
+          export_it() {
+            xcodebuild -exportArchive -archivePath "$RUNNER_TEMP/App.xcarchive" \
+              -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" -exportPath "$RUNNER_TEMP/export" "${AUTH[@]}" \
+              2>&1 | tee -a "$RUNNER_TEMP/export.log"
+          }
+          # Apple signs the app with a certificate it keeps for you (cloud signing), so nothing secret lives on this Mac.
+          if ! export_it; then
+            echo "::warning::Signing the plain archive did not work. Trying again with the archive signed by Xcode."
+            rm -rf "$RUNNER_TEMP/App.xcarchive" "$RUNNER_TEMP/export"
+            xcodebuild archive \
+              -project ios/App/App.xcodeproj -scheme App -configuration Release \
+              -destination 'generic/platform=iOS' -archivePath "$RUNNER_TEMP/App.xcarchive" \
+              MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="$BUILD" PRODUCT_BUNDLE_IDENTIFIER="$APP_ID" \
+              DEVELOPMENT_TEAM="$TEAM_ID" CODE_SIGN_STYLE=Automatic "${AUTH[@]}" \
+              | tee -a "$RUNNER_TEMP/archive.log" | grep -E "error:|ARCHIVE SUCCEEDED|ARCHIVE FAILED" || true
+            export_it
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          rm -f "$RUNNER_TEMP"/AuthKey_*.p8
+          {
+            echo "### Mud & Crowns $VERSION (build $BUILD)"
+            if [ "${{ job.status }}" != "success" ]; then echo "Something went wrong. Open the failed step above to see the error."
+            elif [ "$UPLOAD" = "true" ]; then echo "Sent to App Store Connect. It shows up in TestFlight after Apple processes it, usually 10 to 30 minutes."
+            else echo "The app builds. Nothing was sent to Apple (run it from the Actions tab with the Apple secrets set to upload)."; fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Keep the build logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcode-logs
+          path: ${{ runner.temp }}/*.log
+          if-no-files-found: ignore
