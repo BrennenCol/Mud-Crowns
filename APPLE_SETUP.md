@@ -92,8 +92,9 @@ Claude to read the logs.
 Open your app in App Store Connect, then the **1.5.1** version on the left.
 Everything to paste is in `STORE_LISTING.md`.
 
-1. **Screenshots**: upload the six pictures from `store/ios-6.7in/` to the
-   **iPhone 6.9" Display** slot.
+1. **Screenshots**: upload the six pictures from `store/iphone/` to the
+   **iPhone with Dynamic Island (medium display)** slot. That slot only takes
+   1206×2622 or 1179×2556 pictures.
 2. **Promotional text, description, keywords, support URL**: paste them from
    `STORE_LISTING.md`.
 3. **Build**: press **+** and choose the build you uploaded.

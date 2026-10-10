@@ -82,7 +82,8 @@ press Run.
 2. *Product → Archive*, then *Distribute App → App Store Connect*.
 3. In [App Store Connect](https://appstoreconnect.apple.com), create the app
    and add:
-   - the screenshots in `store/ios-6.7in/` (they fit the 6.9" iPhone slot)
+   - the screenshots in `store/iphone/` (1206×2622, for the "iPhone with
+     Dynamic Island (medium display)" slot)
    - the name, subtitle, description, keywords and links from
      `STORE_LISTING.md`
 4. **App Privacy**: choose *Data Not Collected*. The game stores saves only on
@@ -123,8 +124,9 @@ Already done in this repo:
 
 - [x] Works fully offline (bundled fonts, service worker)
 - [x] App icon in every size (`icons/`), source in `icons/icon.svg`
-- [x] Store screenshots of version 1.5: `store/ios-6.7in/` (1290×2796, for
-      the 6.9" iPhone slot) and `store/android-phone/` (1080×2160)
+- [x] Store screenshots of version 1.5: `store/iphone/` (1206×2622, for the
+      "iPhone with Dynamic Island (medium display)" slot) and
+      `store/android-phone/` (1080×2160)
 - [x] Google Play feature graphic: `store/android-feature-graphic.png`
 - [x] Store text, age rating and privacy answers: `STORE_LISTING.md`
 - [x] Privacy policy and support pages (`privacy.html`, `support.html`),

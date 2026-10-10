@@ -107,7 +107,7 @@ On Google Play's target audience question, choose **13 and over**, so the
 
 | What | File | Where it goes |
 |---|---|---|
-| iPhone screenshots | `store/ios-6.7in/1-chronicle.png` to `6-pirate-fleet.png` (1290×2796) | App Store Connect → iPhone 6.9" display |
+| iPhone screenshots | `store/iphone/1-chronicle.png` to `6-pirate-fleet.png` (1206×2622) | App Store Connect → iPhone with Dynamic Island (medium display) |
 | Android screenshots | `store/android-phone/*.png` (1080×2160) | Play Console → Phone screenshots |
 | Feature graphic | `store/android-feature-graphic.png` (1024×500) | Play Console → Feature graphic (required) |
 | App icon, Google Play | `icons/icon-512.png` | Play Console → App icon |
