@@ -87,8 +87,29 @@ jobs:
         if: env.UPLOAD == 'true'
         run: |
           set -o pipefail
+          # Pasted values can carry spaces or Windows line endings; tidy them.
+          ASC_KEY_ID=$(printf '%s' "$ASC_KEY_ID" | tr -d '[:space:]')
+          ASC_ISSUER_ID=$(printf '%s' "$ASC_ISSUER_ID" | tr -d '[:space:]')
+          TEAM_ID=$(printf '%s' "$TEAM_ID" | tr -d '[:space:]')
           KEY="$RUNNER_TEMP/AuthKey_$ASC_KEY_ID.p8"
-          printf '%s\n' "$ASC_KEY_P8" > "$KEY"
+          # Rebuild the key file from whatever was pasted: with or without the BEGIN/END lines,
+          # on one line or many, with Windows line endings. The key itself is never printed.
+          KEY_OUT="$KEY" python3 - <<'PY'
+          import base64, os, re, sys, textwrap
+          raw = os.environ.get('ASC_KEY_P8', '')
+          body = re.sub(r'-----\s*(BEGIN|END)[^-]*-----', '', raw)
+          body = re.sub(r'[^A-Za-z0-9+/=]', '', body)
+          try:
+              der = base64.b64decode(body, validate=True)
+          except Exception:
+              der = b''
+          if len(der) < 100 or der[:1] != b'\x30':
+              print(f"::error::APPSTORE_KEY_P8 does not look like the .p8 key file ({len(body)} key characters found). Open the .p8 file in Notepad, copy all of it, and paste it into the secret again.")
+              sys.exit(1)
+          pem = '-----BEGIN PRIVATE KEY-----\n' + '\n'.join(textwrap.wrap(body, 64)) + '\n-----END PRIVATE KEY-----\n'
+          open(os.environ['KEY_OUT'], 'w').write(pem)
+          print(f"Key file ready ({len(der)} bytes).")
+          PY
           AUTH=(-allowProvisioningUpdates -authenticationKeyPath "$KEY" -authenticationKeyID "$ASC_KEY_ID" -authenticationKeyIssuerID "$ASC_ISSUER_ID")
           cat > "$RUNNER_TEMP/ExportOptions.plist" <<EOF
           <?xml version="1.0" encoding="UTF-8"?>
