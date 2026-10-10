@@ -335,6 +335,10 @@ details.fold:not([open])>summary{margin-bottom:10px}
 .wship text{font-size:18px}
 .wlg-war{color:#b3261e;font-weight:700;letter-spacing:-1px}
 .wnews .tx>span{line-height:1.35}
+.jobline{display:flex;align-items:center;border-bottom:1px solid var(--rule)}
+.jobline>.item{flex:1;min-width:0;border-bottom:0}
+.japply{flex:none;margin-right:14px;padding:7px 14px;border-radius:999px;border:0;background:var(--good);color:var(--vellum);font:600 15px var(--serif);cursor:pointer}
+.japply:focus-visible{outline:2px solid var(--lapis);outline-offset:2px}
 @media (prefers-reduced-motion:no-preference){
 .wbl{animation:wpulse 3.2s ease-in-out infinite}
 .wfront{animation:wmarch 1.6s linear infinite}
@@ -520,7 +524,7 @@ html,body{overscroll-behavior:none}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.5.0';
+const APP_VERSION = '1.5.1';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -6666,12 +6670,19 @@ function foldSections(root, kind) {
     const det = document.createElement('details'); det.className = 'fold' + (h.classList.contains('sm') ? ' sm' : '');
     const sum = document.createElement('summary'); sum.className = h.className; sum.innerHTML = h.innerHTML;
     det.appendChild(sum); items.forEach(x => det.appendChild(x));
-    const count = det.querySelectorAll(':scope > .item, :scope > .lineitem, :scope > .road, :scope > .devrow').length;
+    const count = det.querySelectorAll(':scope > .item, :scope > .lineitem, :scope > .road, :scope > .devrow, :scope > .jobline').length;
     if (count) { const c = document.createElement('span'); c.className = 'fold-n'; c.textContent = count; sum.appendChild(c); }
     det.open = key in fs ? fs[key] : foldDefault(kind, title, i, count);
-    det.addEventListener('toggle', () => { fs[key] = det.open; try { store.set(FOLDKEY, JSON.stringify(fs)); } catch (e) { } });
+    det.addEventListener('toggle', () => {
+      if (!det.isConnected) return; // a page that has since been redrawn
+      // one section open at a time: opening this one closes the rest
+      if (det.open) root.querySelectorAll(':scope > details.fold[open]').forEach(d => { if (d !== det) d.open = false; });
+      fs[key] = det.open; try { store.set(FOLDKEY, JSON.stringify(fs)); } catch (e) { }
+    });
     h.replaceWith(det);
   });
+  // only the first open section stays open when the page is drawn
+  let seen = false; root.querySelectorAll(':scope > details.fold').forEach(d => { if (d.open) { if (seen) d.open = false; seen = true; } });
 }
 
 /* ================= Jobs A: the common and skilled working life (v1.2, prefix ja_) ================= */
@@ -18386,6 +18397,8 @@ function myJobHTML() {
     if (S.job.track !== 'crown') h += `<div class="bar" role="img" aria-label="Standing ${S.job.perf}%"><i class="${barCls(S.job.perf)}" style="width:${S.job.perf}%"></i></div><small>Standing with your superiors: ${S.job.perf}%</small>`;
     h += '</div></div>';
     if (S.job.track === 'crown') h += btnItem('gocourt', '', '🏛️', 'Rule your kingdom', 'Your council, taxes, decrees and great works are in Realm, Court.', true, '›');
+    // the job's own game comes first: a fleet, trade runs, duties of office
+    h += jobPanelsHTML();
     // what you can do this year
     const fam = jobFam(), acts = TRADE.filter(d => d.tr === S.job.track || (d.fams && d.fams.includes(fam)));
     h += `<h3 class="sec">This year at work</h3>`;
@@ -18394,8 +18407,6 @@ function myJobHTML() {
     if (S.job.track === 'thief') h += `<div class="heat"><span>Heat ${S.heat || 0}</span><span class="bar" role="img" aria-label="Heat ${S.heat || 0} of 100"><i class="${(S.heat || 0) >= 60 ? 'lo' : (S.heat || 0) >= 30 ? 'md' : 'hi'}" style="width:${S.heat || 0}%"></i></span></div>`;
     for (const d of acts) { const c = deedCost(d); h += btnItem('trade', d.k, d.i, d.n, d.d, S.deeds <= 0 ? 'No deeds left this year' : tradeWhy(d), c ? `${c} silver` : ''); }
     h += taskHTML();
-    // the job's own game: a fleet, trade runs, duties of office
-    h += jobPanelsHTML();
     // where this job leads
     h += `<h3 class="sec">Your career</h3>`;
     if (S.job.track !== 'crown') {
@@ -18442,6 +18453,47 @@ function findWorkHTML() {
   // a new post: show it
   const _aj = applyJob;
   applyJob = function () { const before = S.job; const r = _aj.apply(this, arguments); if (S.job && S.job !== before) workPane = null; return r; };
+}
+
+/* ---------- quicker job hunting: Apply from the list, and a way to the step you need first ---------- */
+const occOfTrack = (tr, lv) => OCC_BY[tr] && occPos(OCC_BY[tr])[0] === tr ? OCC_BY[tr] : OCC.find(x => { const [t, l] = occPos(x); return t === tr && l === (lv < 0 ? 0 : lv); }) || null;
+{
+  const _jr = jobRow;
+  jobRow = function (o) {
+    const h = _jr.apply(this, arguments);
+    if (occState(o) !== 'open' || S.appliedYear === S.year || S.age < 12) return h;
+    return `<div class="jobline">${h.replace(/<span class="rt">[\s\S]*?<\/span><\/span><\/button>$/, '</button>')}<button class="mini japply" data-act="apply" data-arg="${o.k}" aria-label="Apply to be ${esc(aOr(occTitle(o)))}">Apply</button></div>`;
+  };
+  const FLEET_POSTS = new Set(['shipcaptain', 'jb_smuggler', 'jb_pirate', 'jb_piratecap', 'jb_privateer', 'jb_kingscapt', 'jb_admiral', 'jb_admiralfleet']);
+  const _jd = jobDetailHTML;
+  jobDetailHTML = function (o) {
+    let h = _jd.apply(this, arguments);
+    // say up front which posts come with a game of their own
+    const [tr0] = occPos(o), fam0 = TRACKS[tr0] && TRACKS[tr0].fam;
+    const extra = FLEET_POSTS.has(o.k) ? 'Comes with ships and a crew of your own: raid coastal counties, hunt merchant ships, sell plunder (Work, My job).'
+      : fam0 === 'trade' || o.k === 'guildmaster' ? 'Comes with trade runs: buy cheap, sell dear across six markets, keep a warehouse and take contracts (Work, My job).' : '';
+    if (extra) { const m = '<h3 class="sec">What it’s like</h3><ul class="notes">'; h = h.includes(m) ? h.replace(m, `${m}<li><b>${esc(extra)}</b></li>`) : h.replace('<h3 class="sec">Career road</h3>', `<h3 class="sec">What it’s like</h3><ul class="notes"><li><b>${esc(extra)}</b></li></ul><h3 class="sec">Career road</h3>`); }
+    const fs = typeof pathFeeders === 'function' ? pathFeeders()[o.k] : null;
+    if (!fs || !fs.length || fs.some(pathHeld) || pathWaivers(o).some(w => w[0])) return h;
+    const steps = [...new Map(fs.map(f => [f, f.lv === -2 ? null : occOfTrack(f.tr, f.lv)]).filter(([, x]) => x).map(([, x]) => [x.k, x])).values()];
+    if (!steps.length) return h;
+    const word = { open: 'Open to you now', near: 'One thing missing', lock: 'Not yet', block: 'Not now', never: 'Not for you' };
+    let sec = `<h3 class="sec">Start here first</h3><p class="hint">Serve in one of these posts and this one opens to you.</p>`;
+    sec += steps.map(x => btnItem('job', x.k, x.i, occTitle(x), word[occState(x)] || '', true, '›')).join('');
+    const i = h.indexOf('<h3 class="sec">Requirements</h3>'), j = i < 0 ? -1 : h.indexOf('</ul>', i);
+    return j < 0 ? h + sec : h.slice(0, j + 5) + sec + h.slice(j + 5);
+  };
+  // the hint bar points at the job's own game at the start of the year
+  const _ct = coachText;
+  coachText = function () {
+    const t = _ct.apply(this, arguments);
+    if (!S || !S.alive || S.jail || !S.job || S.deeds < DEEDS_PER_YEAR || /^(⛓️|🤒|⚠️|👶|🧒)/.test(t || '')) return t;
+    const on = k => JOBPANELS.some(p => p.k === k && (() => { try { return p.when(); } catch (e) { return false; } })());
+    if (on('fl_fleet')) return '⚓ Your fleet is ready: open ⚒️ Work, My job to raid a coast or hunt merchant ships.';
+    if (on('tr_panel')) return '🐪 Prices have moved: open ⚒️ Work, My job to send a trade run.';
+    if (on('du_panel')) return '📜 Your office has a duty for you this year: open ⚒️ Work, My job.';
+    return t;
+  };
 }
 
 /* ================= Interface ================= */

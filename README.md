@@ -258,4 +258,13 @@ others. Every post's page shows the step below it, and Work, Career roads
 shows the whole ladder. 151 of 286 posts have a step below; every post can
 still be reached from a first job.
 
+### Quicker job hunting (v1.5.1)
+
+- Posts you can get have an Apply button right in the Find work list.
+- A locked post's page lists the posts to start in first; tap one to go there.
+- Your job's own game (the fleet, trade runs, duties) sits right under your
+  job card, the hint bar points to it at the start of each year, and a post's
+  page says when it comes with ships or trade runs.
+- Fold-up sections open one at a time.
+
 See [TESTING_ON_PHONE.md](TESTING_ON_PHONE.md) to play it on your phone.
