@@ -24,7 +24,7 @@ and copy the **Team ID**: ten letters and numbers, like `A1B2C3D4E5`.
 ## 3. Register the app ID
 
 The app ID is the game's permanent name inside Apple, such as
-`com.brennencol.mudcrowns`. It must match `appId` in `capacitor.config.json`.
+`com.brennencol.mudcrowns`. It must match `appId` in `capacitor.config.json`, which is already set to `com.brennencol.mudcrowns`.
 
 1. Go to <https://developer.apple.com/account/resources/identifiers/list>
    and press **+**.
