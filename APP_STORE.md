@@ -38,6 +38,20 @@ npx cap add android
 This creates `ios/` and `android/` folders holding real Xcode and Android
 Studio projects. Commit them.
 
+Then, once, in the new projects:
+
+- **Xcode** (open with `npx cap open ios`), target *App*, tab *General*:
+  under *Supported Destinations* remove **iPad** (or Apple will also ask for
+  iPad screenshots), and under *Deployment Info* tick **Portrait** only. In
+  *Info*, add the key `ITSAppUsesNonExemptEncryption` set to `NO`, so you
+  aren't asked about encryption on every upload.
+- **Android Studio**: in `android/app/src/main/AndroidManifest.xml`, add
+  `android:screenOrientation="portrait"` to the `<activity>` line.
+
+**No Mac?** You can still build for iPhone with a cloud Mac service such as
+Codemagic (it has a free tier) or by renting a Mac online. Android works on
+any computer.
+
 ## Step 2: icons and splash screen
 
 ```sh
@@ -66,23 +80,25 @@ press Run.
 2. *Product → Archive*, then *Distribute App → App Store Connect*.
 3. In [App Store Connect](https://appstoreconnect.apple.com), create the app
    and add:
-   - screenshots (6.7" and 6.5" iPhone sizes)
-   - a description, keywords, and a support URL
-   - a privacy policy URL (host `PRIVACY.md` on GitHub Pages)
+   - the screenshots in `store/ios-6.7in/` (they fit the 6.9" iPhone slot)
+   - the name, subtitle, description, keywords and links from
+     `STORE_LISTING.md`
 4. **App Privacy**: choose *Data Not Collected*. The game stores saves only on
    the device.
-5. **Age rating questionnaire**: answer honestly. The game has cartoon or
-   fantasy violence (battles, executions), alcohol references (taverns),
-   simulated gambling (dice wagers), and mature themes (plague, death).
-   Expect roughly a 12+ rating.
+5. **Age rating questionnaire**: answer honestly. `STORE_LISTING.md` has the
+   answers for this game (text violence, alcohol references, simulated
+   gambling with no real money, mild mature themes). Expect 13+.
 6. Submit for review. It usually takes 1 to 3 days.
 
 **Google**
 1. In Android Studio, *Build → Generate Signed App Bundle* (.aab). Keep the
    keystore file safe forever: you need it for every update.
 2. In the [Play Console](https://play.google.com/console), create the app,
-   fill in the store listing, content rating (IARC questionnaire), and data
-   safety form ("no data collected"), and upload the .aab.
+   fill in the store listing from `STORE_LISTING.md` (screenshots in
+   `store/android-phone/`, the feature graphic
+   `store/android-feature-graphic.png`, the icon `icons/icon-512.png`), the
+   content rating (IARC questionnaire), the data safety form ("no data
+   collected"), and upload the .aab.
 3. New personal developer accounts must run a closed test with at least 12
    testers for 14 days before going public.
 
@@ -105,9 +121,12 @@ Already done in this repo:
 
 - [x] Works fully offline (bundled fonts, service worker)
 - [x] App icon in every size (`icons/`), source in `icons/icon.svg`
-- [x] Store screenshots: `store/ios-6.7in/` (1290×2796, for the 6.7" and
-      6.9" iPhone slots) and `store/android-phone/` (1080×2160)
-- [x] Privacy policy (`PRIVACY.md`): no data collected
+- [x] Store screenshots of version 1.5: `store/ios-6.7in/` (1290×2796, for
+      the 6.9" iPhone slot) and `store/android-phone/` (1080×2160)
+- [x] Google Play feature graphic: `store/android-feature-graphic.png`
+- [x] Store text, age rating and privacy answers: `STORE_LISTING.md`
+- [x] Privacy policy and support pages (`privacy.html`, `support.html`),
+      served by GitHub Pages
 - [x] First-time welcome tour, hint line, and help in the menu
 - [x] Crash guard: if something breaks, the game saves and offers to carry on
 - [x] Save backup: the previous year is kept and restored automatically if a
@@ -125,11 +144,9 @@ You still need to:
       `com.yourname.mudcrowns`). It can never change after release.
 - [ ] Put your name in place of "the Mud & Crowns authors" (menu About text and
       `LEGAL_NOTES.md`)
-- [ ] Host `PRIVACY.md` (GitHub Pages works) and use its link in both stores
+- [ ] Check that https://brennencol.github.io/Mud-Crowns/privacy.html and
+      `support.html` load (GitHub Pages must be on: Settings → Pages)
 - [ ] Search the name in the USPTO database and both stores
-- [ ] Write the store description. Suggested subtitle: "A medieval life, from
-      serf to sovereign". Keywords: medieval, life simulator, kingdom, knight,
-      dynasty, choices, text adventure, history. **Never** another game's name.
 - [ ] Test on a real iPhone and Android phone: notch, dark mode, closing and
       reopening, and a backup code round trip
 - [ ] For every update: raise `APP_VERSION`, the `version` in `package.json`,
