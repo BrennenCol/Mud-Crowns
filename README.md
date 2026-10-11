@@ -268,5 +268,7 @@ still be reached from a first job.
   job card, the hint bar points to it at the start of each year, and a post's
   page says when it comes with ships or trade runs.
 - Fold-up sections open one at a time.
+- A double tap never zooms the page. In the phone apps, pinch zoom and
+  long-press text selection are off too, so it feels like an app.
 
 See [TESTING_ON_PHONE.md](TESTING_ON_PHONE.md) to play it on your phone.
