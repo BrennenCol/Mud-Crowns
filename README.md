@@ -273,6 +273,32 @@ still be reached from a first job.
 - A double tap never zooms the page. In the phone apps, pinch zoom and
   long-press text selection are off too, so it feels like an app.
 
+## One law for the poor, another for the great (v1.11)
+
+- **The punishment fits the crime**, as medieval law had it. Petty theft,
+  poaching and brawling: a fine, or the stocks or the whip if you cannot pay
+  (a year and a day in the forest gaol for poaching). False weights: the
+  pillory, with your goods burned under your nose. Adultery and witchcraft:
+  the church court and public penance. Theft, robbery, arson and murder are
+  felonies: the rope, branding, or years in the dungeon if the rope is
+  commuted. A relapsed heretic, or a wife who kills her husband, is burned;
+  a traitor dies a traitor's death.
+- **Rank decides how the law treats you.** No court can try a king (the
+  realm and the Church take note). A prince or princess is judged by the
+  crown, pardoned if loved, otherwise confined in a castle or exiled; for
+  treason, perhaps the block. Lords are tried by their peers, pay fines and
+  blood money (killing a peasant costs them a few pounds), are beheaded
+  rather than hanged, and are attainted and exiled for treason. Clergy, and
+  anyone who can read the neck verse once, go to the bishop's court, which
+  cannot shed blood. The manor court never puts a lord's child in the stocks.
+- **The old ways out of a hanging:** a jury of your neighbours (your friends
+  help, your enemies hurt), oath-helpers for the lesser charges, benefit of
+  clergy, trial by combat, turning approver against your accomplices, or a
+  dash for sanctuary and abjuring the realm.
+- **A sentence is served.** Escape is hard, a failed escape means a flogging
+  and more years, breaking gaol is itself a hanging felony, and only the
+  powerful can buy their release.
+
 ## Blood and law (v1.10)
 
 - **Fights by skill.** Health, years in arms, a soldier's or knight's training,

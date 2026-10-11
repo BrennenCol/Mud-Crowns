@@ -62,7 +62,7 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 ## What's new (for this version)
 
 ```
-Blood and law: fights are won by health and training, and every fight hurts. A hired killer costs what the victim is worth, so the poor must do it themselves, and may lose. Killings bring inquests, blood feuds and the sheriff. At a trial your friends can swear for you and your enemies speak against you; lose and it is the fine, the gaol or the gallows, and prison has its own dangers. A lord is cold to his serfs, and everyone around you acts on what they feel about you. Also: 26 storylines, the people around you, fear and love, and passions and scandals.
+One law for the poor, another for the great. The punishment fits the crime: the stocks, the pillory, the gaol, the rope, the stake. No court can try a king, princes are judged by the crown, lords go to the block instead of the gallows and pay blood money, and clerks claim the church courts. Escape a hanging the old ways: a jury of your neighbours, the neck verse, trial by combat, sanctuary and exile. And a sentence is served. Also: fights won by health and training, murder that is remembered, prison life, and lords who are cold to their serfs.
 ```
 
 ## Category
