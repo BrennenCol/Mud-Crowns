@@ -524,7 +524,7 @@ html,body{overscroll-behavior:none}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.6.0';
+const APP_VERSION = '1.7.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -5435,10 +5435,10 @@ function showWhatsNew() {
   store.set(NEWKEY, APP_VERSION);
   modalOpen = true;
   const items = [
-    ['👑', 'Born to it', 'a prince or princess is handed commands and offices without years in the ranks, and nobles need only half the usual years. Your new fellows will doubt you at first: prove them wrong.'],
-    ['🎭', 'Beneath your rank', 'royals and nobles cannot take menial work under their own name. Live under a false name (Deeds, Daring) if you want to.'],
-    ['📯', 'The crown’s own blood', 'a king or queen who loves you may send for you and offer you a post.'],
-    ['🩹', 'Fixes', 'no more drawing code in the chronicle after a portrait card, and a double tap no longer zooms.'],
+    ['⚔️', 'Wars are wars', 'attacking a kingdom declares war on it. Its allies by marriage come to its defence, and neighbours may join if you grow too strong. Your own ally may march with you.'],
+    ['🏰', 'The royal host', 'every crown keeps an army that relieves its capital and nearby towns. Beat it in the field first. Take a capital and the court may flee and fight on.'],
+    ['🕊️', 'War and peace', 'enemies invade your borders every year. Offer peace, demand terms or buy peace at their court, and beaten crowns sue for peace.'],
+    ['🤝', 'Talk to crowns', 'meet a monarch in person, ask a court to join your war, or warn one to stay out. Hired captains are fewer, and dearer each time.'],
   ];
   $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Find work</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
@@ -16596,7 +16596,7 @@ PETITIONS.push(
   };
   const courts = () => foreign().filter(live);
   function statusOf(r) {
-    const bits = [];
+    const bits = window.dpStatus ? window.dpStatus(r) : [];
     if (S.flags.ally === r) bits.push('your ally'); else if (truce(r)) bits.push(`truce until ${S.flags.truce[r]}`);
     if (married(r)) bits.push('bound by marriage');
     const at = wAtWar(r); if (at.includes('civil')) bits.push('in civil war');
@@ -16620,6 +16620,7 @@ PETITIONS.push(
   function embWhy(r) { const d = deedWhy(); if (d !== true) return d; if (wd().emb[r] === S.year) return 'You already sent them an embassy this year'; if (S.coin < embCost(r)) return `Costs ${embCost(r)} silver`; return true; }
   function allyWhy(r) {
     if (S.flags.ally === r) return `${r} is already your ally`;
+    if (window.dpIsEnemy && window.dpIsEnemy(r)) return 'You are at war with them';
     const d = deedWhy(); if (d !== true) return d;
     if ((wd().ally || {})[r] === S.year) return 'They have given their answer for this year';
     const v = rel(r); if (v < 30) return `They must be at least Friendly first (now ${relWord(v)})`;
@@ -16629,14 +16630,15 @@ PETITIONS.push(
   function matchWhy(r) {
     const x = wRuler(r); if (!x || !x.heir) return 'They have no heir';
     if (wd().match.some(m => m.r === r)) return 'Your houses are already bound by a match';
+    if (window.dpIsEnemy && window.dpIsEnemy(r)) return 'Not while you are at war with them';
     if (x.heir.age < 12) return `Their heir, ${x.heir.n}, is only ${x.heir.age}`;
     if (!matchFor(r).length) return `You have no unwed ${x.heir.sex === 'm' ? 'daughter' : 'son'} near ${x.heir.n}’s age (${x.heir.age})`;
     if (rel(r) < -10) return 'They are too cold to listen';
     if (wd().mt === S.year) return 'You have already proposed one match this year';
     return deedWhy();
   }
-  function truceWhy(r) { if (S.flags.ally === r) return 'They are your ally'; if (truce(r)) return `Truce until ${S.flags.truce[r]}`; if (S.coin < truceCost(r)) return `Costs ${truceCost(r)} silver`; return true; }
-  function tribWhy(r) { if (S.flags.ally === r) return 'You cannot squeeze an ally'; const y = S.flags['trib_' + r]; if (y && S.year - y < 5) return `They will not hear another demand until ${y + 5}`; return true; }
+  function truceWhy(r) { if (S.flags.ally === r) return 'They are your ally'; if (window.dpIsEnemy && window.dpIsEnemy(r)) return 'You are at war: offer peace below'; if (truce(r)) return `Truce until ${S.flags.truce[r]}`; if (S.coin < truceCost(r)) return `Costs ${truceCost(r)} silver`; return true; }
+  function tribWhy(r) { if (S.flags.ally === r) return 'You cannot squeeze an ally'; if (window.dpIsEnemy && window.dpIsEnemy(r)) return 'You are at war: demand terms below'; const y = S.flags['trib_' + r]; if (y && S.year - y < 5) return `They will not hear another demand until ${y + 5}`; return true; }
 
   SHEETS.wd_court = () => {
     const r = wdSel, back = btnItem('wd_back', '', '‹', 'Back to the world', '', true);
@@ -16703,6 +16705,7 @@ PETITIONS.push(
   };
   XACT.wd_truce = r => { if (!ruler() || !live(r)) return; const why = truceWhy(r); if (why !== true) return toast(why); ACT.truce(r); };
   XACT.wd_tribute = r => { if (!ruler() || !live(r)) return; const why = tribWhy(r); if (why !== true) return toast(why); ACT.tribute(r); };
+  window.wdApi = { rel, relAdd, relWord, relPill, setTruce, noTruce, makeAlly, married, live, wd, statusOf, act, sel: () => wdSel, wRowX };
 
   // The game's own truce and tribute (War tab or here) move foreign goodwill too. ACT is declared later in the page.
   setTimeout(() => {
@@ -16830,6 +16833,469 @@ PETITIONS.push(
 .wd-rel i.dn{right:50%;background:var(--low)}
 .wd-mem{margin:6px 22px 2px;padding:0;list-style:none}`;
     try { const el = document.createElement('style'); el.textContent = css; document.head.appendChild(el); } catch (e) { console.error(e); }
+  }
+}
+
+
+/* ================= War between kingdoms: allies, the royal host, a capital that fights on, and peace (prefix dp_) ================= */
+// For rulers. Attacking a kingdom is a declared war: its allies come to defend it, your own ally may march with you.
+// Each enemy crown keeps a royal host that relieves its capital and nearby towns. Taking a capital ends a kingdom only when
+// it is nearly beaten; otherwise the court flees and fights on. Enemies invade your borders every year until peace.
+// State lives in S.dp (lazy; old saves work).
+{
+  const W = () => window.wdApi || null;
+  const rel = r => (W() ? W().rel(r) : 0);
+  const relAdd = (r, d, why) => (W() ? W().relAdd(r, d, why) : 0);
+  const live = r => !!(r && S.world && S.world.k && S.world.k[r]);
+  const ruling = () => !!(S && S.ruling && S.world && S.world.k);
+  const dp = () => { const o = (S.dp = S.dp || {}); o.wars = o.wars || {}; o.hire = o.hire || { y: 0, n: 0 }; o.talk = o.talk || {}; o.ask = o.ask || {}; o.stay = o.stay || {}; return o; };
+  const wars = () => { const w = dp().wars; for (const r of Object.keys(w)) if (!live(r) || !S.ruling) delete w[r]; for (const v of Object.values(w)) for (const side of ['al', 'mine']) for (const a of Object.keys(v[side] || {})) if (!live(a)) delete v[side][a]; return w; };
+  const foreign = () => (S.world && S.world.k ? Object.keys(S.world.k).filter(r => r !== S.realm && live(r)) : []);
+  const hostBase = r => Math.max(20, Math.round(realmPower(r) * .35));
+  const contingent = r => Math.max(10, Math.round(realmPower(r) * .2));
+  const myPower = () => armyPower() + realmPower(S.realm) * .5;
+  const sum = o => Object.values(o || {}).reduce((t, v) => t + (v || 0), 0);
+  const nm = r => royalOf(r);
+  // who stands with whom
+  const pairedWith = r => (S.world.ally || []).filter(a => a.a === r || a.b === r).map(a => (a.a === r ? a.b : a.a)).filter(z => z !== S.realm && live(z));
+  const warOn = r => wars()[r] || null;
+  const warHolding = r => warOn(r) || Object.values(wars()).find(w => w.al && w.al[r] != null) || null;
+  const isEnemy = r => !!warHolding(r);
+  const enemies = () => { const out = new Set(); for (const [r, w] of Object.entries(wars())) { out.add(r); for (const a of Object.keys(w.al || {})) out.add(a); } return [...out]; };
+  const foeOfWar = w => Object.keys(wars()).find(r => wars()[r] === w);
+  const scWord = v => v >= 50 ? 'winning decisively' : v >= 20 ? 'winning' : v > -20 ? 'even' : v > -50 ? 'losing' : 'losing badly';
+  window.dpIsEnemy = r => ruling() && isEnemy(r);
+  window.dpStatus = r => { if (!ruling()) return []; const w = warOn(r); if (w) return [`at war with you (${scWord(w.sc)})`]; const h = warHolding(r); return h ? [`fighting you beside ${foeOfWar(h)}`] : []; };
+
+  /* ---------- going to war ---------- */
+  function declareWar(r, theyStarted) {
+    const all = wars(); if (all[r]) return { rec: all[r], lines: [] };
+    const base = hostBase(r), rec = all[r] = { y: S.year, sc: 0, host: base, base, al: {}, mine: {} };
+    const lines = [];
+    if (!theyStarted) {
+      if (S.flags.ally === r) { S.flags.ally = null; st('renown', -12); for (const z of foreign()) if (z !== r) relAdd(z, -8, `you turned on your own ally, ${r}`); lines.push(`You have betrayed an ally. Every court in the world has heard of it.`); }
+      else if (truce(r)) { delete S.flags.truce[r]; st('renown', -8); for (const z of foreign()) if (z !== r) relAdd(z, -4, `you broke your truce with ${r}`); lines.push('Breaking a sworn truce has cost you honour.'); }
+      relAdd(r, -40, 'you declared war on them');
+    }
+    // their friends answer the call
+    for (const a of pairedWith(r)) {
+      if (a === S.flags.ally && P(.6)) { lines.push(`${a} is bound to both of you, and stays out of it.`); continue; }
+      if ((dp().stay[a] || 0) >= S.year) continue;
+      if (P(.75)) { rec.al[a] = contingent(a); relAdd(a, -20, `you went to war with their ally ${r}`); lines.push(`${a} stands by its ally and marches against you.`); }
+    }
+    // a crown that grows too strong frightens its neighbours
+    if (myPower() > realmPower(r) * 1.8) for (const z of foreign()) {
+      if (z === r || rec.al[z] != null || z === S.flags.ally || (dp().stay[z] || 0) >= S.year) continue;
+      if ((wBorder(z, S.realm) || wBorder(z, r)) && rel(z) < 15 && P(.3)) { rec.al[z] = contingent(z); relAdd(z, -10, 'they fear your power'); lines.push(`${z}, fearing how strong you have grown, joins ${r}.`); }
+    }
+    // the enemy of your enemy
+    for (const z of foreign()) if (z !== r && rec.al[z] == null && (S.world.wars || []).some(v => (v.a === z && v.b === r) || (v.b === z && v.a === r)) && rel(z) >= -10 && P(.5)) { rec.mine[z] = contingent(z); lines.push(`${z}, already at war with ${r}, fights beside you.`); }
+    // and yours
+    const al = S.flags.ally;
+    if (al && live(al) && al !== r && rec.al[al] == null && P(Math.min(.9, .45 + rel(al) / 200))) { rec.mine[al] = contingent(al); relAdd(al, 3, 'they marched with you'); lines.push(`Your ally ${al} marches with you.`); }
+    wNews(theyStarted ? `${r} has declared war on ${S.realm}.` : `${S.realm} has declared war on ${r}.${Object.keys(rec.al).length ? ` ${joinList(Object.keys(rec.al))} ${Object.keys(rec.al).length > 1 ? 'have' : 'has'} taken ${r}’s side.` : ''}`, '⚔️', true);
+    warLog(theyStarted ? `${r} declared war on you.` : `Declared war on ${r}.`);
+    return { rec, lines };
+  }
+  function endWar(r, how) {
+    const w = wars()[r]; if (!w) return;
+    delete wars()[r];
+    const W0 = W();
+    if (how !== 'fallen' && W0) W0.setTruce(r, 10);
+    for (const a of Object.keys(w.al || {})) if (live(a) && W0) W0.setTruce(a, 5);
+    warLog(how === 'fallen' ? `${r} has fallen.` : `Peace with ${r}.`);
+  }
+  function warWhy(r) {
+    if (!ruling() || !live(r)) return 'Only a crowned ruler makes war on kingdoms';
+    if (isEnemy(r)) return 'You are already at war with them';
+    if ((S.army || 0) < 10) return 'Raise at least 10 soldiers first (Army tab)';
+    return true;
+  }
+  function declareCard(r, then) {
+    const allies = pairedWith(r).filter(a => a !== S.flags.ally), fear = myPower() > realmPower(r) * 1.8;
+    const warn = [S.flags.ally === r ? `${r} is your ally: turning on them will shame you before every court.` : truce(r) ? `You have a truce with ${r} until ${S.flags.truce[r]}. Breaking it will cost you honour.` : '',
+      allies.length ? `${joinList(allies)} ${allies.length > 1 ? 'are' : 'is'} bound to ${r} by marriage and will likely march against you.` : `${r} has no sworn allies.`,
+      fear ? 'You have grown so strong that other neighbours may join them out of fear.' : '',
+      `Their royal host, about ${Math.round(hostBase(r) / 10) * 10} strong, will defend the capital and the towns near it. They will invade your borders every year until there is peace.`].filter(Boolean).join(' ');
+    return { id: 'dp_declare', icon: '⚔️', text: () => `Do you declare war on ${nm(r)} of ${r}? ${warn}`,
+      choices: [
+        { t: 'Declare war', fx: () => { const d = declareWar(r, false); st('renown', 2); if (then) Q.push(then); return `Heralds rode to ${r} with your defiance.${d.lines.length ? ' ' + d.lines.join(' ') : ''}`; } },
+        { t: 'Not yet', fx: () => null },
+      ] };
+  }
+
+  /* ---------- the royal host comes to the town's relief ---------- */
+  function planRelief(x) {
+    delete x.dpR;
+    if (!ruling() || x.realm === S.realm || !live(x.realm)) return null;
+    const w = warHolding(x.realm); if (!w) return null;
+    const foe = foeOfWar(w), cap = capOf(foe), r = x.realm;
+    const R0 = { y: S.year, foe, h: 0, a: {}, m: 0 };
+    if (r === foe) {
+      const near = x.cap || (cap && x.adj.includes(cap.id));
+      if (w.host > 0 && (near || P(.45))) R0.h = w.host;
+      for (const [a, v] of Object.entries(w.al)) if (v > 0 && (x.cap || x.adj.some(i => TT(i).realm === a))) R0.a[a] = v;
+    } else {
+      if (w.al[r] > 0) R0.a[r] = w.al[r];
+      if (w.host > 0 && x.adj.some(i => TT(i).realm === foe) && P(.3)) R0.h = Math.round(w.host * .5);
+    }
+    R0.m = sum(w.mine);
+    R0.t = R0.h + sum(R0.a);
+    x.dpR = R0;
+    return R0;
+  }
+  const reliefOf = x => (x.dpR && x.dpR.y === S.year ? x.dpR : null);
+  const reliefText = (x, R0) => {
+    if (!R0) return '';
+    const bits = [];
+    if (R0.h) bits.push(`the royal host of ${R0.foe}, about ${Math.round(R0.h / 10) * 10} strong, has marched to its relief`);
+    for (const [a, v] of Object.entries(R0.a)) bits.push(`${Math.round(v / 10) * 10} men of ${a} stand with them`);
+    const mine = Object.entries(wars()[R0.foe] ? wars()[R0.foe].mine : {}).filter(([, v]) => v > 0);
+    const help = mine.length ? ` Beside you march ${joinList(mine.map(([a, v]) => `${Math.round(v / 10) * 10} men of ${a}`))}.` : '';
+    return (bits.length ? ` But ${joinList(bits)}.` : ` Your scouts see no relief coming: the royal host of ${R0.foe} is elsewhere.`) + help;
+  };
+  {
+    const _be = battleEvent;
+    battleEvent = function (x) {
+      const R0 = planRelief(x);
+      const e = _be.apply(this, arguments);
+      if (!R0) return e;
+      const t0 = e.text; e.text = c => `${t0(c)}${reliefText(x, R0)}`;
+      if (R0.t > 0) e.choices = e.choices.map(ch => /^Demand their surrender/.test(typeof ch.t === 'string' ? ch.t : '') ? { t: 'Demand their surrender', ok: () => false, why: 'Not while an army stands ready to relieve them', fx: () => null } : ch);
+      return e;
+    };
+    const _tc = tactics;
+    tactics = function (x) {
+      const out = _tc.apply(this, arguments), R0 = reliefOf(x); if (!R0) return out;
+      const A = Math.max(1, armyPower(x.ter)), D = Math.max(1, defenseOf(x)), f = ((A + R0.m) / A) * (D / (D + R0.t));
+      for (const c of out) c.q *= f;
+      return out;
+    };
+    const _fight = fight;
+    fight = function (x, o) {
+      const R0 = reliefOf(x); delete x.dpR;
+      if (!R0) return _fight.apply(this, arguments);
+      const w = wars()[R0.foe], r = x.realm, wasCap = !!x.cap;
+      const t = _fight.call(this, x, Object.assign({}, o, { atk: o.atk + R0.m, def: o.def + R0.t }));
+      const won = !!x.you || x.realm === S.realm;
+      if (!w) return t;
+      const hit = won ? R(45, 75) / 100 : R(10, 25) / 100;
+      if (R0.h) w.host = Math.max(0, Math.round(w.host - R0.h * hit));
+      for (const [a, v] of Object.entries(R0.a)) if (w.al[a] != null) w.al[a] = Math.max(0, Math.round(w.al[a] - v * hit));
+      if (wars()[R0.foe]) w.sc = Math.max(-100, Math.min(100, w.sc + (won ? (wasCap ? 0 : 10) : -8)));
+      const note = R0.t ? (won ? ` The relieving army broke and fled the field.` : ` The relieving army held, though it was bloodied.`) : '';
+      if (r !== R0.foe && won && w.al[r] != null && P(.5)) { delete w.al[r]; if (W()) W().setTruce(r, 5); return `${t}${note} ${r} has had enough, and makes a separate peace.`; }
+      return t + note;
+    };
+    // A capital ends a kingdom only when it is nearly beaten, or its crown is taken. Otherwise the court flees.
+    const _cq = conquer;
+    conquer = function (x, pre) {
+      if (!ruling() || !x.cap || x.realm === S.realm) return _cq.apply(this, arguments);
+      const r = x.realm, w = wars()[r], king = nm(r), rest = realmTs(r).filter(y => y !== x);
+      const caught = P(.2), held = !w && warHolding(r);
+      if (held && rest.length > 3 && !caught) {
+        x.cap = 0; const t = _cq.call(this, x, pre);
+        const nc = rest.slice().sort((a, b) => (b.base || 0) - (a.base || 0) || b.gar - a.gar)[0]; nc.cap = 1; nc.walls = Math.max(1, nc.walls || 0); nc.gar = Math.max(nc.gar, 40);
+        delete held.al[r]; if (W()) W().setTruce(r, 5); held.sc = Math.min(100, held.sc + 12);
+        wNews(`${x.n}, the royal seat of ${r}, has fallen to ${S.realm}. ${king} fled to ${nc.n} and sued for peace.`, '🏰', true);
+        return `${t} ${king} fled to ${nc.n}, and sued for a separate peace: ${r} is out of the war.`;
+      }
+      const done = !w || rest.length <= 3 || caught || w.sc >= 70;
+      if (done) { const t = _cq.apply(this, arguments); if (w) endWar(r, 'fallen'); return `${t}${caught && w ? ` ${king} was taken in the citadel and signed away the crown.` : ''}`; }
+      x.cap = 0;
+      const t = _cq.call(this, x, pre);
+      const nc = rest.slice().sort((a, b) => (b.base || 0) - (a.base || 0) || b.gar - a.gar)[0];
+      nc.cap = 1; nc.walls = Math.max(1, nc.walls || 0); nc.gar = Math.max(nc.gar, 40);
+      w.sc = Math.min(100, w.sc + 30); w.host = Math.round(w.host * .8);
+      st('renown', 6);
+      wNews(`${x.n}, the royal seat of ${r}, has fallen to ${S.realm}. ${king} fled with the court to ${nc.n}.`, '🏰', true);
+      return `${t} But ${king} escaped with the court and the crown, and raised the royal standard again at ${nc.n}. ${r} fights on.`;
+    };
+  }
+  // The map's battle odds count the army that would come to a capital's relief.
+  {
+    const _hx = hexOddsColor;
+    hexOddsColor = function (x) {
+      if (!ruling() || x.you || x.realm === S.realm || !live(x.realm)) return _hx.apply(this, arguments);
+      const r = x.realm, w = warOn(r), cap = capOf(r);
+      const host = w ? w.host : hostBase(r), al = w ? sum(w.al) : pairedWith(r).reduce((t, a) => t + contingent(a) * .75, 0);
+      const extra = x.cap ? host + al : cap && x.adj.includes(cap.id) ? host * .6 : 0;
+      if (!extra) return _hx.apply(this, arguments);
+      const q = armyPower(x.ter) / Math.max(1, defenseOf(x) + extra);
+      return q > 1.5 ? '#3f8a52' : q > 1.1 ? '#8fae4a' : q > .85 ? '#d1a93a' : q > .6 ? '#c9743a' : '#b0422e';
+    };
+  }
+
+  /* ---------- every year of war ---------- */
+  function invadeCard(x, r, n) {
+    return { id: 'dp_invade', icon: '🏹', text: () => `${nm(r)} of ${r} has crossed your border with ${n} soldiers and is marching on ${x.n}${x.you ? ', your own county' : ''}!`,
+      choices: [
+        { t: 'Meet them in the field', fx: () => afterDefence(x, r, defendLand({ x, n, foe: r }, true)) },
+        { t: 'Man the walls and wait', fx: () => afterDefence(x, r, defendLand({ x, n, foe: r }, false)) },
+        { t: `Pay them to go home (${Math.round(n * .9)} silver)`, ok: () => S.coin >= Math.round(n * .9), why: `Costs ${Math.round(n * .9)} silver`, fx: () => { coin(-Math.round(n * .9)); st('renown', -4); return `${nm(r)} took your silver and marched home. They will be back.`; } },
+        { t: `Give up ${x.n}`, fx: () => { if (x.you) loseLand(x, r); else x.realm = r; st('renown', -8); const w = warHolding(r); if (w) w.sc = Math.max(-100, w.sc - 12); return `You let ${x.n} go without a fight. The banner of ${r} flies over it now.`; } },
+      ] };
+  }
+  function afterDefence(x, r, t) {
+    const w = warHolding(r); if (!w) return t;
+    const held = x.realm === S.realm;
+    if (held) { if (warOn(r)) w.host = Math.round(w.host * .7); else if (w.al[r] != null) w.al[r] = Math.round(w.al[r] * .7); w.sc = Math.min(100, w.sc + 8); }
+    else { if (x.realm !== r) x.realm = r; w.sc = Math.max(-100, w.sc - 12); }
+    return t;
+  }
+  function borderOf(r) { return S.world.t.filter(x => x.realm === S.realm && !x.cap && x.adj.some(i => TT(i).realm === r)); }
+  YEARLY.push(() => {
+    if (!S || !S.world || !S.world.t) return;
+    for (const x of S.world.t) if (x.dpR && x.dpR.y !== S.year) delete x.dpR;
+    if (!ruling()) { if (S.dp) S.dp.wars = {}; return; }
+    const all = wars();
+    for (const [r, w] of Object.entries(all)) {
+      w.base = hostBase(r);
+      w.host = Math.min(w.base, Math.round(w.host + w.base * .12));
+      for (const a of Object.keys(w.al)) w.al[a] = Math.min(contingent(a), Math.round(w.al[a] + contingent(a) * .15));
+      for (const a of Object.keys(w.mine)) w.mine[a] = Math.min(contingent(a), Math.round(w.mine[a] + contingent(a) * .15));
+      w.sc = Math.round(w.sc * .92);
+      unrest(2);
+      // allies grow tired of a losing war
+      if (w.sc > 25) for (const a of Object.keys(w.al)) if (P(.2)) { delete w.al[a]; if (W()) W().setTruce(a, 5); say(`${a} has made a separate peace and left the war against you.`, 'good'); }
+      if (w.sc < -25) for (const a of Object.keys(w.mine)) if (P(.2)) { delete w.mine[a]; say(`Your ally ${a} has gone home from the war.`, 'bad'); }
+      // they come for you
+      const raiders = [[r, () => w.host]].concat(Object.keys(w.al).map(a => [a, () => w.al[a]]));
+      for (const [who, str] of raiders) {
+        if (str() < 25 || P(who === r ? .45 : .7)) continue;
+        const tg = borderOf(who); if (!tg.length) continue;
+        const x = pick(tg), n = Math.round(str() * R(55, 90) / 100);
+        Q.push(() => showEvent(invadeCard(x, who, n)));
+        break;
+      }
+    }
+  });
+
+  /* ---------- peace ---------- */
+  const yearsAt = w => Math.max(0, S.year - w.y);
+  const ceded = r => { const c = S.world.t.filter(x => x.realm === r && !x.cap && x.adj.some(i => TT(i).realm === S.realm)); return c.sort((a, b) => (b.wealth || 0) - (a.wealth || 0))[0] || null; };
+  const buyCost = r => { const w = warOn(r); return Math.round(60 + realmTs(r).length * 20 + Math.max(0, -(w ? w.sc : 0)) * 5); };
+  const tribAmt = r => Math.round(40 + realmTs(r).length * 12);
+  function peaceTry(r) {
+    const w = warOn(r); if (!w) return 'There is no war.';
+    if (w.sc < -30) { relAdd(r, -2, 'you asked for peace while losing'); return `${nm(r)} laughed at your envoys. "Peace? You are losing. Come back with silver, or with your crown in your hands."`; }
+    const p = .2 + w.sc / 100 + rel(r) / 250 + yearsAt(w) * .05;
+    if (P(Math.max(.05, Math.min(.92, p)))) { endWar(r, 'peace'); relAdd(r, 10, 'you made peace'); st('renown', 2); return `${nm(r)} accepted. Heralds proclaimed peace between ${S.realm} and ${r}, and a truce of ten years.`; }
+    return `${nm(r)} sent your envoys home. "When our banners fly over your capital, perhaps," says the letter.`;
+  }
+  function termsTry(r) {
+    const w = warOn(r); if (!w) return 'There is no war.';
+    const c = ceded(r), g = tribAmt(r);
+    const p = .25 + (w.sc - 30) / 80 + (myPower() / Math.max(1, realmPower(r)) - 1) * .15 + yearsAt(w) * .04;
+    if (P(Math.max(.05, Math.min(.9, p)))) {
+      let t = `${nm(r)} bowed to your terms.`;
+      if (c) { annex(c, false); t += ` ${c.n} is ceded to ${S.realm}.`; }
+      coin(g); t += ` They pay ${g} silver in reparations.`;
+      endWar(r, 'terms'); relAdd(r, -10, 'you forced hard terms on them'); st('renown', 8);
+      wNews(`${r} has made peace with ${S.realm} on hard terms${c ? `, giving up ${c.n}` : ''}.`, '🕊️', true);
+      return t;
+    }
+    w.sc = Math.max(-100, w.sc - 5); relAdd(r, -5, 'you demanded too much');
+    return `${nm(r)} tore up your terms in front of your herald. The war goes on.`;
+  }
+  function buyPeace(r) {
+    const w = warOn(r), c = buyCost(r); if (!w) return 'There is no war.';
+    coin(-c);
+    if (w.sc > -60 || P(.7)) { endWar(r, 'bought'); st('renown', -4); relAdd(r, 6, 'you paid for peace'); return `You paid ${c} silver and ${nm(r)} called off the war. A truce of ten years is sworn.`; }
+    relAdd(r, -3, 'you tried to buy them off'); return `${nm(r)} took your ${c} silver and kept fighting. Your treasurer has not stopped weeping.`;
+  }
+  function separatePeace(r) {
+    const w = warHolding(r); if (!w || warOn(r)) return 'There is no such war.';
+    const p = .3 + w.sc / 120 + rel(r) / 200;
+    if (P(Math.max(.05, Math.min(.85, p)))) { delete w.al[r]; if (W()) W().setTruce(r, 5); relAdd(r, 8, 'you made a separate peace'); return `${nm(r)} took your hand. ${r} leaves the war against you, with a truce of five years.`; }
+    return `${nm(r)} would not abandon ${foeOfWar(w)}. "We swore an oath," says the letter.`;
+  }
+  EVENTS.push(
+    { id: 'dp_sue', icon: '🕊️', min: 16, w: 30, cool: 2,
+      cond: () => ruling() && Object.entries(wars()).some(([r, w]) => w.sc >= 45 && yearsAt(w) >= 1),
+      init: () => { const r = Object.keys(wars()).filter(z => wars()[z].sc >= 45).sort((a, b) => wars()[b].sc - wars()[a].sc)[0]; return { r, c: ceded(r), g: tribAmt(r) }; },
+      text: c => `Envoys from ${nm(c.r)} kneel in your hall. ${c.r} is beaten, and sues for peace: ${c.c ? `the county of ${c.c.n}, and ` : ''}${c.g} silver, if you will call off your armies.`,
+      choices: [
+        { t: 'Accept their peace', fx: c => { if (!warOn(c.r)) return 'The envoys had already gone.'; if (c.c && c.c.realm === c.r) annex(c.c, false); coin(c.g); endWar(c.r, 'terms'); st('renown', 8); return `Peace is sworn. ${c.c ? `${c.c.n} is yours, and ` : ''}${c.g} silver is counted into your treasury.`; } },
+        { t: 'Refuse: you want their crown', fx: c => { relAdd(c.r, -6, 'you refused their peace'); st('renown', 2); return `You sent the envoys home with their offer. ${c.r} fights on, desperately.`; } },
+      ] },
+    { id: 'dp_demand', icon: '📜', min: 16, w: 30, cool: 2,
+      cond: () => ruling() && Object.entries(wars()).some(([r, w]) => w.sc <= -40 && yearsAt(w) >= 1),
+      init: () => { const r = Object.keys(wars()).filter(z => wars()[z].sc <= -40).sort((a, b) => wars()[a].sc - wars()[b].sc)[0]; const mine = borderOf(r).sort((a, b) => (b.wealth || 0) - (a.wealth || 0)); return { r, x: mine[0] || null, g: tribAmt(r) }; },
+      text: c => `A herald of ${nm(c.r)} stands before your throne without bowing. ${c.r} is winning, and names its price for peace: ${c.x ? `the county of ${c.x.n}, and ` : ''}${c.g} silver.`,
+      choices: [
+        { t: 'Give them what they ask', ok: c => S.coin >= c.g, why: 'You cannot pay', fx: c => { if (!warOn(c.r)) return 'The herald had already gone.'; coin(-c.g); if (c.x && c.x.realm === S.realm) { if (c.x.you) loseLand(c.x, c.r); else c.x.realm = c.r; } endWar(c.r, 'terms'); st('renown', -8); return `You signed. ${c.x ? `${c.x.n} belongs to ${c.r} now, and ` : ''}${c.g} silver rode away in their carts. There is peace, of a kind.`; } },
+        { t: 'Fight on', fx: c => { const x = pick(borderOf(c.r)); const w = warOn(c.r); if (x && w && w.host > 20) Q.push(() => showEvent(invadeCard(x, c.r, Math.round(w.host * R(60, 90) / 100)))); st('renown', 2); return `"Tell your master to come and take it." The herald smiled thinly and rode away.`; } },
+      ] },
+    // A friend of your enemy warns you off
+    { id: 'dp_ultimatum', icon: '✉️', min: 16, w: 14, cool: 3,
+      cond: () => ruling() && ultimatumPick() != null,
+      init: () => ultimatumPick(),
+      text: c => `${nm(c.a)} of ${c.a} writes in ${c.a === S.flags.ally ? 'sorrow' : 'anger'}: "${c.r} is bound to us by marriage. Leave ${c.r} in peace, or answer to ${c.a} as well."`,
+      choices: [
+        { t: c => `Make peace with ${c.r}`, fx: c => { if (warOn(c.r)) endWar(c.r, 'peace'); relAdd(c.a, 12, 'you heeded their warning'); st('renown', -5); return `You withdrew from ${c.r}. ${c.a} is pleased, and ${c.r} cannot believe its luck.`; } },
+        { t: 'Defy them', fx: c => { const w = warOn(c.r); if (w) w.al[c.a] = contingent(c.a); relAdd(c.a, -20, 'you defied their warning'); st('renown', 3); return `You sent the letter back unopened. ${c.a} has joined the war against you.`; } },
+        { t: c => `Send gifts to keep them out (${giftCost(c.a)} silver)`, ok: c => S.coin >= giftCost(c.a), why: 'You cannot afford it', fx: c => { coin(-giftCost(c.a)); if (P(.65)) { dp().stay[c.a] = S.year + 3; relAdd(c.a, 4, 'your gifts'); return `${nm(c.a)} kept the gifts and stayed home. For now.`; } const w = warOn(c.r); if (w) w.al[c.a] = contingent(c.a); return `${nm(c.a)} kept the gifts and marched anyway.`; } },
+      ] },
+    // A hostile neighbour sees its chance while your armies are away
+    { id: 'dp_backstab', icon: '🗡️', min: 16, w: 10, cool: 6,
+      cond: () => ruling() && Object.keys(wars()).length > 0 && backstabPick() != null,
+      init: () => ({ r: backstabPick() }),
+      text: c => `While your armies are busy, ${nm(c.r)} of ${c.r} sees a chance. Heralds from ${c.r} have nailed a declaration of war to the door of your cathedral.`,
+      choices: [
+        { t: 'Then they will have war', fx: c => { const d = declareWar(c.r, true); const x = pick(borderOf(c.r)); if (x) Q.push(() => showEvent(invadeCard(x, c.r, Math.round(d.rec.host * R(60, 90) / 100)))); return `You tore down the declaration and called your captains. ${c.r} is coming.`; } },
+        { t: c => `Buy them off (${giftCost(c.r) * 2} silver)`, ok: c => S.coin >= giftCost(c.r) * 2, why: 'You cannot afford it', fx: c => { coin(-giftCost(c.r) * 2); st('renown', -4); if (W()) W().setTruce(c.r, 5); return `${nm(c.r)} took the silver and swore a truce of five years. You will remember this.`; } },
+      ] },
+  );
+  const giftCost = r => Math.round(50 + realmTs(r).length * 12);
+  function ultimatumPick() {
+    for (const [r, w] of Object.entries(wars())) for (const a of pairedWith(r)) if (w.al[a] == null && w.mine[a] == null && (dp().stay[a] || 0) < S.year && live(a)) return { r, a };
+    return null;
+  }
+  function backstabPick() {
+    const c = foreign().filter(z => !isEnemy(z) && z !== S.flags.ally && !truce(z) && wBorder(z, S.realm) && rel(z) <= -25);
+    return c.length ? pick(c) : null;
+  }
+
+  /* ---------- at the foreign court: war and peace, and a word in person ---------- */
+  const talkWhy = r => (!ruling() ? 'Only for rulers' : S.deeds <= 0 ? 'No deeds left this year' : dp().talk[r] === S.year ? 'You already met them this year' : isEnemy(r) ? 'They will not meet an enemy' : true);
+  const deedOK = () => (S.deeds > 0 ? true : 'No deeds left this year');
+  function askWhy(r) {
+    const d = deedOK(); if (d !== true) return d;
+    if (!Object.keys(wars()).length) return 'You are at no war';
+    if (isEnemy(r)) return 'They are your enemy';
+    if (Object.values(wars()).some(w => w.mine[r] != null)) return 'They already fight beside you';
+    if (dp().ask[r] === S.year) return 'They have given their answer this year';
+    if (rel(r) < 10) return 'They must be at least Cordial';
+    return true;
+  }
+  function warnWhy(r) {
+    const d = deedOK(); if (d !== true) return d;
+    if (!Object.keys(wars()).length) return 'You are at no war';
+    if (warOn(r)) return 'You are at war with them';
+    if ((dp().stay[r] || 0) >= S.year) return 'They have already promised to stay out';
+    return true;
+  }
+  function askHelp(r) {
+    dp().ask[r] = S.year;
+    const [foe, w] = Object.entries(wars()).sort((a, b) => sum(b[1].al) + b[1].host - (sum(a[1].al) + a[1].host))[0];
+    const hate = (S.world.wars || []).some(z => (z.a === r && z.b === foe) || (z.b === r && z.a === foe)) ? .25 : 0;
+    const p = .15 + rel(r) / 150 + (S.flags.ally === r ? .3 : 0) + hate + (w.sc > 0 ? .1 : -.1);
+    if (P(Math.max(.05, Math.min(.9, p)))) { w.mine[r] = contingent(r); relAdd(r, 3, 'they joined your war'); relAdd(foe, -5); warLog(`${r} joined you against ${foe}.`); return `${nm(r)} will march: about ${Math.round(contingent(r) / 10) * 10} men of ${r} join your war against ${foe}.`; }
+    relAdd(r, -2, 'you asked them to fight your war'); return `${nm(r)} sent fine words about friendship, and no soldiers.`;
+  }
+  function warnOff(r) {
+    const ratio = myPower() / Math.max(1, realmPower(r) + contingent(r));
+    if (P(Math.max(.1, Math.min(.85, .2 + (ratio - 1) * .35)))) {
+      dp().stay[r] = S.year + 4; for (const w of Object.values(wars())) if (w.al[r] != null) { delete w.al[r]; if (W()) W().setTruce(r, 4); }
+      relAdd(r, -6, 'you threatened them'); return `${nm(r)} read your letter twice, looked at a map, and promised to stay out of your wars.`;
+    }
+    relAdd(r, -15, 'you threatened them');
+    const tgt = Object.entries(wars()).find(([f]) => pairedWith(f).includes(r) || rel(r) < -20);
+    if (tgt && P(.5)) { tgt[1].al[r] = contingent(r); return `${nm(r)} was insulted, and has joined ${tgt[0]} against you.`; }
+    return `${nm(r)} sent back your letter with a single word written across it. It was not a polite word.`;
+  }
+  // A meeting in person: what pleases this crown depends on who they are.
+  const TALK_LIKE = { flatter: ['fair', 'weak', 'greedy'], plain: ['wise', 'just'], faith: ['pious', 'just'], army: ['bold', 'lion', 'cruel'], gift: ['greedy', 'fair', 'weak'] };
+  function summitCard(r) {
+    const x = wRuler(r), tr = x ? x.trait : '', gift = giftCost(r);
+    const res = (k, base) => {
+      dp().talk[r] = S.year;
+      if (tr === 'mad') { const d = R(-12, 16); relAdd(r, d, 'your meeting in person'); return d >= 0 ? `${nm(r)} laughed at everything you said, including the parts that were not jokes, and embraced you at the end. You think it went well.` : `${nm(r)} stared at you in silence for an hour, then left. Nobody can say why.`; }
+      const good = TALK_LIKE[k].includes(tr) && (k !== 'army' || myPower() >= realmPower(r) * .8);
+      const d = good ? R(10, 18) : R(-6, 4);
+      relAdd(r, d, 'your meeting in person');
+      const after = rel(r) >= 30 && S.flags.ally !== r ? ` At the end ${nm(r)} said, half in jest, that your two crowns would make fine allies.` : '';
+      return `${base} ${good ? `${nm(r)} warmed to you visibly.` : d < 0 ? `${nm(r)} grew cool and formal.` : `${nm(r)} listened politely, and gave nothing away.`}${after}`;
+    };
+    return { id: 'dp_summit', icon: '🤝', text: () => `You meet ${nm(r)} of ${r} in a striped pavilion on the border, with a hundred knights on each side and a great deal of wine.${x && RTRAIT[x.trait] ? ` ${nm(r)} ${RTRAIT[x.trait].d}.` : ''} What do you speak of?`,
+      choices: [
+        { t: 'Flatter them shamelessly', fx: () => res('flatter', 'You praised their wisdom, their horses, and their hat.') },
+        { t: 'Speak plainly of borders and trade', fx: () => res('plain', 'You talked of tolls, wool and the river crossings like two honest merchants.') },
+        { t: 'Talk of God and the crusade', fx: () => res('faith', 'You spoke of Jerusalem, relics, and the state of their soul.') },
+        { t: 'Let them see the strength of your army', fx: () => res('army', 'Your knights rode past the pavilion in full armour, twice.') },
+        { t: `Give a rich gift (${gift} silver)`, ok: () => S.coin >= gift, why: `Costs ${gift} silver`, fx: () => { coin(-gift); return res('gift', `You gave ${pick(['a jewelled cup', 'a white stallion', 'a reliquary of crystal', 'a chest of pepper'])}.`); } },
+      ] };
+  }
+  {
+    const _sh = SHEETS.wd_court;
+    SHEETS.wd_court = function () {
+      const o = _sh.apply(this, arguments), r = W() && W().sel();
+      if (!ruling() || !live(r)) return o;
+      const back = btnItem('wd_back', '', '‹', 'Back to the world', '', true);
+      let h = `<h3 class="sec">War and peace</h3>`;
+      const w = warOn(r), held = warHolding(r);
+      if (w) {
+        const al = Object.entries(w.al).filter(([, v]) => v > 0), mine = Object.entries(w.mine).filter(([, v]) => v > 0);
+        h += `<div class="sumbox">At war since ${w.y}. You are <b>${scWord(w.sc)}</b> (war score ${w.sc > 0 ? '+' : ''}${w.sc}). Their royal host: about ${Math.round(w.host / 10) * 10}.${al.length ? ` Fighting beside them: ${esc(joinList(al.map(([a, v]) => `${a} (~${Math.round(v / 10) * 10})`)))}.` : ''}${mine.length ? ` Beside you: ${esc(joinList(mine.map(([a, v]) => `${a} (~${Math.round(v / 10) * 10})`)))}.` : ''}<small>Win battles, beat their host in the field and take their towns to raise the score. A beaten crown sues for peace.</small></div>`;
+        h += btnItem('dp_peace', r, '🕊️', 'Offer peace', 'Uses a deed. A truce of ten years if they accept. They will not hear it while they are winning.', deedOK());
+        h += btnItem('dp_terms', r, '📜', 'Demand terms', 'Uses a deed. A county on your border and reparations. Only when you are winning.', deedOK() !== true ? deedOK() : w.sc < 30 ? 'Win more of the war first (war score 30)' : true);
+        h += btnItem('dp_buy', r, '💰', 'Buy peace', 'Pay them to call off the war. Costs you honour.', S.coin >= buyCost(r) ? true : `Costs ${buyCost(r)} silver`, `${buyCost(r)} silver`);
+      } else if (held) {
+        h += `<div class="sumbox">${esc(r)} is fighting you beside ${esc(foeOfWar(held))}, with about ${Math.round((held.al[r] || 0) / 10) * 10} men.</div>`;
+        h += btnItem('dp_sep', r, '🕊️', 'Offer them a separate peace', 'Uses a deed. They leave the war if they accept.', deedOK());
+      } else {
+        const allies = pairedWith(r).filter(a => a !== S.flags.ally);
+        h += btnItem('dp_war', r, '⚔️', `Declare war on ${r}`, allies.length ? `${joinList(allies)} will likely defend them.` : 'They have no sworn allies.', warWhy(r));
+        if (Object.keys(wars()).length) {
+          h += btnItem('dp_ask', r, '📯', 'Ask them to join your war', 'Uses a deed. Friends and your ally answer best, and anyone who hates your enemy.', askWhy(r));
+          h += btnItem('dp_warn', r, '✋', 'Warn them to stay out of your wars', 'Uses a deed. Works if you are much stronger; insults them either way.', warnWhy(r));
+        }
+      }
+      h += btnItem('dp_talk', r, '🤝', `Meet ${nm(r)} in person`, 'Uses a deed. What pleases a crown depends on who they are.', talkWhy(r));
+      // at war, this comes first (and open); otherwise after the usual dealings
+      const first = '<h3 class="sec">What you can do</h3>';
+      return { t: o.t, h: (w || held) && o.h.includes(first) ? o.h.replace(first, h + first) : o.h.replace(back, h + back) };
+    };
+    const act = (icon, title, f) => { if (W()) W().act(icon, title, f); };
+    const spend = () => { S.deeds = Math.max(0, S.deeds - 1); };
+    XACT.dp_war = r => { const why = warWhy(r); if (why !== true) return toast(why); closeSheet(); modalOpen = true; showEvent(declareCard(r)); };
+    XACT.dp_peace = r => { if (deedOK() !== true) return toast(deedOK()); spend(); act('🕊️', `Peace with ${r}`, () => peaceTry(r)); };
+    XACT.dp_terms = r => { const w = warOn(r); if (!w || w.sc < 30) return toast('Win more of the war first'); if (deedOK() !== true) return toast(deedOK()); spend(); act('📜', `Terms for ${r}`, () => termsTry(r)); };
+    XACT.dp_buy = r => { if (S.coin < buyCost(r)) return toast(`Costs ${buyCost(r)} silver`); act('💰', `Buying peace from ${r}`, () => buyPeace(r)); };
+    XACT.dp_sep = r => { if (deedOK() !== true) return toast(deedOK()); spend(); act('🕊️', `A separate peace with ${r}`, () => separatePeace(r)); };
+    XACT.dp_ask = r => { const why = askWhy(r); if (why !== true) return toast(why); spend(); act('📯', `Asking ${r} for help`, () => askHelp(r)); };
+    XACT.dp_warn = r => { const why = warnWhy(r); if (why !== true) return toast(why); spend(); act('✋', `A warning to ${r}`, () => warnOff(r)); };
+    XACT.dp_talk = r => { const why = talkWhy(r); if (why !== true) return toast(why); spend(); closeSheet(); modalOpen = true; showEvent(summitCard(r)); };
+  }
+  // The War tab lists the wars you are in.
+  {
+    const _ah = armyHTML;
+    armyHTML = function () {
+      let h = _ah.apply(this, arguments);
+      if (!ruling()) return h;
+      const all = Object.entries(wars());
+      const sec = all.length ? `<h3 class="sec">Your wars</h3>${all.map(([r, w]) => btnItem('wd_court', r, '⚔️', `War with ${r}`, `Since ${w.y} · you are ${scWord(w.sc)} · their host ~${Math.round(w.host / 10) * 10}${Object.keys(w.al).length ? ` · with them: ${joinList(Object.keys(w.al))}` : ''}${Object.keys(w.mine).length ? ` · with you: ${joinList(Object.keys(w.mine))}` : ''}`, true, '›')).join('')}`
+        : `<h3 class="sec">Your wars</h3><p class="hint">You are at peace. Attacking a kingdom declares war on it, and its allies will come to its defence. Meet other crowns in Realm, World, Foreign courts.</p>`;
+      return h.replace('<h3 class="sec">Recruit and train</h3>', sec + '<h3 class="sec">Recruit and train</h3>');
+    };
+  }
+  // Attacking a kingdom you are at peace with is a declaration of war. ACT is declared later in the page.
+  setTimeout(() => {
+    try {
+      const _at = ACT.attack;
+      ACT.attack = id => {
+        const x = TT(+id);
+        if (x && ruling() && x.realm !== S.realm && live(x.realm) && !isEnemy(x.realm) && canAttack(x) === true) { closeSheet(); modalOpen = true; showEvent(declareCard(x.realm, () => showEvent(battleEvent(x)))); return; }
+        return _at(id);
+      };
+      const _tr = ACT.truce, _tb = ACT.tribute;
+      ACT.truce = r => (ruling() && isEnemy(r) ? toast('You are at war with them: make peace at their court (Realm, World)') : _tr(r));
+      ACT.tribute = r => (ruling() && isEnemy(r) ? toast('You are at war with them: demand terms at their court (Realm, World)') : _tb(r));
+    } catch (e) { /* not ready */ }
+  }, 0);
+
+  /* ---------- sellswords: only so many captains will sign each year ---------- */
+  const HIRE = ['hire10', 'archers', 'xbows', 'horse', 'hire50'];
+  const hiredNow = () => { const h = dp().hire; if (h.y !== S.year) { h.y = S.year; h.n = 0; } return h.n; };
+  const hireCap = () => 3 + Math.floor((S.stats.renown || 0) / 30) + (S.ruling ? 2 : 0);
+  for (const a of ARMY_ACTS) {
+    if (!HIRE.includes(a.k)) continue;
+    const base = a.cost, can0 = a.can, run0 = a.run;
+    Object.defineProperty(a, 'cost', { configurable: true, enumerable: true, get: () => (S ? Math.round(base * (1 + .2 * hiredNow()) * (S.ruling && Object.keys(wars()).length ? 1.25 : 1)) : base) });
+    a.can = () => { if (S && hiredNow() >= hireCap()) return 'No more captains will sign this year'; return can0 ? can0() : true; };
+    a.run = function () { dp().hire.n = hiredNow() + 1; return run0.apply(this, arguments); };
+    a.d = `${a.d} Each hire this year raises the price; only so many captains sign each year.`;
   }
 }
 

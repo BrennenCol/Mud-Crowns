@@ -62,7 +62,7 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 ## What's new (for this version)
 
 ```
-Born to it: princes and princesses are handed commands and offices without years in the ranks, and nobles need half the usual years, but you must prove yourself once you have the post. Royals and nobles cannot take menial work under their own name; live under a false name to do it. A king or queen who loves you may offer you a post. Also: no more drawing code in the chronicle, and a double tap no longer zooms.
+Wars between kingdoms: attacking a kingdom declares war, its allies come to its defence, and a royal army relieves its capital. Take the capital and the court may flee and fight on. Enemies invade every year until you make peace: offer peace, demand terms or buy it. Meet other monarchs in person, ask them to join your war or warn them off. Also: princes and princesses are handed commands and offices by birth, and a double tap no longer zooms.
 ```
 
 ## Category

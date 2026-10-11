@@ -273,6 +273,34 @@ still be reached from a first job.
 - A double tap never zooms the page. In the phone apps, pinch zoom and
   long-press text selection are off too, so it feels like an app.
 
+## Wars between kingdoms (v1.7)
+
+- **Declared wars.** As a ruler, attacking a kingdom declares war on it. Its
+  allies by marriage come to its defence (most of the time), neighbours may
+  join if you have grown far stronger, and a court already at war with your
+  enemy may fight beside you. Your own ally may march with you. Turning on an
+  ally or breaking a truce costs honour everywhere.
+- **The royal host.** Every crown at war keeps an army that relieves its
+  capital and the towns near it, with its allies' contingents. Beat it in the
+  field and it breaks; it recovers a little every year. You cannot demand the
+  surrender of a town an army is coming to relieve.
+- **A capital that fights on.** Taking the royal seat ends a kingdom only if
+  it has three counties or fewer left, the war is nearly won, or its monarch
+  is caught (one time in five). Otherwise the court flees to another town and
+  the war goes on.
+- **They fight back.** Enemies invade your border counties every year of the
+  war, and each year of war adds to unrest.
+- **Peace.** A war score tracks who is winning. At the enemy's court: offer
+  peace, demand terms (a border county and reparations), buy peace, or offer an
+  enemy's ally a separate peace. Beaten crowns sue for peace; winning ones send
+  demands.
+- **Talking to crowns.** Meet a monarch in person: flattery, plain talk, faith,
+  a show of arms or a rich gift each please a different kind of crown. Ask a
+  court to join your war, or warn one to stay out. A friend of your enemy may
+  send an ultimatum, and a hostile neighbour may attack while you are busy.
+- **Sellswords.** Only so many captains sign each year (more with Renown), each
+  hire costs more than the last, and hiring in wartime costs a quarter more.
+
 ## Born to it (v1.6)
 
 - **Rank opens doors.** A prince or princess is handed commands and offices
