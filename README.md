@@ -273,4 +273,20 @@ still be reached from a first job.
 - A double tap never zooms the page. In the phone apps, pinch zoom and
   long-press text selection are off too, so it feels like an app.
 
+## Born to it (v1.6)
+
+- **Rank opens doors.** A prince or princess is handed commands and offices
+  (knight, captain, admiral, chamberlain, royal adviser, castellan) without
+  years in the ranks, younger than anyone else could hold them, and their name
+  counts for 30 Renown towards a post. Nobles need half the usual years and get
+  12. Wits, Looks and the rest still count.
+- **Prove yourself.** A post your birth handed you starts with low standing.
+- **Beneath your rank.** Royals cannot labour, serve, trade in the street or
+  enlist as common soldiers, and nobles cannot do menial work. Pages and the
+  Church are open to anyone.
+- **Live under a false name** (Deeds, Daring) to set your rank aside and take
+  humble work. A courtier may recognise you; take back your name to return.
+- **The crown's own blood.** A king or queen who loves you may send for you and
+  offer you a post.
+
 See [TESTING_ON_PHONE.md](TESTING_ON_PHONE.md) to play it on your phone.

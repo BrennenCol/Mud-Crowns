@@ -524,7 +524,7 @@ html,body{overscroll-behavior:none}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.5.1';
+const APP_VERSION = '1.6.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -5435,13 +5435,14 @@ function showWhatsNew() {
   store.set(NEWKEY, APP_VERSION);
   modalOpen = true;
   const items = [
-    ['🪜', 'Careers have steps', 'a post now needs the one below it: guard before Royal Guard, pirate before Pirate Captain, prior before abbot. Years of training alone are not enough.'],
-    ['👑', 'Ways around', 'noble birth opens officers’ and courtiers’ posts, and the king’s favour (Renown 60, Influence 40) or a patron can open others.'],
-    ['🧭', 'Where to look', 'every post’s page shows the step below it. Work, Career roads shows the whole ladder.'],
+    ['👑', 'Born to it', 'a prince or princess is handed commands and offices without years in the ranks, and nobles need only half the usual years. Your new fellows will doubt you at first: prove them wrong.'],
+    ['🎭', 'Beneath your rank', 'royals and nobles cannot take menial work under their own name. Live under a false name (Deeds, Daring) if you want to.'],
+    ['📯', 'The crown’s own blood', 'a king or queen who loves you may send for you and offer you a post.'],
+    ['🩹', 'Fixes', 'no more drawing code in the chronicle after a portrait card, and a double tap no longer zooms.'],
   ];
-  $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">See career roads</button></div>`;
+  $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Find work</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
-  $('wnCourt').addEventListener('click', () => { modalOpen = false; hideModal(); openSheet('work'); XACT.wpane('roads'); });
+  $('wnCourt').addEventListener('click', () => { modalOpen = false; hideModal(); openSheet('work'); XACT.wpane('find'); });
   openModal(); $('wnOk').focus({ preventScroll: true });
 }
 // Only a new feature release (1.4, 1.5...) shows the card; small fixes (1.4.1) do not.
@@ -6634,6 +6635,147 @@ function pathWaivers(o) {
   const _sj = setJob;
   setJob = function () { const r = _sj.apply(this, arguments); try { pathNote(); } catch (e) { } return r; };
   YEARLY.push(pathNote);
+}
+
+
+/* ================= Born to it: rank opens the high doors, and shuts the low ones ================= */
+// Your standing when you look for work: 'royal', 'noble', or null. Rank counts only under your own name,
+// so not while disguised, living under a false name, outlawed or in rebellion.
+function rankOf() {
+  if (!S || !S.alive || S.ruling) return null;
+  if (disguised() || S.flags.incog || S.flags.outlaw || S.flags.wolfshead || S.flags.rebel) return null;
+  return S.cls === 'royal' ? 'royal' : S.cls === 'noble' ? 'noble' : null;
+}
+const rankWord = r => r === 'royal' ? ws('a prince of the blood', 'a princess of the blood') : ws('a nobleman', 'a noblewoman');
+const RANK_BONUS = { royal: 30, noble: 12 };
+// Soldiers' trades learned in the ranks: a prince does not serve as one, and birth does not teach them.
+const RANK_NCO = new Set(['sergeant', 'veteran', 'jb_scout', 'jb_vintenar', 'jb_siegeeng', 'jb_quartermaster', 'jb_gunner', 'merclead']);
+// Posts that were given by birth and favour: commands, the household, offices of state, the navy.
+function rankPost(o) {
+  if (!o || PATH_OUTLAW.has(o.k) || RANK_NCO.has(o.k)) return false;
+  const [tr] = occPos(o), fam = TRACKS[tr] && TRACKS[tr].fam;
+  if (PATH_NAVY.has(o.k)) return true;
+  if (o.tier === 'mil') return o.grp !== 'Low';
+  if (o.tier !== 'high') return false;
+  if (o.grp === 'The great household') return !['learn', 'occult', 'arts'].includes(fam);
+  if (o.grp === 'Land and household') return true;
+  if (o.grp === 'Crown and government') return fam !== 'law';
+  if (o.grp === 'Law and order') return o.k === 'jb_sheriff' || o.k === 'jb_highsheriff';
+  return false;
+}
+// Work nobody of your rank would be seen doing. Pages and the Church are fine for anyone.
+function beneathRank(o, r) {
+  if (o.k === 'page' || o.grp === 'The Church') return false;
+  if (o.tier === 'low') return true;
+  if (o.tier === 'mil') return o.grp === 'Low' || (r === 'royal' && RANK_NCO.has(o.k) && o.k !== 'merclead');
+  if (r === 'royal' && o.tier === 'mid') return o.grp !== 'Fields and flocks' && o.k !== 'herald';
+  return false;
+}
+const halveYears = x => x && Object.fromEntries(Object.entries(x).map(([f, n]) => [f, Math.ceil(n / 2)]));
+// Would this post have been closed to you on age or experience, if not for your birth?
+function rankHelped(o) {
+  const [tr] = occPos(o), t = TRACKS[tr], min = o.min || t.min || 12;
+  if (S.age < min) return true;
+  if (o.skill && Object.entries(o.skill).some(([f, n]) => sk(f) < n)) return true;
+  if (o.skillAny && !Object.entries(o.skillAny).some(([f, n]) => sk(f) >= n)) return true;
+  return false;
+}
+{
+  const _oc = occChecks;
+  occChecks = function (o) {
+    const r = rankOf();
+    if (!r) return _oc.apply(this, arguments);
+    if (!rankPost(o)) {
+      const C = _oc.apply(this, arguments);
+      if (beneathRank(o, r)) C.push({ ok: false, never: true, label: 'Fitting for your rank', why: `Beneath ${rankWord(r)}`,
+        tip: `Nobody would hire ${rankWord(r)} for this, and your family would never live it down. To take humble work, live under a false name (Deeds, Daring).` });
+      return C;
+    }
+    const royal = r === 'royal', [tr] = occPos(o), t = TRACKS[tr], base = o.min || t.min || 12;
+    const helped = rankHelped(o);
+    // look at the post as your birth lets you: younger, with fewer (or no) years of experience
+    const own = k => Object.prototype.hasOwnProperty.call(o, k);
+    const saved = ['min', 'skill', 'skillAny'].map(k => [k, own(k), o[k]]);
+    let C;
+    try {
+      if (base > 16) o.min = Math.max(16, base - (royal ? 12 : 5));
+      if (royal) { o.skill = null; o.skillAny = null; } else { if (o.skill) o.skill = halveYears(o.skill); if (o.skillAny) o.skillAny = halveYears(o.skillAny); }
+      C = _oc.apply(this, arguments);
+    } finally { for (const [k, had, v] of saved) { if (had) o[k] = v; else delete o[k]; } }
+    // everyone already knows your name; and nobody makes you serve the step below first
+    const bonus = RANK_BONUS[r], ren = S.stats.renown;
+    for (const c of C) {
+      const m = /^Renown (\d+)\/(\d+)$/.exec(c.label || '');
+      if (m) { const v = +m[2]; c.ok = ren + bonus >= v; c.never = false; c.label = `Renown ${ren}, +${bonus} for your birth, of ${v}`; c.why = `Requires Renown ${v} (your birth counts for ${bonus})`; }
+      if (royal && c.ok && c.label === 'No apprenticeship needed: noble birth') c.label = 'No apprenticeship needed: royal blood';
+      if (!c.ok && /^Served as /.test(c.label || '')) { c.ok = true; c.label = royal ? 'No apprenticeship needed: royal blood' : 'No apprenticeship needed: noble birth'; c.why = ''; c.never = false; }
+    }
+    if (helped) C.push({ ok: true, label: royal ? 'Royal blood: given the post, you learn it on the job' : 'Noble birth: younger, and half the usual years', why: '',
+      tip: royal ? 'A king’s child is handed commands and offices that others wait half a lifetime for. Your new fellows will doubt you at first.' : 'Noble families place their sons and daughters early. You will still have to prove yourself.' });
+    return C;
+  };
+  const _aj = applyJob;
+  applyJob = function (k) {
+    const o = OCC_BY[k], r = rankOf(), before = S && S.job;
+    const helped = !!(o && r && rankPost(o) && rankHelped(o));
+    const res = _aj.apply(this, arguments);
+    if (helped && S.job && S.job !== before) rkUnproven(r);
+    return res;
+  };
+}
+
+// Handed a post you have not earned: your standing starts low, and you have to prove yourself.
+function rkUnproven(r) {
+  if (!S.job) return;
+  S.job.perf = Math.min(S.job.perf, 32);
+  say(`Your new fellows bowed low to ${rankWord(r)}, and wondered privately whether you knew the first thing about the work. Your standing starts low: prove them wrong.`, 'note');
+}
+
+/* ---------- living under a false name ---------- */
+DEEDS.push(
+  { k: 'rk_incog', g: 'Daring', i: '🎭', n: 'Live under a false name', d: 'Set your rank aside and take humble work. While you hide, your birth opens no doors.', min: 14,
+    only: () => !S.ruling && !S.flags.incog && (S.cls === 'royal' || S.cls === 'noble'),
+    can: () => !S.vows || 'Not while under holy vows',
+    run: () => { S.flags.incog = 1; S.flags.alias = S.flags.alias || pick(NAMES[S.sex === 'f' ? 'f' : 'm']); st('happy', 2);
+      if (S.job && rankPost(occOfJob())) quitJob();
+      return `You put away your rings and your good cloak, and told the first innkeeper you met that your name was ${S.flags.alias}. Nobody asked twice.`; } },
+  { k: 'rk_name', g: 'Daring', i: '🪪', n: 'Take back your own name', d: 'Return to your rank, and leave humble work behind.', min: 14,
+    only: () => !!S.flags.incog,
+    run: () => { S.flags.incog = 0; const o = S.job && occOfJob(); const r = rankOf(); if (o && r && beneathRank(o, r)) quitJob();
+      return `You washed, dressed as yourself again, and walked back into the life you were born to. Some of the people you worked beside will be very surprised.`; } },
+);
+// A face at court can be recognised anywhere.
+YEARLY.push(() => {
+  if (!S || !S.alive || !S.flags.incog || !S.job || !P(.06)) return;
+  st('renown', -4);
+  say(`A courtier passing through recognised you hard at work as ${aOr(jobTitle())}. The story was all round court within the month.`, 'note');
+});
+
+/* ---------- the monarch finds a post for their kin ---------- */
+EVENTS.push({
+  id: 'rk_post', icon: '📯', min: 16, max: 45, cool: 5, w: 6,
+  cond: () => {
+    if (rankOf() !== 'royal') return false;
+    const k = rulerKin(); if (!k || k.bond < 35) return false;
+    const cur = S.job && occOfJob(); if (cur && rankPost(cur) && cur.tier !== 'mil') return false;
+    return rkOffers().length > 0;
+  },
+  init: () => ({ k: rulerKin(), o: rkOffers() }),
+  text: c => `${KQ(c.k.sex)} ${c.k.name} sends for you. "The crown needs its own blood in places of trust," ${pr(c.k).he} says, and offers you a post of your choosing.${S.job ? ` You would have to give up being ${aOr(jobTitle())}.` : ''}`,
+  choices: [0, 1, 2].map(i => ({
+    t: c => c.o[i] ? `Become ${occTitle(c.o[i])}` : '',
+    ok: c => !!c.o[i], why: '',
+    fx: c => { const o = c.o[i]; const help = rankHelped(o); hireInto(o); if (help) rkUnproven('royal'); bond(c.k, 4); st('renown', 3); return `You knelt, and rose as ${occTitle(o)}. ${pr(c.k).He} clasped your hand: "Do not shame me."`; },
+  })).concat([
+    { t: 'Thank them, and keep to your own path', fx: c => { bond(c.k, -3); return `${c.k.name} was a little put out. "As you wish. The offer will not stand for ever."`; } },
+  ]),
+});
+// Posts a monarch would hand their brother, sister or child: open to you now, highest first.
+function rkOffers() {
+  const want = ['knightmil', 'knightcmd', 'jb_kingscapt', 'jb_admiral', 'jb_masterhorse', 'diplomat', 'adviser', 'official', 'jb_chamberlain', 'castellan', 'ladywait'];
+  const ok = OCC.filter(o => rankPost(o) && !o.title && !o.land && occState(o) === 'open');
+  const score = o => (want.includes(o.k) ? 100 : 0) + (o.tier === 'high' ? 20 : 0) + occPos(o)[1] * 5 + (TRACKS[occPos(o)[0]].levels[occPos(o)[1]].pay || 0) / 10;
+  return ok.sort((a, b) => score(b) - score(a)).slice(0, 3);
 }
 
 

@@ -62,7 +62,7 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 ## What's new (for this version)
 
 ```
-Careers now have steps: serve as a pirate before you command pirates, or as a soldier before the Royal Guard. Noble birth, the king's favour or a patron can open the door instead. Apply for a post straight from the list, see which post to start in first, and enjoy tidier menus with one section open at a time.
+Born to it: princes and princesses are handed commands and offices without years in the ranks, and nobles need half the usual years, but you must prove yourself once you have the post. Royals and nobles cannot take menial work under their own name; live under a false name to do it. A king or queen who loves you may offer you a post. Also: no more drawing code in the chronicle, and a double tap no longer zooms.
 ```
 
 ## Category
