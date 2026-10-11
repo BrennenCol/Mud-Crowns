@@ -62,7 +62,7 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 ## What's new (for this version)
 
 ```
-Dark deeds for every life: lock a rival in the Tower, debase the coin, give no quarter at sea, cheat the scales or forge relics. Infamy follows you, with plots, revenge and a cruel name. Unmarried monarchs are brought royal matches, and a ruler may take a favourite, with jealous spouses and natural children. Seizing a throne now has consequences: the family you deposed, the realm and the old crown's allies all come for you. Also: wars between kingdoms, with allies, a royal host and peace terms.
+Storylines: 26 tales that come back every few years, chapter by chapter, and end the way your choices decide. Around you: talk to the king, the queen, the scheming prince, your captain, your sergeant, the abbot or the beggar at the door; learn their secrets, help them sin, blackmail or betray them, and pray you are not caught. Fear and love: a ruler may put anyone to death, but grudges wait, and conquered kingdoms rise if you neglect them. Passions and scandals: mistresses, secret marriages and royal scandals.
 ```
 
 ## Category
@@ -80,7 +80,7 @@ Answer the questionnaires honestly. For this game:
 | Violence | Yes: realistic, described in text, not graphic (battles, executions, hanging) |
 | Blood or gore | No |
 | Sexual content or nudity | No (courtship, marriage and royal favourites in a line of text, nothing described or shown) |
-| Mature or suggestive themes | Infrequent and mild (death, plague, crime, prison, poison, mistresses) |
+| Mature or suggestive themes | From 1.9: Frequent (affairs, mistresses, seduction, scandal, crime, executions; described in a line of text, never shown) |
 | Alcohol, tobacco or drugs | References only (taverns, ale, drunkenness) |
 | Simulated gambling | Yes: dice games with in-game silver, no real money |
 | Real-money gambling | No |
@@ -90,9 +90,11 @@ Answer the questionnaires honestly. For this game:
 | Shares location | No |
 | Web access or unrestricted browsing | No |
 
-Expect about **13+** on the App Store and **Teen / PEGI 12** on Google Play.
-On Google Play's target audience question, choose **13 and over**, so the
-"Designed for Families" rules don't apply.
+Versions 1.5.1 to 1.8 rate about **13+** on the App Store. From 1.9, with
+Mature or suggestive themes answered Frequent, expect about **16+** on the App
+Store and about **PEGI 16** on Google Play. On Google Play's target audience
+question, choose **16 and over** from 1.9, so the "Designed for Families" rules
+don't apply.
 
 ## Privacy answers
 

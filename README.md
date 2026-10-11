@@ -273,6 +273,49 @@ still be reached from a first job.
 - A double tap never zooms the page. In the phone apps, pinch zoom and
   long-press text selection are off too, so it feels like an app.
 
+## Storylines, the people around you, fear and love (v1.9)
+
+- **Storylines.** Twenty-six tales that run through a life, a chapter every two
+  to five years (a random gap), each choice deciding where it goes and how it
+  ends: the Pretender, the Royal Favourite, the Hostage Prince, the Court
+  Alchemist, the Lord Protector, the Envoy's Secrets, the Peasants' Charter, the
+  Rival Knight, the Free Company, the Vow of the Cross, Half a Map, the Captain
+  Who Hunts You, the Corsair, the Spice Venture, the Guild War, the Forbidden
+  Book, the Girl Who Hears Voices, the Great Mortality, the Secret of the
+  Cloister, the Lord's Heir, the Rising, the Outlaw of the Greenwood, the Cunning
+  Woman, the Foundling, the Love Letters and the Stranger at the Crossroads. At
+  most two run at once, a year with a chapter has no other random event, some
+  pass to your heir, and Deeds and your gravestone list how each one ended.
+- **Around you** (Kin). The people you live and work beside, each with a
+  character and often a secret: the king, the queen, the heir and the scheming
+  younger prince at court; your own court's archbishop, envoy and ambitious
+  cousin; the captain, mate, bosun and crew aboard ship; the sergeant and your
+  comrades in camp; the abbot and the novices in the cloister; the guildmaster,
+  the moneylender and the urchin in town; the lord of the manor and his steward;
+  the band in the greenwood. Talk, give gifts, ask favours, learn secrets, help
+  them sin (carry the queen's letters to her lover, arrange the king's
+  meetings, take a cut of the theft), blackmail them, betray them, join the
+  prince's plot to the throne, lead a mutiny, or have them murdered. Some come
+  to you with their own schemes. Getting caught can mean the Tower, the lash,
+  or the gallows.
+- **Fear and love** (Realm, Court). A ruler may put anyone in the realm to
+  death: kin, councillors, lords, governors. Dread keeps the realm quiet while
+  you are strong; love keeps it loyal when you are not. The people you wrong
+  are listed by name and wait for their chance: plots, assassins, risings, an
+  interdict. Conquered kingdoms remember who they were: show your face, rule
+  them gently or wed your heir into their old royal house and they come to
+  accept you; neglect them, tax them hard or hold too many at once and they
+  rise under their old dynasty and break away.
+- **Passions and scandals** (Deeds). Take a mistress or a lover, marry for love
+  in secret, seek an annulment, visit the stews, buy a love potion, pay court in
+  the courtly fashion, keep a priest's "housekeeper", marry a rich old widow.
+  Under historical rules a king's mistress is a fact of court life, while a
+  queen's or a wife's lover must stay secret and being found out is ruin.
+  Things happen around you too: a royal adultery scandal, a masque that catches
+  fire, rough music under your window, the king's eye on your wife, a
+  half-brother at the door, a runaway heiress, a mocking song. Everyone
+  involved in romance is an adult, and nothing is described.
+
 ## Dark deeds, brides and usurpers (v1.8)
 
 - **Dark deeds** (Deeds, Dark deeds) for every walk of life. A monarch can lock
