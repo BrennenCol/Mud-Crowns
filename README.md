@@ -273,6 +273,32 @@ still be reached from a first job.
 - A double tap never zooms the page. In the phone apps, pinch zoom and
   long-press text selection are off too, so it feels like an app.
 
+## Dark deeds, brides and usurpers (v1.8)
+
+- **Dark deeds** (Deeds, Dark deeds) for every walk of life. A monarch can lock
+  a rival sibling in the Tower, attaint a lord, debase the coin, harry a
+  county, seize loans or poison a foreign heir. Knights can burn the
+  countryside, sack an abbey or sell their lance; pirates can give no quarter,
+  maroon a crew, torch a port or bury a hoard; traders cheat weights, hoard
+  grain and burn a rival's shop; clergy forge relics and skim tithes; anyone
+  can poison or blackmail. Penance (Deeds) washes some of it away.
+- **Infamy.** Dark deeds raise Infamy. High Infamy brings plots, revenge,
+  names like "the Cruel" or "the Wicked", and excommunication costs piety
+  every year. It fades slowly, faster for the pious.
+- **Royal matches.** An unmarried monarch is brought candidates (always
+  adults): a foreign princess or prince for an alliance, a noble heiress or
+  heir, a rich merchant's child, or a famous beauty. Any monarch, old or
+  young, can seek a match (Deeds, Love and family).
+- **Mistresses and favourites.** A ruler can take an acknowledged favourite
+  or keep it discreet. Favourites ask for favours, spouses grow jealous, and
+  natural children (FitzRoy) are born outside the line of succession unless
+  you pay to legitimise them.
+- **Usurpers beware.** Seize the throne and the family you deposed hates you,
+  the realm is restless, every foreign court thinks less of you, and the old
+  crown's allies may declare war. Deposed kin can escape, raise armies from
+  exile and come back for the crown for years. Taking the capital means
+  beating the royal host that defends it.
+
 ## Wars between kingdoms (v1.7)
 
 - **Declared wars.** As a ruler, attacking a kingdom declares war on it. Its

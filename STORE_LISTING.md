@@ -62,7 +62,7 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 ## What's new (for this version)
 
 ```
-Wars between kingdoms: attacking a kingdom declares war, its allies come to its defence, and a royal army relieves its capital. Take the capital and the court may flee and fight on. Enemies invade every year until you make peace: offer peace, demand terms or buy it. Meet other monarchs in person, ask them to join your war or warn them off. Also: princes and princesses are handed commands and offices by birth, and a double tap no longer zooms.
+Dark deeds for every life: lock a rival in the Tower, debase the coin, give no quarter at sea, cheat the scales or forge relics. Infamy follows you, with plots, revenge and a cruel name. Unmarried monarchs are brought royal matches, and a ruler may take a favourite, with jealous spouses and natural children. Seizing a throne now has consequences: the family you deposed, the realm and the old crown's allies all come for you. Also: wars between kingdoms, with allies, a royal host and peace terms.
 ```
 
 ## Category
@@ -79,8 +79,8 @@ Answer the questionnaires honestly. For this game:
 |---|---|
 | Violence | Yes: realistic, described in text, not graphic (battles, executions, hanging) |
 | Blood or gore | No |
-| Sexual content or nudity | No (courtship and marriage only, nothing shown) |
-| Mature or suggestive themes | Infrequent and mild (death, plague, crime, prison) |
+| Sexual content or nudity | No (courtship, marriage and royal favourites in a line of text, nothing described or shown) |
+| Mature or suggestive themes | Infrequent and mild (death, plague, crime, prison, poison, mistresses) |
 | Alcohol, tobacco or drugs | References only (taverns, ale, drunkenness) |
 | Simulated gambling | Yes: dice games with in-game silver, no real money |
 | Real-money gambling | No |

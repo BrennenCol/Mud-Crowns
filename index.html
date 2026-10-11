@@ -524,7 +524,7 @@ html,body{overscroll-behavior:none}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.7.0';
+const APP_VERSION = '1.8.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -5435,10 +5435,11 @@ function showWhatsNew() {
   store.set(NEWKEY, APP_VERSION);
   modalOpen = true;
   const items = [
-    ['⚔️', 'Wars are wars', 'attacking a kingdom declares war on it. Its allies by marriage come to its defence, and neighbours may join if you grow too strong. Your own ally may march with you.'],
-    ['🏰', 'The royal host', 'every crown keeps an army that relieves its capital and nearby towns. Beat it in the field first. Take a capital and the court may flee and fight on.'],
-    ['🕊️', 'War and peace', 'enemies invade your borders every year. Offer peace, demand terms or buy peace at their court, and beaten crowns sue for peace.'],
-    ['🤝', 'Talk to crowns', 'meet a monarch in person, ask a court to join your war, or warn one to stay out. Hired captains are fewer, and dearer each time.'],
+    ['🗡️', 'Dark deeds', 'every walk of life has its cruel choices: a king’s Tower, a knight’s sharpened lance, a pirate’s yardarm, a merchant’s false weights. Infamy brings plots and revenge, and the chroniclers will name you for it.'],
+    ['💍', 'Royal matches', 'monarchs and the highborn choose a match from candidates their council presents: a foreign princess for an alliance, a great lord’s daughter, a rich merchant’s, or a famous beauty.'],
+    ['🌹', 'Mistresses and favourites', 'a married monarch may keep an acknowledged mistress or favourite, with favours to grant, a jealous spouse, and natural children who cannot inherit unless legitimised.'],
+    ['👑', 'Usurpers beware', 'rise against your own crown and its royal host and allies defend the capital. Take the throne and your family turns on you, the old king’s allies make war, and claimants come back with foreign armies.'],
+    ['⚔️', 'Also new', 'wars between kingdoms, with allies, a royal host and peace terms (1.7), and posts handed to princes by birth (1.6).'],
   ];
   $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Find work</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
@@ -6732,7 +6733,7 @@ function rkUnproven(r) {
 }
 
 /* ---------- living under a false name ---------- */
-DEEDS.push(
+DEEDS.splice(DEEDS.map(d => d.g).lastIndexOf('Daring') + 1, 0,
   { k: 'rk_incog', g: 'Daring', i: '🎭', n: 'Live under a false name', d: 'Set your rank aside and take humble work. While you hide, your birth opens no doors.', min: 14,
     only: () => !S.ruling && !S.flags.incog && (S.cls === 'royal' || S.cls === 'noble'),
     can: () => !S.vows || 'Not while under holy vows',
@@ -15801,7 +15802,7 @@ PETITIONS.push(
     { id: 'wd_spy', min: 14, w: 8, cool: 6, icon: '🕵️',
       cond: () => atWar() && homeOK(),
       init: () => ({ foe: foeOf() }),
-      text: c => `A pedlar with a ${c.foe} accent has been buying everyone ale at the inn, and asking about the castle at ${here()}: how many men, how thick the gate, whether the sergeant drinks. Now he sits down beside you. "You look like a ${wsSeen('man', 'woman')} who knows things," he says, and puts a silver penny on the table.`,
+      text: c => `A pedlar with an accent from ${c.foe} has been buying everyone ale at the inn, and asking about the castle at ${here()}: how many men, how thick the gate, whether the sergeant drinks. Now he sits down beside you. "You look like a ${wsSeen('man', 'woman')} who knows things," he says, and puts a silver penny on the table.`,
       choices: [
         { t: 'Turn him in to the castellan', fx: () => {
           if (P(.75)) { coin(R(5, 15)); st('renown', 4); return 'He was a spy. The castellan gave you a reward, and the pedlar a room with no windows.'; }
@@ -16865,6 +16866,7 @@ PETITIONS.push(
   const foeOfWar = w => Object.keys(wars()).find(r => wars()[r] === w);
   const scWord = v => v >= 50 ? 'winning decisively' : v >= 20 ? 'winning' : v > -20 ? 'even' : v > -50 ? 'losing' : 'losing badly';
   window.dpIsEnemy = r => ruling() && isEnemy(r);
+  window.dpDeclare = r => (ruling() && live(r) ? declareWar(r, true) : null);
   window.dpStatus = r => { if (!ruling()) return []; const w = warOn(r); if (w) return [`at war with you (${scWord(w.sc)})`]; const h = warHolding(r); return h ? [`fighting you beside ${foeOfWar(h)}`] : []; };
 
   /* ---------- going to war ---------- */
@@ -16925,8 +16927,19 @@ PETITIONS.push(
   }
 
   /* ---------- the royal host comes to the town's relief ---------- */
+  // Your own crown keeps a host too, and it defends the royal seat against rebels.
+  const crownState = () => { const o = dp(); if (!o.crown || o.crown.k !== S.king) { const base = Math.max(30, Math.round(realmPower(S.realm) * .35)); o.crown = { k: S.king, host: base, base }; } return o.crown; };
+  const crownAllies = () => pairedWith(S.realm);
   function planRelief(x) {
     delete x.dpR;
+    if (!S.ruling && S.world && x.realm === S.realm && !x.you) {
+      const cap = capOf(S.realm), near = x.cap || (cap && x.adj.includes(cap.id)), c0 = crownState();
+      const R0 = { y: S.year, foe: S.realm, crown: 1, h: 0, a: {}, m: 0 };
+      if (c0.host > 0 && (near || P(.3))) R0.h = c0.host;
+      if (x.cap) for (const a of crownAllies()) R0.a[a] = Math.round(contingent(a) * .8);
+      R0.t = R0.h + sum(R0.a); if (!R0.t) return null;
+      x.dpR = R0; return R0;
+    }
     if (!ruling() || x.realm === S.realm || !live(x.realm)) return null;
     const w = warHolding(x.realm); if (!w) return null;
     const foe = foeOfWar(w), cap = capOf(foe), r = x.realm;
@@ -16948,6 +16961,11 @@ PETITIONS.push(
   const reliefText = (x, R0) => {
     if (!R0) return '';
     const bits = [];
+    if (R0.crown) {
+      if (R0.h) bits.push(`the royal host of ${KT()} ${S.king}, about ${Math.round(R0.h / 10) * 10} strong, has marched to its relief`);
+      for (const [a, v] of Object.entries(R0.a)) bits.push(`${Math.round(v / 10) * 10} men of ${a} have come to defend their ally's crown`);
+      return bits.length ? ` But ${joinList(bits)}.` : '';
+    }
     if (R0.h) bits.push(`the royal host of ${R0.foe}, about ${Math.round(R0.h / 10) * 10} strong, has marched to its relief`);
     for (const [a, v] of Object.entries(R0.a)) bits.push(`${Math.round(v / 10) * 10} men of ${a} stand with them`);
     const mine = Object.entries(wars()[R0.foe] ? wars()[R0.foe].mine : {}).filter(([, v]) => v > 0);
@@ -16978,6 +16996,11 @@ PETITIONS.push(
       const w = wars()[R0.foe], r = x.realm, wasCap = !!x.cap;
       const t = _fight.call(this, x, Object.assign({}, o, { atk: o.atk + R0.m, def: o.def + R0.t }));
       const won = !!x.you || x.realm === S.realm;
+      if (R0.crown) {
+        const c0 = dp().crown, hit = (x.you || S.ruling) ? R(45, 75) / 100 : R(10, 25) / 100;
+        if (c0 && R0.h) c0.host = Math.max(0, Math.round(c0.host - R0.h * hit));
+        return t + ((x.you || S.ruling) ? ' The royal host broke and scattered.' : ' The royal host held the field.');
+      }
       if (!w) return t;
       const hit = won ? R(45, 75) / 100 : R(10, 25) / 100;
       if (R0.h) w.host = Math.max(0, Math.round(w.host - R0.h * hit));
@@ -17016,6 +17039,11 @@ PETITIONS.push(
   {
     const _hx = hexOddsColor;
     hexOddsColor = function (x) {
+      if (!S.ruling && S.world && x.realm === S.realm && x.cap && !x.you) {
+        const extra = crownState().host + crownAllies().reduce((t, a) => t + contingent(a) * .8, 0);
+        const q = armyPower(x.ter) / Math.max(1, defenseOf(x) + extra);
+        return q > 1.5 ? '#3f8a52' : q > 1.1 ? '#8fae4a' : q > .85 ? '#d1a93a' : q > .6 ? '#c9743a' : '#b0422e';
+      }
       if (!ruling() || x.you || x.realm === S.realm || !live(x.realm)) return _hx.apply(this, arguments);
       const r = x.realm, w = warOn(r), cap = capOf(r);
       const host = w ? w.host : hostBase(r), al = w ? sum(w.al) : pairedWith(r).reduce((t, a) => t + contingent(a) * .75, 0);
@@ -17285,6 +17313,82 @@ PETITIONS.push(
     } catch (e) { /* not ready */ }
   }, 0);
 
+  /* ---------- treason in the family, and the usurper's crown ---------- */
+  YEARLY.push(() => { if (!S || S.ruling || !S.dp || !S.dp.crown) return; const c0 = S.dp.crown; c0.base = Math.max(30, Math.round(realmPower(S.realm) * .35)); c0.host = Math.min(c0.base, Math.round(c0.host + c0.base * .15)); });
+  // Rising against your own family's crown wounds the family.
+  {
+    const _tr = traitor;
+    traitor = function () {
+      const was = !!S.flags.rebel, t = _tr.apply(this, arguments);
+      if (!was && S.flags.rebel && !S.ruling) {
+        const k = rulerKin(); if (k) { k.bond = Math.min(k.bond, 15); say(`${k.name} will never forgive this.`, 'bad'); }
+        for (const z of S.kin.filter(y => y.alive && (y.sib || y.par) && y !== k)) bond(z, -15);
+      }
+      return t;
+    };
+  }
+  // A king does not like a son with an army of his own.
+  EVENTS.push({ id: 'dp_suspect', icon: '👁️', min: 16, w: 12, cool: 3,
+    cond: () => !S.ruling && !S.flags.rebel && bornRoyal() && !!rulerKin() && (S.army || 0) >= Math.max(100, crownState().base * .4),
+    init: () => ({ k: rulerKin(), n: S.army }),
+    text: c => `${KQ(c.k.sex)} ${c.k.name} has heard that you keep ${c.n} armed men of your own. You are summoned to explain yourself before the whole council.`,
+    choices: [
+      { t: 'Disband most of them', fx: c => { const l = loseTroops(Math.round((S.army || 0) * .7)); if (FX && l) FX.push({ l: 'soldiers', d: -l }); bond(c.k, 6); return `You sent ${l} men home with a month's pay. ${c.k.name} embraced you, and watched you all through supper.`; } },
+      { t: 'Swear they are for the crown’s service', fx: c => { if (P(.4 + S.stats.wits / 250 + c.k.bond / 300)) { bond(c.k, 2); return 'You swore it on the relics, and were believed. For now.'; } bond(c.k, -20); st('renown', -3); return `Nobody believed you. ${c.k.name} has set spies in your household.`; } },
+      { t: 'Refuse to come', fx: c => { bond(c.k, -30); traitor(); return `You sent back the summons torn in two. ${c.k.name} has declared you a rebel. The royal army will come.`; } },
+    ] });
+  function usurped() {
+    if (!ruling()) return;
+    const o = dp(); if (o.usurpY === S.year) return; o.usurpY = S.year;
+    S.flags.usurper = S.year;
+    const dep = S.kin.filter(k => k.alive && /^Deposed (King|Queen)$/.test(k.job || ''));
+    for (const k of dep) { k.bond = Math.min(k.bond, 8); k.claim = 1; }
+    for (const k of S.kin.filter(k => k.alive && k.sib && k.older && !k.claim)) { k.bond = Math.min(k.bond, 20); k.claim = 1; }
+    for (const k of S.kin.filter(k => k.alive && (k.par || k.sib) && !k.claim)) bond(k, -15);
+    unrest(25); st('piety', -4);
+    for (const z of foreign()) relAdd(z, -12, 'you seized the throne');
+    const angry = [];
+    for (const a of crownAllies()) if (!wars()[a] && P(.75)) { declareWar(a, true); angry.push(a); }
+    say(`The realm is restless under a usurper's crown.${angry.length ? ` ${joinList(angry)} will not recognise you, and ${angry.length > 1 ? 'have' : 'has'} declared war.` : ''}`, 'bad');
+    if (dep[0]) Q.push(() => showEvent(deposedCard(dep[0])));
+  }
+  {
+    const _ft = feat;
+    feat = function (k) { const r = _ft.apply(this, arguments); if (k === 'usurper') { try { usurped(); } catch (e) { console.error(e); } } return r; };
+  }
+  const exileCourt = () => { const c = foreign().filter(z => !isEnemy(z)).sort((a, b) => realmPower(b) - realmPower(a)); return c[0] || pick(foreign()) || null; };
+  function deposedCard(k) {
+    return { id: 'dp_deposed', icon: '⛓️', text: () => `${k.name}, the deposed ${k.sex === 'm' ? 'king' : 'queen'} and your own ${relOf(k).toLowerCase()}, is in your hands. Half the realm still calls ${pr(k).him} the rightful monarch. What becomes of ${pr(k).him}?`,
+      choices: [
+        { t: 'Lock them in the Tower', fx: () => { S.flags.infamy = Math.min(100, (S.flags.infamy || 0) + 25); st('piety', -10); kinDies(k, 'in the Tower, of grief, they say'); return `${k.name} went into the Tower and did not come out. The claim died with ${pr(k).him}. Nobody in the realm will ever trust you again.`; } },
+        { t: 'Send them into exile', fx: () => { const r = exileCourt(); k.exile = r; k.job = r ? `In exile at the court of ${r}` : 'In exile'; if (r) relAdd(r, -15, 'you sent your own kin into exile with them'); return `${k.name} took ship${r ? ` for ${r}` : ''} with a handful of loyal knights. Exiles have long memories, and foreign friends.`; } },
+        { t: 'Keep them at court, under guard', fx: () => { k.guard = 1; k.job = `${k.job}, under guard`; st('renown', 2); return `${k.name} lives in comfortable rooms with a guard at the door. The old loyalists bring ${pr(k).him} news, and wine, and ideas.`; } },
+        { t: 'Kneel and beg their forgiveness', fx: () => { bond(k, 20); unrest(-6); st('piety', 4); return `You knelt before ${k.name} in front of the whole court. ${pr(k).He} said nothing, but some of the old lords wept.`; } },
+      ] };
+  }
+  // Claimants do not rest. After fifteen years, few remember you were not the rightful heir.
+  YEARLY.push(() => {
+    if (!ruling() || !S.flags.usurper) return;
+    if (S.year - S.flags.usurper >= 15) { S.flags.usurper = 0; say('A generation has passed. Few now remember that you were not the rightful heir.', 'good'); return; }
+    const cl = S.kin.filter(k => k.alive && k.claim && k.bond < 50);
+    if (!cl.length || !P(.22)) return;
+    const k = pick(cl);
+    if (k.guard && P(.5)) { const r = exileCourt(); k.guard = 0; k.exile = r; k.job = r ? `In exile at the court of ${r}` : 'In exile'; say(`${k.name} escaped from court in a laundry cart${r ? ` and fled to ${r}` : ''}.`, 'bad'); return; }
+    const r = k.exile && live(k.exile) ? k.exile : null;
+    if (r && !isEnemy(r)) { const d = declareWar(r, true); say(`${k.name} has raised an army at the court of ${r} to take back the crown. ${r} has declared war on you.`, 'bad'); const x = pick(borderOf(r)); if (x) Q.push(() => showEvent(invadeCard(x, r, Math.round(d.rec.host * R(60, 90) / 100)))); return; }
+    const x = pick(realmTs(S.realm).filter(y => !y.cap && !y.you)); if (!x) return;
+    Q.push(() => showEvent(riseCard(k, x)));
+  });
+  function riseCard(k, x) {
+    const n = R(60, 160) + realmTs(S.realm).length * 5;
+    return { id: 'dp_rise', icon: '🏴', text: () => `Barons loyal to ${k.name} have risen in ${x.n}, about ${n} strong, crying that you stole the crown.`,
+      choices: [
+        { t: 'Crush them', fx: () => { const mine = armyPower(x.ter) + x.gar; if (mine * R(80, 120) / 100 > n * R(80, 120) / 100) { const l = loseTroops(Math.round((S.army || 0) * R(5, 15) / 100)); unrest(-5); st('renown', 4); return `You scattered ${k.name}'s rebels and hanged their leaders at the crossroads. You lost ${l} men.`; } const l = loseTroops(Math.round((S.army || 0) * R(20, 40) / 100)); unrest(10); x.wealth = Math.max(5, Math.round((x.wealth || 20) * .8)); st('renown', -5); return `The rebels beat your army in the field and burned ${x.n} before melting away. You lost ${l} men.`; } },
+        { t: 'Buy off their leaders', fx: () => { const c = Math.round(n * 1.2); coin(-Math.min(Math.max(0, S.coin), c)); unrest(-3); return `Gold did what swords could not. The rising in ${x.n} dissolved, for now.`; } },
+        { t: 'Promise reforms', fx: () => { unrest(-8); st('renown', -2); if (S.court && S.court.tax != null) S.court.tax = Math.max(0, S.court.tax - 1); return 'You lowered the taxes and swore to rule justly. The rebels went home grumbling.'; } },
+      ] };
+  }
+
   /* ---------- sellswords: only so many captains will sign each year ---------- */
   const HIRE = ['hire10', 'archers', 'xbows', 'horse', 'hire50'];
   const hiredNow = () => { const h = dp().hire; if (h.y !== S.year) { h.y = S.year; h.n = 0; } return h.n; };
@@ -17296,6 +17400,320 @@ PETITIONS.push(
     a.can = () => { if (S && hiredNow() >= hireCap()) return 'No more captains will sign this year'; return can0 ? can0() : true; };
     a.run = function () { dp().hire.n = hiredNow() + 1; return run0.apply(this, arguments); };
     a.d = `${a.d} Each hire this year raises the price; only so many captains sign each year.`;
+  }
+}
+
+
+/* ================= Dark deeds, royal matches and mistresses (prefix dk_) ================= */
+// The cruel things kings, knights, pirates, merchants, priests and ordinary folk really did, as deeds with a price:
+// Infamy grows, plots and revenge follow, and the chroniclers give you a name. Monarchs and the highborn choose a
+// match from candidates the council presents (always adults, 18 or over). A married monarch may keep an acknowledged
+// mistress or favourite, with favours, a jealous spouse and natural children who cannot inherit unless legitimised.
+{
+  const fl = () => S.flags;
+  const infamy = () => fl().infamy || 0;
+  const inf = d => { const b = infamy(); fl().infamy = Math.max(0, Math.min(100, Math.round(b + d))); const r = fl().infamy - b; if (r && FX) FX.push({ l: 'infamy', d: r, bad: 1 }); return r; };
+  const rel = (r, d, why) => (window.wdApi ? window.wdApi.relAdd(r, d, why) : 0);
+  const liveR = r => !!(r && S.world && S.world.k && S.world.k[r]);
+  const ruling = () => !!S.ruling;
+  const highborn = () => ['royal', 'noble'].includes(S.cls);
+  const occK = () => { const o = S.job && occOfJob(); return o ? o.k : ''; };
+  const PIRATE = ['jb_pirate', 'jb_piratecap', 'jb_privateer', 'jb_smuggler'];
+  const isPirate = () => PIRATE.includes(occK());
+  const fam = () => jobFam();
+  const TRADE_FAMS = ['trade', 'food', 'metal', 'cloth', 'leather', 'goods', 'fine', 'woodw', 'stone', 'guild', 'master'];
+  const isTrader = () => !S.ruling && (TRADE_FAMS.includes(fam()) || S.cls === 'merchant');
+  const isClergy = () => !S.ruling && fam() === 'faith';
+  const isCommon = () => !S.ruling && ['serf', 'peasant', 'craft'].includes(S.cls) && !atSea();
+  const isWarrior = () => !S.ruling && (isMil() || S.flags.knight);
+  const atWar = () => (S.dp && S.dp.wars && Object.keys(S.dp.wars).length > 0) || (S.world && typeof wAtWar === 'function' && wAtWar(S.realm).some(z => z !== 'civil'));
+  const cd = (k, y) => () => (!fl()[k] || S.year - fl()[k] >= y ? true : `Not again until ${fl()[k] + y}`);
+  const mark = k => { fl()[k] = S.year; };
+  const caught = sev => Q.push(() => showEvent(trialEvent(sev)));
+  const claimants = () => S.kin.filter(k => k.alive && k.sib && !k.ruler && !k.sp && k.age >= 16);
+  const realmLords = () => (S.world ? realmTs(S.realm).filter(x => !x.you && !x.cap) : []);
+  const adultHeirs = () => (S.world && S.world.k ? Object.keys(S.world.k).filter(r => r !== S.realm && liveR(r) && wRuler(r) && wRuler(r).heir && wRuler(r).heir.age >= 16) : []);
+
+  DEEDS.push(
+    /* ---------- the crown ---------- */
+    { k: 'dk_tower', g: 'Dark deeds', i: '🗝️', n: 'Lock a rival claimant in the Tower', d: 'An adult brother or sister with a claim is never seen again. Infamy, and a terrible rumour.', min: 16,
+      only: () => ruling() && claimants().length > 0,
+      run: () => { const k = claimants().sort((a, b) => b.age - a.age)[0]; inf(25); st('piety', -10);
+        for (const s of S.kin.filter(x => x.alive && (x.sib || x.par) && x !== k)) bond(s, -15);
+        kinDies(k, 'in the Tower, of a sudden illness');
+        if (P(.4)) { st('renown', -10); unrest(10); return `${k.name} went into the Tower in the spring. By Michaelmas, the constable reported that ${pr(k).he} had died of a sudden illness. Nobody in the realm believes it.`; }
+        return `${k.name} went into the Tower in the spring and was not seen again. The court has learned not to ask.`; } },
+    { k: 'dk_attaint', g: 'Dark deeds', i: '📜', n: 'Seize a lord’s lands on a charge of treason', d: 'Forged letters, a quick trial, and his estates are yours. The other lords will remember.', min: 16,
+      only: () => ruling() && realmLords().length > 0, can: cd('dk_attaintY', 3),
+      run: () => { mark('dk_attaintY'); const x = realmLords().sort((a, b) => (b.wealth || 0) - (a.wealth || 0))[0]; const lord = lordOf(x); const g = Math.round((x.wealth || 20) * R(5, 9));
+        coin(g); x.lord = npcLord(); unrest(12); inf(12); st('piety', -4);
+        return `Letters were found, in a hand very like his, promising ${x.n} to a foreign king. ${cap(lord)} went to the block protesting his innocence. His estates brought ${g} silver into your treasury.`; } },
+    { k: 'dk_coin', g: 'Dark deeds', i: '🪙', n: 'Clip and debase the coinage', d: 'Less silver in every penny, and more pennies for you. Prices rise and the people know why.', min: 16,
+      only: () => ruling(), can: cd('dk_coinY', 4),
+      run: () => { mark('dk_coinY'); const g = R(200, 500) + realmTs(S.realm).length * 20; coin(g); unrest(8); inf(5); st('renown', -3);
+        return `Your moneyers mixed copper into the silver. ${g} silver of profit, and by Christmas a loaf costs half as much again. Every alewife in the kingdom curses the new pennies.`; } },
+    { k: 'dk_harry', g: 'Dark deeds', i: '🔥', n: 'Harry a restless county into obedience', d: 'Burn the barns, kill the herds, let the winter do the rest. Unrest falls, and so does the county.', min: 16,
+      only: () => ruling() && realmLords().length > 0, can: cd('dk_harryY', 3),
+      run: () => { mark('dk_harryY'); const x = pick(realmLords()); x.wealth = Math.max(5, Math.round((x.wealth || 20) * .6)); unrest(-15); inf(18); st('piety', -10); st('renown', 3);
+        return `Your soldiers went through ${x.n} like a winter wind. Nobody in the realm talks of rebellion now. Nobody in ${x.n} talks much at all.`; } },
+    { k: 'dk_loans', g: 'Dark deeds', i: '💰', n: 'Force loans from the merchants and abbeys', d: '“Loans” that will never be repaid. Silver now, resentment for years.', min: 16,
+      only: () => ruling(), can: cd('dk_loansY', 3),
+      run: () => { mark('dk_loansY'); const g = R(220, 420); coin(g); unrest(6); inf(6); st('piety', -6);
+        return `The abbots and the great merchants were summoned one by one and asked how much they would like to lend their king. ${g} silver. The receipts are very fine, and quite worthless.`; } },
+    { k: 'dk_heir', g: 'Dark deeds', i: '🍷', n: 'Have a foreign heir poisoned', d: 'A cup of wine at a feast, and a rival dynasty totters. If it is traced to you, it means war.', min: 16, cost: 120,
+      only: () => ruling() && adultHeirs().length > 0, can: cd('dk_heirY', 4),
+      run: () => { mark('dk_heirY'); const r = pick(adultHeirs()), x = wRuler(r), h = x.heir; inf(25); st('piety', -12);
+        const ok = P(.6), traced = ok ? P(.3) : P(.6);
+        if (ok) { x.heir = null; if (typeof wNews === 'function') wNews(`Sorrow in ${r}: ${h.n}, heir to the throne, sickened at a feast and died before morning.`, '🕯️', true); }
+        if (traced) { rel(r, -60, 'they traced the poison to you'); st('renown', -12); if (window.dpDeclare && liveR(r)) window.dpDeclare(r); return `${ok ? `${h.n} died before morning. ` : 'The poisoner was taken before he could act. '}Under questioning, your name came out. ${r} has declared war on you.`; }
+        return ok ? `${h.n} of ${r} sickened at a feast and died before morning. The physicians blamed a bad oyster. You sent a letter of condolence.` : 'Your poisoner lost his nerve and fled with the money. Nobody knows anything, which is the best outcome you could hope for.'; } },
+
+    /* ---------- the sword ---------- */
+    { k: 'dk_chev', g: 'Dark deeds', i: '🐎', n: 'Ride a chevauchée through enemy country', d: 'Burn and loot across the border to ruin the enemy. Rich plunder, and a black mark on your soul.', min: 16,
+      only: () => (isWarrior() || (ruling() && (S.army || 0) >= 20)) && atWar(), can: cd('dk_chevY', 1),
+      run: () => { mark('dk_chevY'); const g = R(30, 110); coin(g); st('renown', 4); st('piety', -8); inf(10); if (P(.12)) st('health', -R(5, 15));
+        return `For three weeks you rode through the enemy’s country leaving smoke behind you. You came home with ${g} silver of plunder and a great many cattle that are not yours.`; } },
+    { k: 'dk_abbey', g: 'Dark deeds', i: '⛪', n: 'Sack a rich monastery', d: 'Gold plate, a jewelled reliquary, and the curse of the Church.', min: 16,
+      only: () => isWarrior() || (S.army || 0) >= 20, can: cd('dk_abbeyY', 4),
+      run: () => { mark('dk_abbeyY'); const g = R(80, 250); coin(g); st('piety', -20); inf(15);
+        if (P(.4)) { fl().excom = S.year; st('renown', -10); return `You carried off ${g} silver of gold plate. The bishop read your name out from every pulpit in the land: you are excommunicate until you do penance.`; }
+        return `You carried off ${g} silver of gold plate while the monks wept in the cloister. The abbot has written to the Pope. Twice.`; } },
+    { k: 'dk_lance', g: 'Dark deeds', i: '🏇', n: 'Kill a rival at the tourney with a sharpened lance', d: 'In the joust, a blunted lance is the rule. Yours will not be.', min: 16,
+      only: () => (isWarrior() || S.flags.knight || highborn()) && rivals().length > 0, can: cd('dk_lanceY', 3),
+      run: () => { mark('dk_lanceY'); const k = rivals()[0]; inf(12);
+        if (P(.6)) { kinDies(k, 'on your lance at the tourney'); st('renown', 4); if (P(.25)) { st('renown', -10); return `${k.name} went down and did not get up. The heralds found the sharpened point. You are the most feared knight in the realm, and the least welcome at any tourney.`; } return `${k.name} went down in the third course and did not get up. "A terrible accident," you told the heralds.`; }
+        st('health', -R(10, 20)); return `${k.name} saw the point at the last moment and turned it. Your own horse threw you. The crowd laughed.`; } },
+
+    /* ---------- the sea ---------- */
+    { k: 'dk_noquarter', g: 'Dark deeds', i: '🏴‍☠️', n: 'Hang a merchant crew as a warning', d: 'Every captain on the sea will hear of it, and strike their colours faster.', min: 16,
+      only: () => isPirate(), can: cd('dk_nqY', 2),
+      run: () => { mark('dk_nqY'); const g = R(20, 70); coin(g); st('renown', 6); st('piety', -10); inf(15);
+        return `You hanged the whole crew of the cog from her own yardarm and sent her drifting into port. ${g} silver from her hold, and now your flag alone empties a ship’s deck.`; } },
+    { k: 'dk_maroon', g: 'Dark deeds', i: '🏝️', n: 'Maroon a troublemaker on a sandbar', d: 'A cask of water, a pistol with one shot, and the tide coming in. The crew will not argue again.', min: 16,
+      only: () => isPirate(),
+      run: () => { st('renown', 2); st('happy', 2); inf(6); jobPerf(5);
+        return `You left ${pick(NAMES.m)} the boatswain on a sandbar with a cask of water and his opinions. The rest of the crew have become very agreeable.`; } },
+    { k: 'dk_torch', g: 'Dark deeds', i: '🔥', n: 'Torch a fishing village for supplies', d: 'Fresh water, salt fish, and a smoking ruin behind you.', min: 16,
+      only: () => isPirate(), can: cd('dk_torchY', 2),
+      run: () => { mark('dk_torchY'); const g = R(20, 50); coin(g); st('piety', -8); inf(12);
+        return `The village had water, nets and ${g} silver in the church. Now it has none of those things.`; } },
+    { k: 'dk_hoard', g: 'Dark deeds', i: '⚓', n: 'Slip away with the whole hoard', d: 'One night, one boat, every coin the crew owns. They will hunt you for the rest of your life.', min: 16,
+      only: () => isPirate(),
+      run: () => { const g = R(150, 400); coin(g); quitJob(); inf(12); fl().crewHunt = 1;
+        return `You rowed away under a moonless sky with ${g} silver and not a single friend in the world. Somewhere behind you, an entire crew is waking up.`; } },
+
+    /* ---------- the market ---------- */
+    { k: 'dk_weights', g: 'Dark deeds', i: '⚖️', n: 'Use false weights', d: 'A thumb on the scale. Easy silver, and the pillory if you are caught.', min: 14,
+      only: () => isTrader(),
+      run: () => { inf(4); if (P(.25)) { coin(-25); st('renown', -8); return 'The market searcher tested your weights and found them light. You spent a day in the pillory being pelted with your own cabbages, and paid a 25 silver fine.'; } const g = R(15, 50); coin(g); return `A little light on every pound, all year long. ${g} silver that your customers never knew they gave you.`; } },
+    { k: 'dk_grain', g: 'Dark deeds', i: '🌾', n: 'Hoard grain and sell it dear in the lean months', d: 'Buy at harvest, sell at Lent, when people are starving. Rich, and hated.', min: 16,
+      only: () => isTrader() || (highborn() && !ruling()), can: cd('dk_grainY', 2),
+      run: () => { mark('dk_grainY'); const g = R(40, 150); coin(g); st('renown', -6); inf(8);
+        if (P(.15)) { coin(-Math.round(g / 2)); return `You sold your grain at four times the harvest price, until a hungry crowd broke into your granary and took the rest. You kept ${Math.round(g / 2)} silver and your life.`; }
+        return `You sold your grain at four times the harvest price. ${g} silver. Children in the lane look at you the way wolves look at a fence.`; } },
+    { k: 'dk_burnshop', g: 'Dark deeds', i: '🔥', n: 'Pay a man to burn your rival’s shop', d: 'One night, one torch, one less rival. If he talks, you hang.', min: 16, cost: 20,
+      only: () => isTrader() && rivals().length > 0,
+      run: () => { const k = rivals()[0]; bond(k, -30); inf(12); if (P(.2)) { caught(4); return `The man you paid was caught with the oil still on his hands, and he named you. You will stand trial.`; } k.job = 'Ruined'; return `${k.name}’s shop burned to the ground one windy night. ${pr(k).He} is ruined. Nobody saw anything.`; } },
+
+    /* ---------- the altar ---------- */
+    { k: 'dk_relics', g: 'Dark deeds', i: '🦴', n: 'Sell false relics to pilgrims', d: 'A pig’s knuckle in a silver box is a saint’s finger to the right buyer.', min: 14,
+      only: () => isClergy(),
+      run: () => { st('piety', -10); inf(5); if (P(.15)) { st('renown', -8); jobPerf(-10); return 'A pilgrim who had bought the same finger of Saint Botolph at three other shrines made a scene in the nave. Your bishop is not pleased.'; } const g = R(20, 80); coin(g); return `Three fingers of Saint Botolph, a feather of the Archangel and a phial of the Virgin’s tears. ${g} silver, and the pilgrims went home happy.`; } },
+    { k: 'dk_tithes', g: 'Dark deeds', i: '🪙', n: 'Skim the tithes', d: 'A little off the top, every quarter day.', min: 16,
+      only: () => isClergy(),
+      run: () => { inf(5); st('piety', -6); if (P(.2)) { st('renown', -10); quitJob(); return 'The archdeacon audited your accounts. You have been stripped of your post.'; } const g = R(20, 60) + (S.job ? S.job.level * 10 : 0); coin(g); return `${g} silver of God’s money found its way into your own purse. The accounts balance beautifully.`; } },
+    { k: 'dk_confess', g: 'Dark deeds', i: '🤫', n: 'Use what you hear in confession', d: 'Every sin in the parish passes through your ear. Some of them are worth a great deal.', min: 18,
+      only: () => isClergy(),
+      run: () => { const g = R(30, 90); coin(g); st('piety', -15); inf(10); st('renown', 2);
+        return `The reeve’s wife confessed something very interesting about the reeve. The reeve now pays you ${g} silver a year to keep God’s secrets.`; } },
+
+    /* ---------- the village ---------- */
+    { k: 'dk_inform', g: 'Dark deeds', i: '👉', n: 'Denounce a neighbour to the bailiff', d: 'A reward for the informer, the stocks or worse for them. The village will not forgive you.', min: 14,
+      only: () => isCommon(),
+      run: () => { const g = R(5, 20); coin(g); st('renown', -2); st('happy', -3); inf(8);
+        return `You told the bailiff where ${pick(NAMES.m)} keeps his snares. He was taken to the manor court, and you were given ${g} silver. Nobody sits with you in church now.`; } },
+    { k: 'dk_barn', g: 'Dark deeds', i: '🔥', n: 'Burn the lord’s barn in revenge', d: 'For every beating and every stolen harvest. If they catch you, they hang you.', min: 14,
+      only: () => isCommon(), can: cd('dk_barnY', 3),
+      run: () => { mark('dk_barnY'); st('happy', 6); inf(6); if (P(.3)) { caught(5); return 'The reeve saw you running from the smoke. You will stand trial at the manor court, and arson is a hanging matter.'; } return 'The lord’s great barn burned all night, with a year of tithe grain in it. You watched from the edge of the wood and felt better than you have in years.'; } },
+    { k: 'dk_poorbox', g: 'Dark deeds', i: '⛪', n: 'Rob the church poor box', d: 'Pennies for the poor. You are poor, are you not?', min: 10,
+      only: () => isCommon(),
+      run: () => { st('piety', -8); inf(3); if (P(.15)) { caught(2); return 'The sexton caught you with your hand in the box.'; } const g = R(2, 10); coin(g); return `${g} silver in pennies and one Flemish button. You did not sleep well.`; } },
+
+    /* ---------- anyone ---------- */
+    { k: 'dk_poison', g: 'Dark deeds', i: '☠️', n: 'Poison a rival', d: 'Monkshood in the soup. Murder, if anyone can prove it.', min: 16, cost: () => (ruling() ? 60 : 15),
+      only: () => rivals().length > 0, can: cd('dk_poisonY', 3),
+      run: () => { mark('dk_poisonY'); const k = rivals()[0]; inf(20); st('piety', -10);
+        if (!P(.65)) { bond(k, -20); return `${k.name} was sick for a week and recovered. ${pr(k).He} has started having a taster.`; }
+        kinDies(k, 'of a sudden griping of the bowels');
+        if (P(.2)) { if (ruling()) { st('renown', -8); return `${k.name} died in agony. The whole court suspects you, and nobody dares say it.`; } caught(5); return `${k.name} died in agony, and the coroner smelled monkshood. You will stand trial for murder.`; }
+        return `${k.name} died in agony after a fine supper. The coroner wrote “an act of God”.`; } },
+    { k: 'dk_blackmail', g: 'Dark deeds', i: '✉️', n: 'Blackmail someone with a secret', d: 'Everybody has one. Silver now, and an enemy for life.', min: 16, can: cd('dk_bmY', 2),
+      run: () => { mark('dk_bmY'); inf(6); if (P(.15)) { st('renown', -6); return 'Your victim went to the bishop with your letter before paying a penny. Now everyone knows your secret instead.'; } const g = Math.round(R(10, 40) * ({ serf: .5, peasant: .7, craft: 1, merchant: 1.6, noble: 2.5, royal: 4 }[S.cls] || 1)); coin(g); return `${g} silver, in a purse left under a stone by the bridge, as instructed. There will be more next year.`; } },
+
+    /* ---------- the way back ---------- */
+    { k: 'dk_penance', g: 'Dark deeds', i: '🙏', n: 'Do public penance', d: 'Walk barefoot to the cathedral in a hair shirt and be whipped before the altar. Infamy falls, and the Church forgives.', min: 14, cost: 30,
+      only: () => infamy() >= 10 || !!fl().excom, can: cd('dk_penY', 3),
+      run: () => { mark('dk_penY'); inf(-15); st('piety', 10); st('health', -4); const ex = !!fl().excom; fl().excom = 0;
+        return `You walked barefoot through the streets in a hair shirt and knelt to be scourged before the high altar.${ex ? ' The bishop lifted your excommunication.' : ''} People are saying that perhaps you are not wholly lost.`; } },
+  );
+
+  /* ---------- what infamy brings ---------- */
+  function plotCard() {
+    return { id: 'dk_plot', icon: '🗡️', text: () => `Your food taster dropped dead at supper. Someone in your own household wants you dead, and after what you have done, the list is long.`,
+      choices: [
+        { t: 'Purge the household, the guilty and perhaps the innocent', fx: () => { inf(8); st('renown', 2); return 'Eleven servants went to the dungeon and two to the gallows. You eat more calmly now. Nobody else in the castle does.'; } },
+        { t: 'Double the guard, and trust no one (60 silver)', ok: () => S.coin >= 60, why: 'Costs 60 silver', fx: () => { coin(-60); st('happy', -4); return 'Guards at every door, a new taster, and you sleep with a dagger under the pillow.'; } },
+        { t: 'Shrug it off', fx: () => { if (P(.25)) { die('poisoned by a traitor in the household'); return 'The second cup of wine was meant for you, and it found you.'; } return 'Nothing more came of it. This time.'; } },
+      ] };
+  }
+  function revengeCard() {
+    const amt = Math.round(R(20, 60) * ({ serf: .5, peasant: .7, craft: 1, merchant: 1.5, noble: 2, royal: 3 }[S.cls] || 1));
+    return { id: 'dk_revenge', icon: '🗡️', text: () => `${fl().crewHunt && P(.5) ? 'Three of your old crew found you at last, in a tavern by the docks.' : 'The kin of someone you wronged are waiting for you on the road, with cudgels and long memories.'}`,
+      choices: [
+        { t: 'Fight your way out', fx: () => { if (P(.65 + S.stats.health / 500)) { st('renown', 2); fl().crewHunt = 0; return 'You left them bleeding in the mud and walked home. They will not try again.'; } st('health', -R(15, 30)); if (P(.1)) { die('in a blood feud'); return 'They had brought more friends than you had thought.'; } return 'They beat you half to death and left you in a ditch.'; } },
+        { t: `Pay blood money (${amt} silver)`, ok: () => S.coin >= amt, why: `Costs ${amt} silver`, fx: () => { coin(-amt); inf(-5); return 'You paid. They spat at your feet and went away, and the feud is ended.'; } },
+        { t: 'Run', fx: () => { st('happy', -4); return 'You ran, and kept running until dark. They know where you live.'; } },
+      ] };
+  }
+  YEARLY.push(() => {
+    if (!S || !S.alive) return;
+    const f = fl();
+    if (f.infamy) f.infamy = Math.max(0, f.infamy - (S.stats.piety >= 60 ? 4 : 2));
+    if (f.excom) st('piety', -3);
+    const v = infamy();
+    if (v >= 40 && P((v - 30) / 250)) Q.push(() => showEvent(ruling() ? plotCard() : revengeCard()));
+    else if (f.crewHunt && P(.12)) Q.push(() => showEvent(revengeCard()));
+    if (ruling() && v >= 50) unrest(-2);
+  });
+  {
+    const _ep = epithet;
+    epithet = function () {
+      const e = _ep.apply(this, arguments), v = infamy();
+      if (S.age < 13 || v < 50) return e;
+      if (v >= 70) return S.ruling ? 'the Terrible' : 'the Wicked';
+      return S.ruling ? 'the Cruel' : S.cls === 'noble' || S.cls === 'royal' ? 'the Black' : 'the Wicked';
+    };
+    const _dh = deedsHTML;
+    deedsHTML = function () {
+      const h = _dh.apply(this, arguments), v = infamy();
+      if (!S.alive || (!v && !fl().excom)) return h;
+      const word = v >= 70 ? 'a name to frighten children' : v >= 50 ? 'whispered with dread' : v >= 25 ? 'muttered about' : 'a little stained';
+      return h.replace('</p>', `</p><div class="sumbox">Your name is ${word}: infamy ${v} of 100.${fl().excom ? ' You are excommunicate.' : ''}<small>High infamy brings plots and revenge, and the chroniclers will remember. It fades slowly; public penance (Dark deeds) washes some away.</small></div>`);
+    };
+  }
+
+  /* ---------- a match for a crown, or a great house ---------- */
+  const dowryOf = c => ({ royal: R(150, 400), noble: R(60, 180), merchant: R(250, 600) }[c] || 0);
+  function candidates() {
+    const sx = S.sex === 'm' ? 'f' : 'm', out = [];
+    const mk = (cls, a, b, extra) => { const p = person(sx, R(a, b), cls, { sp: 1 }); p.sur = cls === 'royal' ? pick(SUR.royal) : cls === 'noble' ? pick(SUR.noble) : pick(SUR.low); p.looks = R(30, 90); p.trait = pick(TRAITS); p.dowry = dowryOf(cls); Object.assign(p, extra || {}); return p; };
+    if (S.ruling || S.cls === 'royal') {
+      const rs = S.world && S.world.k ? Object.keys(S.world.k).filter(r => r !== S.realm && liveR(r) && !(window.dpIsEnemy && window.dpIsEnemy(r))) : [];
+      if (rs.length) { const r = pick(rs), x = wRuler(r); out.push(mk('royal', 18, 24, { sur: (x && x.house) || pick(SUR.royal), job: `${sx === 'f' ? 'Princess' : 'Prince'} of ${r}`, dk_r: r, dk_k: 'royal' })); }
+    }
+    out.push(mk('noble', 18, 26, { job: `${sx === 'f' ? 'Daughter' : 'Son'} of the Earl of ${pick(VILLAGES)}`, dk_k: 'noble' }));
+    out.push(mk('merchant', 18, 28, { job: `${sx === 'f' ? 'Daughter' : 'Son'} of the richest merchant in ${S.village}`, dk_k: 'merchant' }));
+    const b = mk(P(.5) ? 'craft' : 'peasant', 18, 22, { dk_k: 'beauty', dowry: 0, looks: R(88, 99) }); b.job = sx === 'f' ? 'The most talked-about beauty in the realm' : 'The handsomest man in the realm'; out.push(b);
+    return out;
+  }
+  const brings = p => p.dk_k === 'royal' ? `an alliance with ${p.dk_r} and ${p.dowry} silver` : p.dk_k === 'noble' ? `the loyalty of a great house and ${p.dowry} silver` : p.dk_k === 'merchant' ? `${p.dowry} silver, and a little scandal` : 'nothing but beauty, and a great deal of scandal';
+  function matchCard() {
+    const cs = candidates();
+    return { id: 'dk_match', icon: '💍', init: () => ({ cs }),
+      text: () => `${S.ruling ? 'Your council' : 'Your family'} has drawn up a list of matches, with portraits and accounts of every dowry. ${cs.map(p => `${fullName(p)}, ${p.age}, ${p.job.charAt(0).toLowerCase() + p.job.slice(1)}: known for ${p.trait}, looks ${stars(p.looks)}, brings ${brings(p)}.`).join(' ')}${S.age - Math.min(...cs.map(p => p.age)) >= 25 ? ` You are ${S.age}. At court, nobody finds the difference in years remarkable.` : ''}`,
+      choices: cs.map(p => ({ t: `Marry ${p.name}`, fx: () => wed(p) })).concat([{ t: 'None of them', fx: () => { st('happy', -1); return 'You sent the portraits back. The council sighed.'; } }]),
+    };
+  }
+  function wed(p) {
+    if (spouse()) return 'You are already married.';
+    marry(p);
+    let t = `You married ${fullName(p)} before the whole court, and the feasting lasted a week.`;
+    if (p.dk_k === 'royal' && liveR(p.dk_r)) {
+      S.world.ally = S.world.ally || []; S.world.ally.push({ a: S.realm, b: p.dk_r, y: S.year });
+      if (window.wdApi) { window.wdApi.setTruce(p.dk_r, 12); window.wdApi.relAdd(p.dk_r, 25, `you married their ${p.sex === 'f' ? 'princess' : 'prince'}`); }
+      if (!S.flags.ally || !liveR(S.flags.ally)) S.flags.ally = p.dk_r;
+      st('renown', 6); t += ` ${S.realm} and ${p.dk_r} are bound by marriage now.`;
+    } else if (p.dk_k === 'noble') { if (S.ruling) unrest(-8); st('renown', 3); }
+    else if (p.dk_k === 'merchant') st('renown', -3);
+    else if (p.dk_k === 'beauty') { st('renown', -8); st('happy', 6); if (S.ruling) unrest(4); t += ' The great lords are scandalised, and you could not care less.'; }
+    return t;
+  }
+  EVENTS.push({ id: 'dk_match', icon: '💍', min: 18, w: () => (S.ruling ? 6 : 2.5), cool: 4,
+    cond: () => (S.ruling || highborn()) && !spouse() && !S.vows && !disguised() && !S.jail,
+    init: () => ({ e: matchCard() }),
+    text: () => `${S.ruling ? 'Your council' : 'Your family'} says it is time you married, and has drawn up a list of matches, with portraits and accounts of every dowry.`, choices: [
+      { t: 'Hear the council out', fx: c => { Q.push(() => showEvent(c.e)); return null; } },
+      { t: 'Not yet: you will marry when you please', fx: () => 'You waved the council away. They will be back.' },
+    ] });
+  const famAt = () => { const i = DEEDS.map(d => d.g).lastIndexOf('Love and family'); return i < 0 ? DEEDS.length : i + 1; };
+  DEEDS.splice(famAt(), 0, { k: 'dk_seek', g: 'Love and family', i: '💍', n: 'Ask for a list of matches', d: 'Your council or your family draws up candidates, with portraits and dowries.', min: 18,
+    only: () => (S.ruling || highborn()) && !spouse() && !S.vows && !disguised(), can: cd('dk_seekY', 1),
+    run: () => { mark('dk_seekY'); const e = matchCard(); Q.push(() => showEvent(e)); return 'Envoys rode out to every great house. Within the month, a pile of portraits arrived.'; } });
+
+  /* ---------- mistresses and favourites ---------- */
+  const lovesOf = () => S.kin.filter(k => k.alive && k.mist);
+  const mw = k => (k.sex === 'f' ? 'mistress' : 'favourite');
+  EVENTS.push(
+    { id: 'dk_fav', icon: '🌹', min: 20, max: 75, w: () => (S.ruling ? 3 : 1.5), cool: 6,
+      cond: () => (S.ruling || highborn()) && !!spouse() && !S.vows && !disguised() && !lovesOf().length && !lovers().length,
+      init: () => { const sx = S.sex === 'm' ? 'f' : 'm'; const p = person(sx, R(18, 30), pick(['noble', 'noble', 'merchant', 'craft']), {}); p.sur = p.cls === 'noble' ? pick(SUR.noble) : pick(SUR.low); p.looks = R(70, 98); p.trait = pick(TRAITS); p.job = sx === 'f' ? pick(['A lady-in-waiting', 'A young widow at court', 'A famous singer']) : pick(['A knight of your household', 'A handsome young courtier', 'Your master of horse']); return { p }; },
+      text: c => `${fullName(c.p)}, ${c.p.age}, ${c.p.job.charAt(0).toLowerCase() + c.p.job.slice(1)}, has caught your eye, and ${pr(c.p).he} knows it. ${S.age - c.p.age >= 25 ? `You are ${S.age}, and no one at court finds that strange. ` : ''}The whole court is watching to see what you do.`,
+      choices: [
+        { t: c => `Make ${c.p.name} your acknowledged ${mw(c.p)}`, fx: c => { const p = c.p; p.lv = 1; p.mist = 1; p.bond = R(60, 80); p.alive = true; p.lastYear = -1; S.kin.push(p); const sp = spouse(); if (sp) bond(sp, -15); st('piety', -5); st('happy', 8); return `${p.name} has rooms beside yours now, jewels, and a seat at the high table. ${sp ? `${sp.name} smiles in public and does not speak to you in private.` : ''}`; } },
+        { t: 'Keep it discreet', fx: c => { const p = c.p; p.lv = 1; p.bond = R(55, 75); p.alive = true; p.lastYear = -1; S.kin.push(p); st('happy', 6); st('piety', -3); return `Notes passed by a page, a door left unlocked. Nobody knows. Probably. (See Kin, Secret lovers.)`; } },
+        { t: 'Remain faithful', fx: () => { const sp = spouse(); if (sp) bond(sp, 4); st('piety', 3); return 'You looked away. It was harder than it should have been.'; } },
+      ] },
+    { id: 'dk_mfavour', icon: '💎', min: 20, w: 3, cool: 3,
+      cond: () => lovesOf().length > 0,
+      init: () => { const k = lovesOf()[0]; const ask = pick([['a manor for', 'brother'], ['a bishopric for', 'cousin'], ['a knighthood for', 'brother'], ['a dowry for', 'sister']]); return { k, ask, cost: R(40, 120) }; },
+      text: c => `${c.k.name} wants ${c.ask[0]} ${pr(c.k).his} ${c.ask[1]}, and asks very sweetly, in front of the whole court.`,
+      choices: [
+        { t: c => `Grant it (${c.cost} silver)`, ok: c => S.coin >= c.cost, why: 'You cannot afford it', fx: c => { coin(-c.cost); bond(c.k, 10); st('renown', -2); if (S.ruling) unrest(3); return `${c.k.name}’s ${c.ask[1]} has done very well out of you. So has ${c.k.name}. The court notices everything.`; } },
+        { t: 'Refuse', fx: c => { bond(c.k, -12); if (c.k.bond < 40 && P(.35)) { c.k.lv = 0; c.k.mist = 0; S.kin = S.kin.filter(x => x !== c.k); return `${c.k.name} packed ${pr(c.k).his} jewels and left court in a carriage you paid for.`; } return `${c.k.name} sulked for a month.`; } },
+      ] },
+    { id: 'dk_jealous', icon: '💢', min: 20, w: 3, cool: 4,
+      cond: () => lovesOf().length > 0 && !!spouse() && spouse().bond < 55,
+      init: () => ({ k: lovesOf()[0], sp: spouse() }),
+      text: c => `${c.sp.name} has had enough of ${c.k.name}. "Me or ${pr(c.k).him}," ${pr(c.sp).he} says, in front of the servants.`,
+      choices: [
+        { t: c => `Send ${c.k.name} away`, fx: c => { c.k.lv = 0; c.k.mist = 0; S.kin = S.kin.filter(x => x !== c.k); bond(c.sp, 10); st('happy', -6); return `${c.k.name} left court for good. ${c.sp.name} has won, and makes sure you know it.`; } },
+        { t: 'Tell them to hold their tongue', fx: c => { bond(c.sp, -15); if (P(.2)) { kinDies(c.k, 'of a sudden fever (some say poison)'); return `Within the month, ${c.k.name} was dead of a sudden fever. ${c.sp.name} wore black, and did not seem sad.`; } return `${c.sp.name} went white and left the room. Things are very quiet at supper now.`; } },
+        { t: c => `Give ${c.k.name} a manor far from court (80 silver)`, ok: () => S.coin >= 80, why: 'Costs 80 silver', fx: c => { coin(-80); bond(c.sp, 4); return `${c.k.name} has a fine manor three days’ ride away. You find a great many reasons to hunt in that direction.`; } },
+      ] },
+  );
+  // natural children: they cannot inherit unless legitimised
+  YEARLY.push(() => {
+    if (!S || !S.alive) return;
+    for (const k of S.kin.filter(x => x.alive && x.lv)) {
+      const mother = S.sex === 'f' ? S : k; if ((mother.age || 99) > 40) continue;
+      if (!P(k.mist ? .15 : .05)) continue;
+      const sx = P(.5) ? 'm' : 'f', c = person(sx, 0, S.cls, { nat: 1 });
+      c.name = pick(NAMES[sx]); c.sur = S.ruling ? 'FitzRoy' : `Fitz${S.last}`; c.bond = R(55, 75); c.alive = true; c.lastYear = -1;
+      S.kin.push(c); if (!k.mist) { const sp = spouse(); if (sp && P(.5)) { bond(sp, -20); st('renown', -4); } }
+      say(`A natural ${sx === 'm' ? 'son' : 'daughter'}, ${c.name} ${c.sur}, was born to ${k.name}${k.mist ? `, your ${mw(k)}` : ', and the secret is out'}.`, 'note');
+      break;
+    }
+  });
+  DEEDS.splice(famAt(), 0, { k: 'dk_legit', g: 'Love and family', i: '📜', n: 'Legitimise a natural child', d: 'A papal bull, bought dear, makes them your lawful heir like any other child.', min: 18, cost: 300,
+    only: () => S.ruling && S.kin.some(k => k.nat && k.alive),
+    run: () => { const k = S.kin.filter(x => x.nat && x.alive).sort((a, b) => b.age - a.age)[0]; k.nat = 0; k.ch = 1; k.sur = S.last; st('renown', -3); st('piety', -2);
+      return `The Pope’s bull arrived with its leaden seal. ${k.name} is your lawful ${k.sex === 'm' ? 'son' : 'daughter'} now, with a place in the line of succession. Some of your other children are furious.`; } });
+  // An acknowledged mistress is no secret to discover: what follows is the spouse's jealousy instead.
+  {
+    const _ad = affairDiscovered;
+    affairDiscovered = function (k) {
+      if (!k || !k.mist) return _ad.apply(this, arguments);
+      const e = EVENTS.find(x => x.id === 'dk_jealous'), sp = spouse();
+      if (!e || !sp) return { id: 'dk_quiet', icon: '🌹', text: () => `${k.name} is at your side at every feast now, and nobody pretends otherwise.`, choices: [{ t: 'So be it', fx: () => null }] };
+      const c = { k, sp };
+      return { id: 'dk_jealous', icon: e.icon, text: () => e.text(c), choices: e.choices.map(ch => ({ t: typeof ch.t === 'function' ? ch.t(c) : ch.t, ok: ch.ok ? () => ch.ok(c) : undefined, why: ch.why, fx: () => ch.fx(c) })) };
+    };
+    const _ro = relOf;
+    relOf = function (k) {
+      if (k && k.nat && !k.ch) return k.sex === 'm' ? 'Natural son' : 'Natural daughter';
+      if (k && k.mist) return k.sex === 'f' ? 'Mistress' : 'Favourite';
+      return _ro.apply(this, arguments);
+    };
   }
 }
 
@@ -19400,7 +19818,7 @@ function kinItem(k) {
   return `<button class="item${k.alive ? '' : ' dead'}" data-act="${k.alive ? 'person' : 'noop'}" data-arg="${k.id}"><span class="ic pic" aria-hidden="true">${kinPortrait(k)}</span><span class="tx"><b>${esc(fullName(k))}</b><small>${esc(sub)}</small>${k.alive ? `<span class="bar" role="img" aria-label="Relationship ${k.bond}%"><i class="${barCls(k.bond)}" style="width:${k.bond}%"></i></span>` : ''}</span>${k.alive ? '<span class="rt chev" aria-hidden="true">›</span>' : ''}</button>`;
 }
 function kinHTML() {
-  const groups = [['Parents', k => k.par], ['Spouse', k => k.sp], ['Suitors', k => k.su], ['Children', k => k.ch], ['Siblings', k => k.sib], ['Friends', k => k.fr], ['Rivals', k => k.rv], ['Mentors', k => k.mt], ['Apprentices', k => k.ap], ['Patrons', k => k.pt], ['Secret lovers', k => k.lv]];
+  const groups = [['Parents', k => k.par], ['Spouse', k => k.sp], ['Suitors', k => k.su], ['Children', k => k.ch], ['Siblings', k => k.sib], ['Friends', k => k.fr], ['Rivals', k => k.rv], ['Mentors', k => k.mt], ['Apprentices', k => k.ap], ['Patrons', k => k.pt], ['Mistresses and favourites', k => k.mist], ['Secret lovers', k => k.lv && !k.mist], ['Natural children', k => k.nat && !k.ch]];
   let h = successionHTML() + heirNoteHTML();
   for (const [g, f] of groups) {
     const ks = S.kin.filter(f).sort((a, b) => (b.alive - a.alive) || (b.age - a.age));
