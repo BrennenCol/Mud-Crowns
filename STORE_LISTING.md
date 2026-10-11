@@ -62,7 +62,7 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 ## What's new (for this version)
 
 ```
-Storylines: 26 tales that come back every few years, chapter by chapter, and end the way your choices decide. Around you: talk to the king, the queen, the scheming prince, your captain, your sergeant, the abbot or the beggar at the door; learn their secrets, help them sin, blackmail or betray them, and pray you are not caught. Fear and love: a ruler may put anyone to death, but grudges wait, and conquered kingdoms rise if you neglect them. Passions and scandals: mistresses, secret marriages and royal scandals.
+Blood and law: fights are won by health and training, and every fight hurts. A hired killer costs what the victim is worth, so the poor must do it themselves, and may lose. Killings bring inquests, blood feuds and the sheriff. At a trial your friends can swear for you and your enemies speak against you; lose and it is the fine, the gaol or the gallows, and prison has its own dangers. A lord is cold to his serfs, and everyone around you acts on what they feel about you. Also: 26 storylines, the people around you, fear and love, and passions and scandals.
 ```
 
 ## Category

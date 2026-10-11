@@ -524,7 +524,7 @@ html,body{overscroll-behavior:none}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.9.0';
+const APP_VERSION = '1.10.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -5435,11 +5435,11 @@ function showWhatsNew() {
   store.set(NEWKEY, APP_VERSION);
   modalOpen = true;
   const items = [
-    ['📖', 'Storylines', 'twenty-six tales that run through a life: a pretender to your throne, a rival knight, half a treasure map, a forbidden book, the lord’s heir. Each comes back two to five years later as the next chapter, and your choices decide how it ends. Deeds lists them.'],
-    ['🫂', 'Around you', 'the people you live beside: the king, the queen and the scheming younger prince at court; the captain and the mate aboard ship; the sergeant in camp; the abbot; the moneylender; the lord of the manor. Learn their secrets, help them sin, blackmail or betray them. If you are caught, you may hang. See Kin.'],
-    ['⚖️', 'Fear and love', 'a ruler may put anyone to death. Dread keeps the realm quiet while you are strong, love keeps it loyal when you are not, and the people you wrong wait for their chance. Conquered kingdoms remember who they were and rise if you neglect them. See Realm, Court.'],
-    ['🌹', 'Passions and scandals', 'take a mistress or a lover, marry in secret, seek an annulment. Under historical rules a king’s mistress is a fact of court life, and a queen’s lover is treason. Royal scandals, rough music and a dance that caught fire.'],
-    ['🗡️', 'Also new', 'dark deeds, royal matches and mistresses (1.8), and wars between kingdoms (1.7).'],
+    ['⚔️', 'Fights you have to win', 'health, years in arms and training decide a fight now, and every fight costs health, even the ones you win. A sickly serf does not beat a knight.'],
+    ['🩸', 'Blood has a price', 'a hired killer costs what the victim is worth, so the poor must do it with their own hands, and may lose. Every killing brings an inquest, a blood feud with the dead one’s kin, frightened neighbours and a sheriff who starts counting.'],
+    ['⚖️', 'Trials and prison', 'people who love you can swear for you, and your enemies will speak against you. Lose and it is the fine, the gaol or the gallows. Prison has its own dangers: the cellmate, the gaoler’s garnish, gaol fever, the yard, and a loose stone in the wall.'],
+    ['🏰', 'Know your place', 'a lord is cold to his serfs and stays cold unless you earn his favour. Your lord, your master, your enemies and your friends all act on what they feel about you, every year.'],
+    ['📖', 'Also new', 'storylines, the people around you, fear and love, and passions and scandals (1.9).'],
   ];
   $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Who is around me</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
@@ -17545,8 +17545,9 @@ PETITIONS.push(
       run: () => { mark('dk_poisonY'); const k = rivals()[0]; inf(20); st('piety', -10);
         if (!P(.65)) { bond(k, -20); return `${k.name} was sick for a week and recovered. ${pr(k).He} has started having a taster.`; }
         kinDies(k, 'of a sudden griping of the bowels');
-        if (P(.2)) { if (ruling()) { st('renown', -8); return `${k.name} died in agony. The whole court suspects you, and nobody dares say it.`; } caught(5); return `${k.name} died in agony, and the coroner smelled monkshood. You will stand trial for murder.`; }
-        return `${k.name} died in agony after a fine supper. The coroner wrote “an act of God”.`; } },
+        if (ruling()) { if (window.lwMurdered) window.lwMurdered({ name: k.name, cls: k.cls }, 'poison'); if (P(.2)) { st('renown', -8); return `${k.name} died in agony. The whole court suspects you, and nobody dares say it.`; } return `${k.name} died in agony after a fine supper. The physicians blamed the eels.`; }
+        const line = window.lwMurdered ? window.lwMurdered({ name: k.name, cls: k.cls }, 'poison') : '';
+        return `${k.name} died in agony after a fine supper.${line || ' The coroner wrote “an act of God”.'}`; } },
     { k: 'dk_blackmail', g: 'Dark deeds', i: '✉️', n: 'Blackmail someone with a secret', d: 'Everybody has one. Silver now, and an enemy for life.', min: 16, can: cd('dk_bmY', 2),
       run: () => { mark('dk_bmY'); inf(6); if (P(.15)) { st('renown', -6); return 'Your victim went to the bishop with your letter before paying a penny. Now everyone knows your secret instead.'; } const g = Math.round(R(10, 40) * ({ serf: .5, peasant: .7, craft: 1, merchant: 1.6, noble: 2.5, royal: 4 }[S.cls] || 1)); coin(g); return `${g} silver, in a purse left under a stone by the bridge, as instructed. There will be more next year.`; } },
 
@@ -17570,7 +17571,7 @@ PETITIONS.push(
     const amt = Math.round(R(20, 60) * ({ serf: .5, peasant: .7, craft: 1, merchant: 1.5, noble: 2, royal: 3 }[S.cls] || 1));
     return { id: 'dk_revenge', icon: '🗡️', text: () => `${fl().crewHunt && P(.5) ? 'Three of your old crew found you at last, in a tavern by the docks.' : 'The kin of someone you wronged are waiting for you on the road, with cudgels and long memories.'}`,
       choices: [
-        { t: 'Fight your way out', fx: () => { if (P(.65 + S.stats.health / 500)) { st('renown', 2); fl().crewHunt = 0; return 'You left them bleeding in the mud and walked home. They will not try again.'; } st('health', -R(15, 30)); if (P(.1)) { die('in a blood feud'); return 'They had brought more friends than you had thought.'; } return 'They beat you half to death and left you in a ditch.'; } },
+        { t: 'Fight your way out', fx: () => { const r = window.lwFight ? window.lwFight(.45, { deadly: 1, cause: 'in a blood feud' }) : { won: P(.6) }; if (r.died) return 'They had brought more friends than you had thought.'; if (r.won) { st('renown', 2); fl().crewHunt = 0; return 'You left them bleeding in the mud and walked home. They will not try again.'; } return 'They beat you half to death and left you in a ditch.'; } },
         { t: `Pay blood money (${amt} silver)`, ok: () => S.coin >= amt, why: `Costs ${amt} silver`, fx: () => { coin(-amt); inf(-5); return 'You paid. They spat at your feet and went away, and the feud is ended.'; } },
         { t: 'Run', fx: () => { st('happy', -4); return 'You ran, and kept running until dark. They know where you live.'; } },
       ] };
@@ -17713,6 +17714,256 @@ PETITIONS.push(
       if (k && k.nat && !k.ch) return k.sex === 'm' ? 'Natural son' : 'Natural daughter';
       if (k && k.mist) return k.sex === 'f' ? 'Mistress' : 'Favourite';
       return _ro.apply(this, arguments);
+    };
+  }
+}
+
+/* ================= Blood and law: fights that hurt, murders that are remembered, trials with witnesses, and prison (prefix lw_) ================= */
+// A fight is won by the strong and the trained, and costs health even when you win. A killing is never free: the
+// coroner asks questions, the dead have kin who start a feud, the neighbours grow afraid of you, and every killing
+// makes the next one easier to trace. At a trial, the people who love you can swear for you and the people who hate
+// you will speak against you. Lose, and you go to prison, where the years have their own dangers.
+// State: S.lw = { kills, feuds: [ { id, who, why, h, y } ], sus } (sus: the sheriff's suspicion, years it lingers)
+{
+  const fl = () => S.flags;
+  const L = () => { if (!S.lw) S.lw = { kills: 0, feuds: [], sus: 0 }; S.lw.feuds = S.lw.feuds || []; return S.lw; };
+  const inf = d => { const b = fl().infamy || 0; fl().infamy = Math.max(0, Math.min(100, Math.round(b + d))); const r = fl().infamy - b; if (r && FX) FX.push({ l: 'infamy', d: r, bad: 1 }); return r; };
+  const RANK = { serf: 0, peasant: 1, craft: 2, merchant: 3, noble: 4, royal: 5 };
+  const rankOf0 = cls => (RANK[cls] == null ? 1 : RANK[cls]);
+  window.lwRank = rankOf0;
+  const scale = () => (S.ruling ? 4 : { serf: .5, peasant: .7, craft: 1, merchant: 1.6, noble: 2.5, royal: 4 }[S.cls] || 1);
+
+  /* ---------- fighting ---------- */
+  // How good you are in a fight, from 0 (helpless) to about 1 (a champion of the lists).
+  function fightPower() {
+    let p = S.stats.health / 200;
+    p += Math.min(.25, ((S.skills && S.skills.war) || 0) * .025);
+    if (isMil()) p += .08 + Math.min(.08, ((S.job && S.job.level) || 0) * .02);
+    if (S.flags.knight) p += .1;
+    if (hasAsset('warhorse')) p += .03;
+    p += S.stats.wits / 1000;
+    if (S.age > 45) p -= (S.age - 45) * .01;
+    if (S.age < 16) p -= (16 - S.age) * .03;
+    if (S.illness) p -= .1;
+    return Math.max(0, Math.min(1.1, p));
+  }
+  // friends at your side: a sworn friend, or someone close by who would die for you
+  const allies = () => S.kin.filter(k => k.alive && (k.fr || k.sib || k.sp) && k.bond >= 75 && k.age >= 16).length + (window.ciCircle && ciCircle() ? ciCircle().ppl.filter(p => p.alive && p.bond >= 75 && !p.young).length : 0);
+  // The chance of winning against a foe of a given strength: .2 an old man, .35 a farmhand, .5 a soldier or a
+  // bandit, .6 a sergeant, .7 a knight or the court's champion, .85 a giant.
+  const fightP = (foe, bonus) => Math.max(.04, Math.min(.95, .5 + (fightPower() - foe) * 1.4 + Math.min(.12, allies() * .04) + (bonus || 0)));
+  // A fight always costs something; the better you are, the less.
+  function fightHurt(won, foe) {
+    const d = won ? R(2, 8) + foe * 10 : R(8, 18) + foe * 20;
+    return st('health', -Math.max(1, Math.round(d * (1.15 - fightPower() * .5))));
+  }
+  // Fight it out: { won, died }. A deadly fight can kill you if you lose.
+  function fight(foe, o) {
+    o = o || {};
+    const won = P(fightP(foe, o.bonus));
+    fightHurt(won, foe);
+    let died = false;
+    if (!won && S.alive && P(o.deadly ? .08 + foe * .25 : foe * .06)) { die(o.cause || 'of wounds from a fight'); died = true; }
+    if (won) { S.skills = S.skills || {}; if (P(.3)) S.skills.war = (S.skills.war || 0) + 1; }
+    return { won, died };
+  }
+  Object.assign(window, { lwFightPower: fightPower, lwFightP: fightP, lwFight: fight, lwFightHurt: fightHurt });
+
+  // Any other fight in the game costs some health too, if its own story did not already take it.
+  const FIGHTY = /\b(fight|duel|brawl|wrestle|thrash|cudgel|punch|swordfight|knock (him|her|them) down|stand your ground|draw your sword|beat (him|her|them))\b/i;
+  {
+    const _ch = choose;
+    choose = function (e, ch, c) {
+      let lab = ''; try { lab = typeof ch.t === 'function' ? ch.t(c) : ch.t; } catch (err) { lab = ''; }
+      if (!lab || !FIGHTY.test(lab) || /army|troops|soldiers|levies|fleet|host|throne|war\b/i.test(lab)) return _ch.apply(this, arguments);
+      const ch2 = Object.assign({}, ch, { fx: c2 => { const r = ch.fx(c2); if (S && S.alive && FX && !FX.some(f => f.l === STAT_N.health && f.d < 0)) fightHurt(P(fightP(.4)), .35); return r; } });
+      return _ch.call(this, e, ch2, c);
+    };
+  }
+
+  /* ---------- killing has a price ---------- */
+  // A blood feud: the kin of someone you killed or ruined. Rulers keep grudges instead (Fear and love).
+  function feud(who, why, h) {
+    if (S.ruling && window.ruGrudge) return window.ruGrudge(who, why, h, 'house');
+    const l = L(), old = l.feuds.find(f => f.who === who);
+    if (old) { old.h = clamp(old.h + Math.round(h / 2)); return old; }
+    l.feuds.push({ id: uid(), who, why, h: clamp(h), y: S.year }); if (l.feuds.length > 8) l.feuds.sort((a, b) => b.h - a.h).length = 8;
+    return l.feuds[l.feuds.length - 1];
+  }
+  window.lwFeud = feud;
+  // After a killing: the inquest, the feud, and the fear of everyone who knew the dead.
+  // v = { name, cls, role }, how: 'self' | 'hired' | 'poison'. Returns a short line to add to the story, and may put you on trial.
+  function murdered(v, how) {
+    const l = L(); l.kills++;
+    const status = rankOf0(v.cls || 'peasant');
+    inf(10 + status * 2);
+    if (!S.ruling) { heat(15 + l.kills * 5); l.sus = Math.min(10, (l.sus || 0) + 3); }
+    feud(`The kin of ${v.name}`, `you killed ${v.name}`, 40 + status * 8);
+    // everyone close by is afraid of you now
+    if (window.ciCircle && ciCircle()) for (const p of ciCircle().ppl) if (p.alive) p.bond = clamp(p.bond - R(3, 10));
+    const sp = spouse(); if (sp && P(.4 + l.kills * .1)) bond(sp, -R(5, 15));
+    if (S.ruling) return '';
+    // the coroner's inquest
+    const pc = Math.min(.85, ({ self: .3, hired: .2, poison: .2 }[how] || .25) + (l.kills - 1) * .12 + (S.heat || 0) / 300 + status * .03 - S.stats.wits / 500);
+    if (P(pc)) { Q.push(() => showEvent(trialEvent(5))); return ` The coroner did not like what he found, and ${l.kills > 1 ? 'this is not the first death near you. ' : ''}you will stand trial for murder.`; }
+    if (l.kills >= 2 && P(.3 + l.kills * .1)) Q.push(() => showEvent(hueCard()));
+    return l.kills >= 2 ? ` People have started to notice how often death comes near you.` : '';
+  }
+  window.lwMurdered = murdered;
+  // The sheriff comes asking.
+  function hueCard() {
+    const f = S.kin.filter(k => k.alive && (k.fr || k.sp || k.sib || k.par) && k.bond >= 60);
+    return { id: 'lw_hue', icon: '📯',
+      text: () => `The sheriff has come to ${S.village} with a jury of twelve, asking about the deaths. ${L().kills} people who crossed you are in the churchyard, and every one of the jurors knows your name.`,
+      choices: [
+        { t: f.length ? `Ask ${f[0].name} to swear you were together` : 'Find someone to swear you were elsewhere', ok: () => f.length > 0, why: 'Nobody loves you enough to lie for you', fx: () => { const k = f[0]; if (P(.45 + k.bond / 250)) { bond(k, -8); heat(-10); L().sus = Math.max(0, L().sus - 2); return `${k.name} swore on the Gospels that you were together all that night. ${pr(k).He} looked at you afterwards in a way you did not like.`; } bond(k, -20); Q.push(() => showEvent(trialEvent(5))); return `${k.name} began to swear, faltered, and told the truth. You will stand trial.`; } },
+        { t: () => `Bribe the sheriff (${Math.round(40 * scale())} silver)`, ok: () => S.coin >= Math.round(40 * scale()), why: 'You cannot afford a sheriff', fx: () => { coin(-Math.round(40 * scale())); if (P(.6)) { heat(-15); return 'The sheriff found that all the deaths were accidents. Very sad ones.'; } Q.push(() => showEvent(trialEvent(5))); return 'The sheriff took your silver and added bribery to the charges.'; } },
+        { t: 'Run for the forest before they come', fx: () => { quitJob(); S.flags.outlaw = 1; heat(10); st('renown', -10); L().sus = 0; return 'You went out of the back window with a loaf and a knife. You are an outlaw now, and the hue and cry will follow you to the edge of the county.'; } },
+        { t: 'Stand your ground and say nothing', fx: () => { if (P(.4 + S.stats.wits / 400 - L().kills * .05)) { heat(-5); return 'You looked the jurors in the eye and said nothing at all. With no witness, they went home. They will be back.'; } Q.push(() => showEvent(trialEvent(5))); return 'Your silence was taken for guilt.'; } },
+      ] };
+  }
+  // A feud comes for you.
+  function feudCard(f) {
+    const blood = Math.round(R(20, 50) * scale());
+    const lord = window.ciCircle && ciCircle() ? ciCircle().ppl.find(p => p.alive && ['lord', 'abbot', 'guildmaster', 'chief', 'captain', 'campcap'].includes(p.role)) : null;
+    return { id: 'lw_feud', icon: '🩸',
+      text: () => `${f.who} ${f.h >= 60 ? 'have sworn on their dead' : 'have not forgotten'} that ${f.why}. Three of them are waiting for you on the road home, with cudgels and a long memory.`,
+      choices: [
+        { t: 'Fight them', fx: () => { const r = fight(.45 + (f.h >= 60 ? .1 : 0), { deadly: 1, cause: `in a blood feud with ${f.who.replace(/^The /, 'the ')}` }); if (r.died) return 'There were more of them than you had thought.'; if (r.won) { f.h = clamp(f.h - 20); st('renown', 3); return 'You left them groaning in the ditch and walked home with blood on your sleeves. They will think twice next time. Not three times.'; } f.h = clamp(f.h - 10); return 'They beat you half to death and left you in the mud. The feud goes on.'; } },
+        { t: `Pay blood money (${blood} silver)`, ok: () => S.coin >= blood, why: `You need ${blood} silver`, fx: () => { coin(-blood); f.h = 0; inf(-3); return 'You paid the blood price before witnesses, as the old law allows. They spat at your feet and took it. The feud is over.'; } },
+        { t: lord ? `Ask ${lord.name} to make a loveday between you` : 'Ask the priest to make peace between you', ok: () => !lord || lord.bond >= 50, why: 'They do not think well enough of you to help', fx: () => { if (P(lord ? .4 + lord.bond / 200 : .35)) { f.h = 0; st('piety', 2); return 'A loveday in the churchyard: both sides swore peace on the relics and shared a cup of ale, very stiffly.'; } f.h = clamp(f.h - 10); return 'They came to the loveday and refused to shake hands. It did no good.'; } },
+        { t: 'Leave the county', fx: () => { f.h = 0; quitJob(); st('renown', -4); st('happy', -6); for (const k of S.kin.filter(x => x.alive && x.fr)) bond(k, -10); S.village = pick(VILLAGES.filter(v => v !== S.village)) || S.village; return `You left in the night for ${S.village}, where nobody knows you. Not yet.`; } },
+      ] };
+  }
+
+  /* ---------- trials: the people who love you, and the people who don't ---------- */
+  function helpers() {
+    const n = S.kin.filter(k => k.alive && k.age >= 16 && !k.rv && k.bond >= 60).length;
+    const m = window.ciCircle && ciCircle() ? ciCircle().ppl.filter(p => p.alive && !p.young && p.bond >= 60).length : 0;
+    return n + m;
+  }
+  function accusers() {
+    const r = S.kin.filter(k => k.alive && k.rv && k.bond < 30);
+    const c = window.ciCircle && ciCircle() ? ciCircle().ppl.filter(p => p.alive && !p.young && p.bond < 20) : [];
+    return { n: r.length + c.length + L().feuds.filter(f => f.h >= 30).length, name: (r[0] && r[0].name) || (c[0] && c[0].name) || '' };
+  }
+  trialEvent = function (sev) {
+    const bribe = Math.round(20 * sev * Math.max(1, scale())), hp = helpers(), ac = accusers();
+    const champ = sev >= 4 ? .75 : .65;
+    return {
+      id: 'trial', icon: '⚖️', redo: { f: 'trial', a: [sev] },
+      text: () => `Caught! You stand in chains before ${sev >= 4 ? "the king's justices" : 'the sheriff'}${sev >= 5 ? ', charged with a hanging crime' : ''}. ${ac.n ? `${ac.name ? `${ac.name} has come to speak against you${ac.n > 1 ? `, and ${ac.n - 1} more besides` : ''}.` : `${ac.n} of your enemies have come to speak against you.`} ` : ''}${hp >= 3 ? `${hp} people who love you are in the hall, ready to swear for you.` : hp ? `Only ${hp} ${hp === 1 ? 'person' : 'people'} in the hall would swear for you.` : 'Nobody in the hall would swear for you.'} Outside, the crowd is chanting for a hanging.`,
+      choices: [
+        { t: `Bribe the judge (${bribe} silver)`, ok: () => S.coin >= bribe, fx: () => { coin(-bribe); if (P(.7 - sev * .04)) { heat(-10); return 'Silver speaks louder than law. You walked free.'; } return sentence(sev + 1, 'The judge took your silver and sentenced you anyway.'); } },
+        { t: `Swear your innocence, with ${Math.max(hp, 0)} oath-helpers`, ok: () => hp >= 3, why: 'You need three people who will swear for you', fx: () => { const p = .35 + Math.min(.45, hp * .07) - ac.n * .06 + S.stats.renown / 400 - Math.max(0, sev - 2) * .05;
+          for (const k of S.kin.filter(x => x.alive && x.bond >= 60 && !x.rv)) bond(k, -3);
+          if (P(Math.max(.05, p))) { heat(-10); st('renown', 2); return `${hp} neighbours laid their hands on the Gospels with you and swore you were innocent. Under the old law, the court had to let you go.`; } return sentence(sev + 1, `Your oath-helpers swore, but ${ac.name || 'your enemies'} swore louder, and the court called it perjury.`); } },
+        { t: 'Plead benefit of clergy', ok: () => !!S.flags.letters, why: 'You must be able to read', fx: () => { if (P(.55 - (sev >= 5 ? .15 : 0))) { st('renown', -3); return 'You read the "neck verse" from the psalter and were handed to the church courts, who let you off with a penance.'; } return sentence(sev, 'The judge snorted. "Nice try."'); } },
+        { t: `Demand trial by combat (your odds: ${Math.round(fightP(champ) * 100)} in 100)`, fx: () => { const r = fight(champ, { deadly: 1, cause: 'in a trial by combat' });
+          if (r.died) return 'The court’s champion was a seven-foot Fleming with a poleaxe.';
+          if (r.won) { st('renown', 8); heat(-15); return 'You beat the court’s champion in the mud of the lists. God has spoken: you are innocent. You will feel God’s verdict in your ribs for a month.'; }
+          return sentence(sev, 'You lost the fight, and the verdict.'); } },
+        { t: 'Make a break for it', fx: () => { if (P(.22 + fightPower() * .2)) { S.flags.outlaw = 1; heat(15); st('renown', -5); checkFeats(); return 'You kicked over the table, vaulted the dock, and vanished into the crowd. You are an outlaw now.'; } fightHurt(false, .4); return sentence(sev + 1, 'You made it three steps before the bailiffs brought you down.'); } },
+      ],
+    };
+  };
+  // What the court does to you: fines for the small things if you can pay, prison if you cannot, and the rope for the worst.
+  sentence = function (sev, pre) {
+    S.crimes++;
+    const fine = Math.round(R(8, 20) * sev * Math.max(1, scale()));
+    if (sev >= 5) {
+      if (P(.5)) { die(L().kills ? 'on the gallows, for murder' : 'on the gallows'); feat('hanged'); return `${pre} You were hanged at the crossroads before a cheering crowd.`; }
+      const y = R(4, 8); jail(y); return `${pre} The judge spared your neck, and gave you ${y} years in the castle dungeon to wish he had not.`;
+    }
+    if (sev >= 3) { const y = R(1, sev); jail(y); return `${pre} ${y} year${y > 1 ? 's' : ''} in the dungeon.`; }
+    if (sev === 2 && P(.5)) { const y = 1; jail(y); return `${pre} A year in the town gaol.`; }
+    if (S.coin >= fine) { coin(-fine); st('renown', -4); return `${pre} You were fined ${fine} silver.`; }
+    if (P(.5)) { jail(1); st('renown', -3); return `${pre} You could not pay the ${fine} silver fine, so you will pay it in the debtors’ gaol: a year, at least.`; }
+    st('health', -R(8, 15)); st('renown', -6); return `${pre} You could not pay the fine, so you were flogged at the cart’s tail through the market instead.`;
+  };
+
+  /* ---------- prison ---------- */
+  const jailed = () => !!S.jail && S.alive;
+  const visitors = () => S.kin.filter(k => k.alive && k.bond >= 60 && k.age >= 14 && (k.sp || k.ch || k.par || k.sib || k.fr || k.lv));
+  EVENTS.push(
+    { id: 'lw_cellmate', icon: '⛓️', jailOK: true, min: 10, w: 6, cool: 3, cond: jailed,
+      init: () => { const sx = hist() || P(.7) ? (disguised() ? 'm' : S.sex) : pick(['m', 'f']); const p = person(sx, R(18, 55), pick(['serf', 'peasant', 'craft']), { sur: pick(SUR.low) }); p.job = pick(['A horse thief', 'A poacher', 'A debtor', 'A forger', 'A runaway apprentice', 'A preacher of strange ideas']); return { p }; },
+      text: c => `They have put someone in your cell: ${c.p.name}, ${c.p.age}, ${c.p.job.charAt(0).toLowerCase() + c.p.job.slice(1)}. There is one blanket, and one of you will have it.`,
+      choices: [
+        { t: 'Share the blanket, and the stories', fx: c => { const p = c.p; p.fr = 1; p.bond = R(60, 75); p.lastYear = -1; S.kin.push(p); st('happy', 4); return `You shared the blanket, the bread and the long nights. ${p.name} knows every road and every fence in the county, and is your friend now. (See Kin, Friends.)`; } },
+        { t: 'Take the blanket by force', fx: c => { const r = fight(.35, { cause: 'in a fight in the dungeon' }); if (r.died) return 'It was a very sharp spoon.'; if (r.won) { st('health', 3); return `You took the blanket. ${c.p.name} sat in the cold corner and watched you all winter.`; } return `${c.p.name} was much harder than ${pr(c.p).he} looked. You slept on the stones.`; } },
+        { t: 'Sell what they tell you to the gaoler', fx: c => { inf(4); if (P(.6)) { S.jail = Math.max(0, S.jail - 1); return `${c.p.name} talked in ${pr(c.p).his} sleep about where the stolen horses were. The gaoler was grateful: a year off your sentence. ${c.p.name} was hanged in the spring.`; } return `${c.p.name} told you nothing true. The gaoler laughed at you.`; } },
+      ] },
+    { id: 'lw_garnish', icon: '🍞', jailOK: true, min: 10, w: 6, cool: 2, cond: jailed,
+      init: () => ({ g: Math.max(2, Math.round(6 * Math.max(.5, scale()))) }),
+      text: c => `The gaoler sells everything in here: bread that is not mouldy, a candle, a blanket, a cell that does not flood. "Garnish," he calls it, holding out his hand. ${c.g} silver for the year.`,
+      choices: [
+        { t: c => `Pay the garnish (${c.g} silver)`, ok: c => S.coin >= c.g, why: 'You have no silver in here', fx: c => { coin(-c.g); st('health', R(3, 6)); return 'Fresh bread, a dry corner and a candle. You will live through the winter.'; } },
+        { t: 'Work for it, scrubbing the guardroom', fx: () => { st('health', R(0, 3)); st('happy', -3); return 'You scrubbed the guardroom floor every morning for a crust and a corner. It is better than nothing, just.'; } },
+        { t: 'Go without', fx: () => { st('health', -R(4, 9)); return 'You went without. The damp got into your chest by Candlemas, and stayed.'; } },
+      ] },
+    { id: 'lw_fever', icon: '🤒', jailOK: true, min: 10, w: 4, cool: 3, cond: jailed,
+      text: () => 'Gaol fever is going through the cells. Two men down the passage were carried out this week, feet first.',
+      choices: [
+        { t: 'Pray, and keep away from the others', fx: () => { st('piety', 3); if (P(.6)) return 'You prayed and kept to your corner. The fever passed you by.'; ill('fever'); return 'The fever found you anyway.'; } },
+        { t: 'Nurse the sick men', fx: () => { st('piety', 6); if (P(.45)) { ill('fever'); return 'You nursed three men through the fever. Two lived. You caught it from the third.'; } st('renown', 2); return 'You nursed three men through the fever, and two lived. The gaolers speak to you differently now.'; } },
+      ] },
+    { id: 'lw_visit', icon: '🧺', jailOK: true, min: 10, w: 5, cool: 2, cond: jailed,
+      init: () => { const v = visitors(); return { k: v.length ? v.sort((a, b) => b.bond - a.bond)[0] : null }; },
+      text: c => c.k ? `${c.k.name}, your ${relOf(c.k).toLowerCase()}, has walked all the way to the gaol with a basket: bread, cheese, a clean shirt, and news from home.` : 'Visiting day. The other prisoners have mothers, wives, friends at the grate. Nobody has come for you.',
+      choices: [
+        { t: c => (c.k ? 'Take the basket, and their hand' : 'Turn your face to the wall'), fx: c => { if (!c.k) { st('happy', -8); return 'Nobody came. Nobody will. You think about every person you ever let down.'; } bond(c.k, 6); st('happy', 6); st('health', R(2, 5)); if (S.coin < 5 && P(.5)) coin(R(2, 6)); return `${c.k.name} stayed until the gaoler threw ${pr(c.k).him} out. There was a little silver sewn into the shirt.`; } },
+        { t: c => (c.k ? `Ask ${c.k.name} to petition for your release` : 'Shout through the grate for help'), fx: c => { if (!c.k) { st('happy', -3); return 'The guard told you to shut your mouth.'; } if (P(.2 + c.k.bond / 400 + S.stats.renown / 400)) { S.jail = Math.max(0, S.jail - 1); bond(c.k, 4); return `${c.k.name} went from the priest to the steward to the lord himself, on ${pr(c.k).his} knees. A year has been taken off your sentence.`; } bond(c.k, -2); return `${c.k.name} tried every door. None opened.`; } },
+      ] },
+    { id: 'lw_break', icon: '🗝️', jailOK: true, min: 14, w: 3, cool: 3, cond: () => jailed() && S.jail >= 2,
+      text: () => 'A loose stone behind the slop bucket, a bent nail, and three months of scraping. One more night and the hole will be big enough.',
+      choices: [
+        { t: 'Go tonight', fx: () => { if (P(.3 + fightPower() * .25)) { S.jail = 0; S.flags.outlaw = 1; heat(20); st('happy', 10); return 'You squeezed through the hole, dropped into the moat, and swam for your life. You are free, and an outlaw.'; } fightHurt(false, .5); S.jail += R(1, 3); return 'The gaoler’s dog found you halfway through the hole. They added years to your sentence, and they took the nail.'; } },
+        { t: 'Wait, and serve your time', fx: () => { st('piety', 2); return 'You put the stone back. Some nights you take it out and look at the hole.'; } },
+        { t: 'Tell the gaoler about the hole', fx: () => { inf(2); S.jail = Math.max(1, S.jail - 1); return 'You showed the gaoler the hole and blamed the man in the next cell. A year off for you. The other man never came back from the questioning.'; } },
+      ] },
+    { id: 'lw_yard', icon: '👊', jailOK: true, min: 14, w: 3, cool: 3, cond: jailed,
+      init: () => ({ n: pick(NAMES.m) }),
+      text: c => `${c.n}, the biggest man in the gaol, runs the cells. He wants your bread, and every man in the yard is watching to see if you hand it over.`,
+      choices: [
+        { t: 'Fight him in the yard', fx: c => { const r = fight(.55, { cause: 'in a fight in the gaol yard' }); if (r.died) return `${c.n} had a knife.`; if (r.won) { st('renown', 3); st('happy', 3); return `You put ${c.n} on the cobbles in front of the whole gaol. Nobody takes your bread now.`; } st('happy', -4); return `${c.n} beat you senseless and took the bread anyway. You learned something about yourself.`; } },
+        { t: 'Hand over the bread', fx: () => { st('health', -R(2, 5)); st('happy', -3); return 'You handed it over. Every day. You are very hungry and very much alive.'; } },
+        { t: 'Make him a friend: offer to write his letters', ok: () => !!S.flags.letters, why: 'You must be able to read and write', fx: c => { st('wits', 1); return `${c.n} cannot read. You write his letters to his mother, and he guards your bread like a dog.`; } },
+      ] },
+  );
+  // Coming out: the world did not wait for you.
+  {
+    const _yj = yearJail;
+    yearJail = function () {
+      const r = _yj.apply(this, arguments);
+      if (S.alive && !S.jail) {
+        const sp = spouse();
+        if (sp && sp.bond < 45 && P(.45)) { sp.sp = 0; sp.alive = false; sp.died = sp.age; sp.cause = 'left you while you were in prison'; say(`${sp.name} did not wait for you. ${pr(sp).He} has gone, with the children’s blessing and half the furniture.`, 'bad'); }
+        st('renown', -3);
+        for (const k of S.kin.filter(x => x.alive && (x.fr || x.lv) && x.bond < 50)) if (P(.4)) { k.bond = clamp(k.bond - 15); }
+      }
+      return r;
+    };
+  }
+
+  /* ---------- once a year: suspicion fades, feuds strike ---------- */
+  YEARLY.push(() => {
+    if (!S || !S.alive) return;
+    const l = L();
+    if (l.sus) l.sus--;
+    for (const f of l.feuds) f.h = clamp(f.h - 4);
+    l.feuds = l.feuds.filter(f => f.h > 0);
+    if (S.jail || S.ruling) return;
+    const f = l.feuds.slice().sort((a, b) => b.h - a.h)[0];
+    if (f && P(f.h / 300)) Q.push(() => showEvent(feudCard(f)));
+  });
+  // the Deeds page shows feuds against you
+  {
+    const _dh = deedsHTML;
+    deedsHTML = function () {
+      const h = _dh.apply(this, arguments);
+      if (!S.alive || S.ruling || !S.lw || !S.lw.feuds.length) return h;
+      return h.replace('</p>', `</p><div class="sumbox">Blood feuds against you: ${esc(joinList(S.lw.feuds.map(f => f.who.replace(/^The /, 'the '))))}.<small>Feuds strike on the road. Pay blood money, ask your lord for a loveday, or move away to end them.</small></div>`);
     };
   }
 }
@@ -17978,7 +18229,11 @@ PETITIONS.push(
       choices: [
         { t: c => `Forgive ${c.sp.name}`, fx: c => { bond(c.sp, 8); st('happy', -6); st('piety', 3); return `You forgave ${pr(c.sp).him}. ${c.l.name} went away. Some nights you still lie awake and think about it.`; } },
         { t: c => herHist() ? 'Take it to the priest and the church court' : `Throw ${c.sp.name} out of the house`, fx: c => { if (herHist()) { if (P(.5)) { bond(c.sp, -5); return `The archdeacon gave ${c.sp.name} a penance and a lecture. ${c.l.name} was sent away. ${c.sp.name} sulks.`; } return `The archdeacon told you that a wife’s duty is patience, and to come back when he hits you.`; } part(c.sp, 'parted from you after a scandal'); st('happy', -4); st('renown', 2); return `You threw ${c.sp.name}’s clothes into the street, and ${c.sp.name} after them. The neighbours applauded.`; } },
-        { t: c => `Deal with ${c.l.name}, permanently`, fx: c => { inf(15); st('piety', -8); if (P(.3)) { Q.push(() => showEvent(trialEvent(4))); return `${c.l.name} was pulled out of the millpond. Too many people knew who had reason to want it.`; } bond(c.sp, -20); return `${c.l.name} was pulled out of the millpond. "Drunk, and slipped," said the coroner. ${c.sp.name} looks at you differently now.`; } },
+        { t: c => `Kill ${c.l.name} with your own hands`, fx: c => { inf(12); st('piety', -8); const r = window.lwFight ? window.lwFight(.4, { deadly: 1, cause: `fighting ${c.l.name}` }) : { won: P(.5) };
+          if (r.died) return `${c.l.name} was stronger than you, and angrier.`;
+          if (!r.won) { bond(c.sp, -25); if (window.lwFeud) window.lwFeud(`${c.l.name} and ${pr(c.l).his} kin`, `you tried to kill ${c.l.name}`, 45); return `You went for ${c.l.name} behind the alehouse and came off worst. Now the whole parish knows, and ${c.sp.name} has gone to ${pr(c.sp).his} mother’s.`; }
+          bond(c.sp, -20); const line = window.lwMurdered ? window.lwMurdered({ name: c.l.name, cls: c.l.cls }, 'self') : '';
+          return `${c.l.name} was pulled out of the millpond in the morning. ${c.sp.name} looks at you differently now.${line}`; } },
         { t: 'Take a lover of your own', ok: () => !S.vows && !lovesNow().length, why: 'Not while under vows or with a lover already', fx: () => { Q.unshift(() => showEvent(loverCard())); return null; } },
       ] },
     // Whose child?
@@ -18089,7 +18344,7 @@ PETITIONS.push(
       init: () => { const k = S.kin.find(x => x.alive && x.lv && x.wed); return { k, h: pick(NAMES[k.sex === 'f' ? 'm' : 'f']) }; },
       text: c => `${c.h}, ${c.k.name}’s ${c.k.sex === 'f' ? 'husband' : 'wife'}, knows. ${c.k.sex === 'f' ? 'He' : 'She'} is at your door with ${c.k.sex === 'f' ? 'a sword and two brothers' : 'a lawyer and a very long list'}.`,
       choices: [
-        { t: c => c.k.sex === 'f' ? 'Fight him' : 'Face her down', fx: c => { if (c.k.sex === 'f') { if (P(.45 + S.stats.health / 300 + (isMil() ? .15 : 0))) { st('renown', 3); if (P(.3)) { inf(6); return `You fought ${c.h} in the yard, and ${c.h} did not get up. Now ${c.k.name} is a widow, and the coroner wants a word.`; } return `You beat ${c.h} in the yard and sent him home bleeding. He will not be back. ${c.k.name} might.`; } st('health', -R(10, 25)); return `${c.h} and his brothers left you in the mud with two broken ribs and a lesson.`; } st('renown', -4); return `${c.h} told the whole street everything, at length. You stood and took it. It is all anyone talks about.`; } },
+        { t: c => c.k.sex === 'f' ? 'Fight him' : 'Face her down', fx: c => { if (c.k.sex === 'f') { const r = window.lwFight ? window.lwFight(.5, { cause: `fighting ${c.h} and his brothers` }) : { won: P(.5) }; if (r.died) return `${c.h} had brought his brothers, and his brothers had brought knives.`; if (r.won) { st('renown', 3); if (P(.25)) { const line = window.lwMurdered ? window.lwMurdered({ name: c.h, cls: 'craft' }, 'self') : ''; return `You fought ${c.h} in the yard, and ${c.h} did not get up. Now ${c.k.name} is a widow.${line}`; } return `You beat ${c.h} in the yard and sent him home bleeding. He will not be back. ${c.k.name} might.`; } return `${c.h} and his brothers left you in the mud with broken ribs and a lesson.`; } st('renown', -4); return `${c.h} told the whole street everything, at length. You stood and took it. It is all anyone talks about.`; } },
         { t: 'Pay them off (60 silver)', ok: () => S.coin >= 60, why: 'You need 60 silver', fx: c => { coin(-60); return `${c.h} took the silver and went home to ${c.k.name}. Whether to forgive or to punish, you will never know.`; } },
         { t: c => `Give ${c.k.name} up`, fx: c => { c.k.lv = 0; S.kin = S.kin.filter(x => x !== c.k); st('happy', -6); st('piety', 2); return `You swore before ${c.h} never to see ${c.k.name} again, and meant it, mostly.`; } },
       ] },
@@ -18465,7 +18720,14 @@ PETITIONS.push(
   const P3 = p => pr(p);
   const kingW = () => (KT() === 'Queen' ? 'queen' : 'king');
   const scale = () => (S.ruling ? 4 : ['royal', 'noble'].includes(S.cls) ? 2.5 : S.cls === 'merchant' ? 1.6 : 1);
-  const bondW = b => b >= 75 ? 'trusts you completely' : b >= 60 ? 'likes you' : b >= 40 ? 'knows your face' : b >= 20 ? 'does not like you' : 'hates you';
+  // How far above you someone stands: a lord looks at a serf very differently from a fellow serf.
+  const RK = { serf: 0, peasant: 1, craft: 2, merchant: 3, noble: 4, royal: 5 };
+  const myRank = () => (S.ruling ? 6 : RK[S.cls] == null ? 1 : RK[S.cls]);
+  const gapOf = p => Math.max(0, (p.ruler ? 6 : RK[p.cls] == null ? 1 : RK[p.cls]) + (ROLE[p.role] && ROLE[p.role].boss ? 1 : 0) - myRank());
+  const bondW = (b, p) => {
+    if (p && gapOf(p) >= 2) return b >= 75 ? 'favours you, which is rare from someone so far above you' : b >= 60 ? 'has noticed you, and approves' : b >= 40 ? 'knows your name, just' : b >= 20 ? 'looks straight through you' : 'thinks you are dirt';
+    return b >= 75 ? 'trusts you completely' : b >= 60 ? 'likes you' : b >= 40 ? 'knows your face' : b >= 20 ? 'does not like you' : 'hates you';
+  };
 
   /* ---------- where you are, and who is there ---------- */
   const COURT_T = new Set(['courtier', 'diplomat', 'official', 'adviser', 'treasurer', 'chancellor', 'page', 'ladywait', 'herald', 'spymaster', 'jester', 'jb_cupbearer', 'jb_wardrobe', 'jb_chamberlain', 'jb_seneschal', 'jb_royalguard', 'jb_guardcaptain', 'jb_revels', 'jb_poet', 'jb_painter', 'jb_courtastro', 'jb_tutor', 'jb_masterhorse', 'jb_chronicler', 'jb_astronomer', 'jb_librarian']);
@@ -18564,12 +18826,16 @@ PETITIONS.push(
   function newPerson(role, c) {
     const R0 = ROLE[role], sex = R0.sex();
     const age = R(R0.age[0], R0.age[1]);
-    const p = { id: uid(), role, name: pick(NAMES[sex]), sur: R0.cls === 'noble' || R0.cls === 'royal' ? pick(SUR.noble) : pick(SUR.low), sex, by: S.year - age, cls: R0.cls, look: randomLook(), sec: wsec(role), known: 0, bond: R(35, 60), y: -1, st: 0, alive: true };
+    const p = { id: uid(), role, name: pick(NAMES[sex]), sur: R0.cls === 'noble' || R0.cls === 'royal' ? pick(SUR.noble) : pick(SUR.low), sex, by: S.year - age, cls: R0.cls, look: randomLook(), sec: wsec(role), known: 0, bond: 50, y: -1, st: 0, alive: true };
     if (role === 'king') { const [n, ...num] = String(S.king || '').split(' '); if (n) p.name = n; p.num = num.join(' '); p.ruler = 1; p.sur = S.realm; }
     if (role === 'queen' && S.npcCourt && S.npcCourt.consort && S.npcCourt.king === S.king) { const q = S.npcCourt.consort; p.name = q.name; p.sex = q.sex; p.look = q.look || p.look; p.by = S.year - (q.age || age); }
     if (role === 'chancellor' && S.npcCourt && S.npcCourt.king === S.king) { const x = (S.npcCourt.list || []).find(z => z.off === 'chancellor'); if (x && x.c) { p.name = x.c.name; p.sur = x.c.sur; p.sex = x.c.sex; p.look = x.c.look || p.look; } }
     if (role === 'envoy') p.realm = (S.world && S.world.k ? pick(Object.keys(S.world.k).filter(r => r !== S.realm)) : '') || pick(REALMS.filter(r => r !== S.realm));
     if (role === 'heir' || role === 'prince2') { const k = c && c.ppl.find(x => x.role === 'king'); if (k) p.sur = k.sur; }
+    // where a relationship starts: those far above you are cold, those beside you warmer, the poor kind to the poor
+    const g = gapOf(p);
+    p.b0 = clamp(50 - g * 7 + (g === 0 && !R0.boss ? 8 : 0) + (R0.poor && myRank() <= 1 ? 10 : 0) + (p.sec === 'cruel' ? -8 : 0), 5, 70);
+    p.bond = clamp(p.b0 + R(-8, 8), 3, 80);
     return p;
   }
   function circle(key) {
@@ -18632,7 +18898,7 @@ PETITIONS.push(
       text: () => J(`${bossP ? title(bossP) : 'The captain'} has had you clapped in irons.`, `${cap(why)}.`, 'The crew is gathered on deck to watch ship’s justice done.'),
       choices: [
         { t: 'Take the lash and beg pardon', fx: () => { st('health', -R(15, 30)); jobPerf(-30); if (P(.12)) { die('flogged to death at the mainmast'); return 'Forty lashes at the mainmast. You did not get up after the thirty-first.'; } return 'Thirty lashes at the mainmast. You will carry the stripes for life, and the crew will remember you took them without a sound.'; } },
-        { t: 'Fight your way to the rail and jump', fx: () => { if (P(.4)) { quitJob(); st('health', -R(5, 15)); return 'You broke free, went over the rail, and swam until your arms gave out. A fishing boat found you at dawn. You will not be going back.'; } die('hanged from the yardarm'); return 'They caught you at the rail. Ship’s justice is quick: the yardarm, before the noon bell.'; } },
+        { t: 'Fight your way to the rail and jump', fx: () => { if (window.lwFight ? window.lwFight(.5).won : P(.4)) { quitJob(); st('health', -R(5, 15)); return 'You broke free, went over the rail, and swam until your arms gave out. A fishing boat found you at dawn. You will not be going back.'; } die('hanged from the yardarm'); return 'They caught you at the rail. Ship’s justice is quick: the yardarm, before the noon bell.'; } },
         { t: 'Name your accomplices', fx: () => { inf(10); st('renown', -8); if (p && p.alive) kill(p, 'hanged from the yardarm, on your word'); quitJob(); return `${p ? `${nm(p)} swung from the yardarm. ` : ''}You were put ashore at the next port with nothing. Every sailor on the coast will know your name by spring.`; } },
       ] };
     if (k === 'camp') return { id: 'ci_caught', icon: '⛓️',
@@ -18661,12 +18927,18 @@ PETITIONS.push(
     const k = circleNow();
     const myBoss = !!R0.boss;
     const add = (t, fx, o) => A.push(Object.assign({ t, fx, ok: () => !used && (!o || !o.ok || o.ok()), why: used ? 'You have seen them already this year' : (o && o.why) || '' }, o && o.show != null ? { show: o.show } : {}));
-    add('Talk, and listen more than you speak', () => { p.y = S.year; bond2(p, R(4, 9));
+    const gap = gapOf(p);
+    if (gap >= 2) add(`Wait on ${nm(p)}, and try to be noticed`, () => { p.y = S.year;
+      if (P(.3 + gap * .05 - S.stats.looks / 400 - S.stats.renown / 400)) { bond2(p, -2); return `You waited in the yard from dawn until dusk. ${nm(p)} rode past without a glance, and a groom told you to get out of the way.`; }
+      bond2(p, R(2, 6)); if (p.sec && !p.known && P(.08)) { p.known = 1; return `${nm(p)} spoke to you for the space of a breath, and was overheard saying something else to someone else. ${SEC[p.sec].rv(p)}`; }
+      return `${nm(p)} noticed you, nodded, and said a few words. From someone so high, that is a great deal.`; });
+    else add('Talk, and listen more than you speak', () => { p.y = S.year; bond2(p, R(4, 9));
       if (p.sec && !p.known && P(.2 + S.stats.wits / 300 + (p.bond >= 60 ? .15 : 0) + (R0.gossip ? .1 : 0))) { p.known = 1; return `You talked of nothing much for an hour. Then ${nm(p)} said one thing too many. ${SEC[p.sec].rv(p)}`; }
       if (R0.gossip && P(.5)) { const o = c.ppl.find(x => x !== p && x.alive && x.sec && !x.known); if (o) { o.known = 1; return `${nm(p)} cannot keep a thing to ${P3(p).him}self. ${SEC[o.sec].rv(o)}`; } }
       return `${nm(p)} ${p.bond >= 60 ? 'was glad of your company' : 'warmed to you, a little'}. ${pick(['You talked about the weather, which was bad.', 'You heard a great deal about everyone else.', 'You laughed at the same joke, for different reasons.', 'You came away knowing more than you went in with.'])}`; });
     const gc = gold(R0.poor ? 2 : 8);
-    add(R0.poor ? `Give alms (${gc} silver)` : `Bring a gift (${gc} silver)`, () => { p.y = S.year; coin(-gc); bond2(p, R(8, 14)); if (R0.poor) { st('piety', 3); return `${nm(p)} blessed you, and meant it.`; } if (k === 'court') st('power', 1); return `${nm(p)} was delighted with the gift, and will remember who gave it.`; }, { ok: () => S.coin >= gc, why: `You need ${gc} silver` });
+    add(R0.poor ? `Give alms (${gc} silver)` : `Bring a gift (${gc} silver)`, () => { p.y = S.year; coin(-gc); const g = gapOf(p); bond2(p, Math.max(1, Math.round(R(8, 14) / (1 + g * .6)))); if (R0.poor) { st('piety', 3); return `${nm(p)} blessed you, and meant it.`; } if (k === 'court') st('power', 1);
+      return g >= 3 ? `${nm(p)} accepted your gift the way a lord accepts a serf’s eggs: graciously, and as if they were already ${P3(p).his}.` : `${nm(p)} was delighted with the gift, and will remember who gave it.`; }, { ok: () => S.coin >= gc, why: `You need ${gc} silver` });
     add('Ask a favour', () => { p.y = S.year; bond2(p, -5); return favour(p, c); }, { ok: () => p.bond >= 60, why: 'They do not like you enough yet' });
     // the sins of others, helped along
     if (p.sec && p.known && SEC[p.sec].aidable) add(SEC[p.sec].aid(p), () => { p.y = S.year; p.st++; bond2(p, 12); const g = gold(R(15, 40)); coin(g); st('piety', -3); if (p.role === 'king' || p.role === 'queen') st('power', 4); inf(3);
@@ -18694,7 +18966,11 @@ PETITIONS.push(
     if (R0.wise) add(`Ask ${nm(p)} for wisdom`, () => { p.y = S.year; st('wits', R(1, 3)); bond2(p, 6); return `${nm(p)} has seen sixty winters and no daylight for twenty. "${pick(['Never trust a man who agrees with you', 'The abbot is a fool, but he is our fool', 'God hears everything, and the cellarer hears the rest', 'Burn your letters, child. All of them.'])}," ${P3(p).he} said.`; });
     if (R0.young) add(`Bully ${nm(p)}`, () => { p.y = S.year; bond2(p, -25); inf(3); st('happy', 1); return `You made ${nm(p)}’s life a misery for a month. ${P3(p).He} is quieter now, and watches you when ${P3(p).he} thinks you cannot see.`; });
     if (p.role === 'captive') add(`Release ${nm(p)} for a ransom`, () => { p.y = S.year; const g = gold(R(60, 160)); coin(g); kill(p, 'ransomed and sent home'); p.cause = 'ransomed'; return `${nm(p)}’s family paid ${g} silver, and ${P3(p).he} went home in a fishing boat, swearing to see you hang one day.`; });
-    if (k !== 'mycourt' && !p.ruler) add(`Have ${nm(p)} murdered`, () => { p.y = S.year; return murder(p, c, k); });
+    if (k !== 'mycourt' && !p.ruler && !R0.young) {
+      const price = killPrice(p);
+      add(`Pay a cutthroat to kill ${nm(p)} (${price} silver)`, () => { p.y = S.year; coin(-price); return murder(p, c, k, 'hired'); }, { ok: () => S.coin >= price, why: `A killer for someone like ${nm(p)} costs ${price} silver` });
+      add(`Kill ${nm(p)} yourself (your odds: ${Math.round((window.lwFightP ? lwFightP(killFoe(p)) : .5) * 100)} in 100)`, () => { p.y = S.year; return murder(p, c, k, 'self'); });
+    }
     add(`Insult ${nm(p)} to ${P3(p).his} face`, () => { p.y = S.year; bond2(p, -R(15, 25)); st('happy', 2); if (myBoss || p.ruler) { if (P(.4)) jobPerf(-12); st('power', -3); } return `You told ${nm(p)} exactly what you think of ${P3(p).him}. It felt wonderful for about an hour.`; });
     return A.filter(a => a.show !== false);
   }
@@ -18762,15 +19038,29 @@ PETITIONS.push(
     Q.push(() => showEvent(caughtCard('ship', `Your mutiny was betrayed before the change of the watch`, m)));
     return 'Somebody talked.';
   }
-  function murder(p, c, k) {
-    inf(18); st('piety', -10);
-    const big = p.ruler || ['queen', 'heir', 'prince2', 'chancellor', 'lord', 'captain', 'abbot', 'guildmaster', 'campcap'].includes(p.role);
-    if (P(big ? .5 : .65)) {
-      kill(p, pick(['of a fall down the stairs', 'of a bad oyster', 'of a knife in an alley', 'of something in the wine']));
-      if (risk(big ? .35 : .2, k === 'mycourt' ? 'court' : k, `The man you paid to kill ${nm(p)} has talked`, null, 'murder')) return `${nm(p)} is dead. And someone talked.`;
-      return `${nm(p)} was found dead in the morning. ${pick(['A tragic accident, the coroner said.', 'Nobody saw anything. Nobody ever does.', 'The funeral was well attended. You sent flowers.'])}`;
+  // What a killer charges depends on who is to die, not on who is paying.
+  const BIG = ['queen', 'heir', 'prince2', 'chancellor', 'lord', 'lordsp', 'lordheir', 'captain', 'abbot', 'guildmaster', 'campcap', 'guardcap', 'envoy', 'cousin', 'bishop'];
+  const killPrice = p => Math.round(({ serf: 15, peasant: 20, craft: 30, merchant: 60, noble: 150, royal: 400 }[p.cls] || 30) * (BIG.includes(p.role) ? 1.5 : 1));
+  // How hard they are to kill with your own hands: guards, retainers and their own strength.
+  const killFoe = p => Math.max(.1, Math.min(.9, ({ serf: .3, peasant: .32, craft: .35, merchant: .3, noble: .55, royal: .65 }[p.cls] || .35) + (BIG.includes(p.role) ? .12 : 0) + (['sergeant', 'bosun', 'comrade', 'mate', 'chief', 'fletcher', 'watch', 'bailiff', 'armourer'].includes(p.role) ? .15 : 0) - (ageOf(p) > 65 ? .15 : 0)));
+  function murder(p, c, k, how) {
+    inf(how === 'self' ? 14 : 18); st('piety', -10);
+    const big = BIG.includes(p.role), kk = k === 'mycourt' ? 'court' : k;
+    if (how === 'self') {
+      const r = window.lwFight ? lwFight(killFoe(p), { deadly: 1, cause: `trying to kill ${nm(p)}` }) : { won: P(.5) };
+      if (r.died) return `${nm(p)} fought back harder than you ever imagined, and you did not get up.`;
+      if (!r.won) { bond2(p, -60); p.known = 1; if (window.lwFeud) lwFeud(`${nm(p)} and ${P3(p).his} kin`, `you tried to kill ${nm(p)}`, 50); risk(.6, kk, `${nm(p)} fought you off and has named you to anyone who will listen`, null, 'attempted murder'); return `You went for ${nm(p)} in the dark, and ${P3(p).he} fought you off, bleeding and screaming for help. ${cap(P3(p).he)} knows exactly who it was.`; }
+      kill(p, pick(['of a blow to the head, on a dark lane', 'drowned in the millpond', 'strangled in a barn', 'of a knife in the back']));
+      const line = window.lwMurdered ? lwMurdered({ name: nm(p), cls: p.cls, role: p.role }, 'self') : '';
+      return `You did it with your own hands, on a dark night, and walked home shaking with someone else’s blood under your nails.${line}`;
     }
-    bond2(p, -40); risk(.4, k === 'mycourt' ? 'court' : k, `${nm(p)} survived your killer and knows who sent him`, null, 'attempted murder'); return `${nm(p)} survived, and has a very good idea who sent the knife.`;
+    if (P(big ? .55 : .7)) {
+      kill(p, pick(['of a fall down the stairs', 'of a bad oyster', 'of a knife in an alley', 'of something in the wine']));
+      if (risk(big ? .3 : .15, kk, `The man you paid to kill ${nm(p)} has talked`, null, 'murder')) { if (window.lwMurdered) lwMurdered({ name: nm(p), cls: p.cls, role: p.role }, 'hired'); return `${nm(p)} is dead. And someone talked.`; }
+      const line = window.lwMurdered ? lwMurdered({ name: nm(p), cls: p.cls, role: p.role }, 'hired') : '';
+      return `${nm(p)} was found dead in the morning. ${pick(['A tragic accident, the coroner said.', 'Nobody saw anything. Nobody ever does.', 'The funeral was well attended. You sent flowers.'])}${line}`;
+    }
+    bond2(p, -40); if (window.lwFeud) lwFeud(`${nm(p)} and ${P3(p).his} kin`, `you paid a killer to murder ${nm(p)}`, 45); risk(.4, kk, `${nm(p)} survived your killer and knows who sent him`, null, 'attempted murder'); return `${nm(p)} survived, and has a very good idea who sent the knife. Your silver is gone.`;
   }
   function woo(p, c, k) {
     const odds = .2 + S.stats.looks / 250 + p.bond / 300 + (S.ruling ? .15 : 0) - (p.role === 'queen' || p.role === 'heir' ? .1 : 0);
@@ -18798,7 +19088,7 @@ PETITIONS.push(
   function personCard(p) {
     const c = circle(), acts = actions(p, c);
     return { id: 'ci_person', icon: `<span class="pic ev">${kinPortrait(Object.assign({}, p, { age: ageOf(p), job: title(p), alive: true }))}</span>`,
-      text: () => `${title(p)}, ${ageOf(p)}. ${cap(P3(p).he)} ${bondW(p.bond)}.${p.known && p.sec ? ` You know that ${P3(p).he} ${SEC[p.sec].n}.` : ''}${p.lover ? ` You are lovers.` : ''}${p.st && p.sec === 'plot' ? ' You are in the plot together.' : ''}`,
+      text: () => `${title(p)}, ${ageOf(p)}. ${cap(P3(p).he)} ${bondW(p.bond, p)}.${p.known && p.sec ? ` You know that ${P3(p).he} ${SEC[p.sec].n}.` : ''}${p.lover ? ` You are lovers.` : ''}${p.st && p.sec === 'plot' ? ' You are in the plot together.' : ''}`,
       choices: acts.map(a => ({ t: a.t, ok: a.ok, why: a.why, fx: a.fx })).concat([{ t: 'Leave them be', fx: () => null }]) };
   }
   XACT.ci_who = id => { const p = who(id); if (!p || !p.alive) return toast('They are gone'); closeSheet(); Q.push(() => showEvent(personCard(p))); if (!modalOpen) nextModal(); };
@@ -18813,7 +19103,7 @@ PETITIONS.push(
       const ppl = c.ppl.filter(p => p.alive);
       if (!ppl.length) return h;
       let box = `<h3 class="sec">${esc(CIRCLE_N[key])}</h3><p class="hint">The people you live and work beside. Tap one to talk, win them over, learn their secrets, help them sin, or betray them.</p>`;
-      for (const p of ppl) box += `<button class="item" data-act="ci_who" data-arg="${p.id}"><span class="ic pic" aria-hidden="true">${kinPortrait(Object.assign({}, p, { age: ageOf(p), job: title(p), alive: true }))}</span><span class="tx"><b>${esc(title(p))}</b><small>Age ${ageOf(p)}. ${esc(cap(bondW(p.bond)))}${p.known && p.sec ? `. ${esc(cap(P3(p).he))} ${esc(SEC[p.sec].n)}` : ''}${p.lover ? '. Your lover' : ''}</small><span class="bar" role="img" aria-label="Relationship ${p.bond}%"><i class="${barCls(p.bond)}" style="width:${p.bond}%"></i></span></span><span class="rt chev" aria-hidden="true">›</span></button>`;
+      for (const p of ppl) box += `<button class="item" data-act="ci_who" data-arg="${p.id}"><span class="ic pic" aria-hidden="true">${kinPortrait(Object.assign({}, p, { age: ageOf(p), job: title(p), alive: true }))}</span><span class="tx"><b>${esc(title(p))}</b><small>Age ${ageOf(p)}. ${esc(cap(bondW(p.bond, p)))}${p.known && p.sec ? `. ${esc(cap(P3(p).he))} ${esc(SEC[p.sec].n)}` : ''}${p.lover ? '. Your lover' : ''}</small><span class="bar" role="img" aria-label="Relationship ${p.bond}%"><i class="${barCls(p.bond)}" style="width:${p.bond}%"></i></span></span><span class="rt chev" aria-hidden="true">›</span></button>`;
       // first on the page, before your family
       const at = h.indexOf('<h3 class="sec">');
       return at >= 0 ? h.slice(0, at) + box + h.slice(at) : box + h;
@@ -18827,7 +19117,33 @@ PETITIONS.push(
       if (!p.alive || p.ruler) continue;
       const a = ageOf(p);
       if (P(a > 70 ? .12 : a > 55 ? .04 : .012)) kill(p, a > 60 ? 'of old age' : pick(['of a fever', 'of the flux', 'in an accident']));
-      if (p.bond > 50) p.bond--; else if (p.bond < 50) p.bond++;
+      const base = p.b0 == null ? 50 : p.b0;
+      if (p.bond > base) p.bond--; else if (p.bond < base) p.bond++;
+    }
+    // the people above you and beside you act on what they feel about you
+    const key = circleNow(), cc = key && S.ci[key];
+    if (cc && !S.jail) {
+      const live = cc.ppl.filter(p => p.alive);
+      const b = live.find(p => ROLE[p.role].boss);
+      if (b && S.job && key !== 'mycourt' && key !== 'manor') {
+        if (b.bond >= 70) jobPerf(2);
+        else if (b.bond < 25) { jobPerf(-3); if (b.bond < 12 && P(.15)) { quitJob(); say(`${title(b)} has had enough of you, and you have been turned out of your place.`, 'bad'); } }
+      }
+      const lord = live.find(p => p.role === 'lord');
+      if (lord && ['serf', 'peasant'].includes(S.cls)) {
+        if (lord.bond < 20 && P(.6)) { st('health', -1); const f = Math.min(Math.max(0, S.coin), R(1, 6)); S.coin -= f; say(`${title(lord)} has no love for you. The bailiff doubled your boon-work${f ? ` and fined you ${f} silver for a broken hedge` : ''}.`, 'bad'); }
+        else if (lord.bond >= 75 && S.cls === 'serf' && P(.08)) { freeSerf(); say(`${title(lord)} has granted you a charter of freedom, sealed in green wax, for your loyal service.`, 'gold'); }
+        else if (lord.bond >= 60 && S.coin < 5 && P(.4)) { const g = R(3, 8); S.coin += g; say(`In a hard winter, ${title(lord)} remembered you, and sent a sack of grain and ${g} silver.`, 'good'); }
+      }
+      const foe = live.find(p => p.bond < 15 && !p.young);
+      if (foe && P(.15)) {
+        const r = Math.random();
+        if (r < .4 && (S.heat || 0) > 0) { heat(10); say(`${nm(foe)}, who hates you, has been talking to the authorities about you.`, 'bad'); }
+        else if (r < .75) { st('renown', -2); say(`${nm(foe)} has been spreading stories about you, and some of them are even true.`, 'bad'); }
+        else { const l = Math.min(Math.max(0, S.coin), R(2, 10)); S.coin -= l; if (l) say(`${l} silver went missing from your purse. You are fairly sure who took it.`, 'bad'); }
+      }
+      const pal = live.find(p => p.bond >= 78 && !ROLE[p.role].boss);
+      if (pal && P(.12)) { if ((S.heat || 0) > 0) { heat(-8); say(`${nm(pal)} warned you that the bailiff was asking questions, in time for you to keep your head down.`, 'good'); } else { st('happy', 2); say(`${nm(pal)} stood by you this year, the way a friend should.`, 'good'); } }
     }
     // debts fall due
     for (const c of Object.values(S.ci)) for (const p of c.ppl) if (p.alive && p.owed && p.due <= S.year) { const o = p.owed; coin(-o); p.owed = 0; say(`${nm(p)} the moneylender collected the ${o} silver you owed, with interest, and a smile.`, 'money'); }
@@ -21291,7 +21607,7 @@ YEARLY.push(slYear);
       },
       circle: {
         i: '🕯️',
-        text: (a, v) => `The book has done what books do: it has found readers. ${slName(v.friend)}, a ${v.role}, ${v.copied ? 'borrowed your copy' : 'saw it on your table'} and begged to hear more. Now there are six of them, meeting in your kitchen on Thursday nights with the shutters closed, and they look at you as if you were a prophet. ${v.copied ? 'Your copy has gone from hand to hand, and come back with notes in the margins.' : 'The book itself has never left your keeping.'}`,
+        text: (a, v) => `The book has done what books do: it has found readers. ${slName(v.friend)}, ${aOr(v.role)}, ${v.copied ? 'borrowed your copy' : 'saw it on your table'} and begged to hear more. Now there are six of them, meeting in your kitchen on Thursday nights with the shutters closed, and they look at you as if you were a prophet. ${v.copied ? 'Your copy has gone from hand to hand, and come back with notes in the margins.' : 'The book itself has never left your keeping.'}`,
         choices: [
           { t: 'Lead them, and read aloud every Thursday', fx: (a, v) => { v.circle = 1; slKin(v.friend, { fr: 1 }); st('happy', 6); st('piety', -4); st('renown', 2); a.next = 'inquest'; a.gap = [2, 4];
             return `You read to them every Thursday, and argued, and laughed, and once ${v.friend.name} wept. It is the best company you have ever kept. It is also, by any reckoning of the Church, a conventicle of heretics, and you are its head.`; } },

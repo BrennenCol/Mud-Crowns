@@ -273,6 +273,34 @@ still be reached from a first job.
 - A double tap never zooms the page. In the phone apps, pinch zoom and
   long-press text selection are off too, so it feels like an app.
 
+## Blood and law (v1.10)
+
+- **Fights by skill.** Health, years in arms, a soldier's or knight's training,
+  age and illness decide who wins a fight, and friends at your side help. Every
+  fight costs health, even the ones you win, and a hard fight can kill you.
+- **Murder has a price.** A hired killer costs what the victim is worth (a
+  serf's life is cheap, a lord's is not), so the poor must kill with their own
+  hands, in a real fight they can lose. Every killing brings the coroner's
+  inquest, a blood feud with the dead one's kin, frightened neighbours and,
+  after more than one, the sheriff's hue and cry. Each death makes the next one
+  easier to trace.
+- **Trials.** People who love you can swear for you as oath-helpers, and your
+  enemies (rivals, people around you who hate you, feuds) speak against you.
+  Trial by combat is a real fight against the court's champion.
+- **Sentences and prison.** Fines for small crimes if you can pay, the debtors'
+  gaol or the cart's tail if you cannot, years in the dungeon for theft and
+  violence, and the gallows or a long sentence for murder. In prison: a
+  cellmate, the gaoler's garnish, gaol fever, the bully of the yard, visitors
+  (only those who love you come) and a loose stone in the wall. Coming out, a
+  cold spouse may be gone.
+- **Know your place.** People around you start from what your station is to
+  theirs: a lord is cold to his serfs, the poor are kind to the poor. Feelings
+  drift back to that unless you earn better. You cannot just chat with your
+  betters, and a serf's gift means little to a lord. Each year your lord,
+  your master, your enemies and your friends act on what they feel: doubled
+  boon-work or a charter of freedom, promotion or dismissal, informing or a
+  timely warning.
+
 ## Storylines, the people around you, fear and love (v1.9)
 
 - **Storylines.** Twenty-six tales that run through a life, a chapter every two
