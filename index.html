@@ -1104,7 +1104,8 @@ function cur() {
   if (!y || y.age !== S.age) { y = { age: S.age, year: S.year, lines: [] }; S.log.push(y); if (S.log.length > 160) S.log.splice(0, S.log.length - 160); }
   return y;
 }
-function say(t, c) { if (t) cur().lines.push({ t, c: c || '' }); }
+const plainLine = t => String(t).replace(/<svg[\s\S]*?<\/svg>\s*/g, '').replace(/<[^>]+>/g, '').trim();
+function say(t, c) { if (t) t = plainLine(t); if (t) cur().lines.push({ t, c: c || '' }); }
 function ill(key) {
   if (S.illness || !S.alive) return;
   S.illness = key; say(`You fell ill with ${ILLS[key].n}.`, 'bad');
@@ -18571,7 +18572,7 @@ function choose(e, ch, c) {
   try { out = ch.fx(c); } catch (err) { console.error(err); out = 'Something strange happened, and then it passed.'; }
   const fx = FX; FX = null;
   if (out == null) { nextModal(); return; }
-  say(e.id === 'confirm' ? out : `${e.icon || '📜'} ${out}`, 'ev');
+  say(e.id === 'confirm' ? out : `${/</.test(e.icon || '') ? '📜' : e.icon || '📜'} ${out}`, 'ev');
   showResult(e.icon, out, fx);
   render(); save();
 }
@@ -19206,7 +19207,7 @@ function showStatInfo(k) {
   showResult(STATS.find(x => x.k === k).i, `${n} ${v} of 100. ${d} ${STAT_TIP[k] || ''}`, null, n);
 }
 function chronHTML() {
-  return S.log.map(y => `<section class="yr"><div class="yr-m"><span class="yr-a">${y.age === 0 && y.lines[0] && y.lines[0].c === 'first' ? '✦' : y.age}</span><span class="yr-y">${y.year}</span></div><div class="yr-t">${y.lines.map(l => `<p class="ln ${l.c}">${esc(l.t)}</p>`).join('')}</div></section>`).join('');
+  return S.log.map(y => `<section class="yr"><div class="yr-m"><span class="yr-a">${y.age === 0 && y.lines[0] && y.lines[0].c === 'first' ? '✦' : y.age}</span><span class="yr-y">${y.year}</span></div><div class="yr-t">${y.lines.map(l => `<p class="ln ${l.c}">${esc(plainLine(l.t))}</p>`).join('')}</div></section>`).join('');
 }
 function render() {
   if (!S) return;
