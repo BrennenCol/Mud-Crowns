@@ -152,7 +152,7 @@ the store text to paste, and `store/` the screenshots. See
   harbours.
 - **Holdings you run**: 55 things to own, from geese to a silver mine and a
   stone castle. Each grows through three levels, has a plan to choose every
-  year (breed or sell, gamble on a cash crop, water the ale...), and can be
+  year (breed or sell, plant a risky cash crop, water the ale...), and can be
   given a manager.
 - **Your counties**: set rents, build markets, mills, churches, schools and
   barracks, and keep your people content, or face a rising.

@@ -38,7 +38,7 @@ without a review):
 ```
 Live a whole life in a medieval kingdom, one year at a time.
 
-Be born a serf in a muddy village, a smith's child, a merchant's heir or a royal prince. Each year you have three deeds: work your trade, court a sweetheart, pray, train, scheme, gamble or march to war. Then turn the page and see what the year brings.
+Be born a serf in a muddy village, a smith's child, a merchant's heir or a royal prince. Each year you have three deeds: work your trade, court a sweetheart, pray, train, scheme, feast or march to war. Then turn the page and see what the year brings.
 
 A WORLD THAT LIVES WITHOUT YOU
 Kings age, marry and die. Heirs fight over empty thrones. Plague and famine sweep the counties, outlaws and knights make their names, and your neighbours have lives of their own. The chronicle tells you all of it.
@@ -82,7 +82,7 @@ Answer the questionnaires honestly. For this game:
 | Sexual content or nudity | No (courtship, marriage and royal favourites in a line of text, nothing described or shown) |
 | Mature or suggestive themes | From 1.9: Frequent (affairs, mistresses, seduction, scandal, crime, executions; described in a line of text, never shown) |
 | Alcohol, tobacco or drugs | References only (taverns, ale, drunkenness) |
-| Simulated gambling | Yes: dice games with in-game silver, no real money |
+| Simulated gambling | **None** (removed in 1.11.1: Apple does not allow simulated gambling from individual developers) |
 | Real-money gambling | No |
 | Profanity or crude humour | Infrequent and mild |
 | Horror or fear themes | Infrequent and mild |

@@ -524,7 +524,7 @@ html,body{overscroll-behavior:none}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.11.0';
+const APP_VERSION = '1.11.1';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -1490,18 +1490,6 @@ function joust() {
   st('health', -R(5, 16)); st('renown', -2); st('happy', -4);
   return 'You were unhorsed on the first pass and landed in a heap of mud and pride.';
 }
-function dice(x) {
-  if (P(.06)) { st('health', -R(4, 10)); return 'The soldier accused you of loaded dice and broke a stool over your head.'; }
-  if (P(.47)) { coin(x); st('happy', 4); return `Double sixes! You won ${x} silver.`; }
-  coin(-x); st('happy', -4); return `Snake eyes. You lost ${x} silver.`;
-}
-function diceEvent() {
-  const all = Math.max(0, S.coin);
-  const ch = [2, 10, 50].filter(x => x <= all).map(x => ({ t: `Wager ${x} silver`, fx: () => dice(x) }));
-  if (all > 50) ch.push({ t: `Wager everything (${all} silver)`, fx: () => dice(all) });
-  ch.push({ t: 'Walk away', fx: () => 'You kept your purse shut. The soldier spat on the floor.' });
-  return { id: 'dice', icon: '🎲', text: () => 'The dice clatter across the tavern table. A one-eyed soldier grins at you. "Care to wager?"', choices: ch };
-}
 function stars(n) { const s = Math.max(1, Math.min(5, Math.round(n / 20))); return '★'.repeat(s) + '☆'.repeat(5 - s); }
 function makeSuitor() {
   const sx = S.sex === 'm' ? 'f' : 'm';
@@ -1588,7 +1576,7 @@ const DEEDS = [
   { k: 'cunning', g: 'Body', i: '🌿', n: 'Seek the cunning woman', d: 'Herbs, charms, and gossip.', cost: () => S.age < 16 ? 0 : 2, min: 0, run: () => { if (S.illness) { if (P(.42)) { const n = cure(); return `Her poultice of moss and honey drew out ${n}. The priest must never know.`; } return 'Her charm of dried frog did nothing, but she was very confident about it.'; } if (P(.5)) { st('health', 2); return 'She gave you a bitter tonic. You feel oddly invigorated.'; } st('happy', 3); return 'She read your palm and said you will die "eventually." Comforting.'; } },
   { k: 'tales', g: 'Leisure', i: '🗣️', n: 'Spin tall tales at the well', d: 'Fame, or ridicule.', min: 8, run: () => { if (P(.45 + S.stats.wits / 300)) { st('renown', R(1, 3)); st('happy', 3); return pick(['Your tale of the giant eel of the millpond had the whole village gasping.', 'You told of a knight who slew a dragon with a ham. They begged for more.']); } st('renown', -2); return 'Nobody believed your story about the talking goat. (It was true.)'; } },
   { k: 'tavern', g: 'Leisure', i: '🍺', n: 'Visit the tavern', d: 'Ale, song, and trouble.', cost: 2, min: 14, run: () => { const r = Math.random(); if (r < .15) { if (P(.5)) { st('renown', 2); st('happy', 3); return 'A brawl broke out, and you finished it standing on a table.'; } st('health', -R(5, 12)); return 'A brawl broke out. You were in it. Then you were under it.'; } if (r < .25) { st('happy', 2); return 'You woke in a haystack two villages over with no memory of the night.'; } if (r < .37) { st('wits', 2); return `You heard juicy gossip about the priest and the ${pick(["baker's wife", 'miller', 'abbess', "reeve's goat"])}.`; } st('happy', R(3, 7)); return 'A merry night of ale, song, and terrible jokes.'; } },
-  { k: 'dice', g: 'Leisure', i: '🎲', n: 'Gamble at dice', d: 'Fortune favors the bold.', min: 14, can: () => S.coin >= 2 || 'You need at least 2 silver', run: () => ({ event: diceEvent() }) },
+  { k: 'dice', g: 'Leisure', i: '🍺', n: 'Spend an evening at the tavern', d: 'Ale, songs and old stories. Joy, and now and then trouble.', min: 14, run: () => { st('happy', R(3, 6)); if (P(.12)) { st('health', -R(3, 8)); return 'A one-eyed soldier took exception to your singing, and a stool was broken over somebody. Possibly you.'; } if (P(.2)) { st('renown', 1); return 'You told the story about the bishop and the eel, and the whole alehouse bought you a drink.'; } return pick(['Ale, a fire, and a song about a drowned miller that made everyone cry.', 'You listened to an old sailor lie about sea serpents until closing.', 'You sang the one about the friar and the goose, and nobody threw anything.']); } },
   { k: 'clothes', g: 'Leisure', i: '🧥', n: 'Buy fine clothes', d: 'Look the part.', cost: () => (S.cls === 'noble' || S.cls === 'royal') ? 40 : 12, min: 14, run: () => { st('looks', R(2, 5)); st('renown', 1); st('happy', 2); return `You bought ${pick(['a fur-trimmed cloak', 'pointed shoes of absurd length', 'a dyed woolen kirtle', 'a fine linen chemise', 'a hat with a pheasant feather'])}. Heads turned.`; } },
   { k: 'feast', g: 'Leisure', i: '🍗', n: 'Host a feast', d: 'Win friends and renown.', cost: () => (S.cls === 'noble' || S.cls === 'royal') ? 60 : 25, min: 18, run: () => { st('renown', R(4, 8)); st('happy', 6); S.kin.filter(k => k.alive).forEach(k => { k.bond = clamp(k.bond + 4); }); return `You laid on ${pick(['roast swan and eel pie', 'a whole roast ox', 'venison pasties and spiced wine', 'a sugar sculpture shaped like a castle'])}. They will talk of it for years.`; } },
   { k: 'joust', g: 'Leisure', i: '🐎', n: 'Ride in a tourney', d: 'Glory, gold, or a lance to the face.', min: 16, can: () => hasAsset('horse') || hasAsset('warhorse') || inTrack('knight') || 'You need a horse (see Holdings)', run: () => joust() },
@@ -1873,7 +1861,7 @@ const EVENTS = [
     text: c => `Heralds announce a grand tournament at ${c.where}, with a purse of silver for the champion of the joust.`,
     choices: [
       { t: 'Enter the lists', ok: () => inTrack('knight') || hasAsset('horse'), why: 'You need a horse', fx: () => joust() },
-      { t: 'Wager on a champion (10 silver)', ok: () => S.coin >= 10, fx: () => { if (P(.45)) { coin(R(8, 20)); st('happy', 4); return 'Your champion unhorsed three rivals, and your purse grew fat!'; } coin(-10); return 'Your champion was knocked flat on the first pass. So was your purse.'; } },
+      { t: 'Cheer for the local champion', fx: () => { st('happy', R(2, 5)); if (P(.45)) return 'Your champion unhorsed three rivals, and you cheered yourself hoarse.'; return 'Your champion was knocked flat on the first pass. You booed the herald, which helped.'; } },
       { t: 'Watch from the stands', fx: () => { st('happy', R(3, 6)); return 'Thundering hooves, splintering lances, and roast chestnuts. A glorious day out.'; } },
     ] },
   { id: 'levy', min: 16, max: 48, w: 1.6, cool: 5, icon: '🛡️', cond: () => !S.vows && !S.ruling && !isMil() && S.cls !== 'royal' && !(hist() && S.sex === 'f' && !S.flags.disguise),
@@ -3259,7 +3247,7 @@ EVENTS.push(
     text: () => 'The shire holds an archery contest at the butts. The prize is a silver arrow and five silver pennies.',
     choices: [
       { t: 'Compete', fx: () => { if (P(.3 + S.stats.health / 400 + sk(jobFam()) / 40)) { coin(5); st('renown', R(5, 9)); st('happy', 6); return 'You split your rival’s arrow in the gold. The silver arrow is yours!'; } st('happy', -2); return 'You came fourth, behind a twelve-year-old girl.'; } },
-      { t: 'Bet on the favourite (5 silver)', ok: () => S.coin >= 5, fx: () => { coin(-5); if (P(.5)) { coin(R(8, 14)); return 'The favourite won, and so did you.'; } return 'The favourite sneezed at the crucial moment.'; } },
+      { t: 'Cheer for the favourite', fx: () => { st('happy', R(2, 4)); if (P(.5)) return 'The favourite won, and you shouted until you were hoarse.'; return 'The favourite sneezed at the crucial moment.'; } },
     ] },
   { id: 'ennoble', min: 25, max: 85, once: true, w: 5, icon: '📜', cond: () => !['noble', 'royal'].includes(S.cls) && !S.ruling && tierOfJob() === 'high' && S.stats.renown >= 45,
     text: () => `${KT()} ${S.king}, impressed by your service as ${aOr(jobTitle())}, offers you letters patent of nobility. You would be the first of your blood to bear a coat of arms. The heralds charge 200 silver.`,
@@ -3499,7 +3487,7 @@ EVENTS.push(
     ] },
   { id: 'bear', min: 6, max: 70, w: 1.2, cool: 6, icon: '🐻', text: () => 'A travelling showman leads a dancing bear into the square. It looks miserable, and it is looking straight at you.',
     choices: [
-      { t: 'Bet on the bear in a wrestling match (5 silver)', ok: () => S.coin >= 5, fx: () => { coin(-5); if (P(.5)) { coin(R(8, 15)); return 'The bear won, obviously. So did you.'; } return 'The bear lost interest halfway through and sat down. The bet was void, and so was your silver.'; } },
+      { t: 'Pay a penny to watch it dance', ok: () => S.coin >= 1, why: 'You have no penny', fx: () => { coin(-1); if (P(.5)) { st('happy', 3); return 'The bear danced, badly, to a pipe and drum. The children loved it.'; } st('happy', -2); st('piety', 1); return 'The bear danced, and you were sorry you had paid to see it. It looked so tired.'; } },
       { t: 'Free the bear in the night', fx: () => { if (P(.6)) { st('piety', 5); st('happy', 6); return 'You cut its rope and it lumbered into the forest. It looked back once. You like to think it said thank you.'; } st('health', -R(8, 15)); return 'The bear, startled, swatted you into a water trough before leaving.'; } },
       { t: 'Wrestle the bear yourself', fx: () => { if (P(.04)) { die('wrestling a bear at the fair, for a bet'); return 'You wrestled the bear. The bear won.'; } if (P(.35 + S.stats.health / 400)) { st('renown', 10); return 'You threw the bear! (It slipped.) Ballads are already being written.'; } st('health', -R(10, 20)); return 'Two broken ribs and the best story in the county.'; } },
     ] },
@@ -3544,7 +3532,7 @@ EVENTS.push(
   { id: 'wrestling', min: 15, max: 45, w: 1.4, cool: 4, icon: '🤼', text: () => 'The great fair holds a wrestling match. The prize is a fat ram and ten silver.',
     choices: [
       { t: 'Enter the ring', fx: () => { if (P(.25 + S.stats.health / 250)) { coin(10); st('renown', 6); st('happy', 6); return 'You threw the champion of three counties! The ram is yours. You are not sure what to do with it.'; } st('health', -R(4, 10)); return 'You were folded in half by a blacksmith named Big Wat.'; } },
-      { t: 'Bet on Big Wat (5 silver)', ok: () => S.coin >= 5, fx: () => { coin(-5); if (P(.6)) { coin(R(8, 12)); return 'Big Wat folded everyone in half. Easy money.'; } return 'Big Wat slipped on a cowpat.'; } },
+      { t: 'Cheer for Big Wat', fx: () => { st('happy', R(2, 4)); if (P(.6)) return 'Big Wat folded everyone in half, and you chanted his name with the crowd.'; return 'Big Wat slipped on a cowpat. The crowd went very quiet.'; } },
       { t: 'Just watch and eat pies', fx: () => { st('happy', 4); return 'Three pies, two bouts, one magnificent day.'; } },
     ] },
   { id: 'calf', min: 14, max: 90, once: true, w: 1, icon: '🐄', cond: () => S.assets.some(a => ['cow', 'goat', 'pig'].includes(a.key)),
@@ -4915,7 +4903,7 @@ const HACTS = {
   ],
   farm: [
     { k: 'usual', i: '🌾', n: 'Grow the usual crop', d: 'Safe and steady.', fx: a => { a.boost = 1.05; return 'Barley and beans, as your grandfather grew. Nobody ever went hungry doing it.'; } },
-    { k: 'gamble', i: '🎲', n: 'Gamble on a cash crop', d: 'Saffron, woad or flax: a fortune or a failure.', fx: a => { a.crop = P(.55) ? 'good' : 'bad'; a.boost = a.crop === 'good' ? 1.9 : .35; return `You planted ${pick(['saffron crocuses', 'woad for the dyers', 'flax for the linen weavers'])}. You will know at harvest whether it was genius.`; } },
+    { k: 'gamble', i: '🎲', n: 'Plant a risky cash crop', d: 'Saffron, woad or flax: a fortune or a failure.', fx: a => { a.crop = P(.55) ? 'good' : 'bad'; a.boost = a.crop === 'good' ? 1.9 : .35; return `You planted ${pick(['saffron crocuses', 'woad for the dyers', 'flax for the linen weavers'])}. You will know at harvest whether it was genius.`; } },
     { k: 'fallow', i: '🍂', n: 'Let it rest fallow', d: 'Nothing this year, much more next year.', fx: a => { a.boost = .3; a.next = 1.6; return 'You let the land rest under clover and sheep dung. It will thank you next year.'; } },
   ],
   shop: [
@@ -7200,7 +7188,7 @@ EVENTS.push(
     choices: [
       { t: 'Pop it back in, right there', fx: () => { if (P(.5 + S.stats.health / 400 + sk('heal') / 40)) { const g = R(5, 12); coin(g); st('renown', 8); jobPerf(10); const p = makePeer({ rv: 1, bond: 10 }); p.job = 'Physician'; S.kin.push(p); return `A heave, a crunch, and the howling stopped. The merchant paid you ${g} silver. The physician, ${p.name}, will never forgive you (see Kin).`; } st('renown', -5); return 'It would not go back. The physician smiled thinly, bled the merchant, and charged him for the lesson.'; } },
       { t: 'Bow to his learning', fx: () => { st('renown', -2); st('wits', 1); return 'He cast the merchant’s horoscope, bled him and sent a bill. The shoulder stayed out for a week, and then the merchant came to you.'; } },
-      { t: 'Wager him 10 silver you can fix it', ok: () => S.coin >= 10, fx: () => { if (P(.5 + S.stats.health / 400)) { coin(10); st('renown', 10); return 'Click. The merchant wept with relief, the crowd cheered, and the physician paid up with a face like old vinegar.'; } coin(-10); st('renown', -3); return 'The shoulder fought you and won. The physician picked up your silver with two fingers, as if it were dirty.'; } },
+      { t: 'Push the physician aside and set it yourself', fx: () => { if (P(.5 + S.stats.health / 400)) { coin(R(4, 10)); st('renown', 10); return 'Click. The merchant wept with relief, pressed a few silver pennies on you, and the physician went off with a face like old vinegar.'; } st('renown', -3); return 'The shoulder fought you and won. The physician put it back in himself, slowly, so that everyone could see how it should be done.'; } },
     ] },
   /* ----- the river ----- */
   { id: 'ja_weir', min: 14, max: 75, w: 3, cool: 5, icon: '🎣', cond: () => jobIn('ja_ferry', 'ja_bargeman', 'ja_boatwright'),
@@ -8627,7 +8615,7 @@ EVENTS.push(
       init: () => ({ nm: pick(['Sir Lancelot', 'Lightning', 'Old Grumble', 'Blessed Agnes', 'the Bishop']), fav: pick(['Great Hugh', 'Thunderfoot', 'the Abbess']) }),
       text: c => `It is the great snail race, held every year on the long table of the ${S.village} alehouse. Your snail, ${c.nm}, has been in training for weeks: lettuce, prayer and encouragement.`,
       choices: [
-        { t: c => `Bet on ${c.nm} (2 silver)`, ok: () => S.coin >= 2, fx: c => { ea_pay(2); if (P(.35)) { const g = R(6, 10); coin(g); st('happy', 6); return `${cap(c.nm)} crossed the line by a horn’s length after a gripping half hour. You won ${g} silver and have retired ${c.nm} to a life of ease in the cabbage bed.`; } st('happy', -2); return `Halfway down the table ${c.nm} stopped, turned round and went back to the start. You admire the independence, if not the timing.`; } },
+        { t: c => `Race ${c.nm} for the honour of the alehouse`, fx: c => { if (P(.35)) { st('happy', 6); st('renown', 2); return `${cap(c.nm)} crossed the line by a horn’s length after a gripping half hour. You have retired ${c.nm} to a life of ease in the cabbage bed, a champion.`; } st('happy', -2); return `Halfway down the table ${c.nm} stopped, turned round and went back to the start. You admire the independence, if not the timing.`; } },
         { t: 'Cheer like a madman', fx: c => { st('happy', 4); if (P(.3)) { st('renown', 3); return `${cap(c.nm)} won! The alehouse made you Master of Snails for a year, with a hat made from a cabbage leaf.`; } return `${cap(c.nm)} came fourth of five. You cheered as if it had won. That is what love is.`; } },
         { t: c => `Eat ${c.fav}, the favourite, the night before`, fx: c => { st('piety', -2); st('happy', 3); if (P(.6)) { st('renown', -2); return `You ate ${c.fav} with garlic the night before the race. Nobody can prove anything. The village has its suspicions.`; } st('renown', -5); return `You ate ${c.fav} with garlic, and were seen. You are banned from the alehouse until Lent, and the snail-folk of ${S.village} will never forgive you.`; } },
       ] },
@@ -9300,7 +9288,7 @@ EVENTS.push(
       choices: [
         { t: 'Lead them', fx: () => { if (P(.4 + S.stats.renown / 300)) { coin(R(10, 25)); st('renown', 6); jobPerf(-8); return 'The paymaster found three months’ silver in a great hurry. The men call you the Paymaster’s Nightmare. Your captain calls you other things.'; } jobPerf(-25); st('health', -R(5, 10)); return 'The marshal’s horsemen met you at the paymaster’s tent. You were flogged before the whole army as a warning.'; } },
         { t: 'Stand with your captain', fx: () => { jobPerf(14); st('renown', -3); return 'You stood by the captain’s tent with your spear while the men shouted. The mutiny fizzled. The captain remembers. So do the men.'; } },
-        { t: 'Talk them down with a joke and a dice game', fx: () => { if (P(.4 + S.stats.wits / 250)) { jobPerf(8); st('renown', 4); st('happy', 4); return 'You started a dice game by the fire and told the one about the bishop and the eel. By the time the pay came, the mutiny was forgotten.'; } st('happy', -3); return 'Nobody laughed. They mutinied without you, and got paid.'; } },
+        { t: 'Talk them down with a joke and a song', fx: () => { if (P(.4 + S.stats.wits / 250)) { jobPerf(8); st('renown', 4); st('happy', 4); return 'You started a song by the fire and told the one about the bishop and the eel. By the time the pay came, the mutiny was forgotten.'; } st('happy', -3); return 'Nobody laughed. They mutinied without you, and got paid.'; } },
       ] },
 
     { id: 'eb_ransom', min: 15, max: 70, w: 1.5, cool: 8, icon: '🛡️', cond: () => isMil(),
@@ -9353,12 +9341,12 @@ EVENTS.push(
           st('happy', -2); return 'The letters were in Italian. You nodded wisely at them. He left, offended.'; } },
       ] },
 
-    { id: 'eb_lottery', min: 12, max: 90, w: 1, cool: 6, icon: '🎟️',
-      text: () => 'To pay for its new spire, the cathedral chapter is holding a great lottery for the fabric fund. A silver penny a ticket. The prize is a fat cow named Blessed Margery, and a year off Purgatory.',
+    { id: 'eb_lottery', min: 12, max: 90, w: 1, cool: 6, icon: '⛪',
+      text: () => 'To pay for its new spire, the cathedral chapter is collecting for the fabric fund. Every giver’s name will be read out at Easter, and the greatest giver’s will be carved on the spire, next to a gargoyle with the dean’s face.',
       choices: [
-        { t: 'Buy one ticket (1 silver)', ok: () => S.coin >= 1, fx: () => { coin(-1); st('piety', 1); if (P(.05)) return eb_winCow(); return 'Your ticket lost. But your penny is now a stone in the spire, high up near the weathercock. You can almost see it.'; } },
-        { t: 'Buy twenty tickets (20 silver)', ok: () => S.coin >= 20, fx: () => { coin(-20); st('piety', 3); if (P(.3)) return eb_winCow(); return 'Twenty tickets, twenty losers. The dean was very grateful. The dean’s cousin won the cow.'; } },
-        { t: 'Bribe the sexton to rig the draw (5 silver)', ok: () => S.coin >= 5, fx: () => { coin(-5); if (P(.4)) { st('piety', -6); return eb_winCow() + ' Nobody can prove a thing. The sexton has a new pig, though.'; } st('renown', -6); st('piety', -4); return `The dean found your ticket up the sexton’s sleeve. ${caught(1)}`; } },
+        { t: 'Give a penny (1 silver)', ok: () => S.coin >= 1, fx: () => { coin(-1); st('piety', 1); return 'Your penny is now a stone in the spire, high up near the weathercock. You can almost see it.'; } },
+        { t: 'Give twenty silver', ok: () => S.coin >= 20, fx: () => { coin(-20); st('piety', 3); st('renown', 3); return 'Your name was read out first at Easter, and the dean bowed to you in the street. The gargoyle looks nothing like him.'; } },
+        { t: 'Help yourself from the collection box', fx: () => { if (P(.6)) { const g = R(3, 9); coin(g); st('piety', -6); return `${g} silver, out of the box and up your sleeve. The spire will be a little shorter.`; } st('renown', -6); st('piety', -4); return `The sexton caught you with your hand in the box. ${caught(1)}`; } },
       ] },
 
     { id: 'eb_riot', min: 14, max: 80, w: 1, cool: 10, icon: '🪵', cond: () => !S.ruling,
@@ -9561,9 +9549,9 @@ function dxChessEvent() {
     text: () => `Word has got round that you play a sharp game of chess. ${cap(great)} has a board of ivory and ebony, and a temper to match.`,
     choices: [
       { t: 'Play the priest for a jug of ale', fx: () => { if (P(.4 + lv * .1)) { st('happy', 4); st('wits', 1); return 'Checkmate with a humble pawn. The priest poured the ale and muttered something unchristian.'; } st('happy', -1); return 'The priest won, then explained exactly where you went wrong, for an hour.'; } },
-      { t: () => `Challenge ${great} for 5 silver`, ok: () => S.coin >= 5 && S.age >= 12, why: 'You need 5 silver to wager', fx: () => {
-        if (P(.15 + lv * .1 + S.stats.wits / 500)) { coin(5); st('renown', R(3, 5)); feat('dx_checkmate'); if (P(.25)) { st('happy', 2); return `Checkmate! ${cap(great)} stared at the board, then knocked it over "by accident". Everyone saw.`; } return `Checkmate! ${cap(great)} paid up and demanded a rematch next Lent.`; }
-        coin(-5); return `${cap(great)} took your queen, your rooks and your 5 silver, in that order.`;
+      { t: () => `Challenge ${great} to a game`, ok: () => S.age >= 12, why: 'Too young to be taken seriously', fx: () => {
+        if (P(.15 + lv * .1 + S.stats.wits / 500)) { st('renown', R(3, 5)); feat('dx_checkmate'); if (P(.25)) { st('happy', 2); return `Checkmate! ${cap(great)} stared at the board, then knocked it over "by accident". Everyone saw.`; } return `Checkmate! ${cap(great)} shook your hand and demanded a rematch next Lent.`; }
+        st('renown', -1); return `${cap(great)} took your queen, your rooks and your pride, in that order.`;
       } },
       { t: 'Study the old chess problems', fx: () => { const up = dxUp('chess', S.stats.wits / 400); st('wits', R(1, 3)); return `You puzzled over a problem in which a king must escape seven knights.${up || ' The king did not escape.'}`; } },
     ] };
@@ -10021,7 +10009,7 @@ FEATS.push(
   { k: 'dx_everPupil', i: '🎓', n: 'Ever the Pupil', d: 'Become skilled at riding, swordplay, Latin, a foreign tongue and swimming.' },
   { k: 'dx_oldJaws', i: '🐟', n: 'The One That Did Not Get Away', d: 'Land Old Jaws, the monstrous pike of the millpond.' },
   { k: 'dx_prizeLeek', i: '🥬', n: 'The Prize Leek', d: 'Win the parish prize with a leek as long as your arm.' },
-  { k: 'dx_checkmate', i: '♟️', n: 'Checkmate, My Lord', d: 'Beat your betters at chess, for money.' },
+  { k: 'dx_checkmate', i: '♟️', n: 'Checkmate, My Lord', d: 'Beat your betters at chess, before witnesses.' },
   { k: 'dx_breeches', i: '🍺', n: 'Passed the Breeches Test', d: 'Brew ale so good the ale-conner’s leather breeches do not stick to the bench.' },
   { k: 'dx_roodAngel', i: '👼', n: 'Angel on the Rood Screen', d: 'Carve an angel for the parish church.' },
   { k: 'dx_altarCloth', i: '🪡', n: 'Needle of Gold', d: 'Embroider an altar cloth fit for a bishop.' },
@@ -10128,7 +10116,7 @@ TRIALS.push(
   { k: 'dx_tWool', i: '🚢', n: 'The Wool King', d: 'Be born a serf or free peasant, then own a merchant cog and a riverside warehouse with 3,000 silver in your strongbox.', hint: 'Start low. Win your freedom, buy sheep, trade at every fair, then build a warehouse and launch a ship.',
     ok: () => ['serf', 'peasant'].includes(S.birthCls) && hasAsset('cog') && hasAsset('warehouse') && S.coin >= 3000,
     prog: () => !['serf', 'peasant'].includes(S.birthCls) ? 'You must be born a serf or free peasant' : `${hasAsset('cog') ? 'A cog' : 'No cog'}, ${hasAsset('warehouse') ? 'a warehouse' : 'no warehouse'}, ${Math.max(0, S.coin)} of 3,000 silver` },
-  { k: 'dx_tSingle', i: '🗝️', n: 'Never Wed, Never Poor', d: 'Reach 60 without ever marrying or ending a year in debt, with 500 silver to your name.', hint: 'Turn away every matchmaker, never gamble what you cannot lose, and save. Holy vows count as not marrying.',
+  { k: 'dx_tSingle', i: '🗝️', n: 'Never Wed, Never Poor', d: 'Reach 60 without ever marrying or ending a year in debt, with 500 silver to your name.', hint: 'Turn away every matchmaker, never risk what you cannot lose, and save. Holy vows count as not marrying.',
     ok: () => S.age >= 60 && !dxEverWed() && !S.flags.dx_debt && S.coin >= 500,
     prog: () => dxEverWed() ? 'Failed: you have married' : S.flags.dx_debt ? 'Failed: you have been in debt' : `Age ${S.age} of 60, ${Math.max(0, S.coin)} of 500 silver` },
   { k: 'dx_tClean', i: '😇', n: 'Clean Hands, Pure Heart', d: 'Reach Piety 100 and Renown 80 without ever being caught for a crime.', hint: 'Pray, keep vigils, give alms, visit the sick, and stay well away from the lord’s orchard.',
@@ -10784,7 +10772,7 @@ EVENTS.push(
     text: c => `A long hot summer and a golden September: the grapes in your ${ec_an(c.a)} hang fat and dusty and sweet as honey. Your old vintner swears on his grandmother that this could be the vintage of the century, if it is handled right.`,
     choices: [
       { t: c => `Pick late, and press with great care (${c.cost} silver)`, ok: c => S.coin >= c.cost, why: 'You cannot afford it', fx: c => { coin(-c.cost); arcSet('ec_vint', 1); S.flags.ec_vint = { y: S.year, q: 2 }; return 'Forty casks, each sealed with your own hand, are sleeping in the cellar. The vintner sleeps beside them.'; } },
-      { t: 'Pick late, and gamble on the noble rot', fx: () => { arcSet('ec_vint', 1); S.flags.ec_vint = { y: S.year, q: P(.5) ? 3 : 1 }; return 'You left the grapes to shrivel on the vine while the whole village laughed. The vintner now prays twice a day.'; } },
+      { t: 'Pick late, and risk the noble rot', fx: () => { arcSet('ec_vint', 1); S.flags.ec_vint = { y: S.year, q: P(.5) ? 3 : 1 }; return 'You left the grapes to shrivel on the vine while the whole village laughed. The vintner now prays twice a day.'; } },
       { t: 'Pick now, and sell it all young', fx: c => { coin(ec_inc(c.a, .6)); c.a.boost = 1.2; arcSet('ec_vint', 9); return 'Good wine, sold fast and drunk faster. Nobody will remember it, but your purse will.'; } },
     ] },
   { id: 'ec_vint2', min: 16, max: 110, w: 5, once: true, icon: '🍷', cond: () => hasAsset('vineyard') && arcAt('ec_vint', 1, 2) && !!S.flags.ec_vint,
@@ -10837,7 +10825,7 @@ EVENTS.push(
     init: () => ({ a: ec_asset('stud'), nm: pick(['Thunderhoof', 'Saint George', 'Biscuit', 'Lightning Jack']), t: pick(TOWNS) }),
     text: c => `In your ${ec_an(c.a)}, your best mare has foaled a colt with legs like a heron and a white blaze like a lightning bolt. By midsummer he is outrunning grown horses. The grooms have named him ${c.nm}.`,
     choices: [
-      { t: c => `Race him at the ${c.t} fair`, fx: c => { if (P(.55)) { const g = ec_inc(c.a, .5); coin(g); st('renown', 4); c.a.boost = 1.3; return `${c.nm} won by six lengths, then turned round and ran the course again for fun. ${g} silver in prizes and wagers.`; } st('happy', 1); return `${c.nm} was leading by a furlong when he stopped to eat a lady’s hat.`; } },
+      { t: c => `Race him at the ${c.t} fair`, fx: c => { if (P(.55)) { const g = ec_inc(c.a, .5); coin(g); st('renown', 4); c.a.boost = 1.3; return `${c.nm} won by six lengths, then turned round and ran the course again for fun. ${g} silver in prizes.`; } st('happy', 1); return `${c.nm} was leading by a furlong when he stopped to eat a lady’s hat.`; } },
       { t: 'Sell him to a great lord', fx: c => { const g = ec_inc(c.a, .9); coin(g); st('renown', 1); return `Lord ${pick(SUR.noble)} paid ${g} silver without haggling, which tells you that you should have asked for more.`; } },
       { t: 'Keep him to breed champions', fx: c => { const t = ec_grow(c.a); if (!t) c.a.next = 1.4; st('renown', 2); return `In ten years half the warhorses in the realm will carry ${c.nm}’s blaze.${t}`; } },
       { t: () => S.ruling ? 'Keep him as your own charger' : `Present him to ${KT()} ${S.king}`, fx: c => { if (S.ruling) { st('happy', 5); st('renown', 3); return `You rode ${c.nm} at the head of your army on Saint George’s day. The crowd cheered the horse loudest.`; } st('renown', 6); const r = rulerKin(); if (r) bond(r, 8); if (P(.3)) { coin(ec_inc(c.a, .5)); return `The monarch rode ${c.nm} once and sent you a purse of silver and a very warm letter.`; } return `The monarch rode ${c.nm} once and talked about nothing else for a month. Your name is known at court now.`; } },
@@ -16127,7 +16115,7 @@ PETITIONS.push(
           const p = .15 + S.stats.health / 500 + (inTrack('knight') ? .1 + S.job.level * .05 : 0) + (hasAsset('warhorse') ? .1 : 0);
           if (P(p)) { st('renown', 15); st('happy', 8); S.flags.wins = (S.flags.wins || 0) + 1; if (!c.p.fake) c.p.fame = Math.max(10, c.p.fame - 15); wNews(`${seenName()} ${S.last} unhorsed ${c.p.t} at the tourney of ${here()}! The heralds are still arguing about it.`, '🏇', true); checkFeats(); return `You struck the champion’s shield square and ${P3(c.p).he} went over the crupper into the mud. The crowd went mad, and ${P3(c.p).he} shook your hand.`; }
           st('health', -R(6, 16)); st('renown', 1); return 'You lasted one pass, which is one more than most. You are told the landing was magnificent.'; } },
-        { t: 'Wager on the champion (5 silver)', ok: () => S.coin >= 5, why: 'Costs 5 silver', fx: () => { if (P(.7)) { const g = R(3, 8); coin(g); return `The champion won, as champions do, and you won ${g} silver.`; } coin(-5); return 'A squire from nowhere unhorsed the champion. Everyone else is delighted. You are 5 silver poorer.'; } },
+        { t: 'Cheer for the champion from the stands', fx: () => { st('happy', R(3, 6)); if (P(.7)) return 'The champion won, as champions do, and you cheered yourself hoarse.'; return 'A squire from nowhere unhorsed the champion. Everyone else is delighted. You are inconsolable.'; } },
         { t: c => c.k ? `Ask ${c.p.t} to take ${c.k.name} as squire` : 'Offer to carry the champion’s lances', fx: c => {
           if (c.k) { if (P(.3 + S.stats.renown / 300)) { c.k.job = `Squire to ${c.p.t}`; bond(c.k, 12); st('renown', 3); return `${c.p.t} looked ${c.k.name} up and down and said, "${P3(c.k).He}’ll do." ${c.k.name} has not stopped grinning since.`; } bond(c.k, -3); return `${c.p.t} laughed kindly and said to come back when ${c.k.name} can lift a lance.`; }
           if (P(.4)) { st('renown', 3); return 'You carried lances all day and held the champion’s horse. Your name is in no song, but you were there.'; }
@@ -25242,7 +25230,7 @@ function workHTML() {
     if (acts.length) {
       h += `<h3 class="sec">${S.job.track === 'thief' ? 'Jobs for the Guild' : 'Special work for your trade'}</h3>`;
       if (S.job.track === 'thief') h += `<div class="heat"><span>Heat ${S.heat || 0}</span><span class="bar" role="img" aria-label="Heat ${S.heat || 0} of 100"><i class="${(S.heat || 0) >= 60 ? 'lo' : (S.heat || 0) >= 30 ? 'md' : 'hi'}" style="width:${S.heat || 0}%"></i></span></div><p class="hint">The hotter you are, the likelier the noose. Heat cools a little every year. Each job uses one deed.</p>`;
-      else h += `<p class="hint">Extra things your trade lets you do: earn silver on the side, raise your standing, or take a gamble. Each one <b>uses one of your ${DEEDS_PER_YEAR} deeds</b> for the year (you have ${S.deeds} left), just like actions in Deeds. Your wage is paid anyway when the year ends.</p>`;
+      else h += `<p class="hint">Extra things your trade lets you do: earn silver on the side, raise your standing, or take a risk. Each one <b>uses one of your ${DEEDS_PER_YEAR} deeds</b> for the year (you have ${S.deeds} left), just like actions in Deeds. Your wage is paid anyway when the year ends.</p>`;
       for (const d of acts) { const c = deedCost(d); h += btnItem('trade', d.k, d.i, d.n, d.d, S.deeds <= 0 ? 'No deeds left this year' : tradeWhy(d), c ? `${c} silver` : ''); }
     }
     h += btnItem('quit', '', '🚪', S.job.track === 'crown' ? 'Abdicate the throne' : 'Quit your post', TRACKS[S.job.track].vows ? 'Renounce your vows.' : 'Walk away.', true);
