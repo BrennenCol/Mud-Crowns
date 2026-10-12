@@ -524,7 +524,7 @@ html,body{overscroll-behavior:none}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.11.1';
+const APP_VERSION = '1.12.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -5423,15 +5423,16 @@ function showWhatsNew() {
   store.set(NEWKEY, APP_VERSION);
   modalOpen = true;
   const items = [
-    ['⚖️', 'The punishment fits the crime', 'the stocks or the whip for petty theft if you cannot pay the fine, the pillory for false weights, a year and a day for poaching, the rope for theft, robbery, arson and murder, the stake for a relapsed heretic or a wife who kills her husband, and the traitor’s death for treason.'],
-    ['👑', 'One law for the great', 'no court can try a king. A prince is judged by the crown, and is often pardoned. Lords are tried by their peers, pay fines and blood money, and go to the block instead of the gallows. Clerks claim the church courts, which cannot shed blood.'],
-    ['⛪', 'The old ways out', 'a jury of your neighbours, oath-helpers, the neck verse, trial by combat, turning approver against your friends, or a dash for sanctuary and a life in exile.'],
-    ['⛓️', 'Serve your sentence', 'escape is hard, and the ones who fail are flogged and kept longer. Only the powerful buy their way out.'],
-    ['⚔️', 'Also new', 'fights won by health and training, murder that is remembered, prison life, and lords who are cold to their serfs (1.10).'],
+    ['👑', 'The queen’s household', 'a laundress can rise to chamberer, damsel of the chamber, mistress of the queen’s chamber, and first lady of the queen’s household.'],
+    ['🍼', 'The royal nursery', 'rocker of the royal cradle, nurse to the royal children, lady mistress of the nursery, and royal governess.'],
+    ['⛪', 'Holy women', 'lay sisters, beguines and the grand mistress of a beguinage, hospital sisters and the mistress of a hospital, and above an abbess, the princess-abbess of a royal abbey.'],
+    ['🤲', 'Skilled women', 'sworn midwife and midwife to the queen, silkwoman to the crown, the queen’s embroideress, illuminator, household governess and woman of letters.'],
+    ['🤝', 'Friends in high places', 'tutor children for a fee to gain teaching experience, seek a patroness or patron, and ask your patron for a place. Old dead ends, where the step below was closed to women, now have a way in.'],
+    ['🤴', 'The prince’s eye', 'a rare chance for a very pretty village girl: a prince sees her and brings her to the palace. Keep his heart every year, or be sent home to your village.'],
   ];
-  $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Who is around me</button></div>`;
+  $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Find work</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
-  $('wnCourt').addEventListener('click', () => { modalOpen = false; hideModal(); openSheet('kin'); });
+  $('wnCourt').addEventListener('click', () => { modalOpen = false; hideModal(); openSheet('work'); });
   openModal(); $('wnOk').focus({ preventScroll: true });
 }
 // Only a new feature release (1.4, 1.5...) shows the card; small fixes (1.4.1) do not.
@@ -7861,6 +7862,227 @@ EVENTS.push(
       { t: 'Step aside and let another judge', fx: c => { bond(c.k, 5); st('piety', 2); jobPerf(-6); return `Another brother heard the case. ${c.k.name} got three pilgrimages for penance and a stern look, and still writes to you.`; } },
       { t: 'Judge the case fairly yourself', fx: c => { if (P(.5 + S.stats.wits / 300)) { bond(c.k, 12); st('renown', 4); jobPerf(6); return `You read the book from cover to cover. It was a herbal with pictures of saints in the margins. ${c.k.name} went home free, and in tears.`; } bond(c.k, -30); st('happy', -6); jobPerf(10); return `The book was what they said it was. You gave ${c.k.name} a public penance, and lost a friend for good.`; } },
       { t: 'Warn your friend to flee tonight', fx: c => { bond(c.k, 25); st('piety', -2); if (P(.3)) { st('renown', -8); jobPerf(-25); return `${c.k.name} fled over the sea. Somebody saw you at the door that night, and the bishop has questions.`; } return `${c.k.name} fled over the sea with the book in a flour sack. Nobody saw you knock.`; } },
+    ] },
+);
+}
+
+/* ================= v1.12 Women's roads (prefix wm_) ================= */
+// Roads a woman could really walk in the Middle Ages, in her own name and without passing as a man: the queen's
+// household from the laundry to the head of her chamber, the royal nursery, the beguinages, hospitals and great abbeys,
+// sworn and royal midwives, royal silkwomen and embroiderers, illuminators and women of letters. Also tutoring for
+// hire, seeking a patron or patroness, and asking a patron for a place. The bench, the pulpit, the universities and
+// the host stay closed to women under historical rules, as they were.
+{
+const WM_KEYS = [];
+const wmO = (tier, grp, k, t, i, pay, d, o) => { O(tier, grp, k, t, i, pay, d, o); WM_KEYS.push(k); };
+
+/* The queen's household: Laundress to the Queen → Chamberer → Damsel of the Chamber → Mistress of the Chamber → First Lady */
+wmO('low', 'Household and service', 'wm_qlaundress', mf('Launderer to the Queen’s Household', 'Laundress to the Queen'), '🧺', 8, 'Wash the queen’s linen in lye and rainwater and bleach it on the palace hedges. Lose a single shift and the whole court hears of it.', { fam: 'serve', min: 14, hire: .6, noSerf: 1, req: { health: 30 }, up: 'wm_chamberer' });
+wmO('mid', 'The great household', 'wm_chamberer', mf('Groom of the Chamber', 'Chamberer to the Queen'), '🕯️', 18, 'Make the queen’s bed, lay out her gowns, carry her cushion to chapel, and hold your tongue about everything you see.', { fam: 'court', min: 15, hire: .5, noSerf: 1, req: { looks: 30, wits: 30 }, up: 'wm_damsel' });
+wmO('high', 'The great household', 'wm_damsel', mf('Gentleman of the Chamber', 'Damsel of the Queen’s Chamber'), '🪞', 40, 'Sit with the queen, read to her, sew with her and hear her secrets. More than one king has noticed a damsel of the chamber.', { fam: 'court', min: 17, hire: .45, noSerf: 1, skill: { court: 2 }, req: { looks: 35, wits: 40, renown: 20 }, up: 'wm_mistresscham' });
+wmO('high', 'The great household', 'wm_mistresscham', mf('Chief Gentleman of the Chamber', 'Mistress of the Queen’s Chamber'), '🗝️', 75, 'Rule the queen’s private rooms: her damsels, her jewels, her secrets, and who may see her. Bishops wait at your door.', { fam: 'court', min: 26, hire: .35, noSerf: 1, skill: { court: 6 }, req: { wits: 45, renown: 35 }, infl: 15, up: 'wm_firstlady' });
+wmO('high', 'The great household', 'wm_firstlady', mf('Chamberlain to the Queen', 'First Lady of the Queen’s Household'), '💠', 120, 'Head the whole of the queen’s household, ride at her side on every progress, and speak for her when she will not speak.', { fam: 'court', min: 32, hire: .3, noSerf: 1, skill: { court: 10 }, req: { wits: 50, renown: 50 }, cls: 'noble', ren: 60, infl: 30, raise: 'noble' });
+
+/* The royal nursery: Rocker of the Royal Cradle → Nurse to the Royal Children → Lady Mistress → Royal Governess */
+wmO('mid', 'The great household', 'wm_rocker', 'Rocker of the Royal Cradle', '🎐', 12, 'Rock the royal cradle by day and by night, sing the old songs, and never, ever let the nursery fire go out.', { fam: 'serve', min: 16, hire: .5, noSerf: 1, req: { health: 30 }, up: 'wm_royalnurse' });
+wmO('high', 'The great household', 'wm_royalnurse', 'Nurse to the Royal Children', '🍼', 45, 'Raise the king’s children as if they were your own. If one of them is king one day, he will not forget the woman who held him.', { fam: 'serve', min: 18, hire: .4, noSerf: 1, skill: { serve: 3 }, req: { health: 35, wits: 35 }, up: 'wm_ladymistress' });
+wmO('high', 'The great household', 'wm_ladymistress', 'Lady Mistress of the Royal Nursery', '🏰', 85, 'Govern the royal nursery: its nurses, rockers, laundresses, tutors and accounts. You answer to the queen alone.', { fam: 'court', min: 26, hire: .35, noSerf: 1, skillAny: { serve: 6, court: 3 }, req: { wits: 45, renown: 35 }, cls: 'craft', ren: 40, infl: 15, up: 'jb_tutor' });
+
+/* Holy women: Lay Sister; Beguine → Grand Mistress of the Beguinage; Hospital Sister → Mistress of the Hospital; Abbess → Princess-Abbess */
+wmO('low', 'The Church', 'wm_laysister', mf('Lay Brother', 'Lay Sister'), '🧹', 1, 'Scrub the cloister, milk the abbey cows and sing the hours at the back of the choir. No dowry asked, and bread every day.', { fam: 'faith', min: 14, hire: .9, vows: 1, req: { piety: 20 }, gain: { piety: 1 } });
+wmO('mid', 'The Church', 'wm_beguine', 'Beguine', '🏘️', 8, 'Live with other women in a walled court of little houses: no lifelong vows, no husband and no abbot. Weave, nurse the sick, teach girls and pray.', { fam: 'faith', min: 16, hire: .7, vows: 1, noSerf: 1, req: { piety: 30 }, up: 'wm_grandmistress' });
+wmO('high', 'The Church', 'wm_grandmistress', 'Grand Mistress of the Beguinage', '⛲', 30, 'Rule a beguinage of a thousand women: their houses, their looms, their quarrels, and their defence against suspicious bishops.', { fam: 'faith', min: 28, hire: .4, vows: 1, noSerf: 1, skill: { faith: 4 }, req: { piety: 45, wits: 45, renown: 20 } });
+wmO('mid', 'Healing', 'wm_hospsister', mf('Hospital Brother', 'Hospital Sister'), '🛏️', 6, 'Nurse the sick poor in the long hall of the hospital, bed by bed: wash them, feed them, pray with them, close their eyes.', { fam: 'heal', min: 16, hire: .75, vows: 1, req: { piety: 30 }, sick: .05, gain: { piety: 1 }, up: 'wm_hospmistress' });
+wmO('high', 'Healing', 'wm_hospmistress', mf('Master of the Hospital', 'Mistress of the Hospital'), '🏥', 40, 'Rule a hospital of fifty beds: its sisters, its rents, its wine cellar and its dead.', { fam: 'heal', min: 25, hire: .4, vows: 1, skillAny: { heal: 4, faith: 5 }, req: { piety: 45, wits: 45 }, sick: .03 });
+wmO('high', 'The Church', 'wm_princeabbess', mf('Mitred Abbot', 'Princess-Abbess'), '🦢', 140, 'Rule a great royal abbey as a lord of the realm: its lands, its courts, its knights, and its monks too. Kings send their daughters to you.', { fam: 'faith', min: 35, hire: .3, vows: 1, skill: { faith: 9 }, req: { piety: 70, wits: 55, renown: 55 }, cls: 'noble', ren: 65, infl: 35 });
+
+/* Healing: Midwife → Sworn Midwife → Midwife to the Queen */
+wmO('mid', 'Healing', 'wm_swornmidwife', 'Sworn Midwife', '🤲', 22, 'Swear before the bishop to deliver rich and poor alike, to baptise a dying babe, and never to swap a living child for a dead one. The town pays you a wage.', { fam: 'heal', min: 22, hire: .6, skill: { heal: 3 }, req: { wits: 35, piety: 30 }, up: 'wm_royalmidwife' });
+wmO('high', 'Healing', 'wm_royalmidwife', 'Midwife to the Queen', '👶', 60, 'Deliver the heirs of the realm with the whole court listening at the door. A living prince means a pension for life.', { fam: 'heal', min: 28, hire: .35, skill: { heal: 6 }, req: { wits: 45, renown: 30 } });
+
+/* Silk and needle: Silkwoman → Silkwoman to the Crown; Embroideress → Queen's Embroideress */
+wmO('high', 'Commerce and craft', 'wm_royalsilk', 'Silkwoman to the Crown', '🎀', 65, 'Make the silk laces for the great seal, the fringes for the royal bed and the ribbons for a coronation. Only the best silkwoman in the city is asked.', { fam: 'cloth', min: 24, hire: .4, noSerf: 1, skill: { cloth: 5 }, req: { wits: 40, renown: 25 }, capital: 80 });
+wmO('high', 'Commerce and craft', 'wm_royalembroid', mf('King’s Embroiderer', 'Queen’s Embroideress'), '🧵', 55, 'Work gold thread and seed pearls into copes for bishops and banners for kings. English needlework is wanted from Rome to Castile.', { fam: 'cloth', min: 22, hire: .4, noSerf: 1, skill: { cloth: 5 }, req: { wits: 35, renown: 20 } });
+
+/* Paint, ink and teaching: Illuminator → Court Painter; Household Governess → Royal Governess; Woman of Letters → Royal Chronicler */
+wmO('mid', 'Letters and ledgers', 'wm_illuminator', 'Illuminator', '🎨', 20, 'Paint the gold leaf, the saints and the little monkeys in the margins of rich folk’s prayer books. The finest hand in Paris belonged to a woman.', { fam: 'arts', min: 15, hire: .55, noSerf: 1, req: { wits: 35 }, up: 'jb_painter' });
+wmO('mid', 'Letters and ledgers', 'wm_hometutor', mf('Household Tutor', 'Household Governess'), '🧒', 16, 'Teach a knight’s or a merchant’s children their letters, their prayers, their manners and a little French. Live in, and eat at the lower table.', { fam: 'learn', min: 16, hire: .6, noSerf: 1, req: { wits: 40, letters: 1 }, up: 'jb_tutor' });
+wmO('high', 'Learning', 'wm_writer', mf('Man of Letters', 'Woman of Letters'), '🖋️', 40, 'Write books for queens and dukes: on war, on good government, and on the worth of women. They pay, eventually.', { fam: 'letters', min: 25, hire: .4, noSerf: 1, skillAny: { letters: 3, arts: 4, learn: 3 }, req: { wits: 55, renown: 30, letters: 1 }, up: 'jb_chronicler' });
+
+regOcc(WM_KEYS);
+
+// Women's work under historical rules: the royal laundry, the nursery, the beguinages, midwifery and the silk trade.
+['wm_qlaundress', 'wm_rocker', 'wm_royalnurse', 'wm_ladymistress', 'wm_beguine', 'wm_grandmistress', 'wm_swornmidwife', 'wm_royalmidwife', 'wm_royalsilk'].forEach(k => WOMEN_ONLY.add(k));
+
+// Old posts that now lead on, where nothing led on before.
+const wmLink = (k, to) => { const o = OCC_BY[k], t = TRACKS[k]; if (!o || !t || o.link || t.up || !OCC_BY[to]) return; t.up = to; o.up = to; };
+wmLink('midwife', 'wm_swornmidwife');
+wmLink('silkwoman', 'wm_royalsilk');
+wmLink('brewer', 'innkeep');
+wmLink('laundress', 'wm_qlaundress');
+wmLink('wetnurse', 'wm_rocker');
+
+// Side doors: who may be taken on, having learned the work somewhere else.
+const side = (k, ...ds) => { if (!OCC_BY[k]) return; const a = PATH_SIDE[k] = PATH_SIDE[k] || []; for (const d of ds) if (!a.includes(d)) a.push(d); };
+side('wm_qlaundress', 'washer', 'maid', 'scullion');
+side('wm_chamberer', 'maid', 'servant', 'ja_nursemaid', 'silkwoman', 'ja_embroiderer', 'tailor');
+side('wm_damsel', 'page');
+side('wm_mistresscham', 'ladywait', 'wm_ladymistress');
+side('wm_firstlady', 'ladywait', 'courtier', 'wm_ladymistress');
+side('wm_rocker', 'ja_nursemaid', 'maid', 'servant');
+side('wm_royalnurse', 'wetnurse', 'ja_nursemaid', 'midwife');
+side('wm_grandmistress', 'church:1', 'wm_hospsister');
+side('wm_hospmistress', 'church:1', 'wm_beguine', 'wm_swornmidwife');
+side('wm_princeabbess', 'church:3');
+side('wm_royalembroid', 'ja_embroiderer', 'silkwoman', 'tailor', 'weaver');
+// the old dead ends: no way in that a woman could take
+side('jb_tutor', 'teacher', 'ladywait', 'jb_librarian');
+side('jb_astronomer', 'jb_cartographer', 'jb_librarian');
+side('ja_scavenger', 'ja_ragbone', 'ratcatcher', 'road', 'gravedigger');
+PATH_FEED = null;
+if (typeof ROADS !== 'undefined') ROADS = null;
+
+/* ---------- helpers ---------- */
+const fl = () => S.flags;
+const famOf = o => { const t = TRACKS[occPos(o)[0]]; return t ? t.fam : null; };
+const firstLower = s => s.charAt(0).toLowerCase() + s.slice(1);
+const wmQueen = () => (S.flags.queenReg ? `${KT()} ${S.king}` : 'the queen');
+const wmKing = () => `${KT()} ${S.king}`;
+
+/* ---------- deeds: tutoring for hire, and the right friends ---------- */
+const TUTOR_LINES = [
+  'You taught a wool merchant’s twins their letters at the kitchen table, with a switch for the boy and sugared almonds for the girl.',
+  'You spent the winter teaching a knight’s daughters their psalter and a little French. The younger one asks harder questions than any priest.',
+  'You taught a reeve’s son to read the manor rolls. His father now checks the steward’s sums, and the steward hates you.',
+  'You taught a baker’s widow to keep her own accounts. She found out her journeyman had been robbing her for years.',
+  'You taught the children of a goldsmith to read, write and count, and the goldsmith to stop interrupting.',
+];
+const WM_DEEDS = [
+  { k: 'wm_tutor', g: 'Learning', i: '🧑‍🏫', n: 'Tutor children for a fee', d: 'Teach a merchant’s or a knight’s children their letters in your spare hours. A little silver, a year of teaching to your name, and a family that may take you up. Needs letters. Once a year.', min: 15, once: 1,
+    only: () => !S.ruling && S.cls !== 'royal' && !S.vows,
+    can: () => !S.flags.letters ? 'You must know your letters' : S.stats.wits < 35 ? `Requires Wits 35 (you have ${S.stats.wits})` : jobFam() === 'learn' ? 'Teaching is already your trade' : true,
+    run: () => {
+      const n = fl().wm_tut = (fl().wm_tut || 0) + 1;
+      S.skills = S.skills || {}; S.skills.learn = (S.skills.learn || 0) + 1;
+      st('wits', R(1, 2));
+      if (P(.12)) { st('happy', -3); return 'The boy was a dunce and his father refused to pay, saying that a dunce is the teacher’s fault. Still, you learned how to teach a dunce, which is worth a year of anything.'; }
+      const g = R(3, 7) + Math.round(S.stats.wits / 15) + (['merchant', 'noble'].includes(S.cls) ? 4 : 0); coin(g);
+      let x = '';
+      if (patrons().length < 2 && P(.1 + S.stats.wits / 600 + Math.min(5, n) * .02)) {
+        const p = makePatron(); if (S.sex === 'f' && p.sex === 'm' && P(.5)) { p.sex = 'f'; p.name = pick(NAMES.f); p.job = p.job.replace(/^Lord of/, 'Lady of'); }
+        S.kin.push(p); x = ` The children’s ${p.sex === 'f' ? 'grandmother' : 'grandfather'}, ${p.name} ${p.sur}, ${firstLower(p.job)}, was so pleased that ${pr(p).he} has taken you up. (A new patron: see Kin.)`;
+      } else if (n >= 3 && P(.3)) { st('renown', 2); x = ' Word is getting round that you are the best teacher in the district.'; }
+      return `${pick(TUTOR_LINES)} You were paid ${g} silver, and you have another year of teaching to your name.${x}`;
+    } },
+  { k: 'wm_patron', g: 'Social', i: '🤝', get n() { return S.sex === 'f' ? 'Seek a patroness or patron' : 'Seek a patron'; }, d: 'Present yourself at the great house with a small gift and your best manners, and hope someone powerful takes an interest in you. A patron who thinks well of you opens doors that are shut to everyone else. Once a year.', min: 15, once: 1,
+    cost: () => [3, 5, 8, 15, 30, 40][Math.max(0, CLS_ORDER.indexOf(S.cls))],
+    only: () => !S.ruling && S.cls !== 'royal',
+    can: () => patrons().length >= 2 ? 'You already have two patrons' : true,
+    run: () => {
+      const fam = jobFam();
+      const odds = Math.min(.75, .14 + S.stats.renown / 250 + S.stats.wits / 500 + S.stats.looks / 700 + (['court', 'serve', 'estate', 'arts', 'learn', 'letters', 'heal', 'cloth', 'faith'].includes(fam) ? .1 : 0) + (S.flags.letters ? .05 : 0) - (S.cls === 'serf' ? .06 : 0));
+      if (!P(odds)) return pick(['The steward took your gift and shut the door in your face.', 'You waited all day on a bench in the great hall. Nobody came, though a hound ate your bread.', 'The lady looked at you for a long moment, said “Hm,” and went in to dinner.', 'You were mistaken for the new laundress and given a basket. You did not get to say a word.']) + ` (Your chances were about ${Math.round(odds * 100)}%. Renown and Wits help, and so does good work in a great house.)`;
+      const p = makePatron();
+      if (S.sex === 'f' && hist() && p.sex === 'm' && P(.55)) { p.sex = 'f'; p.name = pick(NAMES.f); p.job = p.job.replace(/^Lord of/, 'Lady of'); }
+      S.kin.push(p);
+      return p.sex === 'f' ? `${p.name} ${p.sur}, ${firstLower(p.job)}, looked you over, asked you three sharp questions, and said she might have a use for a clever ${S.sex === 'f' ? 'girl' : 'lad'}. You have a patroness. Keep her pleased (see Kin): when she thinks well of you, her word opens doors.` : `${p.name} ${p.sur}, ${firstLower(p.job)}, liked the look of you and promised to remember your name. You have a patron. Keep him pleased (see Kin): when he thinks well of you, his word opens doors.`;
+    } },
+  { k: 'wm_askplace', g: 'Social', i: '📜', n: 'Ask your patron for a place', d: 'One letter from the right person and you are taken on where you would be turned away at the door. It will cost you some of their goodwill. Once a year.', min: 15, once: 1,
+    only: () => patrons().length > 0 && !S.ruling,
+    can: () => !patrons().some(k => k.bond >= 55) ? 'No patron thinks well enough of you yet (bond 55)' : S.appliedYear === S.year ? 'You already sought work this year' : true,
+    run: () => {
+      const pt = patrons().filter(k => k.bond >= 55).sort((a, b) => b.bond - a.bond)[0];
+      const tv = { low: 1, mid: 2, mil: 2, high: 3 };
+      const score = o => tv[o.tier] * 1000 + (occPay(o) || 0);
+      const cur = S.job && occOfJob();
+      const FAMS = ['court', 'serve', 'estate', 'arts', 'learn', 'letters', 'heal', 'cloth', 'faith', 'trade', 'civic', 'law'];
+      const best = OCC.filter(o => FAMS.includes(famOf(o)) && occWhy(o) === true && (!cur || score(o) > score(cur))).sort((a, b) => score(b) - score(a))[0];
+      if (!best) return `${pt.name} heard you out kindly, but there is no post in ${pr(pt).his} gift that you are fit for yet, and better than the one you have. Look at what you lack (Work, Find work), and ask again next year.`;
+      S.appliedYear = S.year; const x = hireInto(best); bond(pt, -12); st('happy', 4);
+      const ie = introEvent(best); if (ie) Q.push(() => showEvent(ie));
+      return `${pt.name} wrote one short letter. A week later you were taken on as ${aOr(occTitle(best))}, and nobody asked a single question.${x} “You owe me now,” ${pr(pt).he} said, smiling.`;
+    } },
+];
+{
+  for (const d of WM_DEEDS) {
+    const at = DEEDS.map(x => x.g).lastIndexOf(d.g);
+    DEEDS.splice(at < 0 ? DEEDS.length : at + 1, 0, d);
+  }
+}
+
+/* ---------- life in the new posts ---------- */
+EVENTS.push(
+  { id: 'wm_shift', min: 14, w: 5, cool: 5, icon: '🧺', cond: () => jobIn('wm_qlaundress', 'wm_chamberer', 'laundress'),
+    text: () => `One of ${wmQueen()}’s silk shifts has vanished from the drying hedge. The yeoman of the wardrobe is counting the linen with a face like thunder.`,
+    choices: [
+      { t: 'Search every hedge and ditch', fx: () => { if (P(.55)) { jobPerf(10); return 'You found it in the moat, on a goose. You washed it again and nobody was the wiser.'; } st('happy', -3); jobPerf(-6); return 'You searched until dark and found nothing but a dead rat and a love letter, not yours.'; } },
+      { t: 'Blame the new girl', fx: () => { st('piety', -4); if (P(.7)) { jobPerf(6); return 'The new girl was turned off without a character. You sleep badly.'; } st('renown', -4); jobPerf(-10); return 'The new girl had been in chapel all afternoon, with the chaplain to swear to it. Everyone looks at you now.'; } },
+      { t: 'Pay for a new one (8 silver)', ok: () => S.coin >= 8, why: 'You do not have 8 silver', fx: () => { coin(-8); jobPerf(4); return 'You bought silk from a mercer on the bridge and sat up three nights sewing. No one could tell.'; } },
+    ] },
+  { id: 'wm_queentears', min: 16, w: 5, cool: 5, icon: '👸', cond: () => jobIn('wm_chamberer', 'wm_damsel', 'wm_mistresscham', 'wm_firstlady', 'ladywait'),
+    text: () => `Late at night ${wmQueen()} sends everyone away but you, and weeps. ${S.flags.queenReg ? 'Her council means to marry her to a man she loathes.' : `${wmKing()} has a new mistress, and the whole court knows her name.`}`,
+    choices: [
+      { t: 'Comfort her, and keep silent forever', fx: () => { jobPerf(12); st('renown', 2); st('piety', 1); return 'You held her hands until the candles burned down. In the morning she gave you a ring from her own finger, and said nothing at all.'; } },
+      { t: 'Tell her everything you have heard', fx: () => { jobPerf(8); if (P(.2)) { st('renown', -4); return 'She was grateful, and you have made dangerous enemies of the people you talked about.'; } st('power', 2); return 'She listened, and stopped weeping, and began to plan. You are her eyes and ears now.'; } },
+      { t: 'Offer her a charm from the wise woman', fx: () => { if (P(.25)) { jobPerf(-15); st('renown', -6); st('piety', -3); return 'Her confessor found the charm sewn into her pillow. You were very nearly accused of witchcraft, and you are watched.'; } jobPerf(12); st('piety', -2); return 'She wore the charm under her shift. Whether or not it worked, she believes in you now.'; } },
+    ] },
+  { id: 'wm_labour', min: 22, w: 6, cool: 4, icon: '👶', cond: () => jobIn('wm_royalmidwife', 'wm_swornmidwife', 'midwife'),
+    text: () => jobIn('wm_royalmidwife') ? `${wmQueen()[0].toUpperCase() + wmQueen().slice(1)} has been in labour two days. The royal physicians want to bleed her, and the whole court is listening at the door.` : 'The alderman’s wife has been in labour two days. The barber-surgeon wants to cut, and her husband wants you to choose.',
+    choices: [
+      { t: 'Send the physicians out and do it your way', fx: () => { if (P(.5 + sk('heal') / 30)) { const g = jobIn('wm_royalmidwife') ? R(60, 140) : R(10, 25); coin(g); st('renown', jobIn('wm_royalmidwife') ? 10 : 4); jobPerf(15); return `Mother and child both lived. ${jobIn('wm_royalmidwife') ? `The king wept, and granted you a pension of ${g} silver.` : `The alderman paid you ${g} silver and calls you a saint.`}`; } st('renown', -10); jobPerf(-20); return 'You did everything you knew, and the child was lost. They say it was your fault, because there must be someone’s fault.'; } },
+      { t: 'Send for the holy girdle of Our Lady', fx: () => { st('piety', 3); if (P(.62)) { jobPerf(8); st('renown', 3); return 'The relic came from the abbey at a gallop, and the child came soon after. The Church takes the credit, and you take the fee.'; } jobPerf(-8); return 'The relic came too late. The priests blame the sins of the mother.'; } },
+      { t: 'Let the physicians do as they please', fx: () => { if (P(.45)) { jobPerf(2); return 'They bled her, and she lived anyway. The physicians are very pleased with themselves.'; } jobPerf(-10); st('happy', -6); return 'They bled her white. You will hear her calling for her mother for the rest of your life.'; } },
+    ] },
+  { id: 'wm_fever', min: 16, w: 6, cool: 4, icon: '🤒', cond: () => jobIn('wm_rocker', 'wm_royalnurse', 'wm_ladymistress', 'jb_tutor'),
+    text: () => 'The littlest of the royal children has a fever, and it is rising. The physician is two days away, hunting with the king.',
+    choices: [
+      { t: 'Sit up with the child all night', fx: () => { st('health', -4); if (P(.7)) { jobPerf(14); st('renown', 4); return 'You sponged and sang and prayed until dawn, and at dawn the fever broke. The queen kissed your hands.'; } jobPerf(-6); st('happy', -8); return 'You did all you could. The child is with God, and the court is in black.'; } },
+      { t: 'Use the wise woman’s willow bark', fx: () => { if (P(.68)) { jobPerf(12); return 'The bark tea brought the fever down by midnight. You told the physician it was prayer.'; } if (P(.5)) { jobPerf(-18); st('renown', -6); return 'The child lived, but the chaplain found the herbs, and you were nearly turned off as a witch.'; } jobPerf(-8); return 'Nothing helped. The physician says the herbs killed the child. They did not, but he is a physician.'; } },
+      { t: 'Send a rider for the physician', fx: () => { if (P(.55)) { jobPerf(6); return 'The physician arrived in a lather, bled the child, and took the credit when the fever broke.'; } jobPerf(-8); return 'The physician came too late, and blamed the nursery.'; } },
+    ] },
+  { id: 'wm_inquisitor', min: 16, w: 6, cool: 6, icon: '🔥', cond: () => jobIn('wm_beguine', 'wm_grandmistress'),
+    text: () => 'A friar from the bishop’s court has come to the beguinage, asking whether the women read the Gospels in the common tongue, and who taught them. A beguine was burned in Paris for writing a book.',
+    choices: [
+      { t: 'Show him our prayers, our looms and our sick', fx: () => { if (P(.6 + S.stats.wits / 300)) { jobPerf(10); st('renown', 3); return 'He found nothing but hard work and plain prayers, and went away disappointed. The bishop has confirmed your privileges for another year.'; } jobPerf(-10); coin(-Math.min(Math.max(0, S.coin), 10)); return 'He found a book in French under a widow’s bed. The beguinage was fined, and you paid your share.'; } },
+      { t: 'Take a friar as your confessor, to keep the peace', fx: () => { st('piety', 3); jobPerf(4); return 'A Franciscan now hears your confessions and eats your bread. The bishop is satisfied. The women grumble.'; } },
+      { t: 'Hide the books and say nothing', fx: () => { if (P(.7)) { st('piety', -1); return 'He searched for a week and found nothing. The books are back on the shelf.'; } st('renown', -8); jobPerf(-15); return 'He found them. You were made to do public penance in the market square in a white shift. You are lucky it was not the fire.'; } },
+    ] },
+  { id: 'wm_lace', min: 18, w: 6, cool: 4, icon: '🎀', cond: () => jobIn('wm_royalsilk', 'wm_royalembroid', 'silkwoman', 'ja_embroiderer'),
+    text: () => 'There is to be a coronation, and the king’s Wardrobe wants three hundred ells of silk lace and fringe in six weeks. Nobody can do it in six weeks.',
+    choices: [
+      { t: 'Hire every girl in the lane (20 silver)', ok: () => S.coin >= 20, why: 'You do not have 20 silver', fx: () => { coin(-20); if (P(.75)) { const g = R(60, 130); coin(g); st('renown', 6); jobPerf(14); return `Twenty girls, forty hands, and not one candle wasted. The Wardrobe paid ${g} silver, and your fringe hung on the coronation canopy.`; } jobPerf(-5); return 'The girls worked well, but the Wardrobe paid half, late, and in promises.'; } },
+      { t: 'Work night and day yourself', fx: () => { st('health', -6); const g = R(25, 55); coin(g); jobPerf(8); return `You finished the last ell by candlelight on the morning of the crowning. ${g} silver, and eyes that will never be the same.`; } },
+      { t: 'Refuse the order', fx: () => { jobPerf(-10); st('renown', -2); return 'The order went to a rival across the river. She will be insufferable now.'; } },
+    ] },
+  { id: 'wm_pupil', min: 16, w: 5, cool: 6, icon: '📖', cond: () => jobIn('wm_hometutor', 'jb_tutor', 'teacher') || (fl().wm_tut || 0) >= 2,
+    text: () => 'Your best pupil, a girl of eleven, has a wonderful mind and wants to learn Latin like her brothers. Her father says it is wasted on a girl.',
+    choices: [
+      { t: 'Teach her anyway, in secret', fx: () => { st('renown', 1); st('happy', 4); if (P(.3)) { jobPerf(-12); return 'Her father found her conjugating verbs in the hayloft. You are in disgrace, and she is not sorry at all.'; } return 'She learned more Latin in a year than her brothers in five. One day she will write a book. You are sure of it.'; } },
+      { t: 'Win her father round', fx: () => { if (P(.4 + S.stats.wits / 250)) { jobPerf(8); st('renown', 3); return 'You told him the queen herself reads Latin. He allowed it, grumbling, and now boasts about her to his friends.'; } jobPerf(-3); return 'He would not be moved. She cried, and so, later, did you.'; } },
+      { t: 'Do as her father says', fx: () => { jobPerf(4); st('happy', -3); return 'You taught her embroidery instead. She stabbed the linen as if it were her father.'; } },
+    ] },
+  { id: 'wm_pest', min: 16, w: 6, cool: 5, icon: '🛏️', cond: () => jobIn('wm_hospsister', 'wm_hospmistress'),
+    text: () => 'Sickness in the lower town. The hospital is full, three to a bed, and still they come to the gate.',
+    choices: [
+      { t: 'Nurse them with your own hands', fx: () => { st('piety', 6); st('renown', 4); jobPerf(10); if (P(.15)) { st('health', -22); return 'You nursed them day and night, and then you caught it yourself. You lived, just. The town calls you blessed.'; } return 'You nursed them day and night. Many died, but many lived who would not have lived. The town calls you blessed.'; } },
+      { t: 'Shut the gate against them', fx: () => { st('piety', -8); jobPerf(-6); return 'The gate stayed shut. You will hear them knocking for the rest of your life.'; } },
+      { t: 'Beg the guilds for alms and straw', fx: () => { if (P(.6)) { jobPerf(12); st('renown', 3); return 'The guilds sent straw, bread, wine and two barrels of herrings. The hospital will hold.'; } jobPerf(-2); return 'The guilds sent a prayer and a very small cheese.'; } },
+    ] },
+  { id: 'wm_hours', min: 15, w: 5, cool: 5, icon: '🎨', cond: () => jobIn('wm_illuminator', 'jb_painter'),
+    text: () => 'A duchess wants her own face painted as the Virgin Mary in her new book of hours, and her husband’s as one of the Three Kings.',
+    choices: [
+      { t: 'Paint them beautiful', fx: () => { const g = R(20, 45); coin(g); st('piety', -1); jobPerf(8); return `You took ten years off her and gave him a chin. They paid ${g} silver and ordered a psalter.`; } },
+      { t: 'Paint them as they are', fx: () => { st('renown', 3); if (P(.4)) { jobPerf(-6); return 'She saw the page and refused to pay. Her ladies say it is the best likeness ever made.'; } coin(R(15, 30)); jobPerf(4); return 'She saw the page, laughed, and paid. She is cleverer than she looks.'; } },
+      { t: 'Refuse: it is too near to blasphemy', fx: () => { st('piety', 4); jobPerf(-4); return 'You painted a plain Virgin and a plain king. The duchess has taken her custom elsewhere.'; } },
+    ] },
+  // A great lady sees promise in a hard-working girl: the old way up for a woman with no name
+  { id: 'wm_noticed', min: 15, max: 40, w: 4, cool: 6, icon: '🌟', cond: () => !S.ruling && !['noble', 'royal'].includes(S.cls) && patrons().length < 2 && S.job && ['serve', 'court', 'cloth', 'heal', 'learn', 'arts', 'faith'].includes(jobFam()) && (S.job.perf || 0) >= 60,
+    init: () => { const p = makePatron(); if (S.sex === 'f' && P(.6)) { p.sex = 'f'; p.name = pick(NAMES.f); p.job = p.job.replace(/^Lord of/, 'Lady of'); } return { p }; },
+    text: c => `${c.p.name} ${c.p.sur}, ${firstLower(c.p.job)}, has been watching you work. ${pr(c.p).He} stops you in the passage: “You are wasted where you are. Would you like to be something more?”`,
+    choices: [
+      { t: 'Yes, with all my heart', fx: c => { c.p.bond = R(58, 66); S.kin.push(c.p); st('happy', 5); return `${c.p.name} has taken you up. A patron who thinks well of you can open doors that are shut to everyone else (see Kin, and the deed Ask your patron for a place).`; } },
+      { t: 'Ask what it will cost you', fx: c => { if (P(.7)) { c.p.bond = R(55, 62); S.kin.push(c.p); st('wits', 1); return `“Loyalty,” ${pr(c.p).he} said, “and a good memory.” It seemed a fair price. You have a patron (see Kin).`; } return `${pr(c.p).He} laughed and walked on. Perhaps it was a test, and perhaps you failed it.`; } },
+      { t: 'Thank them, but stay where you are', fx: () => { st('piety', 1); return 'You are content where you are. Not everybody is.'; } },
     ] },
 );
 }
@@ -18829,7 +19051,7 @@ PETITIONS.push(
   };
 
   /* ---------- where you are, and who is there ---------- */
-  const COURT_T = new Set(['courtier', 'diplomat', 'official', 'adviser', 'treasurer', 'chancellor', 'page', 'ladywait', 'herald', 'spymaster', 'jester', 'jb_cupbearer', 'jb_wardrobe', 'jb_chamberlain', 'jb_seneschal', 'jb_royalguard', 'jb_guardcaptain', 'jb_revels', 'jb_poet', 'jb_painter', 'jb_courtastro', 'jb_tutor', 'jb_masterhorse', 'jb_chronicler', 'jb_astronomer', 'jb_librarian']);
+  const COURT_T = new Set(['courtier', 'diplomat', 'official', 'adviser', 'treasurer', 'chancellor', 'page', 'ladywait', 'herald', 'spymaster', 'jester', 'jb_cupbearer', 'jb_wardrobe', 'jb_chamberlain', 'jb_seneschal', 'jb_royalguard', 'jb_guardcaptain', 'jb_revels', 'jb_poet', 'jb_painter', 'jb_courtastro', 'jb_tutor', 'jb_masterhorse', 'jb_chronicler', 'jb_astronomer', 'jb_librarian', 'wm_qlaundress', 'wm_chamberer', 'wm_damsel', 'wm_mistresscham', 'wm_firstlady', 'wm_rocker', 'wm_royalnurse', 'wm_ladymistress', 'wm_royalmidwife', 'wm_royalsilk', 'wm_royalembroid']);
   const CLOISTER_T = new Set(['church', 'jb_friar', 'jb_chantry', 'hermit', 'chorister']);
   const TOWN_F = new Set(['trade', 'food', 'metal', 'cloth', 'leather', 'goods', 'fine', 'woodw', 'guild', 'master', 'civic', 'letters', 'heal', 'street', 'serve']);
   function circleNow() {
@@ -18837,7 +19059,7 @@ PETITIONS.push(
     if (S.ruling) return 'mycourt';
     if (atSea()) return 'ship';
     if (S.flags.outlaw || S.flags.wolfshead) return 'greenwood';
-    if (COURT_T.has(tr()) || (typeof playerSeat === 'function' && playerSeat()) || S.cls === 'royal' || fl().consort || (S.cls === 'noble' && S.age >= 16)) return 'court';
+    if (COURT_T.has(tr()) || (typeof playerSeat === 'function' && playerSeat()) || S.cls === 'royal' || fl().consort || (fl().pc && fl().pc.at) || (S.cls === 'noble' && S.age >= 16)) return 'court';
     if (isMil()) return 'camp';
     if (CLOISTER_T.has(tr()) || (S.vows && jobFam() === 'faith')) return 'cloister';
     if (TOWN_F.has(jobFam()) || S.cls === 'merchant') return 'town';
@@ -19289,6 +19511,353 @@ PETITIONS.push(
     ] });
 
   window.ciCircle = () => circle();
+}
+
+/* ================= v1.12 The prince's eye (prefix pc_) ================= */
+// A rare chance for a very pretty village girl: a prince rides through, sees her, and will not forget her. She is
+// brought to the palace with a place in the queen's household, and must keep his heart there. If his ardour cools,
+// she is sent home to the village she came from. A prince marrying a commoner was rare and hated (Edward IV married
+// Elizabeth Woodville in secret; Pedro of Portugal's secret wife was murdered by his father's knights). Far more often
+// she became his mistress and, when he married a princess, was married off to a knight with a manor for a dowry.
+// Romance here is between adults (18 and over) and fades to black.
+// State: S.flags.pc = { n, by, look, heir, rel, ard, opp, y0, st, at, c, from, home, job, ask, rival, hon, kids, duchy }
+//   st: 'court' (courting at the palace), 'mistress', 'wed', 'widow', 'over', 'no'
+{
+  const fl = () => S.flags;
+  const pc = () => fl().pc;
+  const active = () => { const x = pc(); return !!x && !!x.at && (x.st === 'court' || x.st === 'mistress'); };
+  const pAge = x => S.year - x.by;
+  const PN = () => `${pc().king ? 'King' : 'Prince'} ${pc().n}`;
+  const oppWho = () => (pc().king ? 'his mother and the council' : `the ${kingW()} and the court`);
+  const kingW = () => (KT() === 'Queen' ? 'queen' : 'king');
+  const kingN = () => `${KT()} ${S.king}`;
+  const capT = () => { try { return S.world && S.world.t ? capOf(S.realm) : null; } catch (e) { return null; } };
+  const rivalName = () => `Lady ${pick(NAMES.f)} ${pick(SUR.noble)}`;
+  const ardW = a => a >= 85 ? 'cannot stay away from you' : a >= 70 ? 'is smitten with you' : a >= 55 ? 'seeks you out most days' : a >= 40 ? 'still smiles when he sees you' : a >= 25 ? 'is cooling, and the court has noticed' : 'has all but forgotten you';
+  const oppW = o => o >= 75 ? 'want you gone, and say so' : o >= 55 ? 'think you a passing fancy and a scandal' : o >= 35 ? 'put up with you, for his sake' : 'have come to like you';
+  const relW = x => x.king ? `${KT() === 'Queen' ? 'son of the old queen' : 'son of the old king'}, and King of ${S.realm} now` : x.heir ? `the ${kingW()}’s eldest son and heir to the throne` : x.rel === 'son2' ? `the ${kingW()}’s younger son` : `the ${kingW()}’s younger brother`;
+  const ard = d => { const x = pc(); const b = x.ard; x.ard = Math.max(0, Math.min(100, Math.round(b + d))); const r = x.ard - b; if (r && FX) FX.push({ l: `Prince ${x.n}`, d: r, bond: 1 }); return r; };
+  const opp = d => { const x = pc(); x.opp = Math.max(0, Math.min(100, Math.round(x.opp + d))); };
+  const capF = s => s.charAt(0).toUpperCase() + s.slice(1);
+
+  function makePrince() {
+    const w = typeof wRuler === 'function' ? wRuler(S.realm) : null;
+    const h = w && w.heir;
+    if (h && h.sex === 'm' && h.age >= 18 && h.age <= 36 && P(.4)) return { n: h.n, by: S.year - h.age, heir: 1, rel: 'son', look: randomLook() };
+    const kAge = w ? w.age : R(42, 60);
+    const rel = kAge >= 42 ? 'son2' : 'brother';
+    let n = pick(NAMES.m); for (let i = 0; i < 6 && h && n === h.n; i++) n = pick(NAMES.m);
+    const age = rel === 'son2' ? R(18, Math.max(19, Math.min(32, kAge - 20))) : R(20, 34);
+    return { n, by: S.year - age, heir: 0, rel, look: randomLook() };
+  }
+
+  /* ---------- going to the palace, and coming home ---------- */
+  function goPalace(px) {
+    const x = fl().pc = { n: px.n, by: px.by, look: px.look, heir: px.heir, rel: px.rel, ard: R(58, 68), opp: 50 + ({ serf: 18, peasant: 12, craft: 6 }[S.cls] || 0), y0: S.year, st: 'court', at: 1, c: 1, from: S.village, home: S.home, job: S.job ? { tr: S.job.track, lv: S.job.level } : null, ask: 0, kids: 0, hon: 0 };
+    if (x.heir) { const w = wRuler(S.realm); if (w && w.heir && w.heir.n === x.n) w.heir.pc = 1; }
+    let t = '';
+    if (S.cls === 'serf') { freeSerf(); t += ' The prince paid your lord for your freedom without even asking the price.'; }
+    const cap = capT(); if (cap) S.home = cap.id;
+    if (S.job) quitJob();
+    if (TRACKS.wm_chamberer) setJob('wm_chamberer', 0);
+    coin(R(5, 15)); st('happy', 8); st('renown', 5);
+    return `You rode to ${cap ? cap.n : 'the capital'} in a royal cart with your bundle on your knees.${t} You are a chamberer to the queen now: you carry her linen and her cushions, the whole court watches you do it, and everyone is wagering on how long you will last. Court him every year (Deeds, Love and family, or the prince on your Kin page), or his eye will wander and you will be sent home to ${x.from}.`;
+  }
+  function sendHome(t) {
+    const x = pc(); x.st = 'over'; x.at = 0;
+    if (S.job && jobFam() === 'court') quitJob();
+    if (x.home != null) S.home = x.home;
+    if (x.from) S.village = x.from;
+    if (!S.job && x.job && TRACKS[x.job.tr] && !TRACKS[x.job.tr].vows && x.job.tr !== 'crown') { setJob(x.job.tr, Math.min(x.job.lv || 0, TRACKS[x.job.tr].levels.length - 1)); t += ` Back in ${x.from}, you took up your old work as ${aOr(jobTitle())}, and everyone wants to know everything.`; }
+    else t += ` Back in ${x.from}, everyone wants to know everything, and nobody believes half of it.`;
+    say(`You were sent home from the palace to ${x.from}.`, 'bad');
+    return t;
+  }
+  function wed(secret, txt) {
+    const x = pc();
+    const p = person('m', pAge(x), 'royal', { sp: 1 });
+    p.name = x.n; p.sur = (wRuler(S.realm) || {}).house || pick(SUR.royal); p.dowry = 0; p.pcP = 1; p.look = x.look || p.look; p.looks = R(50, 90);
+    if (!x.heir && !x.king) x.duchy = pick(TOWNS);
+    p.job = x.king ? `King of ${S.realm}` : x.heir ? `Prince of ${S.realm}, heir to the throne` : `Prince of ${S.realm}, Duke of ${x.duchy}`;
+    if (S.job) quitJob();
+    marry(p);
+    x.st = 'wed'; x.at = 0; x.secret = secret ? 1 : 0;
+    if (x.king) { S.cls = 'royal'; S.flags.consort = 1; st('renown', 25); coin(R(150, 300)); feat('pc_queen'); return `${txt} You are Queen of ${S.realm}. The girl from ${x.from} wears a crown.`; }
+    S.cls = 'noble';
+    addTitle(x.heir ? `Princess of ${S.realm}` : `Duchess of ${x.duchy}`);
+    st('renown', 15); coin(R(80, 200));
+    return `${txt} You are ${x.heir ? `the wife of the heir to the throne, and one day, God willing, you will be Queen of ${S.realm}` : `a princess of the blood by marriage, and Duchess of ${x.duchy}`}. The girl from ${x.from} has come a very long way.`;
+  }
+  function settle() {
+    const x = pc(); x.st = 'over'; x.at = 0;
+    if (S.job && jobFam() === 'court') quitJob();
+    const p = person('m', R(Math.max(24, S.age), S.age + 14), 'noble', { sp: 1 }); p.name = pick(NAMES.m); p.sur = pick(SUR.noble); p.dowry = 0; p.job = `A knight of Prince ${x.n}’s household`;
+    marry(p);
+    if (CLS_ORDER.indexOf(S.cls) < CLS_ORDER.indexOf('noble')) S.cls = 'noble';
+    S.village = x.from; if (x.home != null) S.home = x.home;
+    const t = `Lady of ${x.from}`; addTitle(t); addAsset('manor', { label: `Manor of ${x.from}`, title: t });
+    coin(R(60, 150)); st('renown', 6); st('happy', 4);
+    return `He gave you in marriage to Sir ${p.name} ${p.sur}, a knight of his household, with the manor of ${x.from} as your dowry. You went home to ${x.from} as its lady, in a gown the village will talk about for fifty years.`;
+  }
+
+  /* ---------- the cards ---------- */
+  function courtCard() {
+    const x = pc();
+    return { id: 'pc_courtcard', icon: '🌹',
+      text: () => `${PN()} ${ardW(x.ard)}. ${capF(oppWho())} ${oppW(x.opp)}. How will you spend your time with him this year?`,
+      choices: [
+        { t: 'Walk with him in the privy garden', fx: () => { x.c = 1; ard(R(4, 9) + Math.round((S.stats.looks - 50) / 12)); st('happy', 3); return pick(['You walked under the pear trees and talked about everything except the one thing on both your minds.', 'He showed you the king’s menagerie: a lion, two leopards and a very sad bear. He held your hand in front of the lion, for courage.', 'You talked about your village for an hour. He listened as if no one had ever told him anything true before.']); } },
+        { t: 'Dance with him at the Twelfth Night feast', fx: () => { x.c = 1; ard(R(3, 11) + Math.round((S.stats.looks - 50) / 8)); st('renown', 2); if (P(.35)) { x.rival = x.rival || rivalName(); opp(4); return `You danced every dance with him, and the whole hall watched. ${x.rival}, a duke’s daughter who had expected to dance with him herself, watched hardest of all.`; } return 'You danced every dance with him, and the whole hall watched. The minstrels have made a song about it already. It rhymes “village” with “pillage”, which seems unkind.'; } },
+        { t: 'Write him a letter in your own hand', ok: () => !!S.flags.letters, why: 'You cannot write', fx: () => { x.c = 1; ard(R(5, 10) + Math.round(S.stats.wits / 15)); st('wits', 1); return 'You wrote him a letter with your own hand, every word your own. He keeps it inside his doublet, and has read it to nobody.'; } },
+        { t: 'Ride out hawking with him', fx: () => { x.c = 1; if (P(.1)) { st('health', -R(6, 14)); ard(R(2, 6)); return 'Your borrowed palfrey bolted at a heron and threw you into a ditch. He carried you home himself, which helped, a little.'; } ard(R(6, 11) + (S.flags.dx_ride || 0)); return 'You rode out with the falcons at dawn and came back at dusk, muddy, laughing, and without the falconers.'; } },
+        { t: 'Hold him at arm’s length', fx: () => { x.c = 1; if (x.ard >= 45 && P(.6 + S.stats.wits / 400)) { ard(R(8, 15)); x.hon = (x.hon || 0) + 1; return 'You let him kiss your hand, and nothing more. He went away half mad, and came back the next morning with a ruby. Wanting what he cannot have is a prince’s favourite sport.'; } x.rival = x.rival || rivalName(); ard(-R(6, 12)); return `He sulked for a month and danced with ${x.rival} instead. Perhaps you held him a little too far away.`; } },
+      ] };
+  }
+  function winCard() {
+    const x = pc();
+    return { id: 'pc_wincard', icon: '👑',
+      text: () => `${capF(oppWho())} ${oppW(x.opp)}. A girl from ${x.from} has no friends at court but the ones she makes.`,
+      choices: [
+        { t: 'Serve the queen better than any lady she has', fx: () => { opp(-(R(4, 9) + Math.round(S.stats.wits / 25))); if (S.job) jobPerf(8); return 'You were first up and last to bed, and you never once forgot how she likes her wine. The queen has started calling you “my good girl”, which from a queen is practically a knighthood.'; } },
+        { t: 'Kneel beside the king’s mother at Mass, every day', fx: () => { st('piety', 3); opp(-(R(3, 8) + Math.round(S.stats.piety / 25))); return 'The old dowager queen noticed you on your knees beside her every morning. She asked your name. Then she asked about your mother. That is a beginning.'; } },
+        { t: 'Bribe the king’s confessor (15 silver)', ok: () => S.coin >= 15, why: 'You do not have 15 silver', fx: () => { coin(-15); st('piety', -2); if (P(.7)) { opp(-R(10, 16)); return 'The confessor took the silver and now tells the king that a humble wife is a blessing from God. The king is thinking about it.'; } opp(8); return 'The confessor took the silver, and then told the king you had tried to bribe him. The king is not pleased.'; } },
+        { t: 'Outshine your rival', ok: () => !!x.rival, why: 'You have no rival yet', fx: () => { if (P(.45 + (S.stats.looks + S.stats.wits) / 500)) { st('renown', 4); ard(R(3, 7)); const r = x.rival; x.rival = null; return `At the May Day feast you were brighter, quicker and kinder than ${r}, and everybody saw it. Her family has taken her home to the country.`; } st('renown', -4); opp(5); return `${x.rival} has better friends than you, and older ones. The whole court laughed at your village manners, and she laughed loudest.`; } },
+      ] };
+  }
+  function askEvent() {
+    const x = pc();
+    return { id: 'pc_ask', icon: '💍',
+      text: () => x.king ? `In the window seat of the long gallery, ${PN()} takes both your hands. He is king, he says, and he will marry whom he pleases, and he pleases to marry you. His council wants a foreign queen and a treaty. His mother wants you gone.` : `In the window seat of the long gallery, ${PN()} takes both your hands. He will have no one but you, he says. He will ask ${x.heir ? 'his father' : `the ${kingW()}`} for leave to marry you${x.heir ? ', though he is the heir and is meant for a foreign princess' : ''}. And if the answer is no, there are other ways.`,
+      choices: [
+        { t: () => (pc().king ? 'Let him put it to his council' : `Let him ask the ${kingW()}, and wait`), fx: () => kingAnswer() },
+        { t: 'Marry him in secret, tonight', ok: () => x.ard >= 85, why: 'He does not love you enough to risk his father’s fury (he must be wild for you)', fx: () => secretWed() },
+        { t: 'Be his acknowledged mistress instead', fx: () => { x.st = 'mistress'; x.ask = S.year; st('piety', -4); st('renown', 3); coin(R(30, 80)); return 'You said you would not cost him a crown. He kissed you, and the next morning the whole court knew. You have rooms of your own now, a gown for every feast day, and a great many enemies. Keep courting him: a mistress who bores a prince is sent home just like a girl who bores him.'; } },
+        { t: 'Refuse him, and go home with your honour', fx: () => { st('piety', 5); st('renown', 4); st('happy', -6); return sendHome('You told him a village girl could not be a princess, and would not be anything less. He did not understand, and you did not explain.'); } },
+      ] };
+  }
+  function kingAnswer() {
+    const x = pc(); x.ask = S.year;
+    const odds = Math.max(.04, Math.min(.6, (x.king ? .3 : x.heir ? .06 : .2) + S.stats.renown / 350 + (60 - x.opp) / 200 + (x.ard - 80) / 100 + (x.hon || 0) * .03));
+    if (P(odds)) return wed(false, x.king ? 'The council argued for a month. The king listened politely, and married you anyway, in the royal chapel, before the whole glittering, furious court.' : `${kingN()} said no three times. Then, worn down by his son and charmed despite himself, said yes. You were married in the royal chapel before the whole glittering, furious court.`);
+    opp(10); ard(-5);
+    return `${x.king ? 'The council said no, and his mother said it louder' : `${kingN()} said no`}. Worse: a bride is being found for ${PN()} in a foreign court, and the envoys are already haggling over her dowry. He swears it changes nothing. It changes everything. (Your chances were about ${Math.round(odds * 100)}%. Win over the royal family, and keep his heart, and you may ask again in a few years.)`;
+  }
+  function secretWed() {
+    const x = pc();
+    const t = wed(true, 'A priest, two witnesses, and a ring from his own finger, in a side chapel by candlelight. In the eyes of God you are his wife, whatever his father says when he finds out.');
+    opp(25);
+    Q.push(() => showEvent(furyEvent()));
+    return t;
+  }
+  function furyEvent() {
+    const x = pc();
+    return { id: 'pc_fury', icon: '⚡',
+      text: () => `${kingN()} has found out. He has sworn before the whole council that the marriage will be annulled, ${PN()} sent abroad, and you shut up in a nunnery for the rest of your life.`,
+      choices: [
+        { t: 'Throw yourself on the queen’s mercy', fx: () => { if (P(.4 + (100 - x.opp) / 220)) { opp(-15); return `The queen went to the king on her knees. He shouted for a week, then had the marriage blessed again in public, as if it had been his idea all along.`; } return annul(); } },
+        { t: 'Stand your ground: you are his lawful wife', fx: () => { if (P(.4 + S.stats.wits / 300 + S.stats.renown / 400)) { st('renown', 8); return 'The archbishop himself ruled that a marriage freely made before a priest cannot be unmade by any king. The king will never forgive you, but he cannot touch you.'; } if (x.heir && x.opp >= 80 && P(.25)) { die('murdered by the king’s knights, for loving his son'); return 'The king’s knights came for you at night, while the prince was away hunting. He never forgave his father, and when he was king he dug up your body and crowned it.'; } return annul(); } },
+        { t: 'Let the marriage go, to save him', fx: () => { st('piety', 3); return annul(true); } },
+      ] };
+  }
+  function annul(willing) {
+    const x = pc(); const sp = S.kin.find(k => k.pcP && k.sp && k.alive);
+    if (sp) { sp.sp = 0; sp.alive = true; sp.bond = Math.max(40, sp.bond - 10); sp.job = sp.job.replace(/, heir to the throne$/, ''); sp.ex = 1; }
+    removeTitle(`Princess of ${S.realm}`); if (x.duchy) removeTitle(`Duchess of ${x.duchy}`); S.flags.consort = 0;
+    x.st = 'over'; x.at = 0;
+    if (x.from) S.village = x.from;
+    if (CLS_ORDER.indexOf(S.cls) > CLS_ORDER.indexOf('craft')) S.cls = 'craft';
+    st('happy', -12);
+    if (!willing && hist() && TRACKS.church) { if (S.job) quitJob(); setJob('church', 0); return 'The marriage was annulled by a bishop who owed the king money. You were taken to a convent in the hills and given a novice’s veil. The abbess is kind. The walls are high.'; }
+    if (x.home != null) S.home = x.home;
+    return `The marriage was annulled, and ${PN()} sent abroad. You were given a purse and a cart home to ${x.from}.`;
+  }
+  function fadeEvent() {
+    const x = pc();
+    return { id: 'pc_fade', icon: '🍂',
+      text: () => `${PN()} has a new favourite, ${x.rival || (x.rival = rivalName())}. ${x.st === 'mistress' ? 'The jewels stopped coming at Easter.' : 'He has not spoken to you since Easter.'} This morning the chamberlain told you, not unkindly, that your place in the queen’s household is wanted for someone else, and that a cart leaves for ${x.from} at dawn.`,
+      choices: [
+        { t: 'Go home with your head high', fx: () => { st('renown', 1); st('happy', -8); return sendHome('You climbed into the cart without a tear, at least until the palace was out of sight.'); } },
+        { t: 'Beg him for one more chance', fx: () => { if (P(.2 + S.stats.looks / 400)) { x.ard = 42; x.c = 1; st('happy', 3); return 'You found him alone in the chapel and said everything you had been afraid to say. He took your hands and sent the cart away. The court has started whispering again.'; } st('renown', -4); st('happy', -10); return sendHome('He would not see you. A page brought you a purse and his regrets.'); } },
+        { t: 'Ask for something to take home', fx: () => { const g = R(15, 45) + (x.st === 'mistress' ? R(30, 80) : 0); coin(g); st('renown', -1); return sendHome(`The chamberlain counted out ${g} silver for your “services to the queen”, and did not meet your eye.`); } },
+        { t: 'Ask the queen to keep you in her service', ok: () => x.opp <= 35 && !!S.job && jobFam() === 'court', why: 'The queen does not think well enough of you (win over the royal family first)', fx: () => { x.st = 'over'; x.at = 0; if (S.job) jobPerf(5); return 'The queen remembered how well you had served her. You stay in her household on your own merit now, and you never again have to laugh at a prince’s jokes.'; } },
+      ] };
+  }
+  function brideEvent() {
+    const x = pc();
+    const rs = S.world && S.world.rul ? Object.keys(S.world.rul).filter(r => r !== S.realm) : [];
+    const from = rs.length ? pick(rs) : 'over the sea';
+    return { id: 'pc_bride', icon: '👰',
+      text: () => `${PN()} is to marry ${rs.length ? `the Princess of ${from}` : 'a princess from over the sea'}. The treaty is sealed, the bride is on the road, and her ladies have already asked who you are.`,
+      choices: [
+        { t: 'Stay on as his mistress', fx: () => { x.st = 'mistress'; x.wife = from; opp(15); ard(-R(5, 12)); st('piety', -3); return 'He married her in the cathedral and came to your rooms that same week. The new princess knows, and she will never forgive either of you.'; } },
+        { t: 'Ask him for a husband and a manor', fx: () => settle() },
+        { t: 'Go home before you are sent', fx: () => { const g = R(20, 60); coin(g); st('renown', 2); return sendHome(`You left before the bride arrived, with ${g} silver and your dignity.`); } },
+      ] };
+  }
+  function deadEvent(how) {
+    const x = pc();
+    return { id: 'pc_dead', icon: '🕯️',
+      text: () => `${PN()} is dead, ${how}. The palace is hung with black, and nobody has any use now for the girl he brought from ${x.from}.`,
+      choices: [
+        { t: 'Mourn him, and go home', fx: () => { st('happy', -14); st('piety', 3); return sendHome('You walked behind the coffin at the very back, among the servants, and nobody stopped you.'); } },
+        { t: 'Ask the queen for a place in a convent', ok: () => !spouse(), why: 'You are married', fx: () => { st('happy', -10); x.st = 'over'; x.at = 0; if (S.job) quitJob(); if (TRACKS.church) setJob('church', 0); if (x.home != null) S.home = x.home; return 'The queen, who had lost a son, gave you a dowry for the nuns of a royal abbey. You will pray for his soul for the rest of your life.'; } },
+      ] };
+  }
+  const PALACE = [
+    () => ({ id: 'pc_rumour', icon: '🐍', text: () => `${pc().rival || (pc().rival = rivalName())} has been telling the court that you are a witch, and that you put a charm in the prince’s wine.`,
+      choices: [
+        { t: 'Confront her in front of everyone', fx: () => { if (P(.4 + (S.stats.wits + S.stats.looks) / 500)) { st('renown', 4); ard(R(3, 6)); return 'You asked her, sweetly and in front of the whole hall, whether she needed a charm herself. The hall roared. She has gone very quiet.'; } st('renown', -5); opp(6); return 'She was ready for you. She wept, beautifully, and you looked like a fishwife.'; } },
+        { t: 'Tell the prince', fx: () => { if (P(.55)) { ard(R(2, 6)); return 'He laughed, and danced with you twice as often to spite her.'; } ard(-R(3, 6)); return 'He sighed and said he had no time for women’s quarrels. Then he went hunting.'; } },
+        { t: 'Ignore it, and go to Mass', fx: () => { st('piety', 2); if (P(.25)) { opp(5); return 'The rumour spread. The queen’s confessor has asked to see your rosary.'; } return 'The rumour died for want of feeding.'; } },
+      ] }),
+    () => ({ id: 'pc_warn', icon: '🦁', cond: () => !pc().king, text: () => `${kingN()} sends for you. “My son is not for you,” the ${kingW()} says. “Go home of your own accord, with silver in your purse. Or stay, and be sent home with nothing.”`,
+      choices: [
+        { t: 'Curtsey, and say nothing at all', fx: () => { opp(3); return 'You curtseyed to the floor and said nothing. The king looked at you for a long time and waved you away.'; } },
+        { t: 'Tell the king you love his son', fx: () => { if (P(.35 + S.stats.looks / 400 + S.stats.wits / 400)) { opp(-10); return 'The king stared, then laughed. “By God, the girl has spirit,” he said, and let you go. The court is still talking about it.'; } opp(12); return '“Love,” said the king, “is for minstrels.” You have made an enemy of the one man who matters most.'; } },
+        { t: 'Take the purse, and go home', fx: () => { const g = R(40, 90); coin(g); return sendHome(`You took the king’s purse, ${g} silver, and went. The prince wrote to you twice, and then stopped.`); } },
+      ] }),
+    () => ({ id: 'pc_jewel', icon: '💎', text: () => `${PN()} gives you a jewel that belonged to his mother: a sapphire as big as a quail’s egg. Everyone in the palace will know it.`,
+      choices: [
+        { t: 'Wear it at the feast', fx: () => { st('renown', 3); opp(6); ard(R(2, 5)); return 'You wore it at the feast. Half the hall gasped, and the queen went white.'; } },
+        { t: 'Keep it hidden, and thank him', fx: () => { st('piety', 1); ard(R(1, 4)); return 'You hid it in your shift and thanked him in private. He liked that better than you would think.'; } },
+        { t: 'Sell it, and send the silver home', fx: () => { const g = R(40, 90); coin(g); const pa = parent(); if (pa) bond(pa, 10); if (P(.45)) { ard(-R(8, 14)); return `A goldsmith on the bridge paid ${g} silver. The prince saw his mother’s sapphire on a merchant’s wife at Easter.`; } return `A goldsmith on the bridge paid ${g} silver, and your family has a new roof and a cow. The prince never asked.`; } },
+      ] }),
+    () => ({ id: 'pc_home', icon: '✉️', text: () => `A letter comes from ${pc().from} in the priest’s hand: the harvest has failed, and your family is going hungry.`,
+      choices: [
+        { t: 'Send silver home (10 silver)', ok: () => S.coin >= 10, why: 'You do not have 10 silver', fx: () => { coin(-10); const pa = parent(); if (pa) bond(pa, 12); st('happy', 2); return `You sent all you could. The whole of ${pc().from} knows you did not forget them.`; } },
+        { t: 'Ask the prince to help them', fx: () => { const pa = parent(); if (pa) bond(pa, 10); ard(-2); opp(3); return 'He sent a wagon of grain without a second thought. The court says you are making him buy your village.'; } },
+        { t: 'Do nothing', fx: () => { st('happy', -5); const pa = parent(); if (pa) bond(pa, -12); return 'You had nothing to send, or told yourself so. Nobody from home has written since.'; } },
+      ] }),
+    () => ({ id: 'pc_temper', icon: '🍷', text: () => `${PN()} comes to you drunk and furious after a quarrel with his father, and takes it out on you.`,
+      choices: [
+        { t: 'Calm him, and listen', fx: () => { if (P(.45 + S.stats.wits / 250)) { ard(R(5, 9)); return 'You let him rage until he wept, and then you let him sleep. In the morning he was ashamed, and grateful.'; } ard(-R(2, 5)); st('happy', -4); return 'Nothing you said helped. He threw a cup at the wall, and then at you.'; } },
+        { t: 'Leave him to it', fx: () => { ard(-R(2, 6)); return 'You left him shouting at the tapestries. He did not come to find you for a week.'; } },
+        { t: 'Tell the queen', fx: () => { opp(-6); ard(-R(6, 10)); return 'The queen thanked you, and scolded her son. He knows who told her.'; } },
+      ] }),
+    () => ({ id: 'pc_rooms', icon: '🚪', cond: () => pc().st === 'court' && S.age >= 18, text: () => `${PN()} asks you to come to his rooms tonight. He does not mean to talk about falconry.`,
+      choices: [
+        { t: 'Go to him', fx: () => { const x = pc(); x.st = 'mistress'; ard(R(4, 9)); st('piety', -4); st('happy', 4); return 'The door closed behind you. What happened next is between you, him, and your confessor. By morning the whole palace knew: you are the prince’s mistress now.'; } },
+        { t: 'Refuse: not before a wedding', fx: () => { const x = pc(); x.hon = (x.hon || 0) + 1; if (P(.6)) { ard(R(6, 12)); return 'He stormed off. Then he came back with flowers. A girl who says no to a prince is a girl he cannot stop thinking about.'; } ard(-R(6, 10)); x.rival = x.rival || rivalName(); return `He went off in a temper, and found ${x.rival} more obliging.`; } },
+        { t: 'Go, but only to talk', fx: () => { ard(R(1, 5)); return 'You talked until the candles burned out, about his father, your mother, and the sea, which neither of you had seen.'; } },
+      ] }),
+    () => ({ id: 'pc_manners', icon: '🎭', text: () => 'The queen’s ladies laugh behind their fans at your village speech, your village walk and the way you hold your knife.',
+      choices: [
+        { t: 'Pay a dancing master for lessons (6 silver)', ok: () => S.coin >= 6, why: 'You do not have 6 silver', fx: () => { coin(-6); st('wits', 2); st('looks', 2); opp(-4); return 'French, dancing, carving and how to curtsey to a bishop. By Lent you could pass for a knight’s daughter, nearly.'; } },
+        { t: 'Laugh louder than they do', fx: () => { if (P(.5)) { st('renown', 3); return 'You did an impression of the chief lady-in-waiting that had the pages crying. The ladies have stopped laughing, at least at you.'; } st('renown', -3); return 'Laughing at yourself made it worse. Now they laugh at you twice.'; } },
+        { t: 'Weep in the laundry', fx: () => { st('happy', -5); return 'The laundresses gave you bread and dripping and told you the ladies’ secrets. Now you know which ones wear false hair.'; } },
+      ] }),
+  ];
+  const palaceEvent = () => { const ok = PALACE.map(f => f()).filter(e => !e.cond || e.cond()); return ok.length ? pick(ok) : null; };
+
+  /* ---------- it begins: a rare chance ---------- */
+  EVENTS.push({ id: 'pc_sees', min: 18, max: 26, once: true, w: 8, icon: '🤴',
+    cond: () => S.sex === 'f' && ['serf', 'peasant', 'craft'].includes(S.cls) && !S.ruling && !spouse() && !S.vows && !S.jail && S.stats.looks >= 70 && !disguised() && !atSea() && !fl().outlaw && !fl().rebel && !fl().pc,
+    init: () => ({ x: makePrince(), where: { serf: 'You were at the well when the royal hunt came down to water its horses', peasant: 'You were in the hayfield when the royal hunt came over the hill', craft: 'You were at your family’s stall on market day when the court rode through' }[S.cls] }),
+    text: c => `${c.where}. A young man in green and gold reined in beside you and asked your name. Then he asked it again, so that he would not forget it. He was Prince ${c.x.n}, ${relW(c.x)}, aged ${S.year - c.x.by}. Three days later a royal messenger came to ${S.village} with a purse for your family and a place for you in the queen’s household. The whole village is at your door, and everyone knows what kind of place it is.`,
+    choices: [
+      { t: 'Go to the palace', fx: c => goPalace(c.x) },
+      { t: 'Ask the priest what to do', fx: c => { if (P(.5)) { st('piety', 2); return goPalace(c.x) + ' (The priest told you to go, keep your virtue, and send money to the church roof.)'; } st('piety', 3); fl().pc = { st: 'no' }; return 'The priest told you that a prince’s favour is a ladder with no top rung and no bottom one. You sent the messenger away. You will wonder about it for the rest of your life.'; } },
+      { t: 'Stay in the village', fx: () => { fl().pc = { st: 'no' }; st('happy', -2); st('piety', 2); return 'You sent the messenger away with a curtsey. Your mother called you a fool for a week. The miller’s son, for one, was very pleased.'; } },
+    ] });
+
+  /* ---------- deeds: keeping his heart ---------- */
+  const PC_DEEDS = [
+    { k: 'pc_court', g: 'Love and family', i: '🤴', get n() { const x = pc(); return x && x.n ? `Court Prince ${x.n}` : 'Court the prince'; }, d: 'Walk with him, dance with him, write to him, ride out with him. A prince’s heart wanders if it is not held, and then you go home. Once a year.', min: 16, once: 1, only: () => active(), run: () => ({ event: courtCard() }) },
+    { k: 'pc_win', g: 'Love and family', i: '👑', n: 'Win over the royal family', d: 'The king and the court think you a scandal. Change their minds, or at least their tempers. Once a year.', min: 16, once: 1, only: () => active(), run: () => ({ event: winCard() }) },
+  ];
+  {
+    const at = DEEDS.map(d => d.g).indexOf('Love and family');
+    DEEDS.splice(at < 0 ? DEEDS.length : at, 0, ...PC_DEEDS);
+  }
+  XACT.pc_court = () => { const d = DEEDS.find(x => x.k === 'pc_court'); const w = d ? deedWhy(d) : 'Not now'; if (w !== true) return toast(w); doDeed('pc_court'); };
+
+  /* ---------- once a year at the palace ---------- */
+  YEARLY.push(() => {
+    const x = pc(); if (!S || !S.alive || !x || !active()) return;
+    if (S.ruling || S.vows || spouse()) { x.st = 'over'; x.at = 0; return; }
+    if (S.jail) { ard(-15); x.c = 0; return; }
+    if (P(.008)) { const how = pick(['of a fall at the tourney', 'of a fever caught on campaign', 'in a hunting accident in the royal forest']); const w = wRuler(S.realm); if (w && w.heir && w.heir.n === x.n) w.heir = null; if (x.king && w && w.n === x.n && S.world) { x.st = 'dying'; try { wDies(S.world, S.realm, w, true, true); } catch (e) { console.error(e); } x.st = 'court'; } Q.push(() => showEvent(deadEvent(how))); return; }
+    if (x.c) ard(-R(2, 6)); else { ard(-R(10, 16)); say(`You did not court ${PN()} this year, and he noticed. He ${ardW(x.ard)}.`, 'bad'); }
+    x.c = 0;
+    if (x.st === 'mistress') {
+      const g = R(15, 45); coin(g); say(`${PN()} gave you ${g} silver and a new gown for Easter.`, 'money');
+      if (S.age <= 42 && (x.kids || 0) < 4 && P(.16)) {
+        const sx = P(.5) ? 'm' : 'f'; const ch = person(sx, 0, S.cls, { ch: 1, bond: R(72, 92), sur: 'FitzRoy', job: '', look: childLook(S.look, x.look) }); ch.name = pick(NAMES[sx]); ch.royalB = 1; S.kin.push(ch); x.kids = (x.kids || 0) + 1;
+        say(`You bore ${PN()} a ${sx === 'm' ? 'son' : 'daughter'}, ${ch.name} FitzRoy. He has acknowledged the child, and sent a silver cup.`, 'good');
+      }
+    }
+    if (x.ard < 25) { Q.push(() => showEvent(fadeEvent())); return; }
+    if (x.ard < 40) say(`${PN()} danced with ${x.rival || 'another lady'} three times at Candlemas. Court him this year, or lose him.`, 'bad');
+    const yrsAt = S.year - x.y0;
+    if (x.st === 'court' && x.ard >= 80 && yrsAt >= 2 && (!x.ask || S.year - x.ask >= 4)) { Q.push(() => showEvent(askEvent())); return; }
+    if (((x.st === 'mistress' && yrsAt >= 3) || (x.ask && S.year - x.ask >= 1)) && !x.wife && P(.22)) { Q.push(() => showEvent(brideEvent())); return; }
+    if (P(.45)) { const e = palaceEvent(); if (e) Q.push(() => showEvent(e)); }
+  });
+
+  /* ---------- the Kin page: the prince ---------- */
+  {
+    const _kh = kinHTML;
+    kinHTML = function () {
+      const h = _kh.apply(this, arguments);
+      if (!S || !active()) return h;
+      const x = pc();
+      const pic = kinPortrait({ id: 'pc' + x.n, name: x.n, sex: 'm', age: pAge(x), look: x.look, cls: 'royal', job: 'Prince', alive: true, bond: x.ard });
+      const done = S.flags.y_pc_court === S.year;
+      const box = `<h3 class="sec">${x.king ? 'The king' : 'The prince'}</h3><button class="item" data-act="pc_court"><span class="ic pic" aria-hidden="true">${pic}</span><span class="tx"><b>${esc(PN())}, ${pAge(x)}</b><small>${esc(capF(relW(x)))}. He ${esc(ardW(x.ard))}. ${esc(capF(oppWho()))} ${esc(oppW(x.opp))}. ${x.st === 'mistress' ? 'You are his acknowledged mistress.' : `${yrs(S.year - x.y0)} at court.`} ${done ? 'You have courted him this year.' : `Court him this year, or be sent home to ${esc(x.from)}.`}</small></span></button>`;
+      const at = h.indexOf('<h3 class="sec">');
+      return at >= 0 ? h.slice(0, at) + box + h.slice(at) : box + h;
+    };
+  }
+
+  /* ---------- a princess, a queen, a widow ---------- */
+  {
+    const _hn = honor;
+    honor = function () {
+      const x = S && fl().pc;
+      if (x && !S.ruling && !S.flags.consort) {
+        if ((x.st === 'wed' || x.st === 'widow') && x.heir && S.titles.includes(`Princess of ${S.realm}`)) return 'Princess';
+        if (x.dowager) return 'Queen';
+      }
+      return _hn.apply(this, arguments);
+    };
+    const _wd = wDies;
+    wDies = function (w, r, xr, own) {
+      const x = S && fl().pc, sp = spouse();
+      const mine = own && x && x.st === 'wed' && sp && sp.pcP;
+      const heirIsHim = mine && !S.flags.consort && x.heir && xr && xr.heir && xr.heir.n === sp.name;
+      const wasKing = mine && S.flags.consort && xr && xr.n === sp.name;
+      const courting = own && x && (x.st === 'court' || x.st === 'mistress') && x.at && !x.king;
+      const nowKing = courting && x.heir && xr && xr.heir && xr.heir.n === x.n;
+      const res = _wd.apply(this, arguments);
+      try {
+        if (nowKing) { x.king = 1; x.heir = 0; say(`The old ${KT() === 'Queen' ? 'queen' : 'king'} is dead, and the prince who brought you from ${x.from} is ${KT()} ${S.king} now. The whole court is watching to see what he does with you.`, 'gold'); }
+        else if (courting && !x.heir && x.rel === 'son2') x.rel = 'brother';
+        if (heirIsHim) {
+          S.flags.consort = 1; S.cls = 'royal'; sp.job = `King of ${S.realm}`; removeTitle(`Princess of ${S.realm}`); st('renown', 15); feat('pc_queen');
+          say(`${KT()} ${S.king} is crowned, and you beside him: Queen of ${S.realm}. The girl from ${x.from} wears a crown.`, 'gold');
+        } else if (wasKing) { x.dying = 1; kinDies(sp, 'in the royal bedchamber, and was buried among the kings of the realm'); x.dying = 0; }
+      } catch (e) { console.error(e); }
+      return res;
+    };
+    const _kd = kinDies;
+    kinDies = function (k, cause) {
+      const was = !!(k && k.alive && k.pcP && k.sp);
+      const r = _kd.apply(this, arguments);
+      if (was) {
+        const x = fl().pc;
+        if (x) {
+          if (S.flags.consort) {
+            S.flags.consort = 0; S.cls = 'noble'; x.dowager = 1; addTitle(`Dowager Queen of ${S.realm}`);
+            const xr = wRuler(S.realm);
+            if (!x.dying && xr && xr.n === k.name) { x.dying = 1; try { wDies(S.world, S.realm, xr, true, true); } catch (e) { console.error(e); } x.dying = 0; }
+          } else if (x.heir) { const xr = wRuler(S.realm); if (xr && xr.heir && xr.heir.n === k.name) xr.heir = null; }
+          x.st = 'widow';
+        }
+      }
+      return r;
+    };
+  }
+  if (typeof FEATS !== 'undefined' && Array.isArray(FEATS) && !FEATS.some(f => f.k === 'pc_queen')) FEATS.push({ k: 'pc_queen', i: '👸', n: 'From the Well to the Throne', d: 'A village girl, crowned queen beside the prince who saw her at the well.' });
 }
 
 /* ================= Storylines: tales that come back every few years, chapter by chapter (prefix sl_) ================= */

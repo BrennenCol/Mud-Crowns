@@ -273,6 +273,40 @@ still be reached from a first job.
 - A double tap never zooms the page. In the phone apps, pinch zoom and
   long-press text selection are off too, so it feels like an app.
 
+## Women's roads, and the prince's eye (v1.12)
+
+Under historical rules a woman can now climb to the top in her own name,
+without passing as a man, by the roads women really walked in the Middle
+Ages. The bench, the pulpit, the universities and the army stay closed to
+women, as they were.
+
+- **The queen's household:** a laundress can become Laundress to the Queen,
+  then Chamberer, Damsel of the Queen's Chamber, Mistress of the Queen's
+  Chamber, and at last First Lady of the Queen's Household.
+- **The royal nursery:** a nursemaid or wet nurse can become Rocker of the
+  Royal Cradle, Nurse to the Royal Children, Lady Mistress of the Royal
+  Nursery, and Royal Governess.
+- **Holy women:** Lay Sister (no dowry asked), Beguine and Grand Mistress of
+  the Beguinage, Hospital Sister and Mistress of the Hospital, and above an
+  Abbess, the Princess-Abbess of a great royal abbey.
+- **Skilled women:** Sworn Midwife and Midwife to the Queen, Silkwoman to the
+  Crown, the Queen's Embroideress, Illuminator, Household Governess and Woman
+  of Letters.
+- **Friends in high places:** tutor children for a fee to build up teaching
+  experience on the side, seek a patroness or patron, and ask a patron who
+  thinks well of you for a place. A great lady may also notice a hard worker
+  and take her up.
+- **Old dead ends fixed:** the Royal Governess and the Astronomer used to need
+  a post that only men could hold first. Now there are ways in for women.
+- **The prince's eye:** a rare chance for a very pretty village girl. A prince
+  sees her and brings her to the palace with a place in the queen's
+  household. Court him every year (Deeds, or the prince on the Kin page) and
+  win over the royal family. If his heart cools, she is sent home to her
+  village. If it does not, he may ask the king for her hand, marry her in
+  secret, or keep her as his mistress until he weds a princess. A prince who
+  becomes king can make her queen. Romance is between adults only and fades
+  to black.
+
 ## One law for the poor, another for the great (v1.11)
 
 - **The punishment fits the crime**, as medieval law had it. Petty theft,

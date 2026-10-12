@@ -62,7 +62,7 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 ## What's new (for this version)
 
 ```
-One law for the poor, another for the great. The punishment fits the crime: the stocks, the pillory, the gaol, the rope, the stake. No court can try a king, princes are judged by the crown, lords go to the block instead of the gallows and pay blood money, and clerks claim the church courts. Escape a hanging the old ways: a jury of your neighbours, the neck verse, trial by combat, sanctuary and exile. And a sentence is served. Also: fights won by health and training, murder that is remembered, prison life, and lords who are cold to their serfs.
+Women's roads. Rise to the top in your own name: from laundress to First Lady of the Queen's Household, from nursemaid to Royal Governess, from beguine to Grand Mistress, from abbess to Princess-Abbess, from midwife to Midwife to the Queen, and silkwoman to the crown. Tutor children for experience, find a patroness, and ask her for a place. And a rare chance for a pretty village girl: a prince brings her to the palace. Keep his heart, or be sent home to your village.
 ```
 
 ## Category
