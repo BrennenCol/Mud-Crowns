@@ -307,6 +307,13 @@ women, as they were.
   becomes king can make her queen. Romance is between adults only and fades
   to black.
 
+### No bald spots (v1.12.2)
+
+- Women's hair now covers the whole top of the head in every style. A little
+  bump of skin used to show at the crown, like a bald spot. Some men's
+  styles had the same problem, more faintly, and are fixed too. Only some
+  men over 44 go bald, on purpose.
+
 ### Steady on a phone (v1.12.1)
 
 - The start screen and the birth screen (where you make your own character)
