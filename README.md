@@ -307,6 +307,12 @@ women, as they were.
   becomes king can make her queen. Romance is between adults only and fades
   to black.
 
+### Steady on a phone (v1.12.1)
+
+- The start screen and the birth screen (where you make your own character)
+  now scroll only up and down. On iPhone the page used to slide left and
+  right under your thumb.
+
 ## One law for the poor, another for the great (v1.11)
 
 - **The punishment fits the crime**, as medieval law had it. Petty theft,

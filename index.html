@@ -486,6 +486,10 @@ html,body{overscroll-behavior:none}
 .sw2{width:28px;height:28px;border-radius:50%;border:2px solid var(--vellum);box-shadow:0 0 0 1px var(--rule-2);cursor:pointer;padding:0}
 .sw2[aria-pressed="true"]{box-shadow:0 0 0 2.5px var(--rubric)}
 .cyc{padding:5px 9px;border:1px solid var(--rule-2);border-radius:999px;background:var(--vellum);cursor:pointer;font-size:14px;color:var(--ink)}
+.screen{overflow-x:hidden;overscroll-behavior:none;touch-action:pan-y}
+.screen>.start{width:100%;max-width:460px;min-width:0}
+.start .inp,.form label,.seg,.creator,.cr-row,.swatches{min-width:0;max-width:100%}
+select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 </style>
 </head>
 <body>
@@ -524,7 +528,7 @@ html,body{overscroll-behavior:none}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.12.0';
+const APP_VERSION = '1.12.1';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -26413,7 +26417,7 @@ function showCustom() {
   <label>Family name<input class="inp" id="cl" maxlength="22" autocomplete="off" placeholder="Leave blank for a random name"></label>
   <fieldset class="seg"><legend>Born a</legend><button type="button" data-s="sex" data-v="" aria-pressed="true">Either</button><button type="button" data-s="sex" data-v="m" aria-pressed="false">Boy</button><button type="button" data-s="sex" data-v="f" aria-pressed="false">Girl</button></fieldset>
   <label>Station<select class="inp" id="cc"><option value="">By the odds of birth</option>${CLS_ORDER.map(k => `<option value="${k}">${CLASSES[k].n}</option>`).join('')}</select></label>
-  <label>The rules of the age<select class="inp" id="cx"><option value="hist">Historical: women and men face the limits of their time</option><option value="relaxed">Relaxed: anyone may do anything</option></select></label>
+  <label>The rules of the age<select class="inp" id="cx"><option value="hist">Historical: true to the times</option><option value="relaxed">Relaxed: anyone may do anything</option></select></label>
   <label>Kingdom<select class="inp" id="cr"><option value="">Any</option>${REALMS.map(r => `<option>${r}</option>`).join('')}</select></label>
   <div class="creator"><div class="cr-h"><span class="pic cr-prev" id="lkPrev"></span><div><b>Your looks</b><small id="lkTxt">Leave as is and you will take after your parents.</small><button type="button" class="btn ghost mini2" data-s="lkrand">🎲 Surprise me</button></div></div>
   ${[['skin', 'Skin', SKINS], ['hair', 'Hair', HAIRS], ['eyes', 'Eyes', EYES]].map(([k, n, cols]) => `<div class="cr-row"><span>${n}</span><div class="swatches">${cols.map((c, i) => `<button type="button" class="sw2" style="background:${c}" data-s="lk" data-k="${k}" data-v="${i}" aria-label="${n} ${i + 1}"></button>`).join('')}</div></div>`).join('')}
