@@ -528,7 +528,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.12.3';
+const APP_VERSION = '1.12.4';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -851,7 +851,7 @@ function occState(o) {
   const n = fails.length;
   return n === 0 ? 'open' : n === 1 ? 'near' : 'lock';
 }
-const hireOdds = o => Math.max(.05, Math.min(.97, (o.hire != null ? o.hire : TRACKS[occPos(o)[0]].hire) + S.stats.renown / 400 + (S.stats.wits - 50) / 400 + influence() / 400));
+const hireOdds = o => Math.max(.05, Math.min(.97, (o.hire != null ? o.hire : TRACKS[occPos(o)[0]].hire) + S.stats.renown / 400 + (S.stats.wits - 50) / 400 + influence() / 400 + (typeof oldHand === 'function' ? oldHand(o) : 0)));
 function noteHeld(tr) {
   S.held = S.held || [];
   if (!S.held.includes(tr)) S.held.push(tr);
@@ -25321,6 +25321,117 @@ YEARLY.push(slYear);
   }
 }
 
+/* ================= v1.12.4 Clearer work (prefix qo_) ================= */
+// An old hand is taken back on; Renown says where it comes from; serfs are kept to what a bound villein could do;
+// and Find work lists only the posts your sex could hold in this age (a disguised woman sees the ones she could pass in).
+{
+  /* ---------- an old hand is taken back ---------- */
+  const heldBefore = o => {
+    if (!S) return false;
+    const [tr, lv] = occPos(o);
+    try { pathNote(); } catch (e) { }
+    const h = S.hiLv || {};
+    return (h[tr] != null && h[tr] >= lv) || (lv === 0 && (S.held || []).includes(tr));
+  };
+  const isMine = o => { const [tr, lv] = occPos(o); return !!S.job && S.job.track === tr && S.job.level === lv; };
+  // added to the odds of being hired, in hireOdds
+  window.oldHand = o => (S && heldBefore(o) && !isMine(o) ? .3 : 0);
+  {
+    const _oc = occChecks;
+    occChecks = function (o) {
+      const C = _oc.apply(this, arguments);
+      if (!S || isMine(o) || !heldBefore(o)) return C;
+      const row = { ok: true, label: 'Held this post before', why: '', tip: 'You have done this work before. You know it, and an old hand is far more likely to be taken back on.' };
+      const i = C.findIndex(c => !c.ok && /^Served as /.test(c.label));
+      if (i >= 0) C[i] = row; else C.push(row);
+      return C;
+    };
+  }
+
+  /* ---------- Renown: what it is, and where to win it ---------- */
+  let renDeeds = null, renMemo = { key: '', v: '' };
+  const wins = d => { try { return /st\('renown',\s*(R\(\s*[1-9]|[1-9])/.test(String(d.run)); } catch (e) { return false; } };
+  // the strongest ways first: a feast, a tourney, a duel, a favour; then your own trade's special work; then the rest
+  const BEST = ['feast', 'rp_tourney', 'joust', 'favour', 'rp_progress', 'matchkin'], NEXT = ['duel', 'tales', 'hunt'];
+  const pickK = ks => ks.map(k => DEEDS.find(d => d.k === k)).filter(Boolean);
+  const renownDeeds = () => renDeeds || (renDeeds = [
+    ...pickK(BEST),
+    ...(typeof TRADE !== 'undefined' ? TRADE.filter(wins).map(d => Object.assign(Object.create(d), { trade: 1 })) : []),
+    ...pickK(NEXT),
+    ...DEEDS.filter(d => wins(d) && !BEST.includes(d.k) && !NEXT.includes(d.k) && !/^dk_/.test(d.k) && !['alchemy', 'dice', 'clothes', 'train'].includes(d.k)),
+  ]);
+  const usable = d => { try { return d.trade ? tradeWhy(Object.getPrototypeOf(d)) === true : deedWhy(d) === true; } catch (e) { return false; } };
+  const where = d => d.trade ? 'Work, your trade' : d.g ? `Deeds, ${d.g}` : 'Work, your trade';
+  function renownTip() {
+    if (!S) return '';
+    const key = `${S.year}|${S.age}|${S.coin}|${S.deeds}|${S.job ? S.job.track : ''}`;
+    if (renMemo.key === key) return renMemo.v;
+    const now = [];
+    for (const d of renownDeeds()) {
+      if (!usable(d)) continue;
+      const n = d.n; if (!n || now.some(x => x.n === n)) continue;
+      now.push({ n, w: where(d) });
+      if (now.length >= 4) break;
+    }
+    const list = now.length ? `Right now you could: ${now.map(x => `${x.n} (${x.w})`).join('; ')}.` : 'Host a feast or ride in a tourney (Deeds, Leisure) when you can afford it.';
+    const v = `Renown is your fame across the realm, and it goes with you from job to job. ${list} Every promotion adds 3 to 6, and so do brave or generous choices when things happen to you. Crimes, scandals and failures take it away.`;
+    renMemo = { key, v };
+    return v;
+  }
+  try { Object.defineProperty(STAT_TIP, 'renown', { get: renownTip, configurable: true, enumerable: true }); } catch (e) { }
+  // the stat descriptions are made further down the page, so this waits until the page has loaded
+  setTimeout(() => { try { STAT_INFO.renown[1] = 'How famous you are across the whole realm. It opens high posts, makes kings listen, lets the poor rouse the commons, and raises your Influence. It is not the same as Standing: Standing (on the Work page) is only how your masters rate you in your current job, and it starts again in each new job.'; } catch (e) { } }, 0);
+
+  /* ---------- serfs: bound to the manor ---------- */
+  // A serf could farm, herd, labour, serve in the lord's house, be levied to fight, or enter religion with the lord's
+  // leave. Town offices, the sea, the crown's service, the universities and the great household needed a free man or
+  // woman. (Old saves keep any post already held.)
+  const SERF_SHUT = ['docker', 'ja_gongfarmer', 'tinker', 'mummer', 'jb_palmer', 'jb_pilgguide', 'pardoner', 'alchemist', 'wm_hospsister', 'wm_swornmidwife',
+    'watchman', 'executioner', 'herald', 'sailor', 'navigator', 'jb_friar', 'jb_undersheriff', 'jb_sheriff', 'jb_highsheriff', 'jb_prisonkeeper',
+    'courtier', 'magistrate', 'judge', 'diplomat', 'official', 'adviser', 'treasurer', 'chancellor', 'ladywait', 'spymaster',
+    'scholar', 'professor', 'jb_courtastro', 'castellan', 'shipcaptain', 'jb_privateer', 'jb_explorer', 'jb_discoverer',
+    'jb_cupbearer', 'jb_wardrobe', 'jb_chamberlain', 'jb_seneschal', 'jb_huntsman', 'jb_masterhorse', 'jb_tutor', 'jb_revels',
+    'wm_hospmistress', 'wm_royalmidwife', 'wm_princeabbess', 'jb_chantry', 'jb_preacher', 'jb_inquisitor', 'jb_legate',
+    'jb_royalguard', 'jb_guardcaptain', 'jb_kingscapt', 'jb_admiral', 'jb_admiralfleet', 'jb_gunner', 'jb_siegeeng', 'jb_quartermaster',
+    'jb_tsergeant', 'jb_tknight', 'jb_preceptor', 'jb_grandmaster', 'general', 'squire'];
+  for (const k of SERF_SHUT) if (OCC_BY[k]) OCC_BY[k].noSerf = 1;
+  // Entering religion needed the lord's leave, and a servant of God could not be held as a serf.
+  {
+    const _sj = setJob;
+    setJob = function (track) {
+      const free = !!(S && S.cls === 'serf' && TRACKS[track] && TRACKS[track].vows);
+      const r = _sj.apply(this, arguments);
+      if (free) { say('Your lord gave you leave to enter religion, as the law demands, and no servant of God can be held as a serf.', 'note'); freeSerf(); }
+      return r;
+    };
+  }
+
+  /* ---------- Find work: only the posts you could hold ---------- */
+  window.sexHidden = o => {
+    if (!S || !hist()) return false;
+    const g = genderRule(o); if (!g) return false;
+    if (g === 'f') return S.sex === 'm';
+    if (S.sex === 'm') return false;
+    return !((S.flags.disguise || S.flags.openWoman) && DISGUISE_OK.has(o.k)) && !(S.flags.openWoman && o.link && o.link[0] === 'soldier');
+  };
+  {
+    const _sk = seekHTML;
+    seekHTML = function () {
+      const h = _sk.apply(this, arguments);
+      if (!S || !hist()) return h;
+      const n = OCC.filter(o => sexHidden(o)).length; if (!n) return h;
+      const pass = S.sex === 'f' && (S.flags.disguise || S.flags.openWoman);
+      const note = S.sex === 'm'
+        ? `<p class="hint">${n} posts that were women’s work in this age are not shown. Switch to Relaxed rules in the menu to see every post.</p>`
+        : pass
+          ? `<p class="hint">${S.flags.openWoman ? 'You are known as a woman in arms' : 'You are passing as a man'}, so the soldiering, sea and labouring posts you could hold are shown too. ${n} posts still closed to you are not shown.</p>`
+          : `<p class="hint">${n} posts closed to women in this age are not shown. If you cut your hair and pass as a man (Deeds, Daring), the soldiering, sea and labouring posts a disguised woman could take will appear here. Or switch to Relaxed rules in the menu to see every post.</p>`;
+      const at = h.indexOf('</div>');
+      return at >= 0 ? h.slice(0, at + 6) + note + h.slice(at + 6) : note + h;
+    };
+  }
+}
+
 /* ================= Portraits: painted in the manner of a manuscript ================= */
 // Everyone has a "look": their genes. Children inherit from both parents, so a dynasty keeps its face.
 // The portrait is then dressed by age, station, trade, health and history (scars, prison, illness).
@@ -25585,7 +25696,7 @@ function myJobHTML() {
   } else {
     const t = TRACKS[S.job.track], L = t.levels[S.job.level];
     h += `<div class="jobcard"><span class="jc-i" aria-hidden="true">${t.i}</span><div><b>${esc(jobTitle())}</b><small>${t.n}, ${S.job.years} year${S.job.years === 1 ? '' : 's'}, ${payStr(t, L)}</small>`;
-    if (S.job.track !== 'crown') h += `<div class="bar" role="img" aria-label="Standing ${S.job.perf}%"><i class="${barCls(S.job.perf)}" style="width:${S.job.perf}%"></i></div><small>Standing with your superiors: ${S.job.perf}%</small>`;
+    if (S.job.track !== 'crown') h += `<div class="bar" role="img" aria-label="Standing ${S.job.perf}%"><i class="${barCls(S.job.perf)}" style="width:${S.job.perf}%"></i></div><small>Standing with your superiors: ${S.job.perf}%. This is how your masters rate your work in this job. High standing gets you promoted, very low standing gets you dismissed, and it starts again in each new job. (Renown is different: it is your fame across the realm, and it goes with you everywhere.)</small>`;
     h += '</div></div>';
     if (S.job.track === 'crown') h += btnItem('gocourt', '', '🏛️', 'Rule your kingdom', 'Your council, taxes, decrees and great works are in Realm, Court.', true, '›');
     // the job's own game comes first: a fleet, trade runs, duties of office
@@ -25594,7 +25705,7 @@ function myJobHTML() {
     const fam = jobFam(), acts = TRADE.filter(d => d.tr === S.job.track || (d.fams && d.fams.includes(fam)));
     h += `<h3 class="sec">This year at work</h3>`;
     h += `<p class="hint">Each of these uses one of your ${DEEDS_PER_YEAR} deeds (you have ${S.deeds} left). Your wage is paid anyway at the end of the year.</p>`;
-    if (S.job.track !== 'crown') h += btnItem('work', '', '💪', 'Work diligently', 'Raise your standing. Once a year.', S.workedYear === S.year ? 'Already done this year' : true);
+    if (S.job.track !== 'crown') h += btnItem('work', '', '💪', 'Work diligently', 'Raise your standing in this job. Once a year.', S.workedYear === S.year ? 'Already done this year' : true);
     if (S.job.track === 'thief') h += `<div class="heat"><span>Heat ${S.heat || 0}</span><span class="bar" role="img" aria-label="Heat ${S.heat || 0} of 100"><i class="${(S.heat || 0) >= 60 ? 'lo' : (S.heat || 0) >= 30 ? 'md' : 'hi'}" style="width:${S.heat || 0}%"></i></span></div>`;
     for (const d of acts) { const c = deedCost(d); h += btnItem('trade', d.k, d.i, d.n, d.d, S.deeds <= 0 ? 'No deeds left this year' : tradeWhy(d), c ? `${c} silver` : ''); }
     h += taskHTML();
@@ -25870,7 +25981,7 @@ function jobRow(o) {
 }
 function seekHTML() {
   const applied = S.appliedYear === S.year;
-  const all = OCC.filter(o => occBlock(o) !== 'This is your post');
+  const all = OCC.filter(o => occBlock(o) !== 'This is your post' && !(typeof sexHidden === 'function' && sexHidden(o)));
   const nOpen = all.filter(o => occState(o) === 'open').length, nNear = all.filter(o => occState(o) === 'near').length;
   let h = '<h3 class="sec">Seek a position</h3>';
   h += `<div class="sumbox"><b>${nOpen}</b> post${nOpen === 1 ? '' : 's'} open to you now${nNear ? `, and <b>${nNear}</b> more need just one thing` : ''}.${applied ? '<br><span class="warn">You already sought work this year. Turn the page to try again.</span>' : S.age < 12 ? `<br><span class="warn">You can start working at 12. Look ahead and plan your road.</span>` : ' You may apply for one post a year.'}</div>`;

@@ -307,6 +307,29 @@ women, as they were.
   becomes king can make her queen. Romance is between adults only and fades
   to black.
 
+### Clearer work (v1.12.4)
+
+- **Back to your old post.** If you are dismissed (say, the king turns you
+  out of the royal guard), you can apply again: having held the post counts
+  as the step below it, and an old hand is far more likely to be taken back.
+- **Where Renown comes from.** Every Renown requirement, and tapping Renown,
+  now names the deeds you can do right now that win it (a feast, a tourney,
+  calling in a favour, your trade's special work...), plus promotions and
+  brave choices.
+- **Renown and Standing explained.** Renown is your fame across the realm and
+  goes with you everywhere. Standing (on the Work page) is only how your
+  masters rate you in your current job: high gets you promoted, very low gets
+  you dismissed, and it starts again in each new job.
+- **Serfs are bound to the manor.** A serf can farm, herd, labour, serve in
+  the lord's house, be levied to fight, or enter religion. Town offices, the
+  sea, the crown's service, the universities, the royal household and the
+  king's guard now need you to be free first (about 70 posts). Taking holy
+  vows frees a serf, as the lord had to give leave.
+- **Find work shows only what you could hold.** Under historical rules men
+  no longer see women's posts and women no longer see men's. A woman who
+  passes as a man sees the soldiering, sea and labouring posts she could
+  take. Relaxed rules still show everything.
+
 ### Fair doors for men too, and an easy fresh start (v1.12.3)
 
 - A man can become a Court Official again. The only step into it used to be
