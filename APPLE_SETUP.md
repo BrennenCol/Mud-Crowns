@@ -125,7 +125,7 @@ and submit.
 
 | Message | Fix |
 |---|---|
-| The build waits with no log, then shows **cancelled** after about 15 minutes | GitHub had no Mac free of that kind. Run the workflow again and pick the other Mac in the **runner** box (`macos-15` instead of `macos-26`, or back). |
+| The build waits with no log, then shows **cancelled** after about 15 minutes | GitHub had no Mac free of that kind (the run's page says "capacity constraints" or "not acquired by Runner"). Run the workflow again and pick another Mac in the **runner** box. The Intel ones (`macos-26-intel`, `macos-15-intel`) are often free when the others are busy. |
 | `Cloud signing permission error` | The key in step 5 must have **Admin** access. Make a new one and replace the secrets. |
 | `No suitable application records were found` | Step 4 isn't done, or its bundle ID doesn't match `appId` in `capacitor.config.json`. |
 | `Set your own appId` | `capacitor.config.json` still says `com.example.mudcrowns`. |

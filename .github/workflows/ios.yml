@@ -11,9 +11,9 @@ on:
         type: boolean
         default: true
       runner:
-        description: Which of GitHub's Macs to use. If a build sits waiting and is cancelled, try the other one.
+        description: Which of GitHub's Macs to use. If a build sits waiting and is cancelled, try another (the Intel ones are often free when the others are busy).
         type: choice
-        options: [macos-26, macos-15]
+        options: [macos-26, macos-26-intel, macos-15, macos-15-intel]
         default: macos-26
   push:
     paths:
