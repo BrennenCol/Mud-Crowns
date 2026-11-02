@@ -307,6 +307,21 @@ women, as they were.
   becomes king can make her queen. Romance is between adults only and fades
   to black.
 
+### Fair doors for men too, and an easy fresh start (v1.12.3)
+
+- A man can become a Court Official again. The only step into it used to be
+  Lady-in-Waiting, which men cannot hold. Now men come in as a Page, Herald,
+  Scribe, Gentleman of the Chamber or Cupbearer. Women keep their way in
+  through Lady-in-Waiting, Maid of Honour, Damsel of the Queen's Chamber or
+  Cupbearer.
+- A man can become a Matchmaker too: as a house servant, peddler or town
+  crier, not only as a nursemaid.
+- A safety net: under historical rules the game never asks you to have held
+  a post your sex could not hold. If every step below a post were closed to
+  you, any post in the same line of work counts instead.
+- "Begin a new life" is now at the top of the Menu, so you can start over
+  without hunting for it (or deleting the app).
+
 ### No bald spots (v1.12.2)
 
 - Women's hair now covers the whole top of the head in every style. A little

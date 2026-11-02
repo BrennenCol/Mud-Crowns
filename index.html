@@ -528,7 +528,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.12.2';
+const APP_VERSION = '1.12.3';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -8089,6 +8089,47 @@ EVENTS.push(
       { t: 'Thank them, but stay where you are', fx: () => { st('piety', 1); return 'You are content where you are. Not everybody is.'; } },
     ] },
 );
+
+/* ---------- fair doors for both sexes (1.12.3) ---------- */
+// A post open to men must have a way in that a man can take, and the same for women. Men become court officials
+// as pages, heralds, clerks, gentlemen of the chamber or cupbearers; a man can broker marriages as a house servant,
+// a peddler or a town crier. Women keep every door they had.
+side('courtier', 'page', 'herald', 'scribe:1', 'wm_damsel', 'jb_cupbearer');
+side('ja_matchmaker', 'servant', 'maid', 'merchant', 'ja_crier');
+PATH_FEED = null;
+// And a safety net for any post where it still happens: under historical rules, steps closed to your sex are not
+// asked of you (or shown to you). If every step below a post is closed to you, any post in the same line of work
+// will do instead.
+{
+  const _pf = pathFeeders;
+  window.pathFeedersRaw = _pf;
+  let cache = { src: null };
+  const shut = f => {
+    if (f.lv === -2) return false;
+    const lv = f.lv < 0 ? 0 : f.lv;
+    const o = OCC.find(x => x.link && x.link[0] === f.tr && x.link[1] === lv) || OCC_BY[f.tr];
+    const g = o ? genderRule(o) : null;
+    if (g === 'f') return S.sex === 'm';
+    if (S.sex !== 'f') return false;
+    if (g === 'm') return !((S.flags.disguise || S.flags.openWoman) && DISGUISE_OK.has(o.k)) && !(S.flags.openWoman && o.link && o.link[0] === 'soldier');
+    return ladderMenOnly(f.tr, lv) && !((S.flags.disguise || S.flags.openWoman) && f.tr === 'soldier');
+  };
+  pathFeeders = function () {
+    const F = _pf.apply(this, arguments);
+    if (!S || !hist()) return F;
+    const key = S.sex + (S.flags.disguise ? 'd' : '') + (S.flags.openWoman ? 'o' : '');
+    if (cache.src !== F) cache = { src: F };
+    if (cache[key]) return cache[key];
+    const out = {};
+    for (const [k, fs] of Object.entries(F)) {
+      const ok = fs.filter(f => !shut(f));
+      if (ok.length) { out[k] = ok; continue; }
+      const o = OCC_BY[k], fam = o && famOf(o);
+      out[k] = fam ? [{ tr: '@' + fam, lv: -2 }] : [];
+    }
+    return (cache[key] = out);
+  };
+}
 }
 
 /* ================= Everyday life: from the cradle to the churchyard (module ea) ================= */
@@ -26236,6 +26277,7 @@ function menuHTML() {
   const o = occOfJob();
   let h = '<h3 class="sec">Right now</h3>';
   h += `<div class="sumbox"><b style="font-size:17px;color:var(--ink)">${esc(displayName())}</b>, age ${S.age}<br>${esc(roleLabel())}${S.job ? ` (${esc(TRACKS[S.job.track].n)})` : ''}. ${S.coin} silver. ${S.alive ? `${S.deeds} of ${DEEDS_PER_YEAR} deeds left this year.` : 'Deceased.'}<br><span class="warn" style="color:var(--ink-2)">${esc(coachText() || 'Your story is over. Begin a new life below, or continue as an heir.')}</span></div>`;
+  h += btnItem('confirmNew', '', '🌱', 'Begin a new life', S.alive ? 'Start over with a new character, or make your own. This life ends here.' : 'Start over from birth.', true);
   const am = ambDef();
   h += '<h3 class="sec">Your ambition</h3>';
   if (am) h += btnItem(S.alive && !S.amb.done ? 'ambition' : 'noop', '', S.amb.done ? '✅' : am.i, `${am.n}${S.amb.done ? ': fulfilled!' : ''}`, `${am.d} ${S.amb.done ? '' : `Progress: ${am.prog()}.`}${S.alive && !S.amb.done ? ' Tap to change (costs some Joy).' : ''}`, true, S.amb.done ? '✓' : '');
@@ -26250,7 +26292,6 @@ function menuHTML() {
   h += '<h3 class="sec">Roads of fortune</h3>' + btnItem('fortune', '', '🎡', 'Every road from where you stand', 'Freedom, wealth, knighthood, nobility, land, a crown, the Church, the outlaw life, and the ways down. How hard each one is for you right now.', true, '›');
   h += '<h3 class="sec">Roads to the crown</h3>' + crownRoadsHTML();
   h += '<h3 class="sec">Your lives</h3>';
-  h += btnItem('confirmNew', '', '🌱', 'Begin a new life', S.alive ? 'Abandon this one and start over.' : 'Start over from birth.', true);
   h += btnItem('grave', '', '🪦', 'The graveyard', 'Every life you have lived.', true);
   h += btnItem('feats', '', '🏅', 'Seals of fame', `Achievements across all your lives. ${FEATS.filter(f => getFeats()[f.k]).length} of ${FEATS.length} earned.`, true);
   h += '<h3 class="sec">Settings</h3>';
