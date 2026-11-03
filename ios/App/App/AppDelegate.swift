@@ -1,4 +1,5 @@
 import UIKit
+import AVFoundation
 import Capacitor
 
 @UIApplicationMain
@@ -7,8 +8,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        useAmbientAudio()
         return true
+    }
+
+    // The game's music and sound are "ambient" audio: they play alongside the player's own music
+    // (Apple Music, Spotify, YouTube) instead of pausing it, and the silent switch mutes them.
+    private func useAmbientAudio() {
+        try? AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default, options: [])
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -27,6 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        useAmbientAudio()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

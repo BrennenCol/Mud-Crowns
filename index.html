@@ -528,7 +528,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.12.4';
+const APP_VERSION = '1.13.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -5427,12 +5427,10 @@ function showWhatsNew() {
   store.set(NEWKEY, APP_VERSION);
   modalOpen = true;
   const items = [
-    ['👑', 'The queen’s household', 'a laundress can rise to chamberer, damsel of the chamber, mistress of the queen’s chamber, and first lady of the queen’s household.'],
-    ['🍼', 'The royal nursery', 'rocker of the royal cradle, nurse to the royal children, lady mistress of the nursery, and royal governess.'],
-    ['⛪', 'Holy women', 'lay sisters, beguines and the grand mistress of a beguinage, hospital sisters and the mistress of a hospital, and above an abbess, the princess-abbess of a royal abbey.'],
-    ['🤲', 'Skilled women', 'sworn midwife and midwife to the queen, silkwoman to the crown, the queen’s embroideress, illuminator, household governess and woman of letters.'],
-    ['🤝', 'Friends in high places', 'tutor children for a fee to gain teaching experience, seek a patroness or patron, and ask your patron for a place. Old dead ends, where the step below was closed to women, now have a way in.'],
-    ['🤴', 'The prince’s eye', 'a rare chance for a very pretty village girl: a prince sees her and brings her to the palace. Keep his heart every year, or be sent home to your village.'],
+    ['🎵', 'Sound and music', 'medieval tunes that follow your life, in the village, at court, in the cloister, at sea and at war, with bells, drums, coins and the turn of the page. Switch them in the menu, under Settings.'],
+    ['👑', 'Women’s roads', 'rise in your own name: the queen’s household, the royal nursery, the beguinages and great abbeys, midwife to the queen, silkwoman to the crown, and more.'],
+    ['🤴', 'The prince’s eye', 'a rare chance for a very pretty village girl: a prince brings her to the palace. Keep his heart every year, or be sent home.'],
+    ['⚖️', 'Fairer careers', 'Find work shows only the posts you could hold in this age, serfs are bound to the manor until they are free, an old hand is taken back on, and every Renown requirement tells you how to win it.'],
   ];
   $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Find work</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
@@ -25430,6 +25428,387 @@ YEARLY.push(slYear);
       return at >= 0 ? h.slice(0, at + 6) + note + h.slice(at + 6) : note + h;
     };
   }
+}
+
+/* ================= v1.13 Sound and music (prefix au_) ================= */
+// Everything is made in the browser with Web Audio: no sound files, nothing to download, nothing to license.
+// Music: medieval-style tunes, written fresh by a small composer in the old church modes, over a drone, as dances and
+// songs were then. The tune changes with your life: the village, the court, the cloister, the sea, war, the grave.
+// Sound: the page turning, coins, bells for weddings, births and deaths, drums in battle, a fanfare for a promotion.
+// The phone's silent switch mutes it all, and other apps' music keeps playing (the "ambient" audio session).
+{
+  const PKEY = 'mudcrowns.sound';
+  const prefs = (() => { const d = { music: 1, sfx: 1, mv: .7, sv: .9 }; try { return Object.assign(d, JSON.parse(store.get(PKEY) || '{}')); } catch (e) { return d; } })();
+  const mvol = () => (prefs.music ? Math.max(0, Math.min(1, +prefs.mv || 0)) : 0), svol = () => (prefs.sfx ? Math.max(0, Math.min(1, +prefs.sv || 0)) : 0);
+  const savePrefs = () => { try { store.set(PKEY, JSON.stringify(prefs)); } catch (e) { } };
+  let ctx = null, master = null, musicBus = null, sfxBus = null, verb = null, noiseBuf = null;
+
+  let offline = false, rendering = false;
+  function init() {
+    if (ctx) return ctx;
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null;
+    try { if (navigator.audioSession) navigator.audioSession.type = 'ambient'; } catch (e) { }
+    let c; try { c = new AC(); } catch (e) { return null; }
+    return build(c);
+  }
+  function build(c) {
+    ctx = c;
+    const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 4; comp.connect(ctx.destination);
+    master = ctx.createGain(); master.gain.value = 1; master.connect(comp);
+    verb = ctx.createConvolver(); verb.buffer = impulse(2.4, 2.6);
+    const vg = ctx.createGain(); vg.gain.value = .3; verb.connect(vg); vg.connect(master);
+    musicBus = ctx.createGain(); musicBus.gain.value = offline ? .7 : mvol(); musicBus.connect(master); musicBus.connect(verb);
+    sfxBus = ctx.createGain(); sfxBus.gain.value = offline ? .9 : svol(); sfxBus.connect(master);
+    const sv = ctx.createGain(); sv.gain.value = .35; sfxBus.connect(sv); sv.connect(verb);
+    noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+    { const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+    return ctx;
+  }
+  function impulse(sec, decay) {
+    const n = Math.floor(ctx.sampleRate * sec), b = ctx.createBuffer(2, n, ctx.sampleRate);
+    for (let c = 0; c < 2; c++) { const d = b.getChannelData(c); for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, decay); }
+    return b;
+  }
+  const live = () => !!ctx && (offline || ctx.state === 'running');
+
+  /* ---------- instruments ---------- */
+  // lute and harp: a plucked string (Karplus-Strong), worked out once per note and kept
+  const ksCache = new Map();
+  function ksBuffer(f) {
+    const key = Math.round(f * 4); if (ksCache.has(key)) return ksCache.get(key);
+    const sr = ctx.sampleRate, n = Math.floor(sr * 2.4), b = ctx.createBuffer(1, n, sr), d = b.getChannelData(0);
+    const p = Math.max(2, Math.round(sr / f)), ring = new Float32Array(p);
+    let prev = 0; for (let i = 0; i < p; i++) { const r = Math.random() * 2 - 1; ring[i] = (r + prev) * .5; prev = r; }
+    const damp = f > 600 ? .990 : f > 300 ? .994 : .996;
+    for (let i = 0, j = 0; i < n; i++) { const a = ring[j], nb = ring[(j + 1) % p]; d[i] = a; ring[j] = (a + nb) * .5 * damp; j = (j + 1) % p; }
+    let mx = 0; for (let i = 0; i < Math.min(n, 3000); i++) mx = Math.max(mx, Math.abs(d[i]));
+    if (mx) for (let i = 0; i < n; i++) d[i] /= mx;
+    if (ksCache.size > 60) ksCache.delete(ksCache.keys().next().value);
+    ksCache.set(key, b); return b;
+  }
+  function pluck(f, t, vel, dest, bright) {
+    const s = ctx.createBufferSource(); s.buffer = ksBuffer(f);
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = bright || 2400;
+    const g = ctx.createGain(); g.gain.setValueAtTime(vel, t); g.gain.exponentialRampToValueAtTime(.0008, t + 2.2);
+    s.connect(lp); lp.connect(g); g.connect(dest); s.start(t); s.stop(t + 2.3);
+  }
+  // recorder, voice and shawm: a blown or sung note with a little vibrato
+  function blow(f, t, dur, vel, dest, kind) {
+    const o = ctx.createOscillator(); o.type = kind === 'shawm' ? 'sawtooth' : kind === 'voice' ? 'sine' : 'triangle';
+    o.frequency.setValueAtTime(f, t);
+    const lfo = ctx.createOscillator(); lfo.frequency.value = kind === 'voice' ? 4.6 : 5.4;
+    const lg = ctx.createGain(); lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(f * (kind === 'voice' ? .008 : .005), t + Math.min(.35, dur * .6));
+    lfo.connect(lg); lg.connect(o.frequency);
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = kind === 'shawm' ? 1500 : kind === 'voice' ? 1800 : 3200;
+    const g = ctx.createGain(), att = kind === 'voice' ? .18 : .035, rel = kind === 'voice' ? .3 : .08;
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vel, t + att);
+    g.gain.setValueAtTime(vel, t + Math.max(att + .01, dur - rel)); g.gain.linearRampToValueAtTime(0, t + dur);
+    o.connect(lp); lp.connect(g); g.connect(dest);
+    o.start(t); lfo.start(t); o.stop(t + dur + .05); lfo.stop(t + dur + .05);
+    if (kind === 'voice') { const o2 = ctx.createOscillator(); o2.type = 'triangle'; o2.frequency.setValueAtTime(f * 2, t); const g2 = ctx.createGain(); g2.gain.value = .18; o2.connect(g2); g2.connect(lp); o2.start(t); o2.stop(t + dur + .05); }
+  }
+  // tabor and kettle drum
+  function drum(t, vel, dest, deep) {
+    const o = ctx.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(deep ? 110 : 190, t); o.frequency.exponentialRampToValueAtTime(deep ? 42 : 70, t + .16);
+    const g = ctx.createGain(); g.gain.setValueAtTime(vel, t); g.gain.exponentialRampToValueAtTime(.001, t + (deep ? .5 : .22));
+    o.connect(g); g.connect(dest); o.start(t); o.stop(t + .55);
+    noise(t, .06, vel * .5, 1400, dest, 'bandpass');
+  }
+  function noise(t, dur, vel, freq, dest, type, freq2) {
+    const s = ctx.createBufferSource(); s.buffer = noiseBuf;
+    const f = ctx.createBiquadFilter(); f.type = type || 'bandpass'; f.frequency.setValueAtTime(freq, t); if (freq2) f.frequency.exponentialRampToValueAtTime(freq2, t + dur); f.Q.value = .9;
+    const g = ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vel, t + Math.min(.02, dur / 4)); g.gain.exponentialRampToValueAtTime(.001, t + dur);
+    s.connect(f); f.connect(g); g.connect(dest); s.start(t, Math.random() * .5); s.stop(t + dur + .05);
+  }
+  // church and wedding bells: a few out-of-tune partials that die away at different speeds
+  function bell(f, t, vel, dest, len) {
+    len = len || 3;
+    [[1, 1, 1], [2, .55, .7], [2.4, .4, .55], [3, .3, .45], [4.2, .2, .35], [5.4, .12, .25]].forEach(([m, a, d]) => {
+      const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = f * m;
+      const g = ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vel * a, t + .006); g.gain.exponentialRampToValueAtTime(.0008, t + len * d);
+      o.connect(g); g.connect(dest); o.start(t); o.stop(t + len * d + .05);
+    });
+  }
+  const hz = midi => 440 * Math.pow(2, (midi - 69) / 12);
+
+  /* ---------- sound effects ---------- */
+  let lastSfx = 0;
+  const fx = {
+    tick: t0 => { const t = t0 != null ? t0 : ctx.currentTime; noise(t, .025, .05, 2600, sfxBus, 'bandpass'); },
+    page: t0 => { const t = t0 != null ? t0 : ctx.currentTime; noise(t, .22, .16, 900, sfxBus, 'bandpass', 3800); noise(t + .12, .2, .1, 1800, sfxBus, 'bandpass', 600); },
+    card: t0 => { const t = t0 != null ? t0 : ctx.currentTime; pluck(hz(62), t, .16, sfxBus); pluck(hz(69), t + .05, .12, sfxBus); },
+    coins: t0 => { const t = t0 != null ? t0 : ctx.currentTime; [0, .07, .15, .21].forEach((d, i) => { const f = 2300 + i * 380 + Math.random() * 200; const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = f; const g = ctx.createGain(); g.gain.setValueAtTime(.08, t + d); g.gain.exponentialRampToValueAtTime(.001, t + d + .25); o.connect(g); g.connect(sfxBus); o.start(t + d); o.stop(t + d + .3); }); },
+    good: t0 => { const t = t0 != null ? t0 : ctx.currentTime; [62, 66, 69, 74].forEach((m, i) => pluck(hz(m), t + i * .09, .2, sfxBus)); },
+    bad: t0 => { const t = t0 != null ? t0 : ctx.currentTime; pluck(hz(50), t, .22, sfxBus, 900); pluck(hz(51), t + .14, .16, sfxBus, 900); },
+    fanfare: t0 => { const t = t0 != null ? t0 : ctx.currentTime; [[62, 0, .14], [69, .14, .14], [74, .28, .14], [78, .42, .5]].forEach(([m, d, l]) => blow(hz(m), t + d, l, .13, sfxBus, 'shawm')); drum(t, .3, sfxBus); drum(t + .42, .35, sfxBus); },
+    chime: t0 => { const t = t0 != null ? t0 : ctx.currentTime; bell(hz(81), t, .09, sfxBus, 2); bell(hz(86), t + .18, .08, sfxBus, 2.2); },
+    wedding: t0 => { const t = t0 != null ? t0 : ctx.currentTime; [86, 84, 83, 81, 79, 78, 76, 74].forEach((m, i) => bell(hz(m), t + i * .22, .07, sfxBus, 1.8)); },
+    toll: t0 => { const t = t0 != null ? t0 : ctx.currentTime; for (let i = 0; i < 3; i++) bell(hz(45), t + i * 1.9, .2, sfxBus, 5); },
+    knell: t0 => { const t = t0 != null ? t0 : ctx.currentTime; bell(hz(50), t, .14, sfxBus, 4); },
+    battle: t0 => { const t = t0 != null ? t0 : ctx.currentTime; drum(t, .5, sfxBus, 1); drum(t + .18, .3, sfxBus); drum(t + .36, .45, sfxBus, 1); noise(t + .4, .3, .14, 3500, sfxBus, 'highpass'); },
+    clash: t0 => { const t = t0 != null ? t0 : ctx.currentTime; drum(t, .4, sfxBus, 1); noise(t + .05, .25, .16, 4200, sfxBus, 'highpass'); },
+  };
+  const RANK = { tick: 0, page: 1, card: 1, coins: 2, bad: 2, good: 3, clash: 3, chime: 4, battle: 4, knell: 4, fanfare: 5, wedding: 5, toll: 6 };
+  let pend = null;
+  // play now, or (inside a busy moment like turning the page) keep only the most important one
+  function sfx(k) {
+    if (rendering || !prefs.sfx || !live() || !fx[k]) return;
+    if (batch) { if (!pend || RANK[k] > RANK[pend]) pend = k; return; }
+    const now = performance.now(); if (now - lastSfx < 90 && RANK[k] < 3) return; lastSfx = now;
+    try { fx[k](); } catch (e) { }
+  }
+  let batch = 0;
+  const hold = () => { batch++; };
+  const release = () => { batch = Math.max(0, batch - 1); if (!batch && pend) { const k = pend; pend = null; sfx(k); } };
+  window.auSfx = sfx;
+
+  /* ---------- the composer ---------- */
+  // Each place has a mode, a home note, a speed, a metre and its instruments. A tune is two phrases, A and B, played
+  // A A B B like an estampie or a carol, then written afresh after a few rounds so it never grows stale.
+  const SCENES = {
+    start:   { mode: [0, 2, 3, 5, 7, 9, 10], root: 62, bpm: 80, metre: 4, lead: 'recorder', drone: 1, bourdon: 1 },
+    village: { mode: [0, 2, 3, 5, 7, 9, 10], root: 62, bpm: 84, metre: 4, lead: 'lute', drone: 1, bourdon: 0 },
+    court:   { mode: [0, 2, 4, 5, 7, 9, 10], root: 67, bpm: 76, metre: 3, lead: 'recorder', drone: 0, bourdon: 1 },
+    church:  { mode: [0, 2, 3, 5, 7, 8, 10], root: 62, bpm: 48, metre: 4, lead: 'voice', drone: 1, bourdon: 0, organum: 1 },
+    sea:     { mode: [0, 2, 3, 5, 7, 8, 10], root: 57, bpm: 70, metre: 6, lead: 'recorder', drone: 1, bourdon: 1 },
+    war:     { mode: [0, 1, 3, 5, 7, 8, 10], root: 64, bpm: 108, metre: 4, lead: 'shawm', drone: 1, bourdon: 0, tabor: 1 },
+    grave:   { mode: [0, 2, 3, 5, 7, 8, 10], root: 62, bpm: 42, metre: 4, lead: 'voice', drone: 1, bourdon: 0, toll: 1 },
+  };
+  const RHY = {
+    4: [[1, 1, 1, 1], [2, 1, 1], [1, 1, 2], [1.5, .5, 1, 1], [.5, .5, 1, 1, 1], [2, 2], [1, .5, .5, 2], [3, 1]],
+    3: [[1, 1, 1], [2, 1], [1, 2], [1.5, .5, 1], [.5, .5, 1, 1], [3]],
+    6: [[1, .5, 1, .5], [1.5, 1.5], [.5, .5, .5, 1.5], [1, .5, 1.5], [1.5, 1, .5]],
+  };
+  const pickR = a => a[Math.floor(Math.random() * a.length)];
+  function phrase(sc, end, start) {
+    const bars = [pickR(RHY[sc.metre]), pickR(RHY[sc.metre])];
+    if (sc.lead === 'voice') bars[0] = bars[1] = sc.metre === 4 ? pickR([[2, 2], [2, 1, 1], [4]]) : bars[0];
+    const lens = bars.flat(); const out = []; let d = start, last = 0;
+    for (let i = 0; i < lens.length; i++) {
+      if (i === lens.length - 1) d = end;
+      else if (i === lens.length - 2) d = end + (Math.random() < .7 ? 1 : -1);
+      else if (i > 0) {
+        let step;
+        if (Math.abs(last) >= 2) step = -Math.sign(last);
+        else { const r = Math.random(); step = r < .32 ? 1 : r < .64 ? -1 : r < .74 ? 0 : r < .87 ? (Math.random() < .5 ? 2 : -2) : (Math.random() < .5 ? 4 : -3); }
+        d = Math.max(-2, Math.min(9, d + step)); last = step;
+      }
+      out.push({ d, len: lens[i] });
+    }
+    return out;
+  }
+  function tune(sc) {
+    const A = phrase(sc, 4, Math.random() < .5 ? 0 : 4), B = phrase(sc, 0, Math.random() < .5 ? 4 : 7);
+    return [...A, ...A, ...B, ...B, { rest: 1, len: sc.metre === 3 ? 3 : 2 }];
+  }
+  const degHz = (sc, d) => { const n = sc.mode.length, o = Math.floor(d / n), i = ((d % n) + n) % n; return hz(sc.root + 12 * o + sc.mode[i]); };
+
+  const M = { name: null, sc: null, bus: null, notes: [], idx: 0, next: 0, beat: 0, rounds: 0, drone: [], timer: null };
+  function stopDrone(when) { for (const n of M.drone) { try { n.g.gain.cancelScheduledValues(when); n.g.gain.setTargetAtTime(0, when, .35); n.o.stop(when + 2.5); } catch (e) { } } M.drone = []; }
+  function startDrone(sc, bus, when) {
+    if (!sc.drone) return;
+    for (const [m, v] of [[sc.root - 12, .05], [sc.root - 5, .03]]) {
+      const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = hz(m); o.detune.value = Math.random() * 6 - 3;
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = sc.lead === 'voice' ? 420 : 560;
+      const g = ctx.createGain(); g.gain.setValueAtTime(0, when); g.gain.linearRampToValueAtTime(v, when + 2.5);
+      o.connect(lp); lp.connect(g); g.connect(bus); o.start(when); M.drone.push({ o, g });
+    }
+  }
+  function setScene(name) {
+    if (!live() || name === M.name) return;
+    const t = ctx.currentTime;
+    if (M.bus) { const old = M.bus; old.gain.cancelScheduledValues(t); old.gain.setTargetAtTime(0, t, .45); setTimeout(() => { try { old.disconnect(); } catch (e) { } }, 3500); }
+    stopDrone(t);
+    M.name = name; M.sc = SCENES[name]; M.rounds = 0;
+    M.bus = ctx.createGain(); M.bus.gain.setValueAtTime(0, t); M.bus.gain.linearRampToValueAtTime(1, t + 2.2); M.bus.connect(musicBus);
+    M.notes = tune(M.sc); M.idx = 0; M.next = t + .6; M.beat = 0;
+    startDrone(M.sc, M.bus, t + .2);
+  }
+  function play(until) {
+    if (!live() || !M.sc || (!prefs.music && !offline)) return;
+    const sc = M.sc, spb = 60 / sc.bpm * (sc.metre === 6 ? .5 : 1);
+    while (M.next < (until != null ? until : ctx.currentTime + .6)) {
+      if (M.idx >= M.notes.length) { M.rounds++; M.idx = 0; if (M.rounds % 3 === 0) M.notes = tune(sc); }
+      const n = M.notes[M.idx++], t = M.next, dur = n.len * spb;
+      const barLen = sc.metre === 6 ? 3 : sc.metre;
+      const onBar = Math.abs(M.beat % barLen) < .01;
+      if (!n.rest) {
+        const f = degHz(sc, n.d), v = sc.lead === 'shawm' ? .095 : sc.lead === 'voice' ? .12 : sc.lead === 'lute' ? .32 : .11;
+        if (sc.lead === 'lute') pluck(f, t, v * (onBar ? 1.15 : 1), M.bus);
+        else blow(f, t, dur * .96, v, M.bus, sc.lead);
+        if (sc.organum) blow(f * Math.pow(2, -7 / 12), t, dur * .96, v * .55, M.bus, 'voice');
+        if (sc.lead === 'recorder' && sc.bourdon && onBar) pluck(degHz(sc, -7), t, .12, M.bus, 1500);
+      }
+      if (sc.bourdon && onBar && sc.lead !== 'recorder') { pluck(degHz(sc, -7), t, .13, M.bus, 1400); pluck(degHz(sc, -3), t + .01, .08, M.bus, 1400); }
+      if (sc.tabor) { const e = Math.floor(M.beat * 2) / 2; for (let b = 0; b < n.len; b += .5) { const bt = (e + b) % barLen; if (bt === 0 || bt === 2 || bt === 2.5) drum(t + b * spb, bt === 0 ? .16 : .09, M.bus); } }
+      if (sc.toll && onBar && Math.floor(M.beat / barLen) % 4 === 0) bell(hz(sc.root - 12), t, .05, M.bus, 5);
+      if (sc.lead === 'lute' && onBar && Math.random() < .25) drum(t, .05, M.bus);
+      M.beat += n.len; M.next += dur;
+    }
+  }
+
+  /* ---------- where you are decides the tune ---------- */
+  function sceneNow() {
+    const scr = document.getElementById('screen');
+    if (!S) return 'start';
+    if (scr && !scr.hidden) return S.alive ? 'start' : 'grave';
+    if (!S.alive) return 'grave';
+    try {
+      if (typeof atSea === 'function' && atSea()) return 'sea';
+      if (S.vows || (S.job && TRACKS[S.job.track] && TRACKS[S.job.track].vows)) return 'church';
+      const war = typeof wAtWar === 'function' && S.world && wAtWar(S.realm).length && (S.ruling || isMil());
+      if (war || (typeof isMil === 'function' && isMil() && S.army)) return 'war';
+      if (S.ruling || S.cls === 'royal' || S.cls === 'noble' || S.flags.consort || (S.flags.pc && S.flags.pc.at) || jobFam() === 'court') return 'court';
+    } catch (e) { }
+    return 'village';
+  }
+  const update = () => { if (!rendering && live() && prefs.music) setScene(sceneNow()); };
+
+  /* ---------- start on the first touch (phones only allow sound after one) ---------- */
+  let started = false;
+  function unlock() {
+    const c = init(); if (!c) return;
+    if (c.state === 'suspended') c.resume().then(go).catch(() => { }); else go();
+  }
+  function go() {
+    if (started || !live()) return; started = true;
+    M.timer = setInterval(() => { if (!rendering) try { play(); } catch (e) { } }, 150);
+    setInterval(() => { if (!rendering) try { update(); } catch (e) { } }, 1500);
+    update();
+  }
+  ['pointerdown', 'touchend', 'keydown'].forEach(ev => document.addEventListener(ev, unlock, { capture: true, passive: true }));
+  document.addEventListener('visibilitychange', () => { if (!ctx) return; if (document.hidden) ctx.suspend().catch(() => { }); else if (prefs.music || prefs.sfx) ctx.resume().catch(() => { }); });
+  // a soft tick under the finger for buttons, and the rustle of the page for the big one
+  document.addEventListener('click', e => {
+    const b = e.target && e.target.closest && e.target.closest('button'); if (!b || b.getAttribute('aria-disabled') === 'true') return;
+    if (b.id === 'ageBtn') return; sfx('tick');
+  }, true);
+
+  /* ---------- hooks: what makes a sound ---------- */
+  const wrap = (name, before, after) => {
+    const f = window[name]; if (typeof f !== 'function') return;
+    window[name] = function () { try { before && before.apply(this, arguments); } catch (e) { } const r = f.apply(this, arguments); try { after && after.apply(this, [r, ...arguments]); } catch (e) { } return r; };
+  };
+  // The year turns: the page rustles, and the loudest thing that happened in it is heard once.
+  {
+    const _au = ageUp;
+    ageUp = function () {
+      if (!S || !S.alive || modalOpen) return _au.apply(this, arguments);
+      sfx('page'); hold();
+      try { return _au.apply(this, arguments); } finally { release(); }
+    };
+  }
+  {
+    const _say = say;
+    say = function (t, c) { const r = _say.apply(this, arguments); if (batch) { if (c === 'gold') sfx('good'); else if (c === 'bad') sfx('bad'); else if (c === 'money') sfx('coins'); } return r; };
+  }
+  {
+    const _se = showEvent;
+    const FIGHT = /⚔️|🗡️|🏹|🛡️|🔥|💀|☠️|🐺|🪓|⚡|🦁/, LOVE = /💒|👶|💍|🌹|💐|👰/, ROYAL = /👑|🏆|⚜️|📯/;
+    showEvent = function (e) {
+      const r = _se.apply(this, arguments);
+      try {
+        const ic = String((e && e.icon) || '');
+        if (e && e.id === 'promoted') sfx('fanfare');
+        else if (FIGHT.test(ic)) sfx('clash');
+        else if (LOVE.test(ic)) sfx('chime');
+        else if (ROYAL.test(ic)) sfx('good');
+        else sfx('card');
+      } catch (er) { }
+      return r;
+    };
+  }
+  {
+    const _sr = showResult;
+    showResult = function (icon, text, fxs) {
+      const r = _sr.apply(this, arguments);
+      try {
+        const got = (fxs || []).find(x => x && x.l === 'silver' && x.d >= 15);
+        if (/promot|You rose from/i.test(text || '')) sfx('fanfare'); else if (got) sfx('coins');
+      } catch (e) { }
+      return r;
+    };
+  }
+  { let had = true; wrap('feat', k => { had = !!(S && (S.feats || []).includes(k)); }, () => { if (!had) sfx('chime'); }); }
+  wrap('marry', null, () => sfx('wedding'));
+  wrap('addChild', null, () => sfx('chime'));
+  { let was = false; wrap('kinDies', k => { was = !!(k && k.alive); }, (r, k) => { if (was && k && !k.alive) sfx('knell'); }); }
+  { let was = false; wrap('die', () => { was = !!(S && S.alive); }, () => { if (was && S && !S.alive) { batch = 0; pend = null; sfx('toll'); } }); }
+  wrap('clashCard', null, () => sfx('clash'));
+  wrap('decisiveCard', null, () => sfx('battle'));
+  wrap('showDeath', null, () => setTimeout(update, 50));
+  wrap('showStart', null, () => setTimeout(update, 50));
+
+  /* ---------- settings ---------- */
+  function setMusic(on) { prefs.music = on ? 1 : 0; savePrefs(); if (musicBus) { const t = ctx.currentTime; musicBus.gain.cancelScheduledValues(t); musicBus.gain.setTargetAtTime(mvol(), t, .2); } if (on) { if (!ctx) unlock(); update(); } }
+  function setSfx(on) { prefs.sfx = on ? 1 : 0; savePrefs(); if (sfxBus) sfxBus.gain.value = svol(); if (on) { if (!ctx) unlock(); setTimeout(() => sfx('chime'), 60); } }
+  XACT.au_music = () => { setMusic(!prefs.music); toast(prefs.music ? 'Music on' : 'Music off'); renderSheet(); };
+  XACT.au_sfx = () => { setSfx(!prefs.sfx); toast(prefs.sfx ? 'Sound effects on' : 'Sound effects off'); renderSheet(); };
+  {
+    const _mh = menuHTML;
+    menuHTML = function () {
+      const h = _mh.apply(this, arguments);
+      const slider = (k, v, label) => `<div class="au-vol"><label for="au_${k}">${label}</label><input type="range" id="au_${k}" data-au="${k}" min="0" max="100" step="5" value="${Math.round(v * 100)}"><span class="au-pc" id="au_${k}_pc">${Math.round(v * 100)}%</span></div>`;
+      const add = btnItem('au_music', '', prefs.music ? '☑️' : '⬜', 'Music', 'Medieval tunes that change with your life: the village, the court, the cloister, the sea, war.', true)
+        + (prefs.music ? slider('mv', prefs.mv, 'Music volume') : '')
+        + btnItem('au_sfx', '', prefs.sfx ? '☑️' : '⬜', 'Sound effects', 'The page turning, coins, bells and drums.', true)
+        + (prefs.sfx ? slider('sv', prefs.sv, 'Effects volume') : '')
+        + '<p class="hint au-note">The game plays alongside your own music (Apple Music, Spotify, YouTube) and never pauses it. Your phone’s silent switch and volume buttons work as usual.</p>';
+      const at = h.indexOf('<h3 class="sec">Settings</h3>');
+      return at >= 0 ? h.slice(0, at + 29) + add + h.slice(at + 29) : h + add;
+    };
+  }
+  document.addEventListener('input', e => {
+    const el = e.target; if (!el || !el.dataset || !el.dataset.au) return;
+    const v = Math.max(0, Math.min(1, (+el.value || 0) / 100)), k = el.dataset.au;
+    prefs[k] = v;
+    if (ctx) { const bus = k === 'mv' ? musicBus : sfxBus, on = k === 'mv' ? prefs.music : prefs.sfx; if (bus && on) { bus.gain.cancelScheduledValues(ctx.currentTime); bus.gain.setTargetAtTime(v, ctx.currentTime, .04); } }
+    const pc = document.getElementById(el.id + '_pc'); if (pc) pc.textContent = `${Math.round(v * 100)}%`;
+  });
+  document.addEventListener('change', e => { const el = e.target; if (!el || !el.dataset || !el.dataset.au) return; savePrefs(); if (el.dataset.au === 'sv') sfx('coins'); });
+  {
+    const css = document.createElement('style');
+    css.textContent = '.au-vol{display:grid;grid-template-columns:auto 1fr 3.2em;align-items:center;gap:12px;padding:0 16px 12px;font-size:15px;color:var(--ink-2)}.au-vol input{width:100%;min-width:0;accent-color:var(--rubric);height:28px}.au-pc{text-align:right;font-variant-numeric:tabular-nums}.au-note{margin:0 16px 10px}';
+    document.head.appendChild(css);
+  }
+  window.auRender = async (names, secs, withFx) => {
+    const keep = { ctx, master, musicBus, sfxBus, verb, noiseBuf, name: M.name, sc: M.sc, bus: M.bus, notes: M.notes, idx: M.idx, next: M.next, beat: M.beat, rounds: M.rounds, drone: M.drone };
+    const sr = 22050, fxLen = withFx ? 16 : 0, total = names.length * secs + fxLen;
+    const off = new OfflineAudioContext(1, Math.ceil(sr * total), sr);
+    offline = true; rendering = true; ksCache.clear();
+    try {
+      build(off); musicBus.gain.value = .7; sfxBus.gain.value = .9; M.name = null; M.bus = null; M.drone = [];
+      names.forEach((nm, i) => {
+        const t0 = i * secs;
+        if (M.bus) { const ob = M.bus; ob.gain.setTargetAtTime(0, t0 - 1.5, .4); }
+        stopDrone(t0);
+        M.name = nm; M.sc = SCENES[nm]; M.rounds = 0; M.notes = tune(M.sc); M.idx = 0; M.beat = 0; M.next = t0 + .3;
+        M.bus = off.createGain(); M.bus.gain.setValueAtTime(0, t0); M.bus.gain.linearRampToValueAtTime(1, t0 + 1.5); M.bus.connect(musicBus);
+        startDrone(M.sc, M.bus, t0 + .1);
+        play(t0 + secs - 1.6);
+      });
+      if (M.bus) M.bus.gain.setTargetAtTime(0, names.length * secs - 1.5, .4);
+      stopDrone(names.length * secs - 1.5);
+      if (withFx) { let t = names.length * secs + .3; for (const k of ['page', 'card', 'coins', 'good', 'bad', 'fanfare', 'chime', 'wedding', 'clash', 'battle', 'knell', 'toll']) { fx[k](t); t += k === 'toll' ? 0 : k === 'wedding' ? 2.2 : 1.05; } }
+      const buf = await off.startRendering(), d = buf.getChannelData(0);
+      let peak = 0, sum = 0; for (let i = 0; i < d.length; i++) { const v = Math.abs(d[i]); if (v > peak) peak = v; sum += d[i] * d[i]; }
+      const per = names.map((nm, i) => { let s2 = 0, pk = 0; const a = Math.floor(i * secs * sr), b = Math.floor((i + 1) * secs * sr); for (let j = a; j < b; j++) { s2 += d[j] * d[j]; pk = Math.max(pk, Math.abs(d[j])); } return { scene: nm, rms: +Math.sqrt(s2 / (b - a)).toFixed(4), peak: +pk.toFixed(3) }; });
+      // 16-bit WAV, as base64
+      const n = d.length, bytes = new Uint8Array(44 + n * 2), dv = new DataView(bytes.buffer);
+      const w = (o, str) => { for (let i = 0; i < str.length; i++) bytes[o + i] = str.charCodeAt(i); };
+      w(0, 'RIFF'); dv.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt '); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+      dv.setUint32(24, sr, true); dv.setUint32(28, sr * 2, true); dv.setUint16(32, 2, true); dv.setUint16(34, 16, true); w(36, 'data'); dv.setUint32(40, n * 2, true);
+      for (let i = 0; i < n; i++) dv.setInt16(44 + i * 2, Math.max(-1, Math.min(1, d[i])) * 32767, true);
+      let bin = ''; for (let i = 0; i < bytes.length; i += 32768) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 32768));
+      return { peak: +peak.toFixed(3), rms: +Math.sqrt(sum / n).toFixed(4), per, wav: btoa(bin) };
+    } finally {
+      offline = false; rendering = false; ksCache.clear();
+      ({ ctx, master, musicBus, sfxBus, verb, noiseBuf } = keep);
+      Object.assign(M, { name: keep.name, sc: keep.sc, bus: keep.bus, notes: keep.notes, idx: keep.idx, next: keep.next, beat: keep.beat, rounds: keep.rounds, drone: keep.drone });
+    }
+  };
+  window.auState = () => ({ ctx: ctx ? ctx.state : 'none', scene: M.name, prefs: Object.assign({}, prefs), started });
 }
 
 /* ================= Portraits: painted in the manner of a manuscript ================= */

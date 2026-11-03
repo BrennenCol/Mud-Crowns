@@ -273,6 +273,20 @@ still be reached from a first job.
 - A double tap never zooms the page. In the phone apps, pinch zoom and
   long-press text selection are off too, so it feels like an app.
 
+## Sound and music (v1.13)
+
+- **Music that follows your life.** Medieval-style tunes, written fresh by a
+  small composer inside the game in the old church modes over a drone: a lute
+  in the village, recorder and harp at court, plainchant in the cloister, a
+  sea song aboard ship, shawm and drum at war, a lament at the grave.
+- **Sound effects.** The page turning, coins, bells for weddings, births and
+  deaths, drums in battle, a fanfare for a promotion.
+- **Your own music keeps playing.** The game's sound mixes with Apple Music,
+  Spotify or YouTube instead of pausing them, and the silent switch mutes it.
+- **Adjustable.** Menu, Settings: Music and Sound effects each have an on/off
+  switch and a volume slider.
+- No sound files: everything is made with Web Audio on the device.
+
 ## Women's roads, and the prince's eye (v1.12)
 
 Under historical rules a woman can now climb to the top in her own name,

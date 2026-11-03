@@ -61,29 +61,26 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.12.4.txt`, ready to copy.
+Also in `store/whats_new_1.13.0.txt`, ready to copy.
 
 ```
+SOUND AND MUSIC
+- Medieval tunes that follow your life: a lute in the village, recorder and harp at court, chant in the cloister, a sea song aboard ship, drums at war, and a lament at the grave.
+- Sound effects: the page turning, coins, bells for weddings, births and deaths, drums in battle, and a fanfare when you are promoted.
+- Your own music keeps playing: the game mixes with Apple Music, Spotify or YouTube instead of pausing them, and the silent switch mutes it.
+- Turn music and sound on or off, and set their volume, in the menu under Settings.
+
 WOMEN'S ROADS
-Rise to the top in your own name, without a disguise, by the roads women really walked:
-- The queen's household: from laundress to chamberer, damsel of the chamber, mistress of the queen's chamber, and first lady of the queen's household.
-- The royal nursery: rocker of the royal cradle, nurse to the royal children, lady mistress of the nursery, and royal governess.
-- Holy women: lay sister, beguine and grand mistress of the beguinage, hospital sister and mistress of the hospital, and the princess-abbess of a royal abbey.
-- Skilled women: sworn midwife and midwife to the queen, silkwoman to the crown, the queen's embroideress, illuminator, household governess and woman of letters.
-- Tutor children for a fee to gain experience, seek a patroness or patron, and ask your patron for a place.
+Rise to the top in your own name, without a disguise: the queen's household, the royal nursery, the beguinages and great abbeys, midwife to the queen, silkwoman to the crown, and more. Tutor children for experience, seek a patroness, and ask her for a place.
 
 THE PRINCE'S EYE
-A rare chance for a very pretty village girl: a prince sees her and brings her to the palace. Keep his heart every year, or be sent home to your village.
+A rare chance for a very pretty village girl: a prince brings her to the palace. Keep his heart every year, or be sent home to your village.
 
 FAIRER CAREERS
-- Men can become court officials again, as a page, herald, scribe or gentleman of the chamber.
-- If you lose a post, you can apply again: an old hand is far more likely to be taken back on.
-- Serfs are bound to the manor. Town offices, the sea and the crown's service need you to be free first. Taking holy vows frees a serf.
 - Find Work shows only the posts you could hold in this age. A woman passing as a man sees the posts she could pass in.
-
-CLEARER
-- Every Renown requirement now tells you what you can do right now to win it.
-- Renown and Standing are explained: Renown is your fame across the realm; Standing is how your masters rate you in your current job.
+- Men can become court officials again. If you lose a post, an old hand is far more likely to be taken back on.
+- Serfs are bound to the manor until they are free. Taking holy vows frees a serf.
+- Every Renown requirement tells you what you can do right now to win it, and Renown and Standing are explained.
 - "Begin a new life" is now at the top of the menu.
 
 FIXES
