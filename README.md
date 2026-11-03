@@ -273,6 +273,17 @@ still be reached from a first job.
 - A double tap never zooms the page. In the phone apps, pinch zoom and
   long-press text selection are off too, so it feels like an app.
 
+### Asking for a rating (v1.13.1)
+
+- In the iPhone app, after you are rewarded (a promotion, a seal of fame, a
+  title, a crown, a fulfilled ambition) the game asks Apple for its rating
+  pop-up, once the reward card has closed. At most once a play session, never
+  within two days of the last ask (a month apart after the third, and never
+  after six), and only once you have come back on a second day and lived 25
+  game years. Apple itself shows it at most three times a year.
+- The game cannot see whether you have rated (Apple keeps that private), so it
+  stops asking for good once you tap **Rate Mud & Crowns** (Menu, About).
+
 ## Sound and music (v1.13)
 
 - **Music that follows your life.** Medieval-style tunes, written fresh by a

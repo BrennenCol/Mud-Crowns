@@ -61,7 +61,7 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.13.0.txt`, ready to copy.
+Also in `store/whats_new_1.13.1.txt`, ready to copy.
 
 ```
 SOUND AND MUSIC
@@ -84,6 +84,7 @@ FAIRER CAREERS
 - "Begin a new life" is now at the top of the menu.
 
 FIXES
+- A new "Rate Mud & Crowns" button in the menu.
 - The birth screen no longer slides left and right on a phone.
 - Women's hair no longer shows a bald spot.
 ```

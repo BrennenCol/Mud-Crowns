@@ -1,0 +1,23 @@
+SOUND AND MUSIC
+- Medieval tunes that follow your life: a lute in the village, recorder and harp at court, chant in the cloister, a sea song aboard ship, drums at war, and a lament at the grave.
+- Sound effects: the page turning, coins, bells for weddings, births and deaths, drums in battle, and a fanfare when you are promoted.
+- Your own music keeps playing: the game mixes with Apple Music, Spotify or YouTube instead of pausing them, and the silent switch mutes it.
+- Turn music and sound on or off, and set their volume, in the menu under Settings.
+
+WOMEN'S ROADS
+Rise to the top in your own name, without a disguise: the queen's household, the royal nursery, the beguinages and great abbeys, midwife to the queen, silkwoman to the crown, and more. Tutor children for experience, seek a patroness, and ask her for a place.
+
+THE PRINCE'S EYE
+A rare chance for a very pretty village girl: a prince brings her to the palace. Keep his heart every year, or be sent home to your village.
+
+FAIRER CAREERS
+- Find Work shows only the posts you could hold in this age. A woman passing as a man sees the posts she could pass in.
+- Men can become court officials again. If you lose a post, an old hand is far more likely to be taken back on.
+- Serfs are bound to the manor until they are free. Taking holy vows frees a serf.
+- Every Renown requirement tells you what you can do right now to win it, and Renown and Standing are explained.
+- "Begin a new life" is now at the top of the menu.
+
+FIXES
+- A new "Rate Mud & Crowns" button in the menu.
+- The birth screen no longer slides left and right on a phone.
+- Women's hair no longer shows a bald spot.

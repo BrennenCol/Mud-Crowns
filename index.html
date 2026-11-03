@@ -528,7 +528,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.13.0';
+const APP_VERSION = '1.13.1';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -25809,6 +25809,78 @@ YEARLY.push(slYear);
     }
   };
   window.auState = () => ({ ctx: ctx ? ctx.state : 'none', scene: M.name, prefs: Object.assign({}, prefs), started });
+}
+
+/* ================= v1.13.1 Asking for a rating (prefix rv_) ================= */
+// In the iPhone app only. After the player is rewarded (a promotion, a seal of fame, a title, a crown, an ambition
+// fulfilled), and only once the reward card has closed, the game asks Apple for its rating pop-up. It asks at most
+// once a play session and never within two days of the last ask (a month apart after the third), and only for players
+// who have come back on a second day and lived at least 25 years of game time. Apple itself shows the pop-up at most
+// three times a year. Menu, About also has a "Rate Mud & Crowns" button that opens the App Store review page.
+{
+  const RKEY = 'mudcrowns.review', DAY = 864e5;
+  const native = () => { try { return !!(window.Capacitor && Capacitor.isNativePlatform && Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios' && Capacitor.nativePromise); } catch (e) { return false; } };
+  const R = (() => { try { return JSON.parse(store.get(RKEY) || '{}') || {}; } catch (e) { return {}; } })();
+  const save = () => { try { store.set(RKEY, JSON.stringify(R)); } catch (e) { } };
+  {
+    const today = new Date().toISOString().slice(0, 10);
+    R.days = Array.isArray(R.days) ? R.days : [];
+    if (!R.days.includes(today)) { R.days.push(today); R.days = R.days.slice(-10); save(); }
+    R.years = R.years || 0; R.n = R.n || 0;
+  }
+  let askedThisSession = false, due = false;
+  // The game cannot see whether someone has rated (Apple keeps that private), so it stops asking for good once they
+  // tap the Rate button themselves, and after six asks in all.
+  const ready = () => native() && !askedThisSession && !R.rated && R.n < 6 && R.days.length >= 2 && R.years >= 25 && Date.now() - (R.last || 0) >= (R.n < 3 ? 2 : 30) * DAY;
+  const reward = () => { if (ready()) due = true; };
+  function maybeAsk() {
+    if (!due || modalOpen || Q.length || !S || !S.alive) return;
+    const scr = document.getElementById('screen'); if (scr && !scr.hidden) return;
+    due = false; askedThisSession = true; R.last = Date.now(); R.n++; save();
+    try { Capacitor.nativePromise('MudReview', 'requestReview', {}).catch(() => { }); } catch (e) { }
+  }
+  window.rvState = () => Object.assign({ native: native(), askedThisSession, due }, R);
+
+  /* ---------- the moments that count as a reward ---------- */
+  {
+    const _se = showEvent;
+    showEvent = function (e) { try { if (e && e.id === 'promoted') reward(); } catch (er) { } return _se.apply(this, arguments); };
+  }
+  {
+    const _say = say;
+    // big good news in the chronicle (promotions, freedom, titles, an inheritance, a fulfilled ambition)
+    say = function (t, c) { try { if (c === 'gold') reward(); } catch (e) { } return _say.apply(this, arguments); };
+  }
+  {
+    const _ft = feat;
+    feat = function (k) { const had = !!(S && (S.feats || []).includes(k)); const r = _ft.apply(this, arguments); try { if (!had && S && (S.feats || []).includes(k)) reward(); } catch (e) { } return r; };
+  }
+  {
+    const _cr = crown;
+    crown = function () { const r = _cr.apply(this, arguments); reward(); return r; };
+  }
+  {
+    const _au = ageUp;
+    ageUp = function () { const a = S && S.alive && !modalOpen ? S.age : null; const r = _au.apply(this, arguments); try { if (a != null && S && S.age > a) { R.years++; if (R.years % 5 === 0) save(); } } catch (e) { } return r; };
+  }
+  // ask only when the reward card has closed and nothing else is waiting
+  {
+    const _nm = nextModal;
+    nextModal = function () { const r = _nm.apply(this, arguments); if (due) setTimeout(() => { try { maybeAsk(); } catch (e) { } }, 600); return r; };
+  }
+
+  /* ---------- Menu, About: rate the game ---------- */
+  XACT.rv_rate = () => { if (!native()) return; R.rated = Date.now(); save(); try { Capacitor.nativePromise('MudReview', 'openReviewPage', {}).catch(() => { }); } catch (e) { } };
+  {
+    const _mh = menuHTML;
+    menuHTML = function () {
+      const h = _mh.apply(this, arguments);
+      if (!native()) return h;
+      const mark = '<h3 class="sec">About</h3>', at = h.indexOf(mark);
+      const btn = btnItem('rv_rate', '', '⭐', 'Rate Mud & Crowns', 'Tell other players what you think on the App Store. For a small game, every rating helps.', true);
+      return at >= 0 ? h.slice(0, at + mark.length) + btn + h.slice(at + mark.length) : h + btn;
+    };
+  }
 }
 
 /* ================= Portraits: painted in the manner of a manuscript ================= */

@@ -1,5 +1,6 @@
 import UIKit
 import AVFoundation
+import StoreKit
 import Capacitor
 
 @UIApplicationMain
@@ -54,4 +55,57 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return ApplicationDelegateProxy.shared.application(application, continue: userActivity, restorationHandler: restorationHandler)
     }
 
+}
+
+// The game's own view controller: Capacitor's, with the review plugin added.
+// (Main.storyboard points here.)
+class MainViewController: CAPBridgeViewController {
+    override open func capacitorDidLoad() {
+        bridge?.registerPluginInstance(MudReviewPlugin())
+    }
+}
+
+// Lets the game ask Apple for its rating pop-up, and open the App Store review page.
+// Apple decides whether the pop-up really shows (at most three times a year for each player).
+@objc(MudReviewPlugin)
+public class MudReviewPlugin: CAPPlugin, CAPBridgedPlugin {
+    public let identifier = "MudReviewPlugin"
+    public let jsName = "MudReview"
+    public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "requestReview", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "openReviewPage", returnType: CAPPluginReturnPromise)
+    ]
+
+    @objc func requestReview(_ call: CAPPluginCall) {
+        call.resolve()
+        Task { @MainActor in
+            let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+            guard let scene = scenes.first(where: { $0.activationState == .foregroundActive }) ?? scenes.first else { return }
+            if #available(iOS 16.0, *) {
+                AppStore.requestReview(in: scene)
+            } else {
+                SKStoreReviewController.requestReview(in: scene)
+            }
+        }
+    }
+
+    // Finds this app's App Store page from its bundle ID, then opens "Write a Review" there.
+    @objc func openReviewPage(_ call: CAPPluginCall) {
+        call.resolve()
+        let bundle = Bundle.main.bundleIdentifier ?? ""
+        guard let lookup = URL(string: "https://itunes.apple.com/lookup?bundleId=\(bundle)") else { return }
+        URLSession.shared.dataTask(with: lookup) { data, _, _ in
+            var target = URL(string: "itms-apps://apps.apple.com/search?term=Mud%20%26%20Crowns")
+            if let data = data,
+               let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let results = json["results"] as? [[String: Any]],
+               let id = results.first?["trackId"] as? Int {
+                target = URL(string: "itms-apps://apps.apple.com/app/id\(id)?action=write-review")
+            }
+            guard let dest = target else { return }
+            Task { @MainActor in
+                UIApplication.shared.open(dest)
+            }
+        }.resume()
+    }
 }
