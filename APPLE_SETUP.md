@@ -92,7 +92,7 @@ Claude to read the logs.
 Open your app in App Store Connect, then the **1.5.1** version on the left.
 Everything to paste is in `STORE_LISTING.md`.
 
-1. **Screenshots**: upload the six pictures from `store/iphone/` to the
+1. **Screenshots**: upload the eight pictures from `store/iphone/`, in order, to the
    **iPhone with Dynamic Island (medium display)** slot. That slot only takes
    1206×2622 or 1179×2556 pictures.
 2. **Promotional text, description, keywords, support URL**: paste them from
