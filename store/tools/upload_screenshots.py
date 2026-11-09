@@ -7,11 +7,14 @@ language on it replaces the iPhone screenshots with the PNGs in the folder given
 Usage: python upload_screenshots.py store/iphone
 Environment: ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8, and optionally DISPLAY_TYPE (e.g. APP_IPHONE_61).
 """
+import base64
 import glob
 import hashlib
 import json
 import os
+import re
 import sys
+import textwrap
 import time
 
 import jwt
@@ -22,11 +25,30 @@ EDITABLE = {'PREPARE_FOR_SUBMISSION', 'DEVELOPER_REJECTED', 'REJECTED', 'METADAT
 http = requests.Session()
 
 
+def clean_key(raw):
+    # The secret is pasted by hand, so its line breaks and spaces are often mangled. Rebuild a proper key file,
+    # the same way the iPhone build does.
+    body = re.sub(r'-----\s*(BEGIN|END)[^-]*-----', '', raw.replace('\\n', '\n'))
+    body = re.sub(r'[^A-Za-z0-9+/=]', '', body)
+    try:
+        der = base64.b64decode(body, validate=True)
+    except Exception:
+        der = b''
+    if len(der) < 100 or der[:1] != b'\x30':
+        sys.exit(f'::error::APPSTORE_KEY_P8 does not look like the .p8 key file ({len(body)} key characters found).')
+    return '-----BEGIN PRIVATE KEY-----\n' + '\n'.join(textwrap.wrap(body, 64)) + '\n-----END PRIVATE KEY-----\n'
+
+
+KEY = None
+
+
 def token():
+    global KEY
+    if KEY is None:
+        KEY = clean_key(os.environ['ASC_KEY_P8'])
     now = int(time.time())
-    key = os.environ['ASC_KEY_P8'].replace('\\n', '\n')
-    return jwt.encode({'iss': os.environ['ASC_ISSUER_ID'], 'iat': now, 'exp': now + 1000, 'aud': 'appstoreconnect-v1'},
-                      key, algorithm='ES256', headers={'kid': os.environ['ASC_KEY_ID'], 'typ': 'JWT'})
+    return jwt.encode({'iss': os.environ['ASC_ISSUER_ID'].strip(), 'iat': now, 'exp': now + 1000, 'aud': 'appstoreconnect-v1'},
+                      KEY, algorithm='ES256', headers={'kid': os.environ['ASC_KEY_ID'].strip(), 'typ': 'JWT'})
 
 
 def call(method, path, body=None):
