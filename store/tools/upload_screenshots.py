@@ -52,13 +52,15 @@ def token():
                       KEY, algorithm='ES256', headers={'kid': os.environ['ASC_KEY_ID'].strip(), 'typ': 'JWT'})
 
 
-def call(method, path, body=None):
+def call(method, path, body=None, soft=False):
     headers = {'Authorization': 'Bearer ' + token()}
     if body is not None:
         headers['Content-Type'] = 'application/json'
     r = http.request(method, API + path, headers=headers, data=json.dumps(body) if body is not None else None, timeout=60)
     if r.status_code >= 400:
-        print(f'::error::{method} {path} answered {r.status_code}: {r.text[:1500]}')
+        print(f"::{'warning' if soft else 'error'}::{method} {path} answered {r.status_code}: {r.text[:1500]}")
+        if soft:
+            return None
         sys.exit(1)
     return r.json() if r.text else {}
 
@@ -104,8 +106,14 @@ def main(folder):
         time.sleep(2)
     if not locs:
         sys.exit('::error::This version has no languages yet. Open it once in App Store Connect, then run this again.')
+    notes_file = f"store/whats_new_{version['attributes']['versionString']}.txt"
+    notes = open(notes_file).read().strip()[:4000] if os.path.exists(notes_file) else ''
     for loc in locs:
         lang = loc['attributes']['locale']
+        if notes:
+            done = call('PATCH', f"/v1/appStoreVersionLocalizations/{loc['id']}", {'data': {'type': 'appStoreVersionLocalizations',
+                        'id': loc['id'], 'attributes': {'whatsNew': notes}}}, soft=True)
+            print(f"{lang}: What's New {'filled in from ' + notes_file if done is not None else 'not changed (paste it by hand)'}")
         sets = call('GET', f"/v1/appStoreVersionLocalizations/{loc['id']}/appScreenshotSets?limit=50")['data']
         iphone = [s for s in sets if s['attributes']['screenshotDisplayType'].startswith('APP_IPHONE')]
         target = None

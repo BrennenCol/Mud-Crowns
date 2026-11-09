@@ -273,6 +273,16 @@ still be reached from a first job.
 - A double tap never zooms the page. In the phone apps, pinch zoom and
   long-press text selection are off too, so it feels like an app.
 
+### New store pictures (v1.13.2)
+
+- Eight new App Store pictures in `store/iphone`, made by `store/tools`.
+- The **Store screenshots** workflow (Actions tab) puts them on the App Store
+  version that can still be edited, replacing the old ones in order. Apple
+  locks the pictures on the live version, so give it the next version number
+  and it creates that version first. It also fills in What's New from
+  `store/whats_new_<version>.txt` when that file exists.
+- The game itself is unchanged.
+
 ### Asking for a rating (v1.13.1)
 
 - In the iPhone app, after you are rewarded (a promotion, a seal of fame, a
