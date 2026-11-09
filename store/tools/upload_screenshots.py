@@ -5,7 +5,8 @@ It finds the app version you can still edit (Prepare for Submission, or one you 
 language on it replaces the iPhone screenshots with the PNGs in the folder given, in file-name order.
 
 Usage: python upload_screenshots.py store/iphone
-Environment: ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8, and optionally DISPLAY_TYPE (e.g. APP_IPHONE_61).
+Environment: ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8, and optionally DISPLAY_TYPE (e.g. APP_IPHONE_61) and NEW_VERSION
+(e.g. 1.13.2: if no version can be edited, create this one first).
 """
 import base64
 import glob
@@ -77,15 +78,32 @@ def main(folder):
         a = v['attributes']
         print(f"Version {a.get('versionString')}: {a.get('appVersionState') or a.get('appStoreState')}")
     editable = [v for v in versions if (v['attributes'].get('appVersionState') or v['attributes'].get('appStoreState')) in EDITABLE]
+    new = (os.environ.get('NEW_VERSION') or '').strip()
+    if not editable and new:
+        # Apple copies the text and pictures of the live version into a new version, which can then be changed.
+        print(f'Creating version {new} in App Store Connect')
+        made = call('POST', '/v1/appStoreVersions', {'data': {'type': 'appStoreVersions',
+                    'attributes': {'platform': 'IOS', 'versionString': new},
+                    'relationships': {'app': {'data': {'type': 'apps', 'id': app}}}}})['data']
+        editable = [made]
+    elif editable and new and editable[0]['attributes'].get('versionString') != new:
+        print(f"Version {editable[0]['attributes'].get('versionString')} is already open for changes, so the pictures go there instead of a new {new}.")
     if not editable:
         print('::error::No version can be edited right now. Apple locks screenshots while a version is waiting for or in '
-              'review, and on the live version. Remove the version from review, or create the next version, then run this again.')
+              'review, and on the live version. Remove the version from review, or run this again with a new version number.')
         sys.exit(1)
     version = editable[0]
     print(f"Uploading to version {version['attributes']['versionString']}")
 
     want = os.environ.get('DISPLAY_TYPE') or ''
-    locs = call('GET', f"/v1/appStoreVersions/{version['id']}/appStoreVersionLocalizations")['data']
+    locs = []
+    for _ in range(15):
+        locs = call('GET', f"/v1/appStoreVersions/{version['id']}/appStoreVersionLocalizations")['data']
+        if locs:
+            break
+        time.sleep(2)
+    if not locs:
+        sys.exit('::error::This version has no languages yet. Open it once in App Store Connect, then run this again.')
     for loc in locs:
         lang = loc['attributes']['locale']
         sets = call('GET', f"/v1/appStoreVersionLocalizations/{loc['id']}/appScreenshotSets?limit=50")['data']

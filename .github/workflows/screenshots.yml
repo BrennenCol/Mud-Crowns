@@ -1,6 +1,7 @@
 # Uploads the store screenshots in store/iphone to App Store Connect, replacing the old ones.
 # Run it from the Actions tab (Store screenshots → Run workflow). It uses the same Apple key as the iPhone build.
-# It only works on a version that can still be edited (not while one is waiting for or in review).
+# It only works on a version that can still be edited (not while one is waiting for or in review, and not the live one).
+# If every version is locked, give a new version number and it creates that version first.
 name: Store screenshots
 
 on:
@@ -8,6 +9,10 @@ on:
     inputs:
       display_type:
         description: Screenshot slot (leave empty to use the iPhone slot already in use)
+        type: string
+        default: ''
+      new_version:
+        description: New version number to create if every version is live or in review (e.g. 1.13.2). Leave empty to only use a version that is already open.
         type: string
         default: ''
 
@@ -34,4 +39,5 @@ jobs:
           ASC_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
           ASC_KEY_P8: ${{ secrets.APPSTORE_KEY_P8 }}
           DISPLAY_TYPE: ${{ inputs.display_type }}
+          NEW_VERSION: ${{ inputs.new_version }}
         run: python store/tools/upload_screenshots.py store/iphone
