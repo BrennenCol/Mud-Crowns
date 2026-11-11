@@ -273,6 +273,44 @@ still be reached from a first job.
 - A double tap never zooms the page. In the phone apps, pinch zoom and
   long-press text selection are off too, so it feels like an app.
 
+## Workplaces (v1.14)
+
+- **Every post has a place.** Each job is worked somewhere: the fields, the pasture, the
+  woods, the mine or quarry, the building site, the forge or the mint, a workshop, the
+  market, the streets, the quay, the inn, a great house's kitchen, the royal kitchen,
+  laundry, stables, nursery or walls, the throne room, the guildhall, the court of law, the
+  parish church, the cathedral, the hospital, the abbey, a scriptorium, the university, a
+  laboratory, a counting house, the camp or the manor. The moving picture follows the place
+  you work, not the rank you were born to: a lord who keeps a shop is painted in the market.
+- **New pictures.** The throne room, guildhall and court of law; the royal and great-house
+  kitchens; the forge and the mint; a workshop for each trade (loom, bakehouse, goldsmith,
+  apothecary, potter, carpenter, cooper, wheelwright, tanner, chandler, ropemaker, bowyer);
+  the inn; the parish church, cathedral and hospital; the scriptorium, university,
+  laboratory and counting house; the stables (royal or at an inn); the pasture (sheep, pigs,
+  cows, geese, bees or rabbits, by your trade); the mine, the quarry and the building site.
+  Rooms show the weather through their windows, and lamps and fires glow at night.
+- **You, in the picture.** You are painted where you work, dressed for your post, with a
+  small gold mark over your head; the name of the place sits in the top corner.
+- **The people you work beside.** Each workplace has its own cast, from the master down to
+  the youngest hand, each with a rank on one ladder (0, the lowest servant, to 6, the
+  monarch). Your rank is your post, never below what your birth makes you (merchants and up).
+  Relationships start, and settle each year, by how far apart you stand: a coal boy is easy
+  friends with the scullions, and the king does not know he exists. Kin shows them highest
+  first, with you in your place on the ladder. Your boss is the nearest person above you who
+  gives orders. At work you can work beside your equals, ask your master for more to do, ask
+  those above you to teach you, and show those below you the ropes. Children at work can
+  talk, help and learn, and nothing worse. A new event each working year: a workmate is
+  sick, someone must take the blame, the boss praises you, the others go to the alehouse,
+  someone is stealing, or someone very great walks through.
+- **Below stairs.** New posts in the royal castle: Castle Coal Boy (from age 8), Scullion of
+  the Royal Kitchen, Cook in the Royal Kitchen, Master Cook of the Royal Kitchen, Porter of
+  the Castle Gate, Groom of the Royal Stables and Yeoman of the Buttery, with the ladders and
+  side doors between them and the older posts (the castle guard, the cupbearer, the Master
+  of the Horse). Under historical rules they are men's posts that a girl in disguise may hold.
+- **Better pictures.** Buildings, ponds, crags and pools no longer stand on each other (the
+  manor's pond is off the haystacks, the market cross is clear of the stalls, the castle's
+  cottages are clear of the moat), and the painting now fills short, wide frames.
+
 ### New store pictures (v1.13.2)
 
 - Eight new App Store pictures in `store/iphone`, made by `store/tools`.

@@ -61,18 +61,29 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.13.2.txt`, ready to copy.
+Also in `store/whats_new_1.14.0.txt`, ready to copy.
 
 ```
-A SMALL UPDATE
-New pictures on the App Store page. The game itself is the same as 1.13.1.
+WORKPLACES
+The picture now follows your work, not your birth. A lord who keeps a shop in town is painted in the market, not at his manor. New places to work in, each painted inside and out:
+- The throne room, the guildhall and the court of law
+- The royal kitchen, the forge and the royal mint
+- A workshop for every trade: the loom, the bakehouse, the goldsmith's, the apothecary's, the potter's, the carpenter's and more
+- The inn, the parish church, the cathedral and the hospital
+- The scriptorium, the university, the alchemist's laboratory and the counting house
+- The stables, the pasture, the mine, the quarry and the building site
 
-IN CASE YOU MISSED 1.13
-- Medieval music and sound effects that follow your life, with their own volume in Settings. Your own music keeps playing.
-- Women's roads: rise to the top in your own name, without a disguise, in the queen's household, the royal nursery, the great abbeys and more.
-- The Prince's Eye: a rare chance for a very pretty village girl to be brought to the palace.
-- Fairer careers: Find Work shows only the posts you could hold, and an old hand is far more likely to be taken back on.
-- "Begin a new life" is at the top of the menu, and a "Rate Mud & Crowns" button is under About.
+YOU, IN THE PICTURE
+You are painted where you work, dressed for your job, with a gold mark over your head. The name of the place sits in the corner.
+
+THE PEOPLE YOU WORK BESIDE
+Every workplace has its own people, from the master down to the youngest hand. Kin shows them as a ladder, with you in your place on it. Those far above you hardly know your name, and your equals are easier to win. Work beside them, ask to be taught, cover for a sick friend, own up for someone else's mistake, or worse.
+
+BELOW STAIRS
+The royal castle has servants now. Start as a coal boy and climb to scullion, cook and master cook, or keep the gate, groom the king's horses, or keep the buttery.
+
+BETTER PICTURES
+The old scenes no longer have things standing on each other (the manor's pond is off the haystacks), and the picture fills wide screens.
 ```
 
 ## Category
