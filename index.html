@@ -24409,6 +24409,7 @@ YEARLY.push(slYear);
 .sc_cv .sc_lift{animation:sc_lift 7s ease-in-out infinite}
 .sc_cv .sc_slide{animation:sc_slide 1.5s ease-in-out infinite}
 .sc_cv .sc_nod{transform-origin:50% 100%;animation:sc_nod 2.4s ease-in-out infinite}
+.sc_cv .sc_toss{animation:sc_toss 1.1s ease-in-out infinite}
 .sc_cv .sc_tint{animation:sc_tint ${CYC}s linear infinite;animation-delay:var(--sc-ph)}
 .sc_cv .sc_dusk{animation:sc_dusk ${CYC}s linear infinite;animation-delay:var(--sc-ph)}
 .sc_cv .sc_starL{animation:sc_starA ${CYC}s linear infinite;animation-delay:var(--sc-ph)}
@@ -24444,6 +24445,7 @@ YEARLY.push(slYear);
 @keyframes sc_lift{0%,12%{transform:translateY(0)}50%,62%{transform:translateY(-55%)}100%{transform:translateY(0)}}
 @keyframes sc_slide{0%,100%{transform:translateX(-10%)}50%{transform:translateX(10%)}}
 @keyframes sc_nod{0%,100%{transform:rotate(0)}50%{transform:rotate(-6deg)}}
+@keyframes sc_toss{0%,100%{transform:translateY(0)}50%{transform:translateY(-70%)}}
 @keyframes sc_tint{0%,47%{opacity:0}57%{opacity:.4}63%,89%{opacity:.62}97%,100%{opacity:0}}
 @keyframes sc_dusk{0%,45%{opacity:0}54%{opacity:.75}62%,90%{opacity:0}94.5%{opacity:.5}100%{opacity:0}}
 @keyframes sc_starA{0%,59%{opacity:0}67%,88%{opacity:1}95%,100%{opacity:0}}
@@ -24582,9 +24584,133 @@ YEARLY.push(slYear);
     X.mid.push(spr(X, bx, by, bw, bh, F2.f, 'sc_wave', dl(X, -X.r() * 1.7)));
   }
   // a little person standing at x, feet on y, facing right (dir -1 faces left)
-  function man(X, x, y, o = {}) {
-    const h = o.h || 11, k = h / 11, dir = o.dir || 1, c = o.c || X.r() < .5 ? (o.c || 'red') : 'blue', skin = 'skin';
+  // A person close up, as the illuminators drew them: a face with eyes, nose and a little colour in the cheeks; hair or
+  // a beard; two arms in their sleeves with hands at the ends; hose and shoes, or a gown to the floor; a belt, a neckline,
+  // the folds of the cloth and its shadow side; a shadow on the ground. Hats and tools are drawn to fit.
+  const HAIRS = ['timber', 'wood2', 'gold2', 'black', 'earth', 'red2', 'timber', 'wood2'];
+  function manBig(X, x, y, o) {
+    const h = o.h, k = h / 11, d = o.dir || 1, c = o.c || pick2(X, ['red', 'blue', 'green', 'earth']);
+    const gown = !!o.gown, seated = !!o.seated, top = y - h, hat = o.hat || '';
+    const hair = o.hair || pick2(X, HAIRS), hose = o.hose || pick2(X, ['timber', 'wood2', 'blue', 'red2', 'black']);
+    const beard = o.beard != null ? o.beard : (!o.fem && !gown && !seated && hat !== 'veil' && X.r() < .3);
+    const hx = x + .1 * k * d, hy = top + 1.55 * k, hr = 1.38 * k;
+    const tool = o.tool, busy = !!(tool && tool !== 'sack') || !!o.hold;
+    const pose = o.pose || (tool === 'sack' ? 'sack' : busy ? 'work' : 'down');
+    const W2 = .95 * k;                                   // sleeve and leg thickness
+    const X2 = (dx, dy) => [x + dx * k * d, top + dy * k]; // a point on the body, facing the way the figure faces
+    const P = pts => 'M' + pts.map(p => `${n1(p[0])} ${n1(p[1])}`).join('L');
+    const limb = (pts, col, w) => ln(P(pts), 'ol', w + .6) + ln(P(pts), col, w);
+    const hand = (p, r = .44) => ci(p[0], p[1], r * k, 'skin', 'stroke-width=".35"');
     let s = '';
+    // the shadow on the ground
+    if (!seated) s += el(x + .25 * k * d, y + .1 * k, 2.7 * k, .5 * k, 'black', 'stroke="none" opacity=".2"');
+    // the joints: shoulders, elbows, hands
+    const fSh = X2(1.05, 3.85), bSh = X2(-1.05, 3.85);
+    const fEl = pose === 'up' ? X2(1.75, 2.7) : pose === 'work' ? X2(1.95, 5.45) : X2(1.45, 5.6);
+    const fHa = pose === 'up' ? X2(2.05, 1.1) : pose === 'work' ? X2(2.95, 5.85) : X2(1.6, 7.2);
+    const bEl = pose === 'sack' ? X2(-1.85, 3.2) : X2(-1.45, 5.55), bHa = pose === 'sack' ? X2(-1.2, 2.6) : X2(-1.3, 7.1);
+    const sleeve = o.sleeve || c;
+    // a sack over the shoulder rides behind everything
+    if (tool === 'sack') s += pa(`M${n1(x - .4 * k * d)} ${n1(top + 2.9 * k)}Q${n1(x - 3.4 * k * d)} ${n1(top + 1.9 * k)} ${n1(x - 3.2 * k * d)} ${n1(top + 4.6 * k)}Q${n1(x - 2.9 * k * d)} ${n1(top + 6.4 * k)} ${n1(x - 1.4 * k * d)} ${n1(top + 5.6 * k)}Z`, 'daub2', 'stroke-width=".45"') + ln(`M${n1(x - 2.4 * k * d)} ${n1(top + 3)}q${n1(.6 * k * d)} ${n1(1.4 * k)} ${n1(.2 * k * d)} ${n1(2.6 * k)}`, 'ol', .3, 'opacity=".4"');
+    // legs and shoes (under the tunic), or shoes peeping from under the gown
+    const hemY = gown ? y - .3 * k : top + 8.25 * k;
+    if (!seated) {
+      if (!gown) {
+        const fL = [X2(.45, 7.7), X2(.8, 10.5)], bL = [X2(-.5, 7.7), X2(-.55, 10.5)];
+        s += limb(bL, hose, W2) + ln(P(bL), 'black', W2 * .9, 'opacity=".14"') + limb(fL, hose, W2);
+        s += el(bL[1][0] + .3 * k * d, y - .3 * k, .78 * k, .38 * k, 'black', 'stroke-width=".35"') + el(fL[1][0] + .38 * k * d, y - .3 * k, .82 * k, .4 * k, 'black', 'stroke-width=".35"');
+      } else s += el(x + 1.2 * k * d, y - .2 * k, .8 * k, .36 * k, 'black', 'stroke-width=".35"') + el(x + .2 * k * d, y - .15 * k, .7 * k, .32 * k, 'black', 'stroke-width=".35"');
+    }
+    // the back arm, in shadow
+    s += limb([bSh, bEl, bHa], sleeve, W2) + ln(P([bSh, bEl, bHa]), 'black', W2, 'opacity=".18"') + hand(bHa, .4);
+    // the body: shoulders, waist, and the fall of the tunic or the gown
+    const sw = gown ? 1.38 : 1.52, ww = gown ? 1.18 : 1.38, hw = gown ? 3 : 2.3;
+    const body = `M${n1(x - sw * k)} ${n1(top + 3.55 * k)}Q${n1(x)} ${n1(top + 3.0 * k)} ${n1(x + sw * k)} ${n1(top + 3.55 * k)}Q${n1(x + (sw + .1) * k)} ${n1(top + 4.8 * k)} ${n1(x + ww * k)} ${n1(top + 6.1 * k)}Q${n1(x + (ww + (gown ? .5 : .3)) * k)} ${n1(top + 7.4 * k)} ${n1(x + hw * k)} ${n1(hemY)}Q${n1(x)} ${n1(hemY + .55 * k)} ${n1(x - hw * k)} ${n1(hemY)}Q${n1(x - (ww + (gown ? .5 : .3)) * k)} ${n1(top + 7.4 * k)} ${n1(x - ww * k)} ${n1(top + 6.1 * k)}Q${n1(x - (sw + .1) * k)} ${n1(top + 4.8 * k)} ${n1(x - sw * k)} ${n1(top + 3.55 * k)}Z`;
+    s += pa(body, c, 'stroke-width=".5"');
+    // the shadow side of the body, and the folds of the cloth
+    s += pn(`M${n1(x - sw * k * d)} ${n1(top + 3.6 * k)}Q${n1(x - (sw + .1) * k * d)} ${n1(top + 4.8 * k)} ${n1(x - ww * k * d)} ${n1(top + 6.1 * k)}Q${n1(x - (ww + .4) * k * d)} ${n1(top + 7.4 * k)} ${n1(x - hw * k * d)} ${n1(hemY)}Q${n1(x - hw * .55 * k * d)} ${n1(hemY + .35 * k)} ${n1(x - hw * .35 * k * d)} ${n1(hemY + .2 * k)}Q${n1(x - .5 * k * d)} ${n1(top + 6 * k)} ${n1(x - .5 * k * d)} ${n1(top + 3.4 * k)}Z`, 'black', 'opacity=".14"');
+    s += ln(`M${n1(x + .45 * k * d)} ${n1(top + 6.4 * k)}q${n1(.25 * k * d)} ${n1((hemY - top - 6.4 * k) * .5)} ${n1(.15 * k * d)} ${n1(hemY - top - 6.6 * k)}M${n1(x - .35 * k * d)} ${n1(top + 6.6 * k)}q${n1(-.2 * k * d)} ${n1((hemY - top - 6.6 * k) * .5)} ${n1(-.05 * k * d)} ${n1(hemY - top - 6.8 * k)}`, 'ol', .3, 'opacity=".3"');
+    if (o.trim) s += ln(`M${n1(x - hw * k)} ${n1(hemY - .3 * k)}Q${n1(x)} ${n1(hemY + .25 * k)} ${n1(x + hw * k)} ${n1(hemY - .3 * k)}`, o.trim, .55 * k);
+    // the neckline, the belt and its buckle
+    s += pa(`M${n1(x - .55 * k)} ${n1(top + 3.3 * k)}L${n1(x + .1 * k * d)} ${n1(top + 4.3 * k)}L${n1(x + .65 * k)} ${n1(top + 3.3 * k)}Z`, gown && o.c !== 'black' ? 'white' : 'daub', 'stroke-width=".3"');
+    if (!o.apron) s += ln(`M${n1(x - ww * k)} ${n1(top + 6.15 * k)}Q${n1(x)} ${n1(top + 6.45 * k)} ${n1(x + ww * k)} ${n1(top + 6.15 * k)}`, o.belt || 'wood2', .5 * k) + pa(wr(X, x + .3 * k * d - .32 * k, top + 6.05 * k, .64 * k, .55 * k, .02), 'gold', 'stroke-width=".25"');
+    if (o.apron) s += pa(`M${n1(x - .95 * k)} ${n1(top + 4.4 * k)}H${n1(x + .95 * k)}L${n1(x + 1.55 * k)} ${n1(gown ? y - 1.4 * k : hemY + .5 * k)}Q${n1(x)} ${n1(gown ? y - 1 * k : hemY + .9 * k)} ${n1(x - 1.55 * k)} ${n1(gown ? y - 1.4 * k : hemY + .5 * k)}Z`, o.apron, 'stroke-width=".35"') + ln(`M${n1(x - 1.3 * k)} ${n1(top + 6.15 * k)}H${n1(x + 1.3 * k)}M${n1(x - .9 * k)} ${n1(top + 4.4 * k)}L${n1(x - .5 * k)} ${n1(top + 3.3 * k)}M${n1(x + .9 * k)} ${n1(top + 4.4 * k)}L${n1(x + .5 * k)} ${n1(top + 3.3 * k)}`, 'ol', .3, 'opacity=".55"');
+    if (o.chain) s += ln(`M${n1(x - 1.25 * k)} ${n1(top + 3.7 * k)}Q${n1(x)} ${n1(top + 5.6 * k)} ${n1(x + 1.25 * k)} ${n1(top + 3.7 * k)}`, 'gold', .4 * k, 'stroke-dasharray=".5 .3"') + ci(x, top + 5.3 * k, .45 * k, 'gold', 'stroke-width=".25"');
+    // the neck and the head
+    s += pa(wr(X, hx - .48 * k, hy + .9 * k, .96 * k, 1.1 * k, .02), 'skin', 'stroke-width=".35"');
+    const covered = hat === 'hood' || hat === 'veil';
+    if (covered) {
+      // hood or veil: the cloth round the head and down onto the shoulders, the face looking out of it
+      const hc = o.hc || (hat === 'veil' ? 'white' : c);
+      s += pa(`M${n1(hx + .95 * hr * d)} ${n1(hy - .25 * hr)}Q${n1(hx + .7 * hr * d)} ${n1(hy - 1.5 * hr)} ${n1(hx - .25 * hr * d)} ${n1(hy - 1.38 * hr)}Q${n1(hx - 1.45 * hr * d)} ${n1(hy - 1.1 * hr)} ${n1(hx - 1.35 * hr * d)} ${n1(hy + .5 * hr)}L${n1(x - 1.7 * k * d)} ${n1(top + 4.6 * k)}Q${n1(x)} ${n1(top + 5.2 * k)} ${n1(x + 1.7 * k * d)} ${n1(top + 4.4 * k)}L${n1(hx + .9 * hr * d)} ${n1(hy + .9 * hr)}Z`, hc, 'stroke-width=".45"');
+      if (hat === 'hood') s += ln(`M${n1(hx - .9 * hr * d)} ${n1(hy - 1.1 * hr)}q${n1(-1.8 * k * d)} ${n1(.2 * k)} ${n1(-2.4 * k * d)} ${n1(2.8 * k)}`, hc, .7 * k) + ln(`M${n1(hx - .9 * hr * d)} ${n1(hy - 1.1 * hr)}q${n1(-1.8 * k * d)} ${n1(.2 * k)} ${n1(-2.4 * k * d)} ${n1(2.8 * k)}`, 'ol', .25, 'opacity=".5"');
+      s += el(hx + .2 * hr * d, hy + .08 * hr, .78 * hr, .9 * hr, 'skin', 'stroke-width=".35"');
+      if (hat === 'veil' && o.wimple !== false) s += pa(`M${n1(hx + .2 * hr * d - .78 * hr)} ${n1(hy + .3 * hr)}Q${n1(hx + .2 * hr * d)} ${n1(hy + 1.25 * hr)} ${n1(hx + .2 * hr * d + .78 * hr)} ${n1(hy + .3 * hr)}L${n1(hx + .2 * hr * d + .85 * hr)} ${n1(hy + 1.05 * hr)}Q${n1(hx + .2 * hr * d)} ${n1(hy + 1.6 * hr)} ${n1(hx + .2 * hr * d - .85 * hr)} ${n1(hy + 1.05 * hr)}Z`, 'white', 'stroke-width=".3"');
+    } else {
+      s += el(hx, hy, hr * .96, hr, 'skin', 'stroke-width=".45"');
+      if (hat === 'cowl') {
+        // the tonsure: a bare crown and a ring of hair; the cowl lies back on the shoulders
+        s += pn(`M${n1(hx - .98 * hr)} ${n1(hy - .1 * hr)}Q${n1(hx - .9 * hr)} ${n1(hy - .75 * hr)} ${n1(hx - .5 * hr)} ${n1(hy - .95 * hr)}L${n1(hx - .35 * hr)} ${n1(hy - .55 * hr)}Q${n1(hx)} ${n1(hy - .7 * hr)} ${n1(hx + .35 * hr)} ${n1(hy - .55 * hr)}L${n1(hx + .5 * hr)} ${n1(hy - .95 * hr)}Q${n1(hx + .9 * hr)} ${n1(hy - .75 * hr)} ${n1(hx + .98 * hr)} ${n1(hy - .1 * hr)}`, hair) ;
+        s += pa(`M${n1(x - 1.6 * k)} ${n1(top + 3.5 * k)}Q${n1(x)} ${n1(top + 2.6 * k)} ${n1(x + 1.6 * k)} ${n1(top + 3.5 * k)}Q${n1(x + 1.4 * k)} ${n1(top + 4.6 * k)} ${n1(x)} ${n1(top + 4.4 * k)}Q${n1(x - 1.4 * k)} ${n1(top + 4.6 * k)} ${n1(x - 1.6 * k)} ${n1(top + 3.5 * k)}Z`, o.hc || c, 'stroke-width=".4"');
+      } else if (hat !== 'helm' && hat !== 'coif' && hat !== 'mitre') {
+        // hair: cropped for most men, long down the back for women with nothing on their heads
+        const long = !!o.fem && ['', 'crown', 'cap', 'straw'].includes(hat);
+        s += pa(`M${n1(hx + .92 * hr * d)} ${n1(hy - .45 * hr)}Q${n1(hx + .35 * hr * d)} ${n1(hy - 1.3 * hr)} ${n1(hx - .55 * hr * d)} ${n1(hy - .95 * hr)}Q${n1(hx - 1.2 * hr * d)} ${n1(hy - .4 * hr)} ${n1(hx - (long ? 1.25 : 1.02) * hr * d)} ${n1(hy + (long ? 2.2 : .5) * hr)}L${n1(hx - (long ? .45 : .62) * hr * d)} ${n1(hy + (long ? 1.9 : .35) * hr)}Q${n1(hx - .4 * hr * d)} ${n1(hy - .35 * hr)} ${n1(hx + .92 * hr * d)} ${n1(hy - .45 * hr)}Z`, hair, 'stroke-width=".4"');
+      }
+      // an ear
+      if (hat !== 'helm' && hat !== 'coif') s += el(hx - .45 * hr * d, hy + .12 * hr, .2 * hr, .28 * hr, 'skin', 'stroke-width=".3"');
+    }
+    // the face, turned the way the figure faces
+    const fx = covered ? hx + .2 * hr * d : hx, fy = covered ? hy + .08 * hr : hy;
+    s += ci(fx + .55 * hr * d, fy - .08 * hr, .12 * hr, 'black', NS) + ci(fx + .12 * hr * d, fy - .08 * hr, .11 * hr, 'black', NS);
+    s += ln(`M${n1(fx + .4 * hr * d)} ${n1(fy - .3 * hr)}l${n1(.28 * hr * d)} ${n1(-.03 * hr)}M${n1(fx - .02 * hr * d)} ${n1(fy - .3 * hr)}l${n1(.24 * hr * d)} ${n1(.01 * hr)}`, covered ? 'timber' : hair, .1 * hr);
+    s += ln(`M${n1(fx + .78 * hr * d)} ${n1(fy - .05 * hr)}l${n1(.16 * hr * d)} ${n1(.3 * hr)}l${n1(-.17 * hr * d)} ${n1(.04 * hr)}`, 'ol', .09 * hr, 'opacity=".6"');
+    s += ci(fx + .45 * hr * d, fy + .3 * hr, .22 * hr, 'flower', NS + ' opacity=".22"');
+    if (beard && !covered) s += pa(`M${n1(fx + .88 * hr * d)} ${n1(fy + .28 * hr)}Q${n1(fx + .75 * hr * d)} ${n1(fy + 1.15 * hr)} ${n1(fx + .1 * hr * d)} ${n1(fy + 1.12 * hr)}Q${n1(fx - .55 * hr * d)} ${n1(fy + .95 * hr)} ${n1(fx - .62 * hr * d)} ${n1(fy + .2 * hr)}Q${n1(fx + .1 * hr * d)} ${n1(fy + .62 * hr)} ${n1(fx + .88 * hr * d)} ${n1(fy + .28 * hr)}Z`, hair, 'stroke-width=".35"') + ln(`M${n1(fx + .28 * hr * d)} ${n1(fy + .5 * hr)}q${n1(.2 * hr * d)} ${n1(.08 * hr)} ${n1(.38 * hr * d)} 0`, 'red2', .09 * hr);
+    else s += ln(`M${n1(fx + .3 * hr * d)} ${n1(fy + .5 * hr)}q${n1(.18 * hr * d)} ${n1(.12 * hr)} ${n1(.36 * hr * d)} ${n1(-.02 * hr)}`, 'red2', .09 * hr);
+    // what is on the head
+    if (hat === 'cap') s += pa(`M${n1(hx - 1.04 * hr)} ${n1(hy - .32 * hr)}Q${n1(hx - .95 * hr)} ${n1(hy - 1.4 * hr)} ${n1(hx + .1 * hr * d)} ${n1(hy - 1.32 * hr)}Q${n1(hx + 1.15 * hr)} ${n1(hy - 1.2 * hr)} ${n1(hx + 1.05 * hr)} ${n1(hy - .32 * hr)}Q${n1(hx)} ${n1(hy - .58 * hr)} ${n1(hx - 1.04 * hr)} ${n1(hy - .32 * hr)}Z`, o.hc || 'red', 'stroke-width=".4"') + ln(`M${n1(hx - 1.02 * hr)} ${n1(hy - .4 * hr)}Q${n1(hx)} ${n1(hy - .66 * hr)} ${n1(hx + 1.02 * hr)} ${n1(hy - .4 * hr)}`, 'ol', .35, 'opacity=".45"');
+    else if (hat === 'coif') s += pa(`M${n1(hx + .7 * hr * d)} ${n1(hy - .8 * hr)}Q${n1(hx - .2 * hr * d)} ${n1(hy - 1.35 * hr)} ${n1(hx - .98 * hr * d)} ${n1(hy - .35 * hr)}Q${n1(hx - 1.08 * hr * d)} ${n1(hy + .6 * hr)} ${n1(hx - .45 * hr * d)} ${n1(hy + .95 * hr)}L${n1(hx - .25 * hr * d)} ${n1(hy + .2 * hr)}Q${n1(hx)} ${n1(hy - .55 * hr)} ${n1(hx + .85 * hr * d)} ${n1(hy - .5 * hr)}Z`, o.hc || 'white', 'stroke-width=".4"') + ln(`M${n1(hx - .4 * hr * d)} ${n1(hy + .9 * hr)}Q${n1(hx + .2 * hr * d)} ${n1(hy + 1.25 * hr)} ${n1(hx + .7 * hr * d)} ${n1(hy + .8 * hr)}`, o.hc || 'white', .12 * hr);
+    else if (hat === 'straw') s += el(hx, hy - .62 * hr, 1.95 * hr, .36 * hr, 'thatch', 'stroke-width=".45"') + pa(`M${n1(hx - .85 * hr)} ${n1(hy - .66 * hr)}Q${n1(hx - .8 * hr)} ${n1(hy - 1.55 * hr)} ${n1(hx)} ${n1(hy - 1.55 * hr)}Q${n1(hx + .8 * hr)} ${n1(hy - 1.55 * hr)} ${n1(hx + .85 * hr)} ${n1(hy - .66 * hr)}Z`, 'thatch', 'stroke-width=".45"') + ln(`M${n1(hx - .84 * hr)} ${n1(hy - .8 * hr)}Q${n1(hx)} ${n1(hy - .6 * hr)} ${n1(hx + .84 * hr)} ${n1(hy - .8 * hr)}`, 'red', .2 * hr);
+    else if (hat === 'helm') s += pa(`M${n1(hx - 1.12 * hr)} ${n1(hy - .1 * hr)}Q${n1(hx - 1.05 * hr)} ${n1(hy - 1.55 * hr)} ${n1(hx)} ${n1(hy - 1.6 * hr)}Q${n1(hx + 1.05 * hr)} ${n1(hy - 1.55 * hr)} ${n1(hx + 1.12 * hr)} ${n1(hy - .1 * hr)}Z`, 'iron2', 'stroke-width=".45"') + el(hx, hy - .12 * hr, 1.35 * hr, .26 * hr, 'iron2', 'stroke-width=".4"') + pn(`M${n1(hx - .5 * hr)} ${n1(hy - 1.3 * hr)}Q${n1(hx - .2 * hr)} ${n1(hy - 1.55 * hr)} ${n1(hx + .3 * hr)} ${n1(hy - 1.45 * hr)}`, 'white', 'opacity=".35"') + ln(`M${n1(hx + .35 * hr * d)} ${n1(hy - .15 * hr)}V${n1(hy + .55 * hr)}`, 'iron2', .22 * hr);
+    else if (hat === 'crown') s += pa(`M${n1(hx - .95 * hr)} ${n1(hy - .55 * hr)}L${n1(hx - 1.02 * hr)} ${n1(hy - 1.55 * hr)}L${n1(hx - .5 * hr)} ${n1(hy - 1.05 * hr)}L${n1(hx)} ${n1(hy - 1.75 * hr)}L${n1(hx + .5 * hr)} ${n1(hy - 1.05 * hr)}L${n1(hx + 1.02 * hr)} ${n1(hy - 1.55 * hr)}L${n1(hx + .95 * hr)} ${n1(hy - .55 * hr)}Z`, 'gold', 'stroke-width=".4"') + ci(hx, hy - .8 * hr, .14 * hr, 'red', NS) + ci(hx - .55 * hr, hy - .75 * hr, .11 * hr, 'blue', NS) + ci(hx + .55 * hr, hy - .75 * hr, .11 * hr, 'green', NS) + ln(`M${n1(hx - .95 * hr)} ${n1(hy - .62 * hr)}H${n1(hx + .95 * hr)}`, 'gold2', .14 * hr);
+    else if (hat === 'mitre') s += pa(`M${n1(hx - .95 * hr)} ${n1(hy - .45 * hr)}L${n1(hx - .8 * hr)} ${n1(hy - 1.8 * hr)}L${n1(hx)} ${n1(hy - 2.55 * hr)}L${n1(hx + .8 * hr)} ${n1(hy - 1.8 * hr)}L${n1(hx + .95 * hr)} ${n1(hy - .45 * hr)}Z`, o.hc || 'white', 'stroke-width=".4"') + ln(`M${n1(hx)} ${n1(hy - 2.4 * hr)}V${n1(hy - .5 * hr)}M${n1(hx - .88 * hr)} ${n1(hy - 1.05 * hr)}H${n1(hx + .88 * hr)}`, 'gold', .14 * hr);
+    // the tool, then the arm that holds it, then whatever is in the hand
+    if (tool === 'spear' || tool === 'staff') {
+      const sx = fHa[0];
+      s += ln(`M${n1(sx)} ${n1(y + .3)}V${n1(top - (tool === 'spear' ? 3.4 : 1) * k)}`, 'wood2', .5 * k);
+      if (tool === 'spear') s += pa(`M${n1(sx)} ${n1(top - 5.4 * k)}l${n1(.65 * k)} ${n1(2.2 * k)}h${n1(-1.3 * k)}Z`, 'iron2', 'stroke-width=".35"') + ln(`M${n1(sx - .7 * k)} ${n1(top - 3.2 * k)}h${n1(1.4 * k)}`, 'iron', .3 * k);
+      else if (o.crook) s += ln(`M${n1(sx)} ${n1(top - 1 * k)}q0 ${n1(-1.6 * k)} ${n1(1 * k * d)} ${n1(-1.6 * k)}q${n1(1 * k * d)} 0 ${n1(.9 * k * d)} ${n1(1 * k)}`, 'wood2', .5 * k);
+    } else if (tool === 'hoe' || tool === 'rake') {
+      s += ln(`M${n1(fHa[0] - .6 * k * d)} ${n1(fHa[1] - 1.2 * k)}L${n1(x + 5.2 * k * d)} ${n1(y - .2)}`, 'wood2', .45 * k) + (tool === 'hoe' ? pa(`M${n1(x + 5.2 * k * d)} ${n1(y - .2)}l${n1(1.3 * k * d)} ${n1(-.3 * k)}l${n1(-.2 * k * d)} ${n1(.8 * k)}Z`, 'iron2', 'stroke-width=".3"') : ln(`M${n1(x + 4.4 * k * d)} ${n1(y)}h${n1(1.8 * k * d)}M${n1(x + 4.6 * k * d)} ${n1(y)}v.8M${n1(x + 5.2 * k * d)} ${n1(y)}v.8M${n1(x + 5.8 * k * d)} ${n1(y)}v.8`, 'wood2', .3 * k));
+    } else if (tool === 'bow') s += ln(`M${n1(fHa[0])} ${n1(top + .4 * k)}q${n1(1.8 * k * d)} ${n1(5 * k)} 0 ${n1(10 * k)}`, 'wood2', .45 * k) + ln(`M${n1(fHa[0])} ${n1(top + .4 * k)}v${n1(10 * k)}`, 'ol', .2);
+    const armPts = [fSh, fEl, fHa];
+    s += limb(armPts, sleeve, W2) + ln(`M${n1(fEl[0])} ${n1(fEl[1])}L${n1(fHa[0])} ${n1(fHa[1])}`, 'black', W2 * .5, 'opacity=".1"');
+    if (pose === 'down' || pose === 'sack') s += el(fHa[0], fHa[1] - .3 * k, .55 * k, .35 * k, sleeve, 'stroke-width=".3"');
+    s += hand(fHa);
+    if (tool === 'book') s += pa(`M${n1(fHa[0] - .2 * k * d)} ${n1(fHa[1] - 1.2 * k)}h${n1(1.7 * k * d)}v${n1(1.3 * k)}h${n1(-1.7 * k * d)}Z`, 'red2', 'stroke-width=".3"') + ln(`M${n1(fHa[0] - .05 * k * d)} ${n1(fHa[1] - 1.05 * k)}h${n1(1.4 * k * d)}`, 'white', .2 * k);
+    if (o.hold) s += o.hold(fHa[0], fHa[1], k, d);
+    return s;
+  }
+  // where a close-up figure's working hand is, so a tool can be painted (and set going) in it
+  const handAt = (x, y, h, d = 1, pose = 'work') => { const k = h / 11, top = y - h; return pose === 'up' ? [x + 2.05 * k * d, top + 1.1 * k] : pose === 'work' ? [x + 2.95 * k * d, top + 5.85 * k] : [x + 1.6 * k * d, top + 7.2 * k]; };
+  function inHand(X, hx, hy, d, kind, dur) {
+    let t = '';
+    if (kind === 'hammer') t = ln(`M${n1(hx)} ${n1(hy)}L${n1(hx + 2 * d)} ${n1(hy - 6.5)}`, 'wood2', 1) + pa(`M${n1(hx + 2 * d - 2.4)} ${n1(hy - 8.4)}h4.8v2.6h-4.8Z`, 'iron', 'stroke-width=".35"');
+    else if (kind === 'cleaver') t = ln(`M${n1(hx)} ${n1(hy)}L${n1(hx + 1.2 * d)} ${n1(hy - 2.6)}`, 'wood2', .9) + pa(`M${n1(hx + 1 * d)} ${n1(hy - 2.4)}l${n1(3.4 * d)} -1.6l${n1(.8 * d)} 2.8l${n1(-3.6 * d)} 1.2Z`, 'iron2', 'stroke-width=".35"');
+    else if (kind === 'mallet') t = ln(`M${n1(hx)} ${n1(hy)}L${n1(hx + 1.6 * d)} ${n1(hy - 5)}`, 'wood2', .9) + pa(`M${n1(hx + 1.6 * d - 2.2)} ${n1(hy - 6.8)}h4.4v2.8h-4.4Z`, 'wood', 'stroke-width=".35"');
+    else if (kind === 'pick') t = ln(`M${n1(hx)} ${n1(hy)}L${n1(hx + 1.4 * d)} ${n1(hy - 6)}`, 'wood2', .9) + ln(`M${n1(hx + 1.4 * d - 3.6 * d)} ${n1(hy - 4.4)}Q${n1(hx + 1.4 * d)} ${n1(hy - 7.6)} ${n1(hx + 1.4 * d + 3.6 * d)} ${n1(hy - 4.6)}`, 'iron2', 1.1);
+    else if (kind === 'plane') t = pa(`M${n1(hx - 2.6)} ${n1(hy + .6)}h5.2l-.6 -1.8h-4Z`, 'wood', 'stroke-width=".35"') + ln(`M${n1(hx + .2 * d)} ${n1(hy - 1.2)}l${n1(.8 * d)} -1`, 'wood2', .7);
+    else if (kind === 'knife') t = ln(`M${n1(hx)} ${n1(hy)}l${n1(2.6 * d)} .8`, 'iron2', .7) + ln(`M${n1(hx)} ${n1(hy)}l${n1(-1 * d)} -.3`, 'wood2', .9);
+    else if (kind === 'brush') t = pa(wr(X, hx - 2.2, hy - .6, 4.4, 2.2, .1), 'wood2', 'stroke-width=".35"') + ln(`M${n1(hx - 1.8)} ${n1(hy + 1.6)}h3.6`, 'thatch', .8);
+    const slide = kind === 'plane' || kind === 'knife' || kind === 'brush';
+    const bx = hx - 9, by = hy - 10, ox = n1((hx - bx) / 18 * 100), oy = n1((hy - by) / 13 * 100);
+    X.mid.push(spr(X, bx, by, 18, 13, t, slide ? 'sc_slide' : 'sc_chop', `animation-duration:${dur || (slide ? 1.2 : .9)}s;transform-origin:${ox}% ${oy}%`));
+  }
+  function man(X, x, y, o = {}) {
+    if ((o.h || 11) >= 17) return manBig(X, x, y, o);
+    const h = o.h || 11, k = h / 11, dir = o.dir || 1, c = o.c || X.r() < .5 ? (o.c || 'red') : 'blue', skin = 'skin';
+    let s = o.seated ? '' : el(x + .3 * k * dir, y + .15, 2.3 * k, .45 * k, 'black', 'stroke="none" opacity=".18"');
     const gown = o.gown, top = y - h;
     if (!gown) s += ln(`M${n1(x - .6 * k)} ${n1(y - 3.6 * k)}L${n1(x - 1.2 * k)} ${n1(y)}M${n1(x + .6 * k)} ${n1(y - 3.6 * k)}L${n1(x + 1.3 * k)} ${n1(y)}`, o.hose || 'timber', 1.05 * k);
     const hem = gown ? y - .3 : y - 3.4 * k;
@@ -25005,7 +25131,7 @@ YEARLY.push(slYear);
     const W = X.W;
     let g = '';
     for (const [x, y, w, h, arch] of X.glow) g += arch === 'soft' ? ci(x + w / 2, y + h / 2, Math.max(w, h) * 1.1, 'glow', NS + ' opacity=".16"') : pa(arch ? `M${n1(x)} ${n1(y + h)}V${n1(y + w / 2)}A${n1(w / 2)} ${n1(w / 2)} 0 0 1 ${n1(x + w)} ${n1(y + w / 2)}V${n1(y + h)}Z` : `M${n1(x)} ${n1(y)}h${n1(w)}v${n1(h)}h${n1(-w)}Z`, 'glow', 'stroke-width=".3"') + ci(x + w / 2, y + h / 2, Math.max(w, h) * 1.3, 'glow', NS + ' opacity=".18"');
-    const tint = X.inside ? `<div class="sc_lay" style="opacity:.55"><div class="sc_lay sc_tint"></div></div>` : `<div class="sc_lay sc_dusk"></div><div class="sc_lay sc_tint"></div>`;
+    const tint = X.inside ? `<div class="sc_lay" style="opacity:${X.st === 'jail' || X.st === 'cradle' ? .55 : .8}"><div class="sc_lay sc_tint"></div></div>` : `<div class="sc_lay sc_dusk"></div><div class="sc_lay sc_tint"></div>`;
     X.night.unshift(tint);
     if (g) X.night.push(`<div class="sc_lay sc_glowL">${spr(X, 0, 0, W, H, g)}</div>`);
   }
@@ -25081,9 +25207,10 @@ YEARLY.push(slYear);
       X.mid.push(spr(X, fx - 4, fyy - 12, 12, 13, man(X, fx, fyy, { c: 'white', hat: 'straw', tool: 'rake' }), 'sc_graze', 'animation-duration:3.5s'));
     }
     // a neighbour walking home along the lane
-    const wy = 138, wt = man(X, cx, wy, { c: pick2(X, ['blue', 'green', 'red', 'earth']), hat: pick2(X, ['hood', 'straw', 'veil', '']), tool: pick2(X, ['sack', 'staff', '']), gown: X.r() < .4 });
-    X.mid.push(mover(X, cx - 4, wy - 13, 9, 14, wt, { from: -(cx + 12), to: W - cx + 12, dur: 52 }));
-    X.me = X.wp === 'fields' ? { x: W * .58, y: 134, h: 13 } : { x: W * .42, y: 137, h: 13 };
+    { const wy = 139, hat = pick2(X, ['hood', 'straw', 'veil', '']), fem = hat === 'veil'; X.mid.push(walker(X, cx, wy, 20, { c: pick2(X, ['blue', 'green', 'red', 'earth']), hat, hc: pick2(X, ['red', 'green', 'white']), tool: fem ? '' : pick2(X, ['sack', 'staff', '']), gown: fem, fem }, { from: -(cx + 20), to: W - cx + 20, dur: 52 })); }
+    if (X.wp === 'fields') { X.me = { x: W * .6, y: 139, h: 22 }; fore(X, W * .74, { c: 'earth', hat: 'straw', tool: 'hoe', dir: -1, y: 138 }); }
+    else { X.me = { x: W * .43, y: 139, h: 22 }; fore(X, W * .63, { c: pick2(X, ['blue', 'green', 'red']), hat: 'veil', hc: 'white', gown: true, fem: true, dir: -1, hold: (a, b) => pa(`M${n1(a - 3)} ${n1(b)}h6l-1 4h-4Z`, 'thatch', 'stroke-width=".4"') + el(a, b, 3, 1, 'gold', NS) }); }
+    if (!X.snowy) { addHen(X, hx - 12, hy + 9, .5, 1); addHen(X, hx - 2, hy + 11, .5, -1, 'earth'); }
     worldBits(X, { pasture, cartY: 128, marchY: B.mid.y(W * .3) + 6, riderY: 139, crowX: W * .3, crowY: 56 });
   }
   function scTown(X) {
@@ -25121,13 +25248,15 @@ YEARLY.push(slYear);
     X.land.push(pa(wr(X, wx - 6, 124, 12, 7, .2), 'stone', 'stroke-width=".55"') + ln(`M${n1(wx - 5)} 124V114M${n1(wx + 5)} 124V114M${n1(wx - 6.5)} 114H${n1(wx + 6.5)}`, 'wood2', .9) + pa(`M${n1(wx - 7.5)} 114.5L${n1(wx)} 109L${n1(wx + 7.5)} 114.5Z`, 'thatch', 'stroke-width=".5"') + ln(`M${n1(wx)} 114v5`, 'ol', .35) + pa(wr(X, wx - 1.2, 119, 2.4, 2.6, .1), 'wood', 'stroke-width=".35"') + ln(`M${n1(wx - 6)} 127H${n1(wx + 6)}`, 'stone2', .45));
     // folk in the street
     const y = 136;
-    X.mid.push(mover(X, W * .3 - 4, y - 13, 9, 14, man(X, W * .3, y, { c: 'blue', hat: 'hood', hc: 'red', tool: 'sack' }), { from: -(W * .3 + 12), to: W * .7 + 12, dur: 48 }));
-    X.mid.push(mover(X, W * .7 - 4, y + 2 - 13, 9, 14, man(X, W * .7, y + 2, { c: 'green', gown: true, hat: 'veil', dir: -1 }), { from: W * .3 + 12, to: -(W * .7 + 12), dur: 60 }));
-    X.land.push(man(X, W * .62, 131, { c: 'purple', gown: true, hat: 'veil', hc: 'white', dir: -1 }) + man(X, W * .58, 131, { c: 'earth', hat: 'cap', hc: 'green', tool: 'staff' }));
+    X.mid.push(walker(X, W * .3, y + 1, 19, { c: 'blue', hat: 'hood', hc: 'red', tool: 'sack' }, { from: -(W * .3 + 20), to: W * .7 + 20, dur: 48 }));
+    X.mid.push(walker(X, W * .7, y + 3, 19, { c: 'green', gown: true, fem: true, hat: 'veil', dir: -1 }, { from: W * .3 + 20, to: -(W * .7 + 20), dur: 60 }));
+    // two neighbours stopped for a gossip
+    X.land.push(man(X, W * .64, 132, { h: 17, c: 'purple', gown: true, fem: true, hat: 'veil', hc: 'white', dir: -1, pose: 'work' }) + man(X, W * .58, 132, { h: 17, c: 'earth', hat: 'cap', hc: 'green', tool: 'staff' }));
     { const x = W * .5, cy = 128, s = horse(X, x + 6, cy, .9, 1, 'stone2') + pa(wr(X, x - 12, cy - 9, 12, 5, .2), 'wood', 'stroke-width=".5"') + pa(`M${n1(x - 11)} ${n1(cy - 9)}q5 -5 10 0Z`, 'thatch', 'stroke-width=".4"') + ci(x - 7, cy - 3, 2.6, 'wood2', 'stroke-width=".5"') + ln(`M${n1(x)} ${n1(cy - 6)}L${n1(x + 3)} ${n1(cy - 5)}`, 'wood2', .6);
       if (!X.plague) X.mid.push(mover(X, x - 13, cy - 16, 30, 17, s, { from: -(x + 34), to: W - x + 16, dur: 80, bobDur: .8, skip: 30 })); }
     birds(X, W * .2, 30, 3);
-    X.me = { x: W * .42, y: 137, h: 13 };
+    X.me = { x: W * .4, y: 139, h: 22 };
+    fore(X, W * .47, { c: pick2(X, ['green', 'purple', 'blue']), hat: 'hood', hc: 'red', dir: -1, tool: 'sack' });
     worldBits(X, { marchY: 139, marchFront: true, cartY: 132, riderY: 132, crowX: ch.bell[0], crowY: 30 });
   }
   function scMarket(X) {
@@ -25162,8 +25291,9 @@ YEARLY.push(slYear);
     }
     // buyers and sellers
     const pp = [['blue', 'hood', 'sack', 1], ['green', 'veil', '', -1], ['earth', 'straw', 'staff', 1], ['red', 'cap', 'book', -1]];
-    pp.slice(0, Math.max(2, Math.round(W / 120))).forEach(([c, hat, tool, dir], i) => { const x = W * (.2 + i * .22), y = 136 + (i % 2) * 2; X.mid.push(mover(X, x - 4, y - 13, 9, 14, man(X, x, y, { c, hat, tool, dir, gown: hat === 'veil' }), dir > 0 ? { from: -(x + 12), to: W - x + 12, dur: 50 + i * 9 } : { from: W - x + 12, to: -(x + 12), dur: 50 + i * 9 })); });
-    X.me = { x: gx + 18, y: 138, h: 13, dir: -1 };
+    pp.slice(0, Math.max(2, Math.round(W / 120))).forEach(([c, hat, tool, dir], i) => { const x = W * (.2 + i * .22), y = 137 + (i % 2) * 2; X.mid.push(walker(X, x, y, 19, { c, hat, tool, dir, gown: hat === 'veil', fem: hat === 'veil', hc: pick2(X, ['red', 'white', 'green']) }, dir > 0 ? { from: -(x + 20), to: W - x + 20, dur: 50 + i * 9 } : { from: W - x + 20, to: -(x + 20), dur: 50 + i * 9 })); });
+    X.me = { x: gx + 20, y: 139, h: 22, dir: -1 };
+    fore(X, gx - 22, { c: pick2(X, ['red', 'green', 'blue']), hat: 'veil', hc: 'white', gown: true, fem: true, dir: 1, hold: (a, b) => pa(`M${n1(a - 3)} ${n1(b)}h6l-1 4h-4Z`, 'thatch', 'stroke-width=".4"') + ci(a - 1, b - .6, 1, 'flower', NS) + ci(a + 1.2, b - .8, 1, 'gold', NS) });
     worldBits(X, { marchY: 139, marchFront: true, cartY: 132, riderY: 132, crowX: gx, crowY: 26 });
   }
   function scHarbour(X) {
@@ -25191,8 +25321,9 @@ YEARLY.push(slYear);
     for (let i = 0; i < 6; i++) glint(X, X.r() * qx * .95, 88 + X.r() * 48, 5);
     birds(X, W * .3, 40, 3, { col: 'white', dur: 40 });
     // a porter on the quay
-    X.mid.push(mover(X, W * .8 - 4, 124, 9, 14, man(X, W * .8, 137, { c: 'earth', hat: 'cap', hc: 'blue', tool: 'sack', dir: -1 }), { from: W * .2 + 12, to: -(W * .2), dur: 30, fade: true }));
-    X.me = { x: W * .7, y: 135, h: 13, dir: -1 };
+    X.mid.push(walker(X, W * .8, 138, 20, { c: 'earth', hat: 'cap', hc: 'blue', tool: 'sack', dir: -1 }, { from: W * .2 + 12, to: -(W * .2), dur: 30, fade: true }));
+    X.me = { x: W * .7, y: 139, h: 22, dir: -1 };
+    fore(X, W * .86, { c: 'earth', hat: 'cap', hc: 'blue', tool: 'sack', dir: -1 });
     worldBits(X, { noMarch: true, noCart: false, cartY: 134, riderY: 134, crowX: W * .78, crowY: 50 });
   }
   function scManor(X) {
@@ -25239,7 +25370,7 @@ YEARLY.push(slYear);
     X.mid.push(mover(X, rx - 9, ry - 22, 20, 23, horse(X, rx, ry, 1, -1, 'black', { c: X.arms[0], hat: 'cap', hc: X.arms[1] }), { from: W - rx + 14, to: -(rx + 18), dur: 46, bobDur: .42 }));
     if (!X.famine) for (let i = 0; i < 2; i++) { const sx = W * (.82 + i * .07), sy = fy + 26 + i * 6; if (sx < W - 6) X.mid.push(spr(X, sx - 6, sy - 7, 12, 8, sheep(X, sx, sy, .8, -1), 'sc_graze', dl(X, -X.r() * 7))); }
     birds(X, W * .5, 30, 3);
-    X.me = { x: mx + 7, y: 139, h: 13 };
+    X.me = { x: mx + 7, y: 139, h: 20 };
     worldBits(X, { pasture: [W * .86, fy + 34], marchY: B.mid.y(W * .5) + 5, cartY: 139, riderY: 139, crowX: mx, crowY: 40 });
   }
   function scCastle(X) {
@@ -25260,9 +25391,10 @@ YEARLY.push(slYear);
     // a herald and a rider on the road; heralds' trumpets are left to the imagination
     const ry = 136;
     X.mid.push(mover(X, cx - 30 - 9, ry - 22, 20, 23, horse(X, cx - 30, ry, 1, 1, 'white', { c: X.banner, hat: X.ruling ? 'crown' : 'cap', hc: 'gold' }), { from: -(cx + 20), to: W - cx + 50, dur: 60, bobDur: .45 }));
-    X.mid.push(mover(X, cx + 40 - 4, ry - 13, 9, 14, man(X, cx + 40, ry, { c: 'gold', hat: 'cap', hc: X.banner, tool: 'staff', dir: -1 }), { from: W - cx - 28, to: -(cx + 52), dur: 66 }));
+    X.mid.push(walker(X, cx + 40, ry + 2, 19, { c: 'gold', sleeve: X.banner, hat: 'cap', hc: X.banner, tool: 'staff', dir: -1 }, { from: W - cx - 28, to: -(cx + 60), dur: 66 }));
     birds(X, W * .2, 34, 4);
-    X.me = { x: cx + 17, y: 138, h: 13, dir: -1 };
+    X.me = { x: cx + 22, y: 139, h: 22, dir: -1 };
+    fore(X, cx - 26, { c: X.banner, hat: 'helm', tool: 'spear', dir: 1 });
     worldBits(X, { marchY: B.mid.y(W * .25) + 6, cartY: 132, riderY: 128, crowX: cx, crowY: 28, noRider: false });
   }
   function scAbbey(X) {
@@ -25294,10 +25426,11 @@ YEARLY.push(slYear);
     L.push(tree(X, W * .07, 128, 1) + tree(X, W * .9, 130, 1) + tree(X, W * .96, 126, .8, 'poplar'));
     // brothers walking to prayer, one behind the other
     let s = ''; const my = 134, mx = W * .4;
-    for (let i = 0; i < 3; i++) s += man(X, mx + i * 7, my, { c: X.nun ? 'black' : 'wood2', gown: true, hat: X.nun ? 'veil' : 'cowl', hc: X.nun ? 'black' : 'wood2', tool: i === 0 ? 'book' : '' });
-    X.mid.push(mover(X, mx - 4, my - 13, 23, 14, s, { from: -(mx + 26), to: W - mx + 12, dur: 75, bobDur: .8 }));
+    for (let i = 0; i < 3; i++) s += man(X, mx + i * 13, my + 3, { h: 18, c: X.nun ? 'black' : 'wood2', gown: true, fem: X.nun, hat: X.nun ? 'veil' : 'cowl', hc: X.nun ? 'black' : 'wood2', tool: i === 0 ? 'book' : '' });
+    X.mid.push(mover(X, mx - 8, my - 22, 42, 28, s, { from: -(mx + 44), to: W - mx + 14, dur: 75, bobDur: .8 }));
     birds(X, W * .55, 26, 3);
-    X.me = { x: W * .24, y: 137, h: 13 };
+    X.me = { x: W * .27, y: 139, h: 22 };
+    fore(X, W * .19 + 8, { c: X.nun ? 'black' : 'wood2', hat: X.nun ? 'veil' : 'cowl', hc: X.nun ? 'white' : 'wood2', gown: true, fem: X.nun, tool: 'book', dir: 1 });
     worldBits(X, { marchY: B.mid.y(W * .7) + 4, cartY: 138, riderY: 140, crowX: tx, crowY: 30, noCart: true });
   }
   function scCamp(X) {
@@ -25330,7 +25463,8 @@ YEARLY.push(slYear);
     L.push(man(X, fx - 9, fy + 1, { c: 'red', hat: 'helm', tool: 'spear' }) + man(X, fx + 9, fy + 1, { c: 'earth', hat: 'cap', hc: 'green', dir: -1 }));
     X.mid.push(mover(X, x0 - 4, y - 18, 30, 19, s, { from: -(x0 + 32), to: W - x0 + 6, dur: 58, bobDur: .62 }));
     birds(X, W * .2, 30, 3);
-    X.me = { x: W * .45, y: 138, h: 13 };
+    X.me = { x: W * .45, y: 139, h: 22 };
+    fore(X, W * .53, { c: X.banner, hat: 'helm', tool: 'spear', dir: -1 });
     worldBits(X, { noMarch: true, cartY: 128, riderY: 122, crowX: W * .7, crowY: 40 });
   }
   function scSea(X) {
@@ -25401,7 +25535,8 @@ YEARLY.push(slYear);
     const deer = ln(`M${n1(dx - 3)} ${n1(dy - 4)}V${n1(dy)}M${n1(dx - 1.6)} ${n1(dy - 4)}V${n1(dy)}M${n1(dx + 2.4)} ${n1(dy - 4)}V${n1(dy)}M${n1(dx + 3.6)} ${n1(dy - 4)}V${n1(dy)}`, 'wood2', .55) + pa(`M${n1(dx - 4)} ${n1(dy - 4.4)}Q${n1(dx)} ${n1(dy - 7.4)} ${n1(dx + 4)} ${n1(dy - 5)}Q${n1(dx + 3.4)} ${n1(dy - 3.4)} ${n1(dx)} ${n1(dy - 3.6)}Q${n1(dx - 3)} ${n1(dy - 3.2)} ${n1(dx - 4)} ${n1(dy - 4.4)}Z`, 'wood', 'stroke-width=".4"') + pa(`M${n1(dx + 3)} ${n1(dy - 5.6)}l1.6 -4 2 .8 -1.6 3.6Z`, 'wood', 'stroke-width=".35"') + ln(`M${n1(dx + 5)} ${n1(dy - 9.4)}l-1 -2.6M${n1(dx + 5)} ${n1(dy - 9.4)}l1.6 -2.2M${n1(dx + 4.4)} ${n1(dy - 11)}l-1.2 -.4`, 'wood2', .45);
     X.mid.push(spr(X, dx - 6, dy - 13, 14, 14, deer, 'sc_graze', 'animation-duration:8s'));
     birds(X, W * .3, 30, 3);
-    X.me = { x: W * .36, y: 135, h: 13 };
+    X.me = { x: W * .38, y: 139, h: 22 };
+    fore(X, W * .28, outlaw ? { c: 'green', hat: 'hood', hc: 'green', tool: 'bow', dir: 1 } : { c: 'earth', hat: 'cap', hc: 'wood2', dir: 1, hold: (a, b) => ln(`M${n1(a)} ${n1(b + 2)}l3 -10`, 'wood2', 1.1) + pa(`M${n1(a + 2)} ${n1(b - 9)}l4 1l-1 4Z`, 'iron2', 'stroke-width=".35"') });
     worldBits(X, { noMarch: true, noCart: true, noRider: true, crowX: W * .5, crowY: 40 });
   }
   // a cell: stone walls, a barred window high up where the year can still be seen
@@ -25601,6 +25736,21 @@ YEARLY.push(slYear);
       let pl = ''; for (let x = 0; x < W; x += 7 + X.r() * 2) if (!inWin(x, 0, 1, fy)) pl += `M${n1(x)} 0V${n1(fy)}`;
       L.push(ln(pl, o.col2 || 'wood2', .45, 'opacity=".7"'));
     }
+    X.wins = wins;
+    // a painted frieze along the top of the wall, as the plasterers stencilled it: red borders and a green running vine
+    if (o.frieze) {
+      const fy0 = o.frieze; let band = '', vine = '', dots = '';
+      for (let x = -4; x < W + 4; x += 8) {
+        if (inWin(x, fy0 - 1, 8, 9)) continue;
+        band += `M${n1(x)} ${n1(fy0)}h8M${n1(x)} ${n1(fy0 + 7)}h8`;
+        vine += `M${n1(x)} ${n1(fy0 + 3.5)}q2 -3 4 0t4 0`;
+        dots += ci(x + 2, fy0 + 5.2, .6, 'red2', NS) + ci(x + 6, fy0 + 1.8, .6, 'red2', NS);
+      }
+      L.push(ln(band, 'red2', 1, 'opacity=".75"') + ln(vine, 'green', .7, 'opacity=".8"') + dots);
+    }
+    // the skirting along the foot of the wall, and the shadow that gathers up under the ceiling
+    L.push(pa(`M-4 ${n1(fy - 3)}H${W + 4}V${n1(fy)}H-4Z`, o.col2 || 'stone2', 'stroke-width=".4"') + ln(`M-4 ${n1(fy - 3)}H${W + 4}`, 'white', .4, 'opacity=".35"'));
+    L.push(`<defs><linearGradient id="sc_cl${X.n}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".2"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient></defs><rect x="-4" y="-4" width="${W + 8}" height="${n1(fy * .5)}" fill="url(#sc_cl${X.n})" stroke="none"/>`);
     // the reveal round each opening, and a sill under the windows
     for (const [cx, t, w, h, kind, door] of wins) {
       L.push(ln(holeD(cx, t, w, h, kind), o.frame || 'stone2', 2.4));
@@ -25615,14 +25765,21 @@ YEARLY.push(slYear);
     L.push(pn(`M-4 -4H${W + 4}V${n1(y)}H-4Z`, o.col || 'timber', 'opacity=".9"') + ln(`M-4 ${n1(y)}H${W + 4}`, 'timber', 2.6));
     let jo = ''; for (let x = 18 + X.r() * 10; x < W; x += 46 + X.r() * 12) jo += `M${n1(x)} -4V${n1(y)}`;
     L.push(ln(jo, 'wood2', 2, 'opacity=".9"'));
+    let gr = ''; for (let i = 0; i < W / 16; i++) { const gx = X.r() * W, gy = 2 + X.r() * Math.max(1, y - 5); gr += `M${n1(gx)} ${n1(gy)}q${n1(4 + X.r() * 6)} ${n1(jit(X, .8))} ${n1(10 + X.r() * 8)} 0`; }
+    L.push(ln(gr, 'wood', .4, 'opacity=".45"') + ln(`M-4 ${n1(y - 1.2)}H${W + 4}`, 'wood', .6, 'opacity=".5"') + `<rect x="-4" y="${n1(y)}" width="${W + 8}" height="5" fill="#000" opacity=".1" stroke="none"/>`);
   }
   function floorOf(X, fy, kind) {
     const W = X.W, L = X.land;
+    X.floorDone = fy;
     L.push(pa(`M-4 ${n1(fy)}H${W + 4}V${H + 4}H-4Z`, { boards: 'wood', rush: 'mud', earth: 'earth', flags: 'stone2', cobbles: 'stone2', straw: 'thatch2' }[kind] || 'stone2', 'stroke-width=".6"'));
     if (kind === 'flags') { let f = ''; for (let r = 0; fy + r * 11 < H; r++) for (let x = (r % 2) * 11 - 22; x < W; x += 22) f += `M${n1(x)} ${n1(fy + r * 11)}h22v11h-22Z`; L.push(ln(f, 'stone', .45, 'opacity=".55"')); }
     else if (kind === 'boards') { let f = ''; for (let i = 1; fy + i * 7 < H; i++) { f += `M-4 ${n1(fy + i * 7)}H${W + 4}`; for (let x = X.r() * 40; x < W; x += 30 + X.r() * 30) f += `M${n1(x)} ${n1(fy + (i - 1) * 7)}v7`; } L.push(ln(f, 'wood2', .5, 'opacity=".75"')); }
     else if (kind === 'cobbles') { let f = ''; for (let i = 0; i < W / 2.2; i++) { const x = X.r() * W, y = fy + 2 + X.r() * (H - fy - 2); f += `M${n1(x)} ${n1(y)}q1.2 -1 2.4 0`; } L.push(ln(f, 'stone', .55, 'opacity=".8"')); }
     else { let r = ''; for (let i = 0; i < W / 3; i++) { const x = X.r() * W, y = fy + 3 + X.r() * (H - fy - 3); r += `M${n1(x)} ${n1(y)}l${n1(2 + X.r() * 3)} ${n1(jit(X, 1))}`; } L.push(ln(r, kind === 'earth' ? 'earth2' : 'thatch2', .5, 'opacity=".75"')); }
+    L.push(`<defs><linearGradient id="sc_ao${X.n}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".26"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient><linearGradient id="sc_fr${X.n}x" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".16"/></linearGradient></defs><rect x="-4" y="${n1(fy)}" width="${W + 8}" height="10" fill="url(#sc_ao${X.n})" stroke="none"/><rect x="-4" y="${n1(H - 16)}" width="${W + 8}" height="20" fill="url(#sc_fr${X.n}x)" stroke="none"/>`);
+    // daylight on the floor below each window
+    let lp = ''; for (const [cx, t, w, h, kind, door] of (X.wins || [])) { if (door) continue; const x0 = cx - w / 2, x1 = cx + w / 2; lp += pn(`M${n1(x0 + 2)} ${n1(fy + 1)}H${n1(x1 - 2)}L${n1(x1 + 16)} ${n1(fy + 16)}H${n1(x0 + 10)}Z`, 'rgba(255,238,180,.16)'); }
+    if (lp) X.mid.push(`<div class="sc_lay sc_dayL">${spr(X, 0, 0, W, H, lp)}</div>`);
   }
   // light: a candle on a pricket, a torch in a bracket. Each flickers, glows, and lights up at night.
   function candle(X, x, y, s = 1, into) {
@@ -25637,15 +25794,16 @@ YEARLY.push(slYear);
     X.glow.push([x - 6, y - 18, 12, 12, 'soft']);
   }
   // furniture and goods
-  const barrel = (X, x, y, s = 1) => pa(`M${n1(x - 5 * s)} ${n1(y)}Q${n1(x - 6.4 * s)} ${n1(y - 6 * s)} ${n1(x - 5 * s)} ${n1(y - 12 * s)}H${n1(x + 5 * s)}Q${n1(x + 6.4 * s)} ${n1(y - 6 * s)} ${n1(x + 5 * s)} ${n1(y)}Z`, 'wood', 'stroke-width=".55"') + ln(`M${n1(x - 5.6 * s)} ${n1(y - 3 * s)}H${n1(x + 5.6 * s)}M${n1(x - 5.6 * s)} ${n1(y - 9 * s)}H${n1(x + 5.6 * s)}`, 'iron', .7 * s) + ln(`M${n1(x - 2 * s)} ${n1(y - 11.6 * s)}V${n1(y - .4)}M${n1(x + 2 * s)} ${n1(y - 11.6 * s)}V${n1(y - .4)}`, 'wood2', .35, 'opacity=".7"');
+  const barrel = (X, x, y, s = 1) => el(x + 1 * s, y + .3, 6.4 * s, 1.2 * s, 'black', 'stroke="none" opacity=".18"') + pa(`M${n1(x - 5 * s)} ${n1(y)}Q${n1(x - 6.4 * s)} ${n1(y - 6 * s)} ${n1(x - 5 * s)} ${n1(y - 12 * s)}H${n1(x + 5 * s)}Q${n1(x + 6.4 * s)} ${n1(y - 6 * s)} ${n1(x + 5 * s)} ${n1(y)}Z`, 'wood', 'stroke-width=".55"') + ln(`M${n1(x - 5.6 * s)} ${n1(y - 3 * s)}H${n1(x + 5.6 * s)}M${n1(x - 5.6 * s)} ${n1(y - 9 * s)}H${n1(x + 5.6 * s)}`, 'iron', .7 * s) + ln(`M${n1(x - 2 * s)} ${n1(y - 11.6 * s)}V${n1(y - .4)}M${n1(x + 2 * s)} ${n1(y - 11.6 * s)}V${n1(y - .4)}`, 'wood2', .35, 'opacity=".7"');
   const cask = (X, x, y, s = 1) => pa(`M${n1(x - 7 * s)} ${n1(y - 9 * s)}H${n1(x + 7 * s)}Q${n1(x + 9 * s)} ${n1(y - 4.5 * s)} ${n1(x + 7 * s)} ${n1(y)}H${n1(x - 7 * s)}Q${n1(x - 9 * s)} ${n1(y - 4.5 * s)} ${n1(x - 7 * s)} ${n1(y - 9 * s)}Z`, 'wood', 'stroke-width=".55"') + el(x - 7 * s, y - 4.5 * s, 2 * s, 4.5 * s, 'wood2', 'stroke-width=".45"') + ln(`M${n1(x - 3 * s)} ${n1(y - 9 * s)}V${n1(y)}M${n1(x + 3 * s)} ${n1(y - 9 * s)}V${n1(y)}`, 'iron', .6 * s) + ln(`M${n1(x - 8.4 * s)} ${n1(y - 3 * s)}h-2v2.4`, 'wood2', .7);
-  const sack = (X, x, y, s = 1, col) => pa(`M${n1(x - 4 * s)} ${n1(y)}Q${n1(x - 5 * s)} ${n1(y - 6 * s)} ${n1(x - 2 * s)} ${n1(y - 8 * s)}L${n1(x - 1 * s)} ${n1(y - 10 * s)}H${n1(x + 1 * s)}L${n1(x + 2 * s)} ${n1(y - 8 * s)}Q${n1(x + 5 * s)} ${n1(y - 6 * s)} ${n1(x + 4 * s)} ${n1(y)}Z`, col || 'daub2', 'stroke-width=".5"') + ln(`M${n1(x - 1.6 * s)} ${n1(y - 8.2 * s)}h${n1(3.2 * s)}`, 'wood2', .6);
+  const sack = (X, x, y, s = 1, col) => el(x + .6 * s, y + .3, 4.8 * s, 1 * s, 'black', 'stroke="none" opacity=".16"') + pa(`M${n1(x - 4 * s)} ${n1(y)}Q${n1(x - 5 * s)} ${n1(y - 6 * s)} ${n1(x - 2 * s)} ${n1(y - 8 * s)}L${n1(x - 1 * s)} ${n1(y - 10 * s)}H${n1(x + 1 * s)}L${n1(x + 2 * s)} ${n1(y - 8 * s)}Q${n1(x + 5 * s)} ${n1(y - 6 * s)} ${n1(x + 4 * s)} ${n1(y)}Z`, col || 'daub2', 'stroke-width=".5"') + ln(`M${n1(x - 1.6 * s)} ${n1(y - 8.2 * s)}h${n1(3.2 * s)}`, 'wood2', .6);
   const crate = (X, x, y, w, h) => pa(wr(X, x - w / 2, y - h, w, h, .2), 'wood', 'stroke-width=".5"') + ln(`M${n1(x - w / 2)} ${n1(y - h)}L${n1(x + w / 2)} ${n1(y)}M${n1(x - w / 2)} ${n1(y - h / 2)}H${n1(x + w / 2)}`, 'wood2', .5);
   function table(X, x, y, w, o = {}) {
     const h = o.h || 12, top = y - h, cloth = o.cloth;
-    let s = ln(`M${n1(x - w / 2 + 3)} ${n1(top + 2)}L${n1(x - w / 2 + 6)} ${n1(y)}M${n1(x - w / 2 + 9)} ${n1(top + 2)}L${n1(x - w / 2 + 6)} ${n1(y)}M${n1(x + w / 2 - 3)} ${n1(top + 2)}L${n1(x + w / 2 - 6)} ${n1(y)}M${n1(x + w / 2 - 9)} ${n1(top + 2)}L${n1(x + w / 2 - 6)} ${n1(y)}`, 'wood2', 1.1);
+    let s = (o.front ? '' : el(x, y + .5, w * .52, 1.5, 'black', 'stroke="none" opacity=".14"')) + ln(`M${n1(x - w / 2 + 3)} ${n1(top + 2)}L${n1(x - w / 2 + 6)} ${n1(y)}M${n1(x - w / 2 + 9)} ${n1(top + 2)}L${n1(x - w / 2 + 6)} ${n1(y)}M${n1(x + w / 2 - 3)} ${n1(top + 2)}L${n1(x + w / 2 - 6)} ${n1(y)}M${n1(x + w / 2 - 9)} ${n1(top + 2)}L${n1(x + w / 2 - 6)} ${n1(y)}`, 'wood2', 1.1);
     s += pa(wr(X, x - w / 2, top, w, 2.4, .15), 'wood', 'stroke-width=".55"');
     if (cloth) s += pa(`M${n1(x - w / 2 - 1)} ${n1(top - .4)}H${n1(x + w / 2 + 1)}V${n1(top + h * .6)}H${n1(x - w / 2 - 1)}Z`, cloth, 'stroke-width=".5"') + ln(`M${n1(x - w / 2 - 1)} ${n1(top + h * .6 - 1)}H${n1(x + w / 2 + 1)}`, 'gold', .5);
+    if (o.front) s += pa(wr(X, x - w / 2 + 1, top + 2.2, w - 2, h - 3.4, .1), o.front, 'stroke-width=".5"') + ln(Array.from({ length: Math.max(1, Math.floor(w / 9)) }, (_, i) => `M${n1(x - w / 2 + 1 + (i + 1) * (w - 2) / (Math.floor(w / 9) + 1))} ${n1(top + 2.4)}V${n1(y - 1.4)}`).join(''), 'ol', .3, 'opacity=".35"') + el(x, y + .6, w * .55, 1.6, 'black', 'stroke="none" opacity=".16"');
     return s;
   }
   const bench = (X, x, y, w) => pa(wr(X, x - w / 2, y - 6, w, 1.8, .1), 'wood', 'stroke-width=".5"') + ln(`M${n1(x - w / 2 + 2)} ${n1(y - 4.2)}V${n1(y)}M${n1(x + w / 2 - 2)} ${n1(y - 4.2)}V${n1(y)}`, 'wood2', 1);
@@ -25669,9 +25827,10 @@ YEARLY.push(slYear);
   // a seated figure in robes: the body from the man() figure, the lap and the fall of the gown below it
   function sitter(X, x, seatY, floorY, o) {
     const h = o.h || 30, k = h / 11, c = o.c || 'red';
+    if (o.front) return pa(`M${n1(x - 1.9 * k)} ${n1(seatY - .8 * k)}Q${n1(x)} ${n1(seatY - 1.3 * k)} ${n1(x + 1.9 * k)} ${n1(seatY - .8 * k)}L${n1(x + 2.7 * k)} ${n1(floorY - .5)}Q${n1(x)} ${n1(floorY + .3 * k)} ${n1(x - 2.7 * k)} ${n1(floorY - .5)}Z`, c, 'stroke-width=".45"') + ln(`M${n1(x - .9 * k)} ${n1(seatY)}q-.2 ${n1((floorY - seatY) * .5)} ${n1(-.5 * k)} ${n1(floorY - seatY - 1)}M${n1(x + .9 * k)} ${n1(seatY)}q.2 ${n1((floorY - seatY) * .5)} ${n1(.5 * k)} ${n1(floorY - seatY - 1)}`, 'ol', .3, 'opacity=".35"') + el(x - .9 * k, floorY - .3, .8 * k, .35 * k, 'black', 'stroke-width=".3"') + el(x + .9 * k, floorY - .3, .8 * k, .35 * k, 'black', 'stroke-width=".3"') + man(X, x, seatY + 1.2 * k, Object.assign({}, o, { h: h * .78, gown: true, seated: true }));
     const d = o.dir || 1, kx = x + 3.9 * k * d, bx = x - 2.4 * k * d;
     // the lap runs forward to the knee; the gown falls from the knee to the floor; the toes peep out
-    return pa(`M${n1(bx)} ${n1(seatY - .8 * k)}Q${n1(x + 1.5 * k * d)} ${n1(seatY - 1.3 * k)} ${n1(kx)} ${n1(seatY - .5 * k)}Q${n1(kx + .5 * k * d)} ${n1(seatY + .3 * k)} ${n1(kx - .1 * k * d)} ${n1(floorY - .5)}H${n1(x + .4 * k * d)}L${n1(bx + .4 * k * d)} ${n1(seatY + 1.4 * k)}Z`, c, 'stroke-width=".45"') + el(kx + .2 * k * d, floorY - .4, 1.1 * k, .45 * k, 'timber', 'stroke-width=".3"') + man(X, x, seatY + 1.2 * k, Object.assign({}, o, { h: h * .78, gown: true }));
+    return pa(`M${n1(bx)} ${n1(seatY - .8 * k)}Q${n1(x + 1.5 * k * d)} ${n1(seatY - 1.3 * k)} ${n1(kx)} ${n1(seatY - .5 * k)}Q${n1(kx + .5 * k * d)} ${n1(seatY + .3 * k)} ${n1(kx - .1 * k * d)} ${n1(floorY - .5)}H${n1(x + .4 * k * d)}L${n1(bx + .4 * k * d)} ${n1(seatY + 1.4 * k)}Z`, c, 'stroke-width=".45"') + el(kx + .2 * k * d, floorY - .4, 1.1 * k, .45 * k, 'timber', 'stroke-width=".3"') + man(X, x, seatY + 1.2 * k, Object.assign({}, o, { h: h * .78, gown: true, seated: true }));
   }
   // a hound asleep on the floor
   const hound = (X, x, y, s = 1, col = 'white') => pa(`M${n1(x - 7 * s)} ${n1(y)}Q${n1(x - 7.4 * s)} ${n1(y - 4.6 * s)} ${n1(x - 1 * s)} ${n1(y - 4.8 * s)}Q${n1(x + 4 * s)} ${n1(y - 4.8 * s)} ${n1(x + 5 * s)} ${n1(y - 2.4 * s)}L${n1(x + 8.4 * s)} ${n1(y - 4.4 * s)}Q${n1(x + 10.4 * s)} ${n1(y - 3 * s)} ${n1(x + 9.4 * s)} ${n1(y - .6 * s)}L${n1(x + 6 * s)} ${n1(y)}Z`, col, 'stroke-width=".5"') + pa(`M${n1(x + 7.4 * s)} ${n1(y - 4.2 * s)}l1 -2.2 1.2 2Z`, col, 'stroke-width=".4"') + ln(`M${n1(x - 7 * s)} ${n1(y - 1 * s)}q-3 -.4 -4 -2.4`, col === 'white' ? 'stone2' : col, .9 * s);
@@ -25689,13 +25848,66 @@ YEARLY.push(slYear);
     return out.sort((a, b) => a - b);
   }
 
+  // someone walking across the picture: the box is sized to the figure, so the walk stays smooth at any size
+  function walker(X, x, y, h, o, mv) {
+    const k = h / 11, bx = x - 4.5 * k, by = y - h - 6 * k, bw = 9 * k, bh = h + 7 * k;
+    const a = Object.assign({ h }, o);
+    return mover(X, bx, by, bw, bh, man(X, x, y, a), Object.assign({ bobDur: .5 }, mv));
+  }
+  // someone who belongs to the place, close up in the foreground beside you
+  const fore = (X, x, o) => X.land.push(man(X, x, o.y || 139, Object.assign({ h: 21 }, o)));
+  /* ---------- small lives: cats, hens, mice, and a jester who juggles ---------- */
+  const CAT_COL = ['black', 'earth', 'stone2', 'white', 'wood', 'timber'];
+  // a cat sitting up and looking about, its tail going; or curled asleep, breathing
+  function addCat(X, x, y, s = 1, dir = 1, mode = 'sit', col) {
+    col = col || pick2(X, CAT_COL);
+    const d = dir, stripe = col === 'wood' || col === 'earth';
+    if (mode === 'sleep') {
+      const body = pa(`M${n1(x - 5 * s)} ${n1(y)}Q${n1(x - 6 * s)} ${n1(y - 4.6 * s)} ${n1(x)} ${n1(y - 4.8 * s)}Q${n1(x + 5.6 * s)} ${n1(y - 4.6 * s)} ${n1(x + 5 * s)} ${n1(y)}Z`, col, 'stroke-width=".45"') + (stripe ? ln(`M${n1(x - 2 * s)} ${n1(y - 4.6 * s)}q.6 2 0 4M${n1(x + 1 * s)} ${n1(y - 4.8 * s)}q.6 2 0 4.2`, 'ol', .3, 'opacity=".4"') : '') + pa(`M${n1(x + 2.4 * s * d)} ${n1(y - .2)}Q${n1(x + 2 * s * d)} ${n1(y - 3.6 * s)} ${n1(x + 4.6 * s * d)} ${n1(y - 3.4 * s)}Q${n1(x + 6.6 * s * d)} ${n1(y - 2.6 * s)} ${n1(x + 6 * s * d)} ${n1(y - .2)}Z`, col, 'stroke-width=".4"') + pa(`M${n1(x + 3.4 * s * d)} ${n1(y - 3.1 * s)}l${n1(.4 * s * d)} ${n1(-1.6 * s)}l${n1(1 * s * d)} ${n1(1.3 * s)}ZM${n1(x + 5 * s * d)} ${n1(y - 3.2 * s)}l${n1(.5 * s * d)} ${n1(-1.4 * s)}l${n1(.6 * s * d)} ${n1(1.5 * s)}Z`, col, 'stroke-width=".3"') + ln(`M${n1(x + 4.2 * s * d)} ${n1(y - 1.9 * s)}q${n1(.4 * s * d)} ${n1(.3 * s)} ${n1(.8 * s * d)} 0M${n1(x + 5.4 * s * d)} ${n1(y - 1.9 * s)}q${n1(.3 * s * d)} ${n1(.3 * s)} ${n1(.6 * s * d)} 0`, col === 'black' ? 'stone2' : 'ol', .25) + ln(`M${n1(x - 5 * s * d)} ${n1(y - .4)}Q${n1(x - 1 * s * d)} ${n1(y + 1.2 * s)} ${n1(x + 3 * s * d)} ${n1(y + .2)}`, col, 1 * s);
+      X.mid.push(spr(X, x - 7 * s, y - 6 * s, 14 * s, 7.4 * s, el(x, y + .4 * s, 6 * s, 1, 'black', 'stroke="none" opacity=".18"') + body, 'sc_breath', 'animation-duration:3.6s'));
+      return;
+    }
+    let c = el(x, y + .3 * s, 3.2 * s, .7 * s, 'black', 'stroke="none" opacity=".2"');
+    c += pa(`M${n1(x - 2.4 * s)} ${n1(y)}Q${n1(x - 3 * s)} ${n1(y - 4 * s)} ${n1(x - 1 * s * d)} ${n1(y - 6.4 * s)}H${n1(x + 1.2 * s * d)}Q${n1(x + 2.8 * s)} ${n1(y - 3 * s)} ${n1(x + 2.2 * s)} ${n1(y)}Z`, col, 'stroke-width=".45"');
+    if (stripe) c += ln(`M${n1(x - 2 * s)} ${n1(y - 2 * s)}h${n1(1.4 * s)}M${n1(x - 2.2 * s)} ${n1(y - 3.6 * s)}h${n1(1.4 * s)}`, 'ol', .3, 'opacity=".4"');
+    c += ln(`M${n1(x + .6 * s * d)} ${n1(y - .4)}v${n1(-2.6 * s)}M${n1(x + 1.4 * s * d)} ${n1(y - .4)}v${n1(-2.6 * s)}`, 'ol', .3, 'opacity=".5"');
+    const hx = x + .5 * s * d, hy = y - 7.6 * s;
+    c += pa(`M${n1(hx - 1.8 * s)} ${n1(hy - .6 * s)}l${n1(.3 * s)} ${n1(-1.8 * s)}l${n1(1.1 * s)} ${n1(1 * s)}h${n1(.8 * s)}l${n1(1.1 * s)} ${n1(-1 * s)}l${n1(.3 * s)} ${n1(1.8 * s)}Q${n1(hx + 2.2 * s)} ${n1(hy + 1.8 * s)} ${n1(hx)} ${n1(hy + 1.9 * s)}Q${n1(hx - 2.2 * s)} ${n1(hy + 1.8 * s)} ${n1(hx - 1.8 * s)} ${n1(hy - .6 * s)}Z`, col, 'stroke-width=".4"');
+    c += ci(hx - .7 * s, hy + .1 * s, .32 * s, 'gold', NS) + ci(hx + .7 * s, hy + .1 * s, .32 * s, 'gold', NS) + ci(hx - .7 * s, hy + .1 * s, .14 * s, 'black', NS) + ci(hx + .7 * s, hy + .1 * s, .14 * s, 'black', NS) + pn(`M${n1(hx - .3 * s)} ${n1(hy + .8 * s)}h${n1(.6 * s)}l${n1(-.3 * s)} ${n1(.4 * s)}Z`, 'flower') + ln(`M${n1(hx - .8 * s)} ${n1(hy + 1 * s)}l${n1(-1.6 * s)} -.2M${n1(hx + .8 * s)} ${n1(hy + 1 * s)}l${n1(1.6 * s)} -.2`, col === 'black' ? 'stone2' : 'ol', .15);
+    X.land.push(c);
+    const tx = x - 2 * s * d;
+    X.mid.push(spr(X, Math.min(tx, tx - 5 * s * d) - .5, y - 5 * s, 5 * s + 1, 5.4 * s, ln(`M${n1(tx)} ${n1(y - .6)}q${n1(-3 * s * d)} ${n1(-.2 * s)} ${n1(-3.6 * s * d)} ${n1(-2.4 * s)}q${n1(-.4 * s * d)} ${n1(-1.6 * s)} ${n1(.6 * s * d)} ${n1(-2.2 * s)}`, col, .9 * s), 'sc_tail', `animation-duration:${n1(2.4 + X.r() * 1.6)}s;transform-origin:${d > 0 ? '100%' : '0'} 90%`));
+  }
+  // a hen pecking about, head down and up again
+  function addHen(X, x, y, s = 1, dir = 1, col) {
+    col = col || pick2(X, ['white', 'earth', 'wood', 'white', 'black']);
+    const d = dir;
+    let c = el(x, y + .2, 2.6 * s, .5 * s, 'black', 'stroke="none" opacity=".18"') + ln(`M${n1(x - .4 * s)} ${n1(y - 1.6 * s)}v${n1(1.6 * s)}M${n1(x + .6 * s)} ${n1(y - 1.6 * s)}v${n1(1.6 * s)}`, 'fire', .35 * s);
+    c += pa(`M${n1(x - 2.8 * s * d)} ${n1(y - 4.4 * s)}Q${n1(x - 2.6 * s * d)} ${n1(y - 1.2 * s)} ${n1(x)} ${n1(y - 1.4 * s)}Q${n1(x + 2.4 * s * d)} ${n1(y - 1.6 * s)} ${n1(x + 2 * s * d)} ${n1(y - 3.4 * s)}L${n1(x + 1.2 * s * d)} ${n1(y - 3.4 * s)}Q${n1(x - .6 * s * d)} ${n1(y - 3.6 * s)} ${n1(x - 2.8 * s * d)} ${n1(y - 4.4 * s)}Z`, col, 'stroke-width=".4"');
+    c += pa(`M${n1(x - 2.6 * s * d)} ${n1(y - 4)}l${n1(-1.2 * s * d)} ${n1(-1.6 * s)}l${n1(.6 * s * d)} ${n1(1.8 * s)}Z`, col === 'white' ? 'stone2' : 'black', 'stroke-width=".3"') + ln(`M${n1(x - 1 * s * d)} ${n1(y - 2.6 * s)}q${n1(1 * s * d)} ${n1(.6 * s)} ${n1(1.8 * s * d)} 0`, 'ol', .25, 'opacity=".5"');
+    const head = ci(x + 2.1 * s * d, y - 4.3 * s, 1 * s, col, 'stroke-width=".35"') + pa(`M${n1(x + 1.7 * s * d)} ${n1(y - 5.2 * s)}l${n1(.3 * s * d)} ${n1(-.8 * s)}l${n1(.4 * s * d)} ${n1(.6 * s)}l${n1(.3 * s * d)} ${n1(-.5 * s)}l${n1(.1 * s * d)} ${n1(.8 * s)}Z`, 'flower', 'stroke-width=".25"') + pa(`M${n1(x + 3 * s * d)} ${n1(y - 4.5 * s)}l${n1(.8 * s * d)} ${n1(.3 * s)}l${n1(-.8 * s * d)} ${n1(.3 * s)}Z`, 'gold', 'stroke-width=".2"') + ci(x + 2.3 * s * d, y - 4.5 * s, .16 * s, 'black', NS) + el(x + 2.8 * s * d, y - 3.5 * s, .3 * s, .45 * s, 'flower', NS);
+    X.land.push(c);
+    X.mid.push(spr(X, x + .8 * s * d - (d < 0 ? 3 * s : 0), y - 6.4 * s, 3.4 * s, 6.4 * s, head, 'sc_graze', `animation-duration:${n1(2 + X.r() * 2.4)}s;${dl(X, -X.r() * 3)};transform-origin:${d > 0 ? '20%' : '80%'} 100%`));
+  }
+  // a mouse, quick along the bottom of the wall
+  function addMouse(X, x, y, span) {
+    const m = pa(`M${n1(x - 2)} ${n1(y)}Q${n1(x - 2)} ${n1(y - 1.8)} ${n1(x)} ${n1(y - 1.8)}Q${n1(x + 2)} ${n1(y - 1.8)} ${n1(x + 2.8)} ${n1(y - .3)}L${n1(x + 2)} ${n1(y)}Z`, 'stone2', 'stroke-width=".3"') + ci(x + .8, y - 1.9, .5, 'stone2', 'stroke-width=".25"') + ln(`M${n1(x - 2)} ${n1(y - .4)}q-2 0 -3 -1`, 'stone2', .3) + ci(x + 2.2, y - 1.1, .12, 'black', NS);
+    X.mid.push(mover(X, x - 6, y - 3, 10, 4, m, { from: -(x + 10), to: (span || X.W) - x + 10, dur: 9 + X.r() * 5, bobDur: .18, fade: true, skip: X.r() * 8 }));
+  }
+  // a jester juggling three balls
+  function addJuggler(X, x, y, h = 28, dir = 1) {
+    X.land.push(man(X, x, y, { h, c: 'gold', sleeve: 'red', hat: 'hood', hc: 'red', hose: 'green', dir, pose: 'up', trim: 'green' }));
+    const k = h / 11, top = y - h, cx = x + 1.2 * k * dir;
+    ['red', 'blue', 'gold'].forEach((col, i) => X.mid.push(spr(X, cx - 3 + i * 3 - 1.2, top - 5, 2.4, 12, ci(cx - 3 + i * 3, top + 5.6, 1.1, col, 'stroke-width=".3"'), 'sc_toss', `animation-duration:1.1s;animation-delay:${n1(-i * .37)}s`)));
+  }
+
   /* ---------- the great hall: the throne room, a guildhall, a court of law ---------- */
   function scHall(X) {
     const W = X.W, L = X.land, fy = 100, vr = X.vr || 'throne', cx = W / 2;
     const royal = vr === 'throne' || vr === 'mine', law = vr === 'law', guild = vr === 'guild';
     outside(X, { town: !royal });
     const wins = slots(W, 76, 18, 58).map(x => [x, 16, 15, 44, 'lancet']);
-    wallOf(X, fy, wins, { col: royal ? 'stone' : 'wall', tex: royal ? 'ashlar' : 'plaster', col2: royal ? 'stone2' : 'wall2', sun: Math.max(0, wins.findIndex(w => w[0] > cx) - 1) });
+    wallOf(X, fy, wins, { col: royal ? 'stone' : 'wall', tex: royal ? 'ashlar' : 'plaster', col2: royal ? 'stone2' : 'wall2', sun: Math.max(0, wins.findIndex(w => w[0] > cx) - 1), frieze: royal ? 0 : 6 });
     // between the windows: banners at court, painted shields in the guildhall, torches everywhere
     for (let j = 0; cx + 76 + j * 76 < W - 14; j++) for (const sd of [-1, 1]) {
       const x = cx + sd * (76 + j * 76);
@@ -25703,6 +25915,7 @@ YEARLY.push(slYear);
       else { L.push(shield(X, x, 20, 1.1, j % 2 ? X.arms : ['blue', 'gold'])); torch(X, x, 62); }
     }
     floorOf(X, fy, royal ? 'flags' : 'boards');
+    if (royal) { let st = ''; for (let i = 0; i < W / 5; i++) { const x = X.r() * W, y = fy + 14 + X.r() * (H - fy - 16); if (Math.abs(x - cx) < 22) continue; st += i % 3 ? ln(`M${n1(x)} ${n1(y)}l${n1(1.4 + X.r() * 2)} ${n1(jit(X, .8))}`, 'g2-su', .5, 'opacity=".55"') : ci(x, y, .55, pick2(X, ['flower', 'flower2', 'bloom', 'white']), NS + ' opacity=".8"'); } L.push(st); }
     // the dais: steps, and what stands on it
     // the dais: two broad steps, the treads lit and the risers in shadow
     const st1 = royal ? 'stone' : 'wood', st2 = royal ? 'dung' : 'wood2';
@@ -25717,11 +25930,12 @@ YEARLY.push(slYear);
       // the throne
       L.push(pa(`M${n1(cx - 13)} ${n1(fy + 2)}V${n1(fy - 46)}Q${n1(cx)} ${n1(fy - 54)} ${n1(cx + 13)} ${n1(fy - 46)}V${n1(fy + 2)}Z`, 'gold', 'stroke-width=".65"') + pa(`M${n1(cx - 10)} ${n1(fy - 44)}Q${n1(cx)} ${n1(fy - 50)} ${n1(cx + 10)} ${n1(fy - 44)}V${n1(fy - 14)}H${n1(cx - 10)}Z`, 'blue', 'stroke-width=".45"') + ci(cx - 13, fy - 47, 2, 'gold', 'stroke-width=".4"') + ci(cx + 13, fy - 47, 2, 'gold', 'stroke-width=".4"') + pa(wr(X, cx - 15, fy - 14, 30, 4, .1), 'gold2', 'stroke-width=".5"'));
       const me = vr === 'mine';
-      L.push(sitter(X, cx, fy - 11, fy + 1, { h: 32, c: me ? 'purple' : 'red', hat: 'crown', gown: true, hold: (hx, hy, k) => ln(`M${n1(hx)} ${n1(hy)}L${n1(hx + 1)} ${n1(hy - 9 * k / 2.9)}`, 'gold', .9) + ci(hx + 1, hy - 9.6 * k / 2.9, 1.3, 'gold', 'stroke-width=".3"') }));
+      const qf = me ? (S.sex === 'f' && !(typeof disguised === 'function' && disguised())) : (typeof KT === 'function' && KT() === 'Queen');
+      L.push(sitter(X, cx, fy - 11, fy + 1, { h: 32, c: me ? 'purple' : 'red', hat: 'crown', gown: true, front: true, fem: qf, beard: !qf && X.r() < .7, hold: (hx, hy, k) => ln(`M${n1(hx)} ${n1(hy)}L${n1(hx + 1)} ${n1(hy - 9 * k / 2.9)}`, 'gold', .9) + ci(hx + 1, hy - 9.6 * k / 2.9, 1.3, 'gold', 'stroke-width=".3"') }));
       // guards at the foot of the dais, and the court standing about in its finery
       for (const sd of [-1, 1]) L.push(man(X, cx + sd * 44, fy + 22, { h: 30, c: X.banner, hat: 'helm', tool: 'spear', dir: -sd }));
       const finery = [['purple', 'cap', 'gold', 0], ['green', 'veil', 'white', 1], ['blue', 'hood', 'red', 0], ['red2', 'veil', 'gold', 1], ['gold', 'cap', 'blue', 0], ['wood', 'hood', 'green', 0]];
-      for (let j = 0, n = 0; ; j++) { const d = 78 + j * 30; if (cx + d > W - 12) break; for (const sd of [-1, 1]) { if (j === 0 && sd < 0 && !me) continue; const [c, hat, hc, gown] = finery[n++ % finery.length]; L.push(man(X, cx + sd * d, fy + 30 + (j % 2) * 4, { h: 28, c, hat, hc, gown: !!gown, dir: -sd })); } }
+      for (let j = 0, n = 0; ; j++) { const d = 78 + j * 30; if (cx + d > W - 12) break; for (const sd of [-1, 1]) { if (j === 0 && sd < 0 && !me) continue; if (j === 1 && sd > 0) { addJuggler(X, cx + d, fy + 34, 27, -1); continue; } const [c, hat, hc, gown] = finery[n++ % finery.length]; L.push(man(X, cx + sd * d, fy + 30 + (j % 2) * 4, { h: 28, c, hat, hc, gown: !!gown, fem: !!gown, dir: -sd })); } }
       if (me) X.meAt = [cx, fy - 33]; else X.me = { x: cx - 78, y: fy + 30, h: 28, dir: 1 };
       // a hound asleep on the step
       L.push(hound(X, cx + 23, fy + 11, 1));
@@ -25748,7 +25962,7 @@ YEARLY.push(slYear);
       L.push(man(X, dx, fy + 30, { h: 28, c: 'daub2', hat: '', dir: 1 }) + pa(wr(X, dx - 14, fy + 18, 28, 12, .2), 'wood', 'stroke-width=".6"') + ln(`M${n1(dx - 12)} ${n1(fy + 18)}V${n1(fy + 30)}M${n1(dx - 6)} ${n1(fy + 18)}V${n1(fy + 30)}M${n1(dx)} ${n1(fy + 18)}V${n1(fy + 30)}M${n1(dx + 6)} ${n1(fy + 18)}V${n1(fy + 30)}M${n1(dx + 12)} ${n1(fy + 18)}V${n1(fy + 30)}`, 'wood2', .8));
       L.push(man(X, dx + 26, fy + 34, { h: 30, c: X.banner, hat: 'helm', tool: 'spear', dir: -1 }));
       const jx = cx + 82; let jury = bench(X, jx, fy + 24, 52);
-      for (let i = 0; i < 4; i++) jury += man(X, jx - 18 + i * 12, fy + 22, { h: 20, c: pick2(X, ['earth', 'blue', 'green', 'wood2']), hat: pick2(X, ['hood', 'cap', '']), hc: pick2(X, ['green', 'red', 'blue']), gown: true, dir: -1 });
+      for (let i = 0; i < 4; i++) jury += sitter(X, jx - 20 + i * 13, fy + 18, fy + 24, { h: 21, c: pick2(X, ['earth', 'blue', 'green', 'wood2']), hat: pick2(X, ['hood', 'cap', '']), hc: pick2(X, ['green', 'red', 'blue']), dir: -1 });
       L.push(jury);
       X.me = { x: cx + 38, y: fy + 36, h: 28, dir: -1 };
     }
@@ -25765,6 +25979,7 @@ YEARLY.push(slYear);
     wallOf(X, fy, [[wx, 20, royal ? 14 : 18, royal ? 26 : 18, royal ? 'arch' : 'rect']], { col: royal ? 'stone' : 'daub', tex: royal ? 'ashlar' : 'plaster', col2: royal ? 'stone2' : 'daub2', frame: royal ? 'stone2' : 'timber' });
     beams(X, 10);
     floorOf(X, fy, royal ? 'flags' : 'rush');
+    { let cp = ''; for (let i = 0; i < 3; i++) { const px = wx - 9 + i * 9, py = 56 + (i % 2) * 3; if (px < 6) continue; cp += ci(px, py - 5, .7, 'iron', NS) + ln(`M${n1(px)} ${n1(py - 4.4)}v2`, 'gold2', .6) + ci(px, py + 1.4, 3.6 - (i % 2) * .6, 'tile', 'stroke-width=".45"') + pn(`M${n1(px - 2)} ${n1(py)}q2 -1.6 4 0`, 'white', 'opacity=".35"'); } L.push(cp); }
     // the great fireplace, with the roast on its spit and the pot on its chain
     const fx = clampX(X, Math.max(wx + 70, W * .34), 46), fw = royal ? 78 : 58, fh = royal ? 50 : 40, ft = fy - fh;
     L.push(`<defs><radialGradient id="sc_kf${X.n}"><stop offset="0" style="stop-color:${V('fire')}" stop-opacity=".32"/><stop offset="1" style="stop-color:${V('fire')}" stop-opacity="0"/></radialGradient></defs><ellipse cx="${n1(fx)}" cy="${n1(fy - 16)}" rx="${n1(W * .32)}" ry="62" fill="url(#sc_kf${X.n})" stroke="none"/>`);
@@ -25784,20 +25999,20 @@ YEARLY.push(slYear);
     if (royal) { const px = fx + fw / 2 - 16; L.push(ln(`M${n1(px)} ${n1(ft - 6)}V${n1(fy - 14)}`, 'iron', .7, 'stroke-dasharray="1.4 .7"') + pa(`M${n1(px - 7)} ${n1(fy - 14)}h14q0 9 -7 9q-7 0 -7 -9Z`, 'iron', 'stroke-width=".55"') + el(px, fy - 14, 7, 1.4, 'iron2', 'stroke-width=".45"')); smoke(X, px, fy - 18, { s: 1.1 }); }
     // the turnspit, sitting by the fire turning the handle (in a great house it is the cook's boy)
     const tx = fx - fw / 2 - 12;
-    if (tx > 10) L.push(pa(wr(X, tx - 5, fy + 10, 10, 2, .1), 'wood', 'stroke-width=".45"') + ln(`M${n1(tx - 3)} ${n1(fy + 12)}v8M${n1(tx + 3)} ${n1(fy + 12)}v8`, 'wood2', .9) + man(X, tx, fy + 12, { h: 18, c: 'earth', hat: 'cap', hc: 'red', dir: 1 }));
+    if (tx > 10) L.push(pa(wr(X, tx - 5, fy + 12, 10, 2, .1), 'wood', 'stroke-width=".45"') + ln(`M${n1(tx - 3)} ${n1(fy + 14)}v8M${n1(tx + 3)} ${n1(fy + 14)}v8`, 'wood2', .9) + sitter(X, tx - 1, fy + 12, fy + 22, { h: 22, c: 'earth', hat: 'cap', hc: 'red', dir: 1 }));
     // the work table, laid with the day's work
     const tbx = clampX(X, fx + fw / 2 + 52, 34), tby = fy + 24;
     L.push(shelf(X, tbx - 36, 52, 72, 'mixed') + shelf(X, tbx - 36, 70, 72, royal ? 'jug' : 'bowl'));
     let pans = ln(`M${n1(tbx - 22)} 34H${n1(tbx + 30)}`, 'iron', .8); for (let i = 0; i < 5; i++) { const px = tbx - 18 + i * 11; pans += ln(`M${n1(px)} 34v${4 + i % 2 * 2}`, 'iron', .5) + (i % 2 ? pa(`M${n1(px - 4)} ${n1(40 + 2)}h8q0 5 -4 5q-4 0 -4 -5Z`, 'iron2', 'stroke-width=".4"') : ln(`M${n1(px)} ${n1(38)}v6`, 'iron2', .9) + el(px, 45, 2, 1.2, 'iron2', 'stroke-width=".35"')); }
     L.push(pans);
-    L.push(man(X, tbx + 8, tby - 2, { h: 30, c: 'blue', hat: 'coif', apron: 'white', dir: -1 }));
+    L.push(man(X, tbx + 8, tby - 2, { h: 30, c: 'blue', hat: 'coif', apron: 'white', dir: -1, pose: 'work', fem: true }));
     L.push(table(X, tbx, tby, 70, { h: 14 }));
     let food = el(tbx - 22, tby - 16, 4.4, 2.6, 'thatch', 'stroke-width=".4"') + el(tbx - 13, tby - 16, 4, 2.4, 'thatch', 'stroke-width=".4"') + pa(`M${n1(tbx - 2)} ${n1(tby - 14)}h12q-1 -5 -6 -5q-5 0 -6 5Z`, 'gold2', 'stroke-width=".45"') + ln(`M${n1(tbx + 1)} ${n1(tby - 17)}l2 1.6m2 -1.6l2 1.6`, 'thatch', .4);
     food += pa(`M${n1(tbx + 16)} ${n1(tby - 14)}q6 -3 12 0q-6 3 -12 0Z`, 'sea', 'stroke-width=".4"') + pa(`M${n1(tbx + 28)} ${n1(tby - 14)}l3 -2v4Z`, 'sea', 'stroke-width=".35"');
     for (let i = 0; i < 3; i++) food += ci(tbx - 28 + i * 3.4, tby - 15.4, 1.5, i === 1 ? 'tr-au' : 'flower', 'stroke-width=".3"');
     L.push(food);
     // the cook's cleaver going up and down
-    X.mid.push(spr(X, tbx - 4, tby - 30, 14, 16, ln(`M${n1(tbx + 4)} ${n1(tby - 20)}L${n1(tbx)} ${n1(tby - 16)}`, 'blue', 2.2) + pa(`M${n1(tbx - 2.4)} ${n1(tby - 19)}l4.4 -4.4l2.2 2.2l-4.4 4.4Z`, 'iron2', 'stroke-width=".35"'), 'sc_chop', 'animation-duration:.8s'));
+    { const [hx, hy] = handAt(tbx + 8, tby - 2, 30, -1); inHand(X, hx, hy, -1, 'cleaver', .8); }
     // strings of onions and a ham hanging from the beam
     for (let i = 0; i < 3; i++) { const hx = fx + fw / 2 + 10 + i * 9; if (hx > tbx - 27) break; L.push(ln(`M${n1(hx)} 10V${n1(20 + i * 2)}`, 'thatch2', .5) + (i === 1 ? pa(`M${n1(hx - 3)} ${n1(22)}Q${n1(hx - 4)} ${n1(34)} ${n1(hx)} ${n1(36)}Q${n1(hx + 4)} ${n1(34)} ${n1(hx + 3)} ${n1(22)}Z`, 'tile', 'stroke-width=".5"') : [0, 1, 2, 3].map(j => ci(hx + (j % 2 ? 1.4 : -1.4), 21 + i * 2 + j * 2.8, 1.6, 'gold', 'stroke-width=".3"')).join(''))); }
     // barrels, sacks and the coal heap on the far side
@@ -25834,6 +26049,8 @@ YEARLY.push(slYear);
       }
     }
     X.me = { x: fx + fw / 2 + 6, y: fy + 36, h: 28, dir: 1 };
+    addCat(X, fx + 12, fy + 13, 1.1, -1, 'sleep');
+    addMouse(X, W * .55, fy + 3);
     // the coal boy, back and forth with his basket
     const by = fy + 37;
     X.mid.push(mover(X, 2, by - 25, 16, 27, man(X, 9, by, { h: 22, c: 'earth', hat: 'cap', hc: 'black', hold: (hx, hy) => pa(`M${n1(hx - 4)} ${n1(hy - 2)}h8l-1 5h-6Z`, 'thatch2', 'stroke-width=".4"') + el(hx, hy - 2, 4, 1.2, 'black', NS) }), { from: -24, to: W - 10, dur: 38, bobDur: .4 }));
@@ -25849,6 +26066,7 @@ YEARLY.push(slYear);
     L.push(pn(`M${n1(dx + 15)} ${n1(fy)}L${n1(dx + 40)} ${n1(H + 2)}H${n1(dx - 15)}Z`, 'rgba(255,240,200,.12)'));
     beams(X, 8, { col: 'iron' });
     floorOf(X, fy, 'earth');
+    L.push(pa(`M${n1(dx - 3.6)} 25a3.6 3.6 0 1 1 7.2 0l-1.3 0a2.3 2.3 0 1 0 -4.6 0Z`, 'iron2', 'stroke-width=".35"'));
     // the hearth, its hood, and the bed of coals
     const hx = clampX(X, Math.max(dx + 74, W * .42), 30);
     L.push(`<defs><radialGradient id="sc_ff${X.n}"><stop offset="0" style="stop-color:${V('fire')}" stop-opacity=".4"/><stop offset="1" style="stop-color:${V('fire')}" stop-opacity="0"/></radialGradient></defs><ellipse cx="${n1(hx)}" cy="${n1(fy - 24)}" rx="${n1(W * .3)}" ry="64" fill="url(#sc_ff${X.n})" stroke="none"/>`);
@@ -25887,8 +26105,8 @@ YEARLY.push(slYear);
     }
     // the smith (or the moneyer) at the block: the hammer rises and falls
     const mx = ax - 14;
-    L.push(man(X, mx, ay + 6, { h: 32, c: mint ? 'blue' : 'earth', hat: mint ? 'cap' : '', hc: 'black', apron: 'wood2', dir: 1 }));
-    X.mid.push(spr(X, mx + 1, ay - 34, 20, 22, ln(`M${n1(mx + 3)} ${n1(ay - 18)}L${n1(mx + 10)} ${n1(ay - 15)}`, mint ? 'blue' : 'earth', 2.4) + ln(`M${n1(mx + 9)} ${n1(ay - 15)}L${n1(mx + 13)} ${n1(ay - 26)}`, 'wood2', 1.2) + pa(wr(X, mx + 10, ay - 30, 7, 4, .1), 'iron', 'stroke-width=".4"'), 'sc_chop', 'animation-duration:.9s;transform-origin:15% 75%'));
+    L.push(man(X, mx, ay + 6, { h: 32, c: mint ? 'blue' : 'earth', hat: mint ? 'cap' : '', hc: 'black', apron: 'wood2', dir: 1, pose: 'work' }));
+    { const [hx, hy] = handAt(mx, ay + 6, 32, 1); inHand(X, hx, hy, 1, 'hammer', .9); }
     X.me = { x: dx + 26, y: fy + 36, h: 30, dir: 1 };
     // a horse at the door, waiting to be shod
     if (job === 'ja_farrier') L.push(horse(X, dx + 4, fy + 34, 1.6, 1, 'wood'));
@@ -25943,10 +26161,11 @@ YEARLY.push(slYear);
     outside(X, { town: true });
     // the shop window onto the street, its counter board let down, the shutter propped above
     const sx = clampX(X, W * .13, 26);
-    wallOf(X, fy, [[sx, 36, 40, 32, 'rect']], { col: fam === 'heal' ? 'wall' : 'daub', tex: 'plaster', col2: 'daub2', frame: 'timber', shutters: false });
+    wallOf(X, fy, [[sx, 36, 40, 32, 'rect']], { col: fam === 'heal' ? 'wall' : 'daub', tex: 'plaster', col2: 'daub2', frame: 'timber', shutters: false, frieze: 26 });
     L.push(pa(wr(X, sx - 26, 68, 52, 4, .2), 'wood', 'stroke-width=".55"') + ln(`M${n1(sx - 24)} 72l4 14M${n1(sx + 24)} 72l-4 14`, 'wood2', 1) + pa(`M${n1(sx - 24)} 34L${n1(sx - 28)} 24H${n1(sx + 28)}L${n1(sx + 24)} 34Z`, 'wood', 'stroke-width=".55"'));
     const goods = { cloth: 'bolt', fine: 'jar', heal: 'bottle', food: 'loaf', goods: 'pot', leather: 'bowl', woodw: 'bowl', arms: 'jug', guild: 'mixed', master: 'mixed' }[fam] || 'pot';
-    L.push(shelf(X, sx - 24, 68, 48, goods).replace(/^<path[^>]*\/>/, ''));
+    L.push(shelf(X, sx - 24, 68, 32, goods).replace(/^<path[^>]*\/>/, ''));
+    addCat(X, sx + 15, 68, .8, -1, 'sleep');
     // posts of the timber frame, and the low ceiling of joists
     for (const px of slots(W, 120, 30, 40)) if (Math.abs(px - sx) > 34) L.push(ln(`M${n1(px)} 22V${n1(fy)}`, 'timber', 3));
     beams(X, 22);
@@ -25981,7 +26200,7 @@ YEARLY.push(slYear);
       L.push(table(X, mx, my, 54, { h: 16 }) + pa(`M${n1(mx - 8)} ${n1(my - 16)}h9l-1 -6h-7Z`, 'stone', 'stroke-width=".45"') + ln(`M${n1(mx - 3)} ${n1(my - 21)}l4 -6`, 'stone2', 1.3) + pa(wr(X, mx + 8, my - 19, 9, 3, .1), 'white', 'stroke-width=".3"') + ci(mx + 20, my - 18, 2.4, 'white', 'stroke-width=".35"') + ci(mx + 19.2, my - 18.4, .5, 'black', NS) + ci(mx + 20.8, my - 18.4, .5, 'black', NS));
       const crx = clampX(X, mx + 40, 20);
       X.mid.push(spr(X, crx - 16, 24, 32, 12, ln(`M${n1(crx - 8)} 22V27M${n1(crx + 8)} 22V27`, 'thatch2', .4) + pa(`M${n1(crx - 16)} 30Q${n1(crx - 6)} 26 ${n1(crx + 4)} 27L${n1(crx + 14)} 28L${n1(crx + 16)} 30L${n1(crx + 4)} 32Q${n1(crx - 6)} 33 ${n1(crx - 16)} 30Z`, 'green', 'stroke-width=".45"') + ln(`M${n1(crx - 10)} 31.4l-1 2M${n1(crx - 2)} 31.8l-1 2M${n1(crx + 4)} 31.6l1 2`, 'green', .7) + ci(crx + 9, 28.2, .5, 'gold', NS), 'sc_swing', 'animation-duration:8s'));
-      st.push(x => { L.push(pa(wr(X, x - 6, fy + 20, 12, 2, .1), 'wood', 'stroke-width=".45"') + ln(`M${n1(x - 4)} ${n1(fy + 22)}v9M${n1(x + 4)} ${n1(fy + 22)}v9`, 'wood2', .9) + man(X, x, fy + 22, { h: 26, c: pick2(X, ['earth', 'blue', 'green']), hat: '', dir: -1 }) + ln(`M${n1(x - 5)} ${n1(fy + 2)}q-3 -1 -3 -4`, 'white', 1.3) + man(X, x - 20, fy + 34, { h: 30, c: 'red2', hat: 'cap', hc: 'black', gown: true, dir: 1, hold: (a, b) => ln(`M${n1(a)} ${n1(b)}l5 -3`, 'iron2', .8) })); return 54; });
+      st.push(x => { L.push(pa(wr(X, x - 6, fy + 20, 12, 2, .1), 'wood', 'stroke-width=".45"') + ln(`M${n1(x - 4)} ${n1(fy + 22)}v9M${n1(x + 4)} ${n1(fy + 22)}v9`, 'wood2', .9) + sitter(X, x, fy + 20, fy + 31, { h: 28, c: pick2(X, ['earth', 'blue', 'green']), hat: '', dir: -1 }) + ln(`M${n1(x + 2)} ${n1(fy + 6)}q-4 3 -6 0`, 'white', 1.4) + man(X, x - 20, fy + 34, { h: 30, c: 'red2', hat: 'cap', hc: 'black', gown: true, dir: 1, hold: (a, b) => ln(`M${n1(a)} ${n1(b)}l5 -3`, 'iron2', .8) })); return 54; });
       st.push(x => { L.push(shelf(X, x - 22, 44, 44, 'bottle') + shelf(X, x - 22, 62, 44, 'jar') + shelf(X, x - 22, 80, 44, 'bowl')); return 50; });
       st.push(x => { L.push(barrel(X, x - 8, fy + 30, 1.1) + sack(X, x + 8, fy + 32, 1, 'daub') + sack(X, x + 16, fy + 33, .8)); return 36; });
     } else if (fam === 'fine') {
@@ -26010,14 +26229,14 @@ YEARLY.push(slYear);
         st.push(x => { L.push(shelf(X, x - 22, 46, 44, 'pot') + shelf(X, x - 22, 64, 44, 'jug') + shelf(X, x - 22, 82, 44, 'bowl')); return 50; });
         st.push(x => { L.push(man(X, x, fy + 34, { h: 30, c: 'blue', hat: 'cap', hc: 'red', apron: 'daub2', dir: -1, hold: (a, b) => pa(`M${n1(a - 3)} ${n1(b - 4)}q-1 -4 3 -5q4 1 3 5Z`, 'tile', 'stroke-width=".35"') })); return 28; });
       } else {
-        L.push(man(X, mx + 6, my - 6, { h: 32, c: leather ? 'wood' : 'green', hat: 'cap', hc: 'red', apron: leather ? 'wood2' : 'daub2', dir: -1 }));
+        L.push(man(X, mx + 6, my - 6, { h: 32, c: leather ? 'wood' : 'green', hat: 'cap', hc: 'red', apron: leather ? 'wood2' : 'daub2', dir: -1, pose: 'work' }));
         L.push(table(X, mx, my, 58, { h: 16 }));
         if (leather) L.push(pa(`M${n1(mx - 24)} ${n1(my - 16)}Q${n1(mx - 10)} ${n1(my - 21)} ${n1(mx + 4)} ${n1(my - 17)}L${n1(mx + 2)} ${n1(my - 15)}Q${n1(mx - 10)} ${n1(my - 14)} ${n1(mx - 24)} ${n1(my - 15)}Z`, 'wood', 'stroke-width=".4"') + (shoe ? pa(`M${n1(mx + 12)} ${n1(my - 16)}h7q2 0 2 -2h-4l-1 -3h-4Z`, 'black', 'stroke-width=".35"') : ''));
         else if (bows) L.push(ln(`M${n1(mx - 26)} ${n1(my - 18)}Q${n1(mx - 2)} ${n1(my - 25)} ${n1(mx + 22)} ${n1(my - 18)}`, 'wood2', 1.3));
         else if (chand) L.push(Array.from({ length: 5 }, (_, i) => pa(wr(X, mx - 22 + i * 5, my - 25, 2, 9, .05), 'white', 'stroke-width=".3"')).join('') + pa(`M${n1(mx + 8)} ${n1(my - 16)}h12l-1 -6h-10Z`, 'iron', 'stroke-width=".4"'));
         else if (rope) L.push(el(mx - 14, my - 17, 7.4, 2.4, 'thatch', 'stroke-width=".45"') + el(mx - 14, my - 19.4, 5.4, 1.9, 'thatch', 'stroke-width=".4"'));
         else L.push(pa(wr(X, mx - 24, my - 19, 32, 3, .2), 'wood', 'stroke-width=".4"') + ln(`M${n1(mx - 14)} ${n1(my - 16)}q2 2 4 0t4 0t4 0`, 'thatch', .5));
-        X.mid.push(spr(X, mx - 12, my - 27, 18, 11, ln(`M${n1(mx - 2)} ${n1(my - 21)}L${n1(mx + 7)} ${n1(my - 23)}`, leather ? 'wood' : 'green', 2.4) + pa(wr(X, mx - 10, my - 23, 8, 3, .1), leather ? 'iron2' : 'wood2', 'stroke-width=".3"'), 'sc_slide', 'animation-duration:1.2s'));
+        { const [hx, hy] = handAt(mx + 6, my - 6, 32, -1); inHand(X, hx, hy, -1, leather ? 'knife' : 'plane', 1.2); }
         L.push(ln(`M${n1(mx - 30)} 44H${n1(mx + 30)}`, 'wood2', 1) + ln(`M${n1(mx - 24)} 44l-3 18M${n1(mx - 24)} 44l3 18`, 'iron2', .7) + pa(`M${n1(mx - 14)} 46h11v13h-11Z`, 'iron2', 'stroke-width=".35"') + ln(`M${n1(mx - 14)} 46l-3 -2`, 'wood2', 1.2) + ln(`M${n1(mx + 4)} 44v13M${n1(mx + 2)} 57h4`, 'wood2', 1) + ln(`M${n1(mx + 14)} 44l6 15M${n1(mx + 22)} 44l-2 15`, 'iron2', .8));
         if (cooper) st.push(x => { L.push(barrel(X, x - 9, fy + 32, 1.4) + barrel(X, x + 11, fy + 30, 1.2) + barrel(X, x + 2, fy + 15, 1.1)); return 48; });
         else if (wheel) st.push(x => { L.push(ring(x, fy + 6, 15, 'wood', 2.2) + ci(x, fy + 6, 3.2, 'wood2', 'stroke-width=".45"') + ln(Array.from({ length: 8 }, (_, i) => `M${n1(x)} ${n1(fy + 6)}l${n1(Math.cos(i * .785) * 14)} ${n1(Math.sin(i * .785) * 14)}`).join(''), 'wood2', 1)); return 46; });
@@ -26043,7 +26262,7 @@ YEARLY.push(slYear);
     const W = X.W, L = X.land, fy = 102;
     outside(X, { town: true });
     const wx = clampX(X, W * .72, 14);
-    wallOf(X, fy, [[wx, 36, 22, 22, 'rect']], { col: 'daub', tex: 'plaster', col2: 'daub2', frame: 'timber' });
+    wallOf(X, fy, [[wx, 36, 22, 22, 'rect']], { col: 'daub', tex: 'plaster', col2: 'daub2', frame: 'timber', frieze: 26 });
     L.push(ln(`M${n1(W * .08)} 22V${n1(fy)}M${n1(W * .5)} 22V${n1(fy)}M${n1(W * .92)} 22V${n1(fy)}`, 'timber', 2.6) + ln(`M${n1(W * .08)} 46L${n1(W * .14)} 22M${n1(W * .92)} 46L${n1(W * .86)} 22M${n1(W * .5)} 46L${n1(W * .44)} 22M${n1(W * .5)} 46L${n1(W * .56)} 22`, 'timber', 1.8));
     beams(X, 22);
     // lanterns from the joists, and a rack of tankards and jugs on the wall
@@ -26058,6 +26277,8 @@ YEARLY.push(slYear);
     X.mid.push(spr(X, hx - 18, fy - 22, 36, 22, ci(hx, fy - 8, 14, 'fire', NS + ' opacity=".25"'), 'sc_halo'));
     X.glow.push([hx - 14, fy - 18, 28, 16, 'soft']);
     L.push(ln(`M${n1(hx + 4)} ${n1(fy - 28)}V${n1(fy - 14)}`, 'iron', .6, 'stroke-dasharray="1.4 .7"') + pa(`M${n1(hx - 2)} ${n1(fy - 14)}h12q0 7 -6 7q-6 0 -6 -7Z`, 'iron', 'stroke-width=".5"'));
+    L.push(pa(`M${n1(hx - 5)} ${n1(fy - 56)}h10l-1.4 6h-7.2Z`, 'wood', 'stroke-width=".45"') + ln(`M${n1(hx - 2)} ${n1(fy - 56)}q-3 -6 -9 -8M${n1(hx - 6)} ${n1(fy - 61)}l-3 -5M${n1(hx - 8.4)} ${n1(fy - 62.6)}l-5 -1M${n1(hx + 2)} ${n1(fy - 56)}q3 -6 9 -8M${n1(hx + 6)} ${n1(fy - 61)}l3 -5M${n1(hx + 8.4)} ${n1(fy - 62.6)}l5 -1`, 'daub2', 1.2));
+    { const tb = clampX(X, W - 44, 16); if (Math.abs(tb - wx) > 30) L.push(pa(wr(X, tb - 9, 44, 18, 13, .2), 'black', 'stroke-width=".55"') + ln(`M${n1(tb - 6)} 47v6M${n1(tb - 4.6)} 47v6M${n1(tb - 3.2)} 47v6M${n1(tb - 1.8)} 47v6M${n1(tb - 7)} 52l6.6 -4M${n1(tb + 2)} 47v6M${n1(tb + 3.4)} 47v6`, 'white', .5, 'opacity=".85"')); }
     smoke(X, hx + 4, fy - 18, { s: .8, n: 2 });
     L.push(hound(X, hx + 2, fy + 18, 1.2, 'earth'));
     X.mid.push(spr(X, hx - 13, fy + 11, 6, 6, ln(`M${n1(hx - 5)} ${n1(fy + 17)}q-3 -.4 -5 -3`, 'earth', 1.1), 'sc_tail', 'animation-duration:1.4s'));
@@ -26069,15 +26290,16 @@ YEARLY.push(slYear);
     let n = 0;
     for (let tx = hx + 64; tx < bx - 54; tx += 84) {
       const ty = fy + 26;
-      for (const sd of [-1, 1]) { const [c, hat, hc] = drink[n++ % drink.length]; L.push(man(X, tx + sd * 16, ty - 2, { h: 28, c, hat, hc, gown: hat === 'veil', dir: -sd })); }
-      L.push(table(X, tx, ty, 46, { h: 15 }) + pa(`M${n1(tx - 12)} ${n1(ty - 15)}v-5h4v5Z`, 'wood2', 'stroke-width=".4"') + pa(`M${n1(tx + 8)} ${n1(ty - 15)}v-5h4v5Z`, 'wood2', 'stroke-width=".4"') + ci(tx - 2, ty - 16, .9, 'white', 'stroke-width=".3"') + ci(tx + 1, ty - 15.6, .9, 'white', 'stroke-width=".3"'));
-      for (const b of [-1, 1]) L.push(bench(X, tx + b * 20, ty + 12, 18));
+      L.push(bench(X, tx, ty - 1, 50));
+      for (const sd of [-1, 1]) { const [c, hat, hc] = drink[n++ % drink.length]; L.push(sitter(X, tx + sd * 13, ty - 7, ty - 1, { h: 30, c, hat, hc, dir: -sd, fem: hat === 'veil', pose: 'work', hold: (a, b) => sd < 0 ? pa(`M${n1(a - 1)} ${n1(b + 1)}v-3.4h3v3.4Z`, 'wood2', 'stroke-width=".35"') : '' })); }
+      L.push(table(X, tx, ty, 46, { h: 15, front: 'wood2' }) + pa(`M${n1(tx - 12)} ${n1(ty - 15)}v-5h4v5Z`, 'wood2', 'stroke-width=".4"') + pa(`M${n1(tx + 8)} ${n1(ty - 15)}v-5h4v5Z`, 'wood2', 'stroke-width=".4"') + ci(tx - 2, ty - 16, .9, 'white', 'stroke-width=".3"') + ci(tx + 1, ty - 15.6, .9, 'white', 'stroke-width=".3"'));
     }
     // a minstrel by the window, and the innkeeper going round with the jug
     L.push(man(X, wx - 22, fy + 32, { h: 28, c: 'gold', hat: 'cap', hc: 'green', dir: -1, hold: (hx2, hy2) => el(hx2 + 2, hy2 - 2, 3.4, 2.4, 'wood', 'stroke-width=".4"') + ln(`M${n1(hx2 + 4)} ${n1(hy2 - 3)}l7 -5`, 'wood2', .8) }));
     X.mid.push(mover(X, hx + 22, fy + 10, 16, 28, man(X, hx + 30, fy + 36, { h: 27, c: 'red', hat: 'veil', hc: 'white', apron: 'white', gown: true, hold: (a, b) => pa(`M${n1(a - 2)} ${n1(b + 2)}Q${n1(a - 3.4)} ${n1(b - 2)} ${n1(a - 1)} ${n1(b - 4)}H${n1(a + 1)}Q${n1(a + 3.4)} ${n1(b - 2)} ${n1(a + 2)} ${n1(b + 2)}Z`, 'tile', 'stroke-width=".35"') }), { from: -20, to: Math.max(40, bx - hx - 100), dur: 26, bobDur: .45 }));
     candle(X, wx + 18, 70, 1.2);
     X.me = { x: clampX(X, bx - 44, 8), y: fy + 36, h: 30, dir: 1 };
+    if (bx - 18 > hx + 60) addCat(X, bx - 18, fy + 24, 1.2, -1, 'sit');
   }
 
   /* ---------- the church: a parish nave, a cathedral, or a hospital hall ---------- */
@@ -26120,6 +26342,7 @@ YEARLY.push(slYear);
       const folk = [['earth', 'hood', 'green'], ['blue', 'veil', 'white'], ['green', 'straw', ''], ['red', 'veil', 'white'], ['wood2', 'cap', 'blue'], ['purple', 'veil', 'gold']];
       let n = 0;
       X.me = { x: cx - 40, y: fy + 32, h: 27, dir: 1 };
+      addMouse(X, cx + 50, fy + 3);
       for (let j = 0; ; j++) { const d = 40 + j * 26; if (cx + d > W - 10) break; for (const sd of [-1, 1]) { if (j === 0 && sd < 0) continue; if ((sd < 0 && Math.abs(cx + sd * d - px) < 16 && cx - px > 54) || (sd > 0 && Math.abs(cx + sd * d - fx) < 16 && fx - cx > 54)) continue; const [c, hat, hc] = folk[n++ % folk.length], kneel = (j + (sd > 0 ? 1 : 0)) % 3 === 0; L.push(man(X, cx + sd * d, fy + (kneel ? 30 : 32) + (j % 2) * 3, { h: kneel ? 20 : 27, c, hat, hc, gown: hat === 'veil' || kneel, dir: -sd })); } }
       // a sexton tugging the bell rope
       const rx = clampX(X, cx + (cath ? 140 : 120), 10);
@@ -26140,7 +26363,7 @@ YEARLY.push(slYear);
     outside(X, { town: counting });
     const wins = [[clampX(X, W * .12, 16), 30, 22, 44, counting ? 'rect' : 'arch']];
     if (W > 560) wins.push([clampX(X, W * .88, 16), 30, 22, 44, counting ? 'rect' : 'arch']);
-    wallOf(X, fy, wins, { col: counting ? 'wall' : 'stone', tex: counting ? 'plaster' : 'ashlar', col2: counting ? 'wall2' : 'stone2', frame: counting ? 'timber' : 'stone2' });
+    wallOf(X, fy, wins, { col: counting ? 'wall' : 'stone', tex: counting ? 'plaster' : 'ashlar', col2: counting ? 'wall2' : 'stone2', frame: counting ? 'timber' : 'stone2', frieze: counting ? 24 : 0 });
     beams(X, 20);
     floorOf(X, fy, counting ? 'boards' : 'flags');
     const nearWin = (x, d) => wins.some(w => Math.abs(x - w[0]) < d);
@@ -26227,10 +26450,11 @@ YEARLY.push(slYear);
     // a groom with the brush, and a saddle and harness hung on the wall by the door
     const gx = clampX(X, Math.max(dx + 76, W * .5), 30);
     L.push(horse(X, gx, fy + 34, 2.4, 1, cols[1]) + (royal ? pa(`M${n1(gx - 9)} ${n1(fy + 21)}h18v9h-18Z`, X.banner, 'stroke-width=".4"') + ln(`M${n1(gx - 9)} ${n1(fy + 26)}h18`, 'gold', .6) : ''));
-    L.push(man(X, gx - 20, fy + 36, { h: 28, c: royal ? X.banner : 'earth', hat: 'cap', hc: royal ? 'gold' : 'wood2', dir: 1 }));
-    X.mid.push(spr(X, gx - 16, fy + 14, 10, 8, pa(wr(X, gx - 14, fy + 16, 6, 3, .1), 'wood2', 'stroke-width=".35"'), 'sc_slide', 'animation-duration:.9s'));
+    L.push(man(X, gx - 20, fy + 36, { h: 28, c: royal ? X.banner : 'earth', hat: 'cap', hc: royal ? 'gold' : 'wood2', dir: 1, pose: 'work' }));
+    { const [hx, hy] = handAt(gx - 20, fy + 36, 28, 1); inHand(X, hx, hy, 1, 'brush', .9); }
     L.push(pa(`M${n1(dx + 22)} 56q4 -6 10 -2q2 4 -2 8h-6Z`, 'wood', 'stroke-width=".5"') + ln(`M${n1(dx + 22)} 50v6`, 'iron', .7));
     X.me = { x: clampX(X, gx + 32, 8), y: fy + 36, h: 28, dir: -1 };
+    for (let i = 0; i < 2; i++) { const hx2 = gx + 54 + i * 13; if (hx2 < W - 46) addHen(X, hx2, fy + 30 + i * 4, 1.1, i ? -1 : 1); }
     L.push(pa(`M${n1(W - 14)} ${n1(fy + 34)}Q${n1(W - 28)} ${n1(fy + 14)} ${n1(W - 40)} ${n1(fy + 34)}Z`, 'thatch', 'stroke-width=".5"') + ln(`M${n1(W - 22)} ${n1(fy + 34)}L${n1(W - 30)} ${n1(fy + 6)}`, 'wood2', 1) + ln(`M${n1(W - 33)} ${n1(fy + 4)}l3 2 3 -2M${n1(W - 30)} ${n1(fy + 6)}v-3`, 'iron2', .6));
   }
 
@@ -26259,6 +26483,7 @@ YEARLY.push(slYear);
       else if (kind === 'rabbit') { L.push(pa(`M${n1(x - 10)} ${n1(y + 2)}Q${n1(x)} ${n1(y - 6)} ${n1(x + 10)} ${n1(y + 2)}Z`, 'earth', 'stroke-width=".45"') + el(x + 3, y, 2, 1.4, 'black', NS)); X.mid.push(spr(X, x - 6, y - 6, 8, 7, rabbit(X, x - 3, y, 1.1, dir), 'sc_bob', 'animation-duration:1.2s')); }
       else if (kind === 'bees') { L.push(pa(wr(X, x - 8, y - 1, 16, 2, .1), 'wood2', 'stroke-width=".4"') + skep(X, x - 4, y - 1, 1.1) + skep(X, x + 5, y - 1, 1)); for (let b = 0; b < 3; b++) X.mid.push(spr(X, x - 6 + b * 4, y - 16 - b * 2, 2, 2, ci(x - 5 + b * 4, y - 15 - b * 2, .5, 'black', NS), 'sc_tw', dd(.6 + b * .2, -b * .3))); }
     }
+    if (kind === 'sheep' && !X.famine) for (let i = 0; i < 2; i++) { const lx = W * (.18 + i * .17), ly = fy + 32 + i * 5; X.mid.push(spr(X, lx - 5, ly - 6, 10, 7, sheep(X, lx, ly, .7, i ? -1 : 1), 'sc_bob', `animation-duration:${n1(.6 + i * .15)}s`)); }
     // the herd's dog, and a crook leaning on the fold
     const dgx = W * .4;
     X.mid.push(mover(X, dgx - 8, fy + 30, 18, 8, pa(`M${n1(dgx - 6)} ${n1(fy + 36)}Q${n1(dgx - 6)} ${n1(fy + 32)} ${n1(dgx)} ${n1(fy + 32)}H${n1(dgx + 4)}L${n1(dgx + 7)} ${n1(fy + 30)}L${n1(dgx + 9)} ${n1(fy + 32)}L${n1(dgx + 6)} ${n1(fy + 34)}V${n1(fy + 37)}M${n1(dgx - 5)} ${n1(fy + 35)}V${n1(fy + 37)}`, 'black', 'stroke-width=".45"') + pn(`M${n1(dgx)} ${n1(fy + 33)}h4v1.6h-4Z`, 'white'), { from: -40, to: 60, dur: 14, bobDur: .3 }));
@@ -26289,7 +26514,7 @@ YEARLY.push(slYear);
       X.mid.push(spr(X, kx - 8, 48, 16, 60, ln(`M${n1(kx)} 46V${n1(gy - 22)}`, 'thatch2', .6) + pa(wr(X, kx - 7, gy - 22, 14, 9, .2), 'stone', 'stroke-width=".55"'), 'sc_lift', 'animation-duration:9s'));
       for (let i = 0; i < 3; i++) for (let j = 0; j <= 2 - i; j++) L.push(pa(wr(X, W * .14 + j * 15 + i * 7, gy + 18 - i * 9, 14, 9, .2), 'stone', 'stroke-width=".55"'));
       // masons at the face with chisel and mallet
-      for (let i = 0; i < 2; i++) { const mx = qx - 20 + i * 52; if (mx > W - 14) break; L.push(man(X, mx, gy + 22 + i * 4, { h: 26, c: i ? 'blue' : 'earth', hat: i ? 'cap' : 'hood', hc: 'wood2', apron: 'daub2', dir: -1 })); X.mid.push(spr(X, mx - 14, gy + 2 + i * 4, 12, 10, ln(`M${n1(mx - 4)} ${n1(gy + 10 + i * 4)}L${n1(mx - 10)} ${n1(gy + 6 + i * 4)}`, 'wood2', 1.2) + pa(wr(X, mx - 13, gy + 3 + i * 4, 5, 3, .1), 'wood', 'stroke-width=".35"'), 'sc_chop', 'animation-duration:.8s')); }
+      for (let i = 0; i < 2; i++) { const mx = qx - 20 + i * 52, my = gy + 22 + i * 4; if (mx > W - 14) break; L.push(man(X, mx, my, { h: 26, c: i ? 'blue' : 'earth', hat: i ? 'cap' : 'hood', hc: 'wood2', apron: 'daub2', dir: -1, pose: 'work' })); const [hx, hy] = handAt(mx, my, 26, -1); inHand(X, hx, hy, -1, 'mallet', .8 + i * .15); }
       // the ox cart waiting for its load
       const cxx = W * .3;
       X.me = { x: cxx + 44, y: gy + 28, h: 26, dir: 1 };
@@ -26308,7 +26533,7 @@ YEARLY.push(slYear);
       L.push(pa(`M${n1(W * .08)} ${n1(gy + 6)}Q${n1(W * .14)} ${n1(gy - 16)} ${n1(W * .2)} ${n1(gy + 6)}Z`, 'dung', 'stroke-width=".55"'));
       L.push(pa(`M-4 ${gy}H${W + 4}V${H + 2}H-4Z`, X.snowy ? 'snow' : 'mud', 'stroke-width=".5"'));
       // miners with picks and their candles; a pit pony with its cart of ore
-      for (let i = 0; i < 2; i++) { const mx = ax + 30 + i * 46; if (mx > W - 12) break; L.push(man(X, mx, gy + 22 + i * 4, { h: 26, c: 'earth', hat: 'cap', hc: 'iron', dir: -1 })); X.mid.push(spr(X, mx - 15, gy + 2 + i * 4, 13, 12, ln(`M${n1(mx - 4)} ${n1(gy + 10 + i * 4)}L${n1(mx - 9)} ${n1(gy + 4 + i * 4)}`, 'wood2', 1.1) + ln(`M${n1(mx - 14)} ${n1(gy + 6 + i * 4)}Q${n1(mx - 9)} ${n1(gy + 1 + i * 4)} ${n1(mx - 5)} ${n1(gy + 4 + i * 4)}`, 'iron2', 1.1), 'sc_chop', 'animation-duration:1s')); }
+      for (let i = 0; i < 2; i++) { const mx = ax + 30 + i * 46, my = gy + 22 + i * 4; if (mx > W - 12) break; L.push(man(X, mx, my, { h: 26, c: 'earth', hat: 'cap', hc: 'iron', dir: -1, pose: 'work' })); const [hx, hy] = handAt(mx, my, 26, -1); inHand(X, hx, hy, -1, 'pick', 1 + i * .2); }
       L.push(pa(`M${n1(ax - 18)} ${n1(gy + 26)}Q${n1(ax - 8)} ${n1(gy + 14)} ${n1(ax + 6)} ${n1(gy + 26)}Z`, 'iron2', 'stroke-width=".5"'));
       X.me = { x: wx + 4, y: gy + 30, h: 26, dir: 1 };
       const px = W * .44;
@@ -26342,8 +26567,8 @@ YEARLY.push(slYear);
     for (let i = 0; i < 3; i++) for (let j = 0; j <= 2 - i; j++) L.push(pa(wr(X, cx + 24 + j * 13 + i * 6, gy + 22 - i * 8, 12, 8, .2), 'stone', 'stroke-width=".5"'));
     // the master mason with his plans, a mason at the banker, a labourer with the hod
     L.push(man(X, cx - 48, gy + 24, { h: 28, c: 'blue', hat: 'cap', hc: 'black', gown: true, dir: 1, hold: (a, b) => pa(wr(X, a - 1, b - 3, 8, 6, .1), 'white', 'stroke-width=".35"') }));
-    L.push(pa(wr(X, cx + 6, gy + 14, 14, 8, .2), 'stone2', 'stroke-width=".5"') + man(X, cx + 26, gy + 22, { h: 26, c: 'earth', hat: 'hood', hc: 'wood2', apron: 'daub2', dir: -1 }));
-    X.mid.push(spr(X, cx + 12, gy + 4, 12, 10, ln(`M${n1(cx + 22)} ${n1(gy + 10)}L${n1(cx + 16)} ${n1(gy + 6)}`, 'wood2', 1.2) + pa(wr(X, cx + 13, gy + 4, 5, 3, .1), 'wood', 'stroke-width=".35"'), 'sc_chop', 'animation-duration:.8s'));
+    L.push(pa(wr(X, cx + 6, gy + 14, 14, 8, .2), 'stone2', 'stroke-width=".5"') + man(X, cx + 26, gy + 22, { h: 26, c: 'earth', hat: 'hood', hc: 'wood2', apron: 'daub2', dir: -1, pose: 'work' }));
+    { const [hx, hy] = handAt(cx + 26, gy + 22, 26, -1); inHand(X, hx, hy, -1, 'mallet', .8); }
     X.mid.push(mover(X, cx - 92, gy + 4, 18, 28, man(X, cx - 84, gy + 30, { h: 26, c: 'red', hat: 'cap', hc: 'wood2', hold: (a, b) => pa(`M${n1(a - 3)} ${n1(b - 12)}l6 -2v6l-6 2Z`, 'wood', 'stroke-width=".4"') + ln(`M${n1(a)} ${n1(b - 9)}L${n1(a)} ${n1(b + 3)}`, 'wood2', .8) }), { from: -(cx - 60), to: 24, dur: 24, bobDur: .45 }));
     X.me = { x: clampX(X, cx + 52, 8), y: gy + 26, h: 28, dir: -1 };
     worldBits(X, { noMarch: true, cartY: 136, riderY: 138, crowX: cx, crowY: 30, noCart: true });
