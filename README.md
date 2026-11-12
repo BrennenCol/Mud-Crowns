@@ -273,6 +273,14 @@ still be reached from a first job.
 - A double tap never zooms the page. In the phone apps, pinch zoom and
   long-press text selection are off too, so it feels like an app.
 
+### Women's hair (v1.14.2)
+
+- Women in the pictures show their hair: loose and long down the back, in a braid tied with a
+  ribbon, or pinned up in a bun, some with a band of linen or ribbon round the head. Caps,
+  straw hats, coifs and crowns sit on top of it. Nuns, and any woman under vows (you
+  included), keep the veil. Hooded men show a fringe of hair, and the hood's long tail (the
+  liripipe) hangs down the back.
+
 ### Better people, livelier rooms (v1.14.1)
 
 - **People, close up.** Figures drawn at a readable size have a face (eyes, brows, nose,

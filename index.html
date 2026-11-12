@@ -528,7 +528,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.14.1';
+const APP_VERSION = '1.14.2';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -5431,7 +5431,7 @@ function showWhatsNew() {
     ['⭐', 'You, in the picture', 'you are painted where you work, dressed for your job, with a gold mark over your head and the name of the place in the corner.'],
     ['🤝', 'The people you work beside', 'every workplace has its own people, from the master down to the youngest hand. Kin shows them as a ladder with you in your place on it. Those far above you hardly know your name; your equals are easier to win. Work beside them, ask to be taught, cover for them, or worse.'],
     ['🪣', 'Below stairs', 'the royal castle has servants now: start as a coal boy and climb to scullion, cook and master cook, or keep the gate, groom the king’s horses, or keep the buttery.'],
-    ['🖌️', 'Better pictures', 'every person is redrawn with a face, hair, arms and hands, shoes and clothes with folds, holding their own tools; rooms have light and shadow, painted walls, and cats, hens, mice and a juggling jester. Nothing stands on anything else any more, and the picture fills wide screens.'],
+    ['🖌️', 'Better pictures', 'every person is redrawn with a face, hair, arms and hands, shoes and clothes with folds, holding their own tools, and women show their hair (nuns keep their veils); rooms have light and shadow, painted walls, and cats, hens, mice and a juggling jester. Nothing stands on anything else any more, and the picture fills wide screens.'],
   ];
   $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Find work</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
@@ -24590,9 +24590,20 @@ YEARLY.push(slYear);
   const HAIRS = ['timber', 'wood2', 'gold2', 'black', 'earth', 'red2', 'timber', 'wood2'];
   function manBig(X, x, y, o) {
     const h = o.h, k = h / 11, d = o.dir || 1, c = o.c || pick2(X, ['red', 'blue', 'green', 'earth']);
-    const gown = !!o.gown, seated = !!o.seated, top = y - h, hat = o.hat || '';
+    const gown = !!o.gown, seated = !!o.seated, top = y - h;
+    let hat = o.hat || '';
     const hair = o.hair || pick2(X, HAIRS), hose = o.hose || pick2(X, ['timber', 'wood2', 'blue', 'red2', 'black']);
-    const beard = o.beard != null ? o.beard : (!o.fem && !gown && !seated && hat !== 'veil' && X.r() < .3);
+    // women show their hair (only a nun keeps her veil): loose and long, in a braid, or pinned up in a bun,
+    // sometimes with a band of linen or ribbon round the head; a cap, a straw hat, a coif or a crown sits on top of it
+    const holy = !!o.holy || o.c === 'black' || o.hc === 'black' || hat === 'cowl' || hat === 'mitre';
+    const fem = !holy && (!!o.fem || hat === 'veil' || hat === 'kerchief');
+    let hstyle = '', fillet = '';
+    if (fem) {
+      hstyle = o.hstyle || pick2(X, ['long', 'braid', 'bun', 'long', 'braid']);
+      if (['veil', 'hood', 'kerchief', ''].includes(hat)) { if (hat === 'veil' || X.r() < .35) fillet = o.hc && !['white', 'daub'].includes(o.hc) ? o.hc : pick2(X, ['white', 'gold', 'red', 'blue', 'green']); hat = ''; }
+      if (hat === 'coif' && hstyle === 'bun') hstyle = 'long';
+    }
+    const beard = o.beard != null ? o.beard : (!fem && !o.fem && !gown && !seated && hat !== 'veil' && X.r() < .3);
     const hx = x + .1 * k * d, hy = top + 1.55 * k, hr = 1.38 * k;
     const tool = o.tool, busy = !!(tool && tool !== 'sack') || !!o.hold;
     const pose = o.pose || (tool === 'sack' ? 'sack' : busy ? 'work' : 'down');
@@ -24604,6 +24615,7 @@ YEARLY.push(slYear);
     let s = '';
     // the shadow on the ground
     if (!seated) s += el(x + .25 * k * d, y + .1 * k, 2.7 * k, .5 * k, 'black', 'stroke="none" opacity=".2"');
+    if (fem && hstyle === 'long') s += pa(`M${n1(hx + .3 * hr * d)} ${n1(hy - 1 * hr)}Q${n1(hx - 1.55 * hr * d)} ${n1(hy - .9 * hr)} ${n1(hx - 1.5 * hr * d)} ${n1(hy + 1.2 * hr)}Q${n1(hx - 1.62 * hr * d)} ${n1(top + 5.3 * k)} ${n1(hx - 1.05 * hr * d)} ${n1(top + 6.1 * k)}Q${n1(hx - .25 * hr * d)} ${n1(top + 5.5 * k)} ${n1(hx + .2 * hr * d)} ${n1(hy + 1.4 * hr)}Z`, hair, 'stroke-width=".4"') + ln(`M${n1(hx - 1.1 * hr * d)} ${n1(hy + .4 * hr)}Q${n1(hx - 1.3 * hr * d)} ${n1(top + 4.4 * k)} ${n1(hx - 1 * hr * d)} ${n1(top + 5.5 * k)}`, 'white', .12 * hr, 'opacity=".25"');
     // the joints: shoulders, elbows, hands
     const fSh = X2(1.05, 3.85), bSh = X2(-1.05, 3.85);
     const fEl = pose === 'up' ? X2(1.75, 2.7) : pose === 'work' ? X2(1.95, 5.45) : X2(1.45, 5.6);
@@ -24638,13 +24650,20 @@ YEARLY.push(slYear);
     if (o.chain) s += ln(`M${n1(x - 1.25 * k)} ${n1(top + 3.7 * k)}Q${n1(x)} ${n1(top + 5.6 * k)} ${n1(x + 1.25 * k)} ${n1(top + 3.7 * k)}`, 'gold', .4 * k, 'stroke-dasharray=".5 .3"') + ci(x, top + 5.3 * k, .45 * k, 'gold', 'stroke-width=".25"');
     // the neck and the head
     s += pa(wr(X, hx - .48 * k, hy + .9 * k, .96 * k, 1.1 * k, .02), 'skin', 'stroke-width=".35"');
+    if (fem && hstyle === 'braid') {
+      const b0x = hx - .85 * hr * d, b0y = hy + .45 * hr, b1x = x - 1.5 * k * d, b1y = top + 6.6 * k;
+      for (let i = 0; i < 6; i++) { const t = i / 5, bx = b0x + (b1x - b0x) * t, by = b0y + (b1y - b0y) * t; s += el(bx, by, .36 * k * (1 - t * .25), .5 * k, hair, 'stroke-width=".35"') + ln(`M${n1(bx - .3 * k)} ${n1(by - .1 * k)}l${n1(.6 * k)} ${n1(.25 * k)}`, 'ol', .2, 'opacity=".4"'); }
+      const rc = fillet || pick2(X, ['red', 'blue', 'green', 'gold']);
+      s += pa(`M${n1(b1x)} ${n1(b1y + .4 * k)}l${n1(-.7 * k)} ${n1(-.4 * k)}v${n1(.9 * k)}ZM${n1(b1x)} ${n1(b1y + .4 * k)}l${n1(.7 * k)} ${n1(-.4 * k)}v${n1(.9 * k)}Z`, rc, 'stroke-width=".25"') + ln(`M${n1(b1x)} ${n1(b1y + .5 * k)}q${n1(-.2 * k)} ${n1(.6 * k)} ${n1(.1 * k)} ${n1(1.1 * k)}`, hair, .3 * k);
+    }
     const covered = hat === 'hood' || hat === 'veil';
     if (covered) {
       // hood or veil: the cloth round the head and down onto the shoulders, the face looking out of it
       const hc = o.hc || (hat === 'veil' ? 'white' : c);
       s += pa(`M${n1(hx + .95 * hr * d)} ${n1(hy - .25 * hr)}Q${n1(hx + .7 * hr * d)} ${n1(hy - 1.5 * hr)} ${n1(hx - .25 * hr * d)} ${n1(hy - 1.38 * hr)}Q${n1(hx - 1.45 * hr * d)} ${n1(hy - 1.1 * hr)} ${n1(hx - 1.35 * hr * d)} ${n1(hy + .5 * hr)}L${n1(x - 1.7 * k * d)} ${n1(top + 4.6 * k)}Q${n1(x)} ${n1(top + 5.2 * k)} ${n1(x + 1.7 * k * d)} ${n1(top + 4.4 * k)}L${n1(hx + .9 * hr * d)} ${n1(hy + .9 * hr)}Z`, hc, 'stroke-width=".45"');
-      if (hat === 'hood') s += ln(`M${n1(hx - .9 * hr * d)} ${n1(hy - 1.1 * hr)}q${n1(-1.8 * k * d)} ${n1(.2 * k)} ${n1(-2.4 * k * d)} ${n1(2.8 * k)}`, hc, .7 * k) + ln(`M${n1(hx - .9 * hr * d)} ${n1(hy - 1.1 * hr)}q${n1(-1.8 * k * d)} ${n1(.2 * k)} ${n1(-2.4 * k * d)} ${n1(2.8 * k)}`, 'ol', .25, 'opacity=".5"');
+      if (hat === 'hood') s += ln(`M${n1(hx - .9 * hr * d)} ${n1(hy - 1.1 * hr)}q${n1(-1.3 * k * d)} ${n1(.5 * k)} ${n1(-1.15 * k * d)} ${n1(3.6 * k)}`, hc, .7 * k) + ln(`M${n1(hx - .9 * hr * d)} ${n1(hy - 1.1 * hr)}q${n1(-1.3 * k * d)} ${n1(.5 * k)} ${n1(-1.15 * k * d)} ${n1(3.6 * k)}`, 'ol', .25, 'opacity=".5"');
       s += el(hx + .2 * hr * d, hy + .08 * hr, .78 * hr, .9 * hr, 'skin', 'stroke-width=".35"');
+      if (hat === 'hood') { const ffx = hx + .2 * hr * d, ffy = hy + .08 * hr; s += pa(`M${n1(ffx - .74 * hr)} ${n1(ffy - .38 * hr)}Q${n1(ffx)} ${n1(ffy - 1.08 * hr)} ${n1(ffx + .74 * hr)} ${n1(ffy - .38 * hr)}Q${n1(ffx + .25 * hr * d)} ${n1(ffy - .6 * hr)} ${n1(ffx - .74 * hr)} ${n1(ffy - .38 * hr)}Z`, hair, 'stroke-width=".3"'); }
       if (hat === 'veil' && o.wimple !== false) s += pa(`M${n1(hx + .2 * hr * d - .78 * hr)} ${n1(hy + .3 * hr)}Q${n1(hx + .2 * hr * d)} ${n1(hy + 1.25 * hr)} ${n1(hx + .2 * hr * d + .78 * hr)} ${n1(hy + .3 * hr)}L${n1(hx + .2 * hr * d + .85 * hr)} ${n1(hy + 1.05 * hr)}Q${n1(hx + .2 * hr * d)} ${n1(hy + 1.6 * hr)} ${n1(hx + .2 * hr * d - .85 * hr)} ${n1(hy + 1.05 * hr)}Z`, 'white', 'stroke-width=".3"');
     } else {
       s += el(hx, hy, hr * .96, hr, 'skin', 'stroke-width=".45"');
@@ -24652,13 +24671,19 @@ YEARLY.push(slYear);
         // the tonsure: a bare crown and a ring of hair; the cowl lies back on the shoulders
         s += pn(`M${n1(hx - .98 * hr)} ${n1(hy - .1 * hr)}Q${n1(hx - .9 * hr)} ${n1(hy - .75 * hr)} ${n1(hx - .5 * hr)} ${n1(hy - .95 * hr)}L${n1(hx - .35 * hr)} ${n1(hy - .55 * hr)}Q${n1(hx)} ${n1(hy - .7 * hr)} ${n1(hx + .35 * hr)} ${n1(hy - .55 * hr)}L${n1(hx + .5 * hr)} ${n1(hy - .95 * hr)}Q${n1(hx + .9 * hr)} ${n1(hy - .75 * hr)} ${n1(hx + .98 * hr)} ${n1(hy - .1 * hr)}`, hair) ;
         s += pa(`M${n1(x - 1.6 * k)} ${n1(top + 3.5 * k)}Q${n1(x)} ${n1(top + 2.6 * k)} ${n1(x + 1.6 * k)} ${n1(top + 3.5 * k)}Q${n1(x + 1.4 * k)} ${n1(top + 4.6 * k)} ${n1(x)} ${n1(top + 4.4 * k)}Q${n1(x - 1.4 * k)} ${n1(top + 4.6 * k)} ${n1(x - 1.6 * k)} ${n1(top + 3.5 * k)}Z`, o.hc || c, 'stroke-width=".4"');
+      } else if (fem && hat !== 'coif') {
+        // her hair: parted in the middle and drawn back from the face, with a sheen on it
+        s += pa(`M${n1(hx + .96 * hr * d)} ${n1(hy - .2 * hr)}Q${n1(hx + .75 * hr * d)} ${n1(hy - 1.2 * hr)} ${n1(hx - .15 * hr * d)} ${n1(hy - 1.08 * hr)}Q${n1(hx - 1.12 * hr * d)} ${n1(hy - .85 * hr)} ${n1(hx - 1.08 * hr * d)} ${n1(hy + .35 * hr)}Q${n1(hx - .9 * hr * d)} ${n1(hy + .75 * hr)} ${n1(hx - .55 * hr * d)} ${n1(hy + .55 * hr)}Q${n1(hx - .5 * hr * d)} ${n1(hy - .35 * hr)} ${n1(hx + .05 * hr * d)} ${n1(hy - .58 * hr)}Q${n1(hx + .6 * hr * d)} ${n1(hy - .72 * hr)} ${n1(hx + .96 * hr * d)} ${n1(hy - .2 * hr)}Z`, hair, 'stroke-width=".4"');
+        s += ln(`M${n1(hx + .02 * hr * d)} ${n1(hy - 1.05 * hr)}L${n1(hx + .22 * hr * d)} ${n1(hy - .62 * hr)}`, 'ol', .1 * hr, 'opacity=".45"') + ln(`M${n1(hx - .55 * hr * d)} ${n1(hy - .85 * hr)}Q${n1(hx - .85 * hr * d)} ${n1(hy - .4 * hr)} ${n1(hx - .8 * hr * d)} ${n1(hy + .1 * hr)}`, 'white', .1 * hr, 'opacity=".3"');
+        if (hstyle === 'bun') s += ci(hx - .95 * hr * d, hy - .3 * hr, .46 * hr, hair, 'stroke-width=".4"') + ln(`M${n1(hx - 1.2 * hr * d)} ${n1(hy - .45 * hr)}q${n1(.25 * hr * d)} ${n1(.3 * hr)} ${n1(.5 * hr * d)} ${n1(.25 * hr)}`, 'ol', .08 * hr, 'opacity=".5"');
+        if (fillet) s += ln(`M${n1(hx - 1.02 * hr * d)} ${n1(hy - .12 * hr)}Q${n1(hx - .2 * hr * d)} ${n1(hy - 1.18 * hr)} ${n1(hx + .9 * hr * d)} ${n1(hy - .5 * hr)}`, fillet, .17 * hr) + (fillet === 'gold' ? ci(hx + .55 * hr * d, hy - .82 * hr, .12 * hr, 'red', NS) : '');
       } else if (hat !== 'helm' && hat !== 'coif' && hat !== 'mitre') {
         // hair: cropped for most men, long down the back for women with nothing on their heads
-        const long = !!o.fem && ['', 'crown', 'cap', 'straw'].includes(hat);
+        const long = false;
         s += pa(`M${n1(hx + .92 * hr * d)} ${n1(hy - .45 * hr)}Q${n1(hx + .35 * hr * d)} ${n1(hy - 1.3 * hr)} ${n1(hx - .55 * hr * d)} ${n1(hy - .95 * hr)}Q${n1(hx - 1.2 * hr * d)} ${n1(hy - .4 * hr)} ${n1(hx - (long ? 1.25 : 1.02) * hr * d)} ${n1(hy + (long ? 2.2 : .5) * hr)}L${n1(hx - (long ? .45 : .62) * hr * d)} ${n1(hy + (long ? 1.9 : .35) * hr)}Q${n1(hx - .4 * hr * d)} ${n1(hy - .35 * hr)} ${n1(hx + .92 * hr * d)} ${n1(hy - .45 * hr)}Z`, hair, 'stroke-width=".4"');
       }
       // an ear
-      if (hat !== 'helm' && hat !== 'coif') s += el(hx - .45 * hr * d, hy + .12 * hr, .2 * hr, .28 * hr, 'skin', 'stroke-width=".3"');
+      if (hat !== 'helm' && hat !== 'coif' && !(fem && hstyle !== 'bun')) s += el(hx - .45 * hr * d, hy + .12 * hr, .2 * hr, .28 * hr, 'skin', 'stroke-width=".3"');
     }
     // the face, turned the way the figure faces
     const fx = covered ? hx + .2 * hr * d : hx, fy = covered ? hy + .08 * hr : hy;
@@ -24721,7 +24746,7 @@ YEARLY.push(slYear);
     if (hat === 'hood' || hat === 'cowl') s += pa(`M${n1(x - 1.9 * k)} ${n1(top + 3.6 * k)}Q${n1(x - 2.1 * k)} ${n1(top - .2 * k)} ${n1(x + .2 * k)} ${n1(top + .1 * k)}Q${n1(x + 1.9 * k)} ${n1(top + .3 * k)} ${n1(x + 1.7 * k * dir)} ${n1(top + 1.6 * k)}Q${n1(x + .6 * k * dir)} ${n1(top + 1.2 * k)} ${n1(x - .6 * k * dir)} ${n1(top + 2.6 * k)}Z`, o.hc || (hat === 'cowl' ? o.c : 'green'), 'stroke-width=".4"') + (hat === 'hood' ? ln(`M${n1(x - 1.4 * k * dir)} ${n1(top + .6 * k)}q${n1(-2 * k * dir)} ${n1(.6 * k)} ${n1(-2.6 * k * dir)} ${n1(2.8 * k)}`, o.hc || 'green', .8 * k) : '');
     else if (hat === 'straw') s += pa(`M${n1(x - 2.8 * k)} ${n1(top + 1.1 * k)}Q${n1(x)} ${n1(top - 1.6 * k)} ${n1(x + 2.8 * k)} ${n1(top + 1.1 * k)}Z`, 'thatch', 'stroke-width=".35"');
     else if (hat === 'helm') s += pa(`M${n1(x - 2.4 * k)} ${n1(top + 1.4 * k)}Q${n1(x)} ${n1(top - 2 * k)} ${n1(x + 2.4 * k)} ${n1(top + 1.4 * k)}Z`, 'iron2', 'stroke-width=".35"');
-    else if (hat === 'veil') s += pa(`M${n1(x - 1.9 * k)} ${n1(top + 4.5 * k)}Q${n1(x - 2.3 * k)} ${n1(top - .4 * k)} ${n1(x + .2 * k)} ${n1(top + .1 * k)}Q${n1(x + 2 * k)} ${n1(top + .2 * k)} ${n1(x + 1.4 * k)} ${n1(top + 1.4 * k)}Q${n1(x + .3 * k)} ${n1(top + 1.2 * k)} ${n1(x - .4 * k)} ${n1(top + 4.4 * k)}Z`, o.hc || 'white', 'stroke-width=".35"');
+    else if (hat === 'veil') s += pa(`M${n1(x - 1.9 * k)} ${n1(top + 4.5 * k)}Q${n1(x - 2.3 * k)} ${n1(top - .4 * k)} ${n1(x + .2 * k)} ${n1(top + .1 * k)}Q${n1(x + 2 * k)} ${n1(top + .2 * k)} ${n1(x + 1.4 * k)} ${n1(top + 1.4 * k)}Q${n1(x + .3 * k)} ${n1(top + 1.2 * k)} ${n1(x - .4 * k)} ${n1(top + 4.4 * k)}Z`, o.hc === 'black' || o.c === 'black' || o.holy ? (o.hc || 'black') : (o.hair || pick2(X, HAIRS)), 'stroke-width=".35"');
     else if (hat === 'crown') s += pa(`M${n1(x - 1.4 * k)} ${n1(top + .9 * k)}l${n1(.3 * k)} ${n1(-1.6 * k)}l${n1(.7 * k)} ${n1(.9 * k)}l${n1(.4 * k)} ${n1(-1.2 * k)}l${n1(.4 * k)} ${n1(1.2 * k)}l${n1(.7 * k)} ${n1(-.9 * k)}l${n1(.3 * k)} ${n1(1.6 * k)}Z`, 'gold', 'stroke-width=".3"');
     else if (hat === 'cap') s += pa(`M${n1(x - 1.7 * k)} ${n1(top + 1.3 * k)}Q${n1(x)} ${n1(top - .8 * k)} ${n1(x + 1.7 * k)} ${n1(top + 1.3 * k)}Z`, o.hc || 'red', 'stroke-width=".3"');
     else if (hat === 'coif') s += pa(`M${n1(x - 1.65 * k)} ${n1(top + 2.6 * k)}Q${n1(x - 1.9 * k)} ${n1(top + .1 * k)} ${n1(x + .15 * k)} ${n1(top + .1 * k)}Q${n1(x + 1.9 * k)} ${n1(top + .1 * k)} ${n1(x + 1.65 * k)} ${n1(top + 2.6 * k)}Q${n1(x + .2 * k)} ${n1(top + 1.3 * k)} ${n1(x - 1.65 * k)} ${n1(top + 2.6 * k)}Z`, o.hc || 'white', 'stroke-width=".3"');
@@ -26588,6 +26613,7 @@ YEARLY.push(slYear);
     o.hat = { crown: 'crown', circlet: fem ? 'veil' : 'cap', mitre: 'mitre', veil: 'veil', tonsure: 'cowl', hood: 'hood', helm: 'helm', kettle: 'helm', knit: 'cap', plume: 'cap', noblehat: 'cap', wizard: 'cap', coif: 'coif', kerchief: 'veil', straw: 'straw', cap: 'cap', jester: 'hood', exec: 'hood' }[role] || (fem ? 'veil' : '');
     o.hc = { circlet: 'gold', noblehat: 'black', plume: 'red', jester: 'gold', exec: 'black', kerchief: 'white', veil: S.vows ? 'black' : 'white', tonsure: o.c }[role] || (o.hat === 'veil' ? 'white' : 'red');
     if (role === 'tonsure' || role === 'veil' && S.vows) { o.c = S.vows && fem ? 'black' : 'wood2'; o.gown = true; }
+    o.fem = fem; o.holy = !!S.vows;
     if (S.ruling) { o.hat = 'crown'; o.c = 'purple'; o.gown = true; }
     if (isMil() || fam === 'war') { o.c = X0.banner || o.c; o.tool = 'spear'; }
     else if (/^(metal|arms|stone|woodw|leather|goods|food|cloth|fine)$/.test(fam)) o.apron = fam === 'food' ? 'white' : 'wood2';

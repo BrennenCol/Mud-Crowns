@@ -61,23 +61,27 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.14.1.txt`, ready to copy.
+Also in `store/whats_new_1.14.2.txt`, ready to copy (it covers everything since 1.13.2).
 
 ```
-BETTER PEOPLE, BETTER PLACES
-Every person in the pictures has been redrawn by hand:
-- Faces with eyes, brows and rosy cheeks, hair and beards, ears, and hoods and veils that frame the face
-- Arms and hands, shoes, belts and buckles, and the folds and shadow of their clothes
-- Smiths swing their hammers, cooks chop, masons and miners strike with mallet and pick, grooms brush the horses, all with the tool in their own hand
-- People sit properly at tables and on thrones, and the jury sits on its bench
-- You stand close up in the outdoor scenes too, with a neighbour beside you
+WORKPLACES
+The picture now follows your work, not your birth: a lord who keeps a shop is painted in the market. New places to work in, each painted inside and out: the throne room, guildhall and court of law; the royal kitchen, forge and mint; a workshop for every trade; the inn; the parish church, cathedral and hospital; the scriptorium, university, laboratory and counting house; the stables, pasture, mine, quarry and building site.
 
-LIVELIER ROOMS
-- Shadows under the tables and barrels, sunlight falling through the windows onto the floor, and shade under the ceilings
-- Painted borders on the walls of the shops, the inn and the guildhall
-- A cat asleep by the kitchen fire and on the shop counter, another watching from beside the inn's barrels, hens in the stables and the village, mice along the walls, lambs frisking on the pasture, and a jester juggling at court
-- Antlers over the inn's hearth and the alewife's chalk tally, copper pans in the kitchen, a lucky horseshoe over the smithy door, and herbs strewn on the great hall floor
-- Rooms grow darker at night, lit by their fires, lamps and candles
+YOU, IN THE PICTURE
+You are painted where you work, dressed for your job, with a gold mark over your head. The name of the place sits in the corner.
+
+THE PEOPLE YOU WORK BESIDE
+Every workplace has its own people, from the master down to the youngest hand. Kin shows them as a ladder with you in your place on it. Those far above you hardly know your name; your equals are easier to win. Work beside them, ask to be taught, cover for a sick friend, or worse.
+
+BELOW STAIRS
+Start as a coal boy in the royal castle and climb to scullion, cook and master cook, or keep the gate, groom the king's horses, or keep the buttery.
+
+BETTER PEOPLE, LIVELIER ROOMS
+- Everyone is redrawn: faces, hair and beards, arms and hands, shoes, and clothes with folds and shadows
+- Women show their hair, loose, braided or pinned up, some with a ribbon; nuns keep their veils
+- Workers swing their own hammers, cleavers, mallets and picks; people sit at tables and on thrones
+- Light through the windows, shadows, painted walls, and cats, hens, mice, lambs and a juggling jester
+- Nothing stands on anything else any more, and the picture fills wide screens
 ```
 
 ## Category
