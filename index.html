@@ -528,7 +528,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.14.2';
+const APP_VERSION = '1.15.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -5427,11 +5427,11 @@ function showWhatsNew() {
   store.set(NEWKEY, APP_VERSION);
   modalOpen = true;
   const items = [
-    ['🏰', 'Workplaces', 'the picture follows your work, not your birth: a lord who keeps a shop is painted in the market. New places to work in: the throne room, the guildhall and the court of law, the royal kitchen, the forge and the mint, a workshop for every trade, the inn, the parish church, the cathedral and the hospital, the scriptorium, the university and the laboratory, the stables, the pasture, the mine, the quarry and the building site.'],
-    ['⭐', 'You, in the picture', 'you are painted where you work, dressed for your job, with a gold mark over your head and the name of the place in the corner.'],
-    ['🤝', 'The people you work beside', 'every workplace has its own people, from the master down to the youngest hand. Kin shows them as a ladder with you in your place on it. Those far above you hardly know your name; your equals are easier to win. Work beside them, ask to be taught, cover for them, or worse.'],
-    ['🪣', 'Below stairs', 'the royal castle has servants now: start as a coal boy and climb to scullion, cook and master cook, or keep the gate, groom the king’s horses, or keep the buttery.'],
-    ['🖌️', 'Better pictures', 'every person is redrawn with a face, hair, arms and hands, shoes and clothes with folds, holding their own tools, and women show their hair (nuns keep their veils); rooms have light and shadow, painted walls, and cats, hens, mice and a juggling jester. Nothing stands on anything else any more, and the picture fills wide screens.'],
+    ['🎻', 'New music', 'a little band plays real tunes: jigs in the village and the tavern (The Maypole, the Irish Washerwoman), Greensleeves and a royal procession at court, the Drunken Sailor at sea, hymns in church, drums at war. Set the volume in the menu, under Settings.'],
+    ['🏰', 'Workplaces', 'the picture follows your work, not your birth: the throne room, the royal kitchen, the forge, a workshop for every trade, the inn, the church, the stables, the mine and more. You are painted there, with the place named in the corner.'],
+    ['🤝', 'The people you work beside', 'every workplace has its own people, from the master to the youngest hand, on a ladder in Kin with you in your place. Those far above you hardly know your name.'],
+    ['🪣', 'Below stairs', 'start as a coal boy in the royal castle and climb to scullion, cook and master cook, or keep the gate, the stables or the buttery.'],
+    ['🖌️', 'Better pictures', 'everyone redrawn with faces, hair, hands and clothes; women show their hair; rooms with light, shadow, cats, hens and a juggling jester.'],
   ];
   $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Find work</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
@@ -26974,8 +26974,9 @@ YEARLY.push(slYear);
 
 /* ================= v1.13 Sound and music (prefix au_) ================= */
 // Everything is made in the browser with Web Audio: no sound files, nothing to download, nothing to license.
-// Music: medieval-style tunes, written fresh by a small composer in the old church modes, over a drone, as dances and
-// songs were then. The tune changes with your life: the village, the court, the cloister, the sea, war, the grave.
+// Music: a little band (fiddle, tin whistle, recorder, shawm, lute, harp, voices, a hurdy-gurdy drone, frame drum,
+// tabor and tambourine) plays real tunes: old ones everyone half knows and new ones in the same manner. The songs
+// change with where your life is: the village, the tavern and market, the court, the cloister, the sea, war, the grave.
 // Sound: the page turning, coins, bells for weddings, births and deaths, drums in battle, a fanfare for a promotion.
 // The phone's silent switch mutes it all, and other apps' music keeps playing (the "ambient" audio session).
 {
@@ -27028,11 +27029,12 @@ YEARLY.push(slYear);
     if (ksCache.size > 60) ksCache.delete(ksCache.keys().next().value);
     ksCache.set(key, b); return b;
   }
-  function pluck(f, t, vel, dest, bright) {
+  function pluck(f, t, vel, dest, bright, ring) {
     const s = ctx.createBufferSource(); s.buffer = ksBuffer(f);
     const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = bright || 2400;
-    const g = ctx.createGain(); g.gain.setValueAtTime(vel, t); g.gain.exponentialRampToValueAtTime(.0008, t + 2.2);
-    s.connect(lp); lp.connect(g); g.connect(dest); s.start(t); s.stop(t + 2.3);
+    const len = ring || (vel < .08 ? 1.1 : vel < .16 ? 1.6 : 2.2);
+    const g = ctx.createGain(); g.gain.setValueAtTime(vel, t); g.gain.exponentialRampToValueAtTime(.0008, t + len);
+    s.connect(lp); lp.connect(g); g.connect(dest); s.start(t); s.stop(t + len + .05);
   }
   // recorder, voice and shawm: a blown or sung note with a little vibrato
   function blow(f, t, dur, vel, dest, kind) {
@@ -27105,88 +27107,259 @@ YEARLY.push(slYear);
   const release = () => { batch = Math.max(0, batch - 1); if (!batch && pend) { const k = pend; pend = null; sfx(k); } };
   window.auSfx = sfx;
 
-  /* ---------- the composer ---------- */
-  // Each place has a mode, a home note, a speed, a metre and its instruments. A tune is two phrases, A and B, played
-  // A A B B like an estampie or a carol, then written afresh after a few rounds so it never grows stale.
-  const SCENES = {
-    start:   { mode: [0, 2, 3, 5, 7, 9, 10], root: 62, bpm: 80, metre: 4, lead: 'recorder', drone: 1, bourdon: 1 },
-    village: { mode: [0, 2, 3, 5, 7, 9, 10], root: 62, bpm: 84, metre: 4, lead: 'lute', drone: 1, bourdon: 0 },
-    court:   { mode: [0, 2, 4, 5, 7, 9, 10], root: 67, bpm: 76, metre: 3, lead: 'recorder', drone: 0, bourdon: 1 },
-    church:  { mode: [0, 2, 3, 5, 7, 8, 10], root: 62, bpm: 48, metre: 4, lead: 'voice', drone: 1, bourdon: 0, organum: 1 },
-    sea:     { mode: [0, 2, 3, 5, 7, 8, 10], root: 57, bpm: 70, metre: 6, lead: 'recorder', drone: 1, bourdon: 1 },
-    war:     { mode: [0, 1, 3, 5, 7, 8, 10], root: 64, bpm: 108, metre: 4, lead: 'shawm', drone: 1, bourdon: 0, tabor: 1 },
-    grave:   { mode: [0, 2, 3, 5, 7, 8, 10], root: 62, bpm: 42, metre: 4, lead: 'voice', drone: 1, bourdon: 0, toll: 1 },
-  };
-  const RHY = {
-    4: [[1, 1, 1, 1], [2, 1, 1], [1, 1, 2], [1.5, .5, 1, 1], [.5, .5, 1, 1, 1], [2, 2], [1, .5, .5, 2], [3, 1]],
-    3: [[1, 1, 1], [2, 1], [1, 2], [1.5, .5, 1], [.5, .5, 1, 1], [3]],
-    6: [[1, .5, 1, .5], [1.5, 1.5], [.5, .5, .5, 1.5], [1, .5, 1.5], [1.5, 1, .5]],
-  };
-  const pickR = a => a[Math.floor(Math.random() * a.length)];
-  function phrase(sc, end, start) {
-    const bars = [pickR(RHY[sc.metre]), pickR(RHY[sc.metre])];
-    if (sc.lead === 'voice') bars[0] = bars[1] = sc.metre === 4 ? pickR([[2, 2], [2, 1, 1], [4]]) : bars[0];
-    const lens = bars.flat(); const out = []; let d = start, last = 0;
-    for (let i = 0; i < lens.length; i++) {
-      if (i === lens.length - 1) d = end;
-      else if (i === lens.length - 2) d = end + (Math.random() < .7 ? 1 : -1);
-      else if (i > 0) {
-        let step;
-        if (Math.abs(last) >= 2) step = -Math.sign(last);
-        else { const r = Math.random(); step = r < .32 ? 1 : r < .64 ? -1 : r < .74 ? 0 : r < .87 ? (Math.random() < .5 ? 2 : -2) : (Math.random() < .5 ? 4 : -3); }
-        d = Math.max(-2, Math.min(9, d + step)); last = step;
-      }
-      out.push({ d, len: lens[i] });
+  /* ---------- the band ---------- */
+  // fiddle: two bowed strings a hair apart, a body resonance, and vibrato that comes in as the note is held
+  function fiddle(f, t, dur, vel, dest) {
+    const g = ctx.createGain(), lp = ctx.createBiquadFilter(), pk = ctx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = Math.min(4200, f * 6); pk.type = 'peaking'; pk.frequency.value = 1100; pk.Q.value = 1.2; pk.gain.value = 5;
+    const att = Math.min(.05, dur * .3), rel = Math.min(.09, dur * .35);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vel, t + att); g.gain.setValueAtTime(vel * .92, t + Math.max(att + .01, dur - rel)); g.gain.linearRampToValueAtTime(0, t + dur);
+    lp.connect(pk); pk.connect(g); g.connect(dest);
+    const vib = dur > .28 ? ctx.createOscillator() : null, vg = vib ? ctx.createGain() : null;
+    if (vib) { vib.frequency.value = 5.6; vg.gain.setValueAtTime(0, t); vg.gain.linearRampToValueAtTime(f * .0045, t + Math.min(.25, dur * .6)); vib.connect(vg); vib.start(t); vib.stop(t + dur + .05); }
+    for (const det of dur > .3 ? [-4, 4] : [0]) { const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = det; if (vg) vg.connect(o.frequency); const og = ctx.createGain(); og.gain.value = dur > .3 ? .5 : .85; o.connect(og); og.connect(lp); o.start(t); o.stop(t + dur + .05); }
+    if (dur > .25) noise(t, .05, vel * .35, 2600, dest, 'bandpass');
+  }
+  // tin whistle: a pure, breathy tone with a little chiff at the start
+  function whistle(f, t, dur, vel, dest) {
+    const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = f;
+    const o2 = ctx.createOscillator(); o2.type = 'triangle'; o2.frequency.value = f * 2; const g2 = ctx.createGain(); g2.gain.value = .12;
+    const g = ctx.createGain(), att = Math.min(.025, dur * .2), rel = Math.min(.06, dur * .3);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vel, t + att); g.gain.setValueAtTime(vel * .9, t + Math.max(att + .01, dur - rel)); g.gain.linearRampToValueAtTime(0, t + dur);
+    if (dur > .3) { const lfo = ctx.createOscillator(); lfo.frequency.value = 5; const lg = ctx.createGain(); lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(f * .004, t + .25); lfo.connect(lg); lg.connect(o.frequency); lfo.start(t); lfo.stop(t + dur + .05); }
+    o.connect(g); o2.connect(g2); g2.connect(g); g.connect(dest); o.start(t); o2.start(t); o.stop(t + dur + .05); o2.stop(t + dur + .05);
+    if (dur > .25) noise(t, .04, vel * .5, Math.min(8000, f * 5), dest, 'bandpass');
+  }
+  // the frame drum (bodhrán): a soft deep thump; the tabor: a higher rap with a snare buzz
+  function bodhran(t, vel, dest, high) {
+    const o = ctx.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(high ? 210 : 125, t); o.frequency.exponentialRampToValueAtTime(high ? 120 : 52, t + .14);
+    const g = ctx.createGain(); g.gain.setValueAtTime(vel, t); g.gain.exponentialRampToValueAtTime(.001, t + (high ? .12 : .3));
+    o.connect(g); g.connect(dest); o.start(t); o.stop(t + .35);
+    noise(t, high ? .05 : .03, vel * (high ? .45 : .25), high ? 1800 : 500, dest, high ? 'bandpass' : 'lowpass');
+  }
+  function tabor(t, vel, dest) { bodhran(t, vel * .8, dest, 1); noise(t, .09, vel * .4, 3200, dest, 'bandpass'); }
+  // tambourine: a shake of little jingles
+  function tamb(t, vel, dest) { noise(t, .09, vel * 1.2, 8400, dest, 'bandpass'); }
+  // hands clapping and feet stamping, for the sea songs
+  function clap(t, vel, dest) { noise(t, .07, vel, 1500, dest, 'bandpass'); noise(t + .008, .05, vel * .7, 2400, dest, 'bandpass'); }
+
+  /* ---------- the songbook ---------- */
+  // Tunes are written in ABC, the folk musicians' notation: letters for notes (C D E F G A B, then c d e ... an octave up),
+  // a number after a note for its length in eighths, z for a rest, ^ sharp, _ flat, = natural, > a dotted pair.
+  // Chords are one per bar (two with a comma). Four are old tunes everyone half knows: Greensleeves, "Tempus adest
+  // floridum" (the spring song that became Good King Wenceslas), the Irish Washerwoman and the Drunken Sailor. The
+  // rest are new, written in the same manner: the lute-and-fiddle tavern style of fantasy games.
+  const KEYS = { C: {}, G: { F: 1 }, D: { F: 1, C: 1 }, F: { B: -1 }, Dmix: { F: 1 }, Ddor: {}, Ador: { F: 1 }, Am: {} };
+  const STEP = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+  function abc(src, key) {
+    const ks = KEYS[key] || {}, out = []; let bar = {}, i = 0, carry = 0;
+    while (i < src.length) {
+      const ch = src[i];
+      if (ch === '|') { bar = {}; i++; continue; }
+      if (!/[\^_=A-Ga-gz]/.test(ch)) { i++; continue; }
+      let acc = null;
+      while (/[\^_=]/.test(src[i])) { acc = src[i] === '=' ? 0 : (acc || 0) + (src[i] === '^' ? 1 : -1); i++; }
+      const L = src[i++]; let oct = 0;
+      while (src[i] === "'" || src[i] === ',') { oct += src[i] === "'" ? 1 : -1; i++; }
+      let num = ''; while (/\d/.test(src[i] || '')) num += src[i++];
+      let len = num ? +num : 1;
+      while (src[i] === '/') { i++; let dn = ''; while (/\d/.test(src[i] || '')) dn += src[i++]; len /= dn ? +dn : 2; }
+      if (carry) { len *= carry; carry = 0; }
+      if (src[i] === '>') { len *= 1.5; carry = .5; i++; } else if (src[i] === '<') { len *= .5; carry = 1.5; i++; }
+      if (L === 'z') { out.push({ rest: 1, len }); continue; }
+      const up = L.toUpperCase(), id = L + oct;
+      let a; if (acc !== null) { a = acc; bar[id] = acc; } else if (bar[id] != null) a = bar[id]; else a = ks[up] || 0;
+      out.push({ m: (L === up ? 60 : 72) + STEP[up] + a + 12 * oct, len });
     }
     return out;
   }
-  function tune(sc) {
-    const A = phrase(sc, 4, Math.random() < .5 ? 0 : 4), B = phrase(sc, 0, Math.random() < .5 ? 4 : 7);
-    return [...A, ...A, ...B, ...B, { rest: 1, len: sc.metre === 3 ? 3 : 2 }];
+  // a chord: its bass note and the notes of the triad above it
+  function chordOf(sym) {
+    const mt = /^([A-G])([#b]?)(m?)$/.exec(sym.trim()); if (!mt) return null;
+    const r = 48 + STEP[mt[1]] + (mt[2] === '#' ? 1 : mt[2] === 'b' ? -1 : 0), minor = mt[3] === 'm';
+    return { root: r, third: r + (minor ? 3 : 4), fifth: r + 7 };
   }
-  const degHz = (sc, d) => { const n = sc.mode.length, o = Math.floor(d / n), i = ((d % n) + n) % n; return hz(sc.root + 12 * o + sc.mode[i]); };
+  // bar: eighths in a bar; pick: eighths of the pickup before the first bar; e: seconds per eighth
+  const SONGS = {
+    theme: { name: 'Mud and Crowns', key: 'Dmix', tonic: 50, bar: 8, e: .25, comp: 'march', drums: 'march', lead: 'fiddle', lead2: ['whistle', 0, .6], drone: 1, form: 'AABB',
+      A: { mel: 'd3A d2f2|e3c e2g2|d3B d2g2|a3f d4|d3A d2f2|e3c e2g2|d2B2 c2e2|d6z2|', ch: 'D C G D D C G,Am D' },
+      B: { mel: 'g2b2a2g2|f2a2f2d2|e2g2e2c2|d3c d4|g2b2a2g2|f2a2f2d2|e2c2A2c2|d8|', ch: 'G D C D G D C D' } },
+    maypole: { name: 'The Maypole', key: 'D', tonic: 50, bar: 6, e: .19, pick: 1, comp: 'jig', drums: 'jig', lead: 'whistle', lead2: ['fiddle', -12, .6], drone: 1, form: 'AABB',
+      A: { mel: 'A|d2d fed|c2A ABc|d2d fed|cAc e2A|d2d fed|c2A ABc|dcB Ace|d3 d2', ch: 'D A D A D A A D' },
+      B: { mel: 'f|a2f d2f|g2e c2e|f2d A2d|cde A2f|a2f d2f|g2e c2e|fed cBc|d3 d2', ch: 'D A D A D A A D' } },
+    tempus: { name: 'Tempus adest floridum', key: 'G', tonic: 55, bar: 8, e: .24, comp: 'march', drums: 'march', lead: 'recorder', lead2: ['lute', 0, .9], form: 'AB',
+      A: { mel: 'G2G2G2A2|G2G2D4|E2D2E2F2|G4G4|G2G2G2A2|G2G2D4|E2D2E2F2|G4G4|', ch: 'G G D G G G D G' },
+      B: { mel: 'd2c2B2A2|B2A2G4|E2D2E2F2|G4G4|D2D2E2F2|G2G2A4|d2c2B2A2|G4c4|G8|', ch: 'C,G G D G D G,D Am,D C G' } },
+    carol: { name: 'Tempus adest floridum (sung)', key: 'G', tonic: 55, bar: 8, e: .34, comp: 'hymn', lead: 'voice', lead2: ['voice', -12, .5], drone: 1, form: 'AB',
+      A: { mel: 'G2G2G2A2|G2G2D4|E2D2E2F2|G4G4|G2G2G2A2|G2G2D4|E2D2E2F2|G4G4|', ch: 'G G D G G G D G' },
+      B: { mel: 'd2c2B2A2|B2A2G4|E2D2E2F2|G4G4|D2D2E2F2|G2G2A4|d2c2B2A2|G4c4|G8|', ch: 'C,G G D G D G,D Am,D C G' } },
+    washer: { name: 'The Irish Washerwoman', key: 'G', tonic: 55, bar: 6, e: .17, pick: 2, comp: 'jig', drums: 'jig', lead: 'fiddle', lead2: ['whistle', 0, .55], drone: 0, form: 'AABB',
+      A: { mel: 'dc|BGG DGG|BGB dcB|cAA EAA|cBc edc|BGG DGG|BGB dcB|cBc Adc|BGG G', ch: 'G G Am D G G D G' },
+      B: { mel: 'g2|gdg gdg|gdg bag|fdf fdf|fdf agf|egf gfe|dcB cBA|cBc Adc|BGG G', ch: 'G G D D C G D G' } },
+    tavern: { name: 'The Crooked Tankard', key: 'Ador', tonic: 45, bar: 6, e: .18, pick: 1, comp: 'jig', drums: 'jig', lead: 'fiddle', lead2: ['lute', 0, .8], drone: 1, form: 'AABB',
+      A: { mel: 'E|A2B c2B|A2G E2D|E2G A2B|c3 B2E|A2B c2B|A2G E2G|A2B G2E|A3 A2', ch: 'Am D Em Am,Em Am Em G Am' },
+      B: { mel: 'c|e2e d2c|B2c d2B|c2c B2A|G2A B2c|e2e d2c|B2c d2B|c2A B2G|A3 A2', ch: 'Am G Am,Em G Am G Am,G Am' } },
+    sailor: { name: 'The Drunken Sailor', key: 'Ddor', tonic: 50, bar: 8, e: .21, comp: 'reel', drums: 'shanty', lead: 'fiddle', lead2: ['whistle', 12, .42], drone: 1, form: 'ABAB',
+      A: { mel: 'A2AA A2AA|A2D2F2A2|G2GG G2GG|G2C2E2G2|A2AA A2AA|A2B2c2d2|c2A2G2E2|D4D4|', ch: 'Dm Dm C C Dm Dm C Dm' },
+      B: { mel: 'A4A4|A2D2F2A2|G4G4|G2C2E2G2|A4A4|A2B2c2d2|c2A2G2E2|D4D4|', ch: 'Dm Dm C C Dm Dm C Dm' } },
+    shanty: { name: 'Haul Away for Kingsport', key: 'Ddor', tonic: 50, bar: 8, e: .24, comp: 'reel', drums: 'shanty', lead: 'recorder', lead2: ['fiddle', -12, .55], drone: 1, form: 'AABB',
+      A: { mel: 'D2F2A2A2|G2E2C2E2|D2F2A2d2|c4A4|d2c2A2G2|F2G2A2F2|E2C2E2G2|F2E2D4|', ch: 'Dm C Dm F Dm,C F C Dm' },
+      B: { mel: 'A4d4|c2A2G2A2|F2G2A2c2|d4A4|A4d4|c2A2G2E2|D2E2F2E2|D8|', ch: 'Dm C F Dm Dm C Dm Dm' } },
+    greensleeves: { name: 'Greensleeves', key: 'Am', tonic: 45, bar: 6, e: .23, pick: 1, comp: 'lilt', drums: 'lilt', lead: 'recorder', lead2: ['fiddle', -12, .45], form: 'AABB',
+      A: { mel: 'A|c2d e>fe|d2B G>AB|c2A A>^GA|B2^G E2A|c2d e>fe|d2B G>AB|c>BA ^G>^FG|A3 A2', ch: 'Am G F E Am G Am,E Am' },
+      B: { mel: 'g|g3 g>fe|d2B G>AB|c2A A>^GA|B2^G E3|g3 g>fe|d2B G>AB|c>BA ^G>^FG|A3 A2', ch: 'C G F E C G Am,E Am' } },
+    lovesong: { name: 'Greensleeves (on the harp)', key: 'Am', tonic: 45, bar: 6, e: .34, pick: 1, comp: 'arp', lead: 'harp', lead2: ['voice', 0, .55], drone: 1, form: 'AB',
+      A: { mel: 'A|c2d e>fe|d2B G>AB|c2A A>^GA|B2^G E2A|c2d e>fe|d2B G>AB|c>BA ^G>^FG|A3 A2', ch: 'Am G F E Am G Am,E Am' },
+      B: { mel: 'g|g3 g>fe|d2B G>AB|c2A A>^GA|B2^G E3|g3 g>fe|d2B G>AB|c>BA ^G>^FG|A3 A2', ch: 'C G F E C G Am,E Am' } },
+    procession: { name: 'The King Rides Out', key: 'G', tonic: 55, bar: 8, e: .26, comp: 'march', drums: 'march', lead: 'recorder', lead2: ['shawm', -12, .55], drone: 0, form: 'AABB',
+      A: { mel: 'G2B2d2B2|c2e2d4|B2d2c2A2|B4G4|G2B2d2g2|f2e2d4|e2c2A2F2|G8|', ch: 'G C,G G,D G G D Am,D G' },
+      B: { mel: 'd2d2e2d2|c2B2A4|B2B2d2B2|A2F2D4|G2A2B2d2|d2e2f2d2|g2e2c2a2|g8|', ch: 'G Am G D G D C,D G' } },
+    march: { name: 'To the Banners', key: 'Ddor', tonic: 50, bar: 8, e: .23, comp: 'march', drums: 'war', lead: 'shawm', lead2: ['fiddle', 0, .6], drone: 1, form: 'AABB',
+      A: { mel: 'D2D2A2A2|B2A2G2F2|G2G2E2C2|D2E2F2D2|D2D2A2A2|B2A2G2F2|E2D2C2E2|D8|', ch: 'Dm G C Dm Dm G C Dm' },
+      B: { mel: 'A2A2d2d2|c2A2G2A2|F2F2G2A2|E4D4|A2A2d2d2|c2A2G2A2|F2D2E2C2|D8|', ch: 'Dm Am F C Dm Am Dm,C Dm' } },
+    hymn: { name: 'Lux in Tenebris', key: 'F', tonic: 53, bar: 8, e: .32, comp: 'hymn', lead: 'voice', lead2: ['voice', -12, .45], drone: 1, form: 'AB',
+      A: { mel: 'F4G4|A4c4|B4A4|G8|A4B4|c4A4|G4F4|E8|', ch: 'F F Bb,F C F,Bb F C,F C' },
+      B: { mel: 'c4d4|c4A4|B4c4|A8|G4A4|F4D4|E4G4|F8|', ch: 'F F Bb F C Dm C F' } },
+    lament: { name: 'The Long Night', key: 'Ddor', tonic: 50, bar: 6, e: .32, comp: 'arp', lead: 'harp', lead2: ['voice', 0, .5], drone: 1, form: 'AB',
+      A: { mel: 'D4F2|A4G2|F2E2D2|E6|F4A2|d4c2|A2G2E2|D6|', ch: 'Dm Dm Dm C F Dm Am Dm' },
+      B: { mel: 'A4c2|d4A2|G2F2G2|A6|d4c2|A2G2F2|E2D2C2|D6|', ch: 'F Dm C Am Dm F C Dm' } },
+  };
+  // what plays where: the first tune when you arrive, then the others in turn
+  const PLAYLISTS = {
+    start: ['theme', 'greensleeves'],
+    village: ['maypole', 'tempus', 'theme'],
+    tavern: ['washer', 'tavern', 'sailor', 'maypole'],
+    court: ['procession', 'greensleeves', 'tempus'],
+    church: ['hymn', 'carol'],
+    sea: ['sailor', 'shanty'],
+    war: ['march', 'theme'],
+    grave: ['lament', 'lovesong'],
+  };
+  const SCENES = PLAYLISTS;
 
-  const M = { name: null, sc: null, bus: null, notes: [], idx: 0, next: 0, beat: 0, rounds: 0, drone: [], timer: null };
+  /* ---------- the arranger: a tune becomes a part for every player ---------- */
+  // The first time through, the lead plays over the lute and a light drum; the second time the whole band joins in.
+  const VOL = { fiddle: .075, whistle: .07, recorder: .1, shawm: .085, voice: .095, lute: .26, harp: .26 };
+  function arrange(song) {
+    const ev = [], bar = song.bar, form = song.form || 'AABB', passes = 2;
+    const P = {}; for (const k of 'AB') if (song[k]) P[k] = { notes: abc(song[k].mel, song.key), ch: song[k].ch.trim().split(/\s+/) };
+    let pos = song.pick || 0; // eighths from the start; the pickup comes first
+    for (let pass = 0; pass < passes; pass++) {
+      const full = pass > 0;
+      for (const k of form) {
+        const part = P[k]; if (!part) continue;
+        // the melody (its pickup runs into the end of the bar before)
+        let mt = pos - (song.pick || 0);
+        part.notes.forEach((n, i) => {
+          if (!n.rest) {
+            const strong = Math.abs(((mt - pos) % bar + bar) % bar) < .01;
+            ev.push({ t: mt, k: 'lead', inst: song.lead, m: n.m, d: n.len, v: VOL[song.lead] * (strong ? 1.12 : 1) });
+            if (song.lead2 && (full || song.comp === 'hymn')) ev.push({ t: mt, k: 'lead', inst: song.lead2[0], m: n.m + song.lead2[1], d: n.len, v: VOL[song.lead2[0]] * song.lead2[2] });
+          }
+          mt += n.len;
+        });
+        // the chords, bar by bar
+        part.ch.forEach((sym, b) => {
+          const t0 = pos + b * bar, halves = sym.split(',');
+          halves.forEach((hs, hi) => {
+            const c = chordOf(hs); if (!c) return;
+            const from = t0 + hi * bar / halves.length, span = bar / halves.length;
+            comp(ev, song, c, from, span, full);
+          });
+          drums(ev, song, t0, full, b);
+        });
+        pos += part.ch.length * bar;
+      }
+    }
+    ev.push({ t: pos + bar, k: 'end' });
+    ev.sort((a, b) => a.t - b.t);
+    return ev;
+  }
+  // the lute, the harp or the choir under the tune: bass on the strong beats, the chord between
+  function comp(ev, song, c, from, span, full) {
+    const bass = (t, m, v) => ev.push({ t: from + t, k: 'pluck', m, v, br: 1300 });
+    const strum = (t, v) => [c.root + 12, c.third + 12, c.fifth + 12].forEach((m, i) => ev.push({ t: from + t + i * .06, k: 'pluck', m, v, br: 2600 }));
+    const s = song.comp;
+    if (s === 'jig') { bass(0, c.root, .2); if (span >= 6) { strum(2, .055); bass(3, c.fifth - 12 < 40 ? c.fifth : c.fifth - 12, .15); strum(5, .05); } else strum(span / 2, .05); }
+    else if (s === 'reel' || s === 'march') { bass(0, c.root, .2); if (span >= 8) { strum(2, .055); bass(4, c.fifth - 12 < 40 ? c.fifth : c.fifth - 12, .15); strum(6, .05); if (full && s === 'reel') { strum(3, .03); strum(7, .03); } } else strum(span / 2, .05); }
+    else if (s === 'lilt') { const arp = [c.root, c.fifth, c.root + 12, c.third + 12, c.fifth + 12, c.third + 12]; for (let i = 0; i < span; i++) ev.push({ t: from + i, k: 'pluck', m: arp[i % 6], v: i === 0 ? .13 : .05, br: 3200 }); }
+    else if (s === 'arp') { const arp = [c.root, c.fifth, c.root + 12, c.third + 12, c.fifth + 12, c.root + 24]; for (let i = 0; i < span; i++) ev.push({ t: from + i, k: 'pluck', m: arp[i % 6], v: i === 0 ? .12 : .06, br: 3400 }); }
+    else if (s === 'hymn') { for (const m of [c.root + 12, c.third + 12, c.fifth + 12]) ev.push({ t: from, k: 'lead', inst: 'voice', m, d: span, v: .032 }); ev.push({ t: from, k: 'pluck', m: c.root, v: .1, br: 900 }); }
+  }
+  // the drums: a frame drum and tambourine for jigs, feet and hands for shanties, tabors for marches, war drums for war
+  function drums(ev, song, t0, full, b) {
+    const d = (t, k, v) => ev.push({ t: t0 + t, k, v });
+    const s = song.drums;
+    if (s === 'jig') { d(0, 'bod', .2); d(3, 'bod', .13); d(2, 'bodh', .05); d(5, 'bodh', .06); if (full) { d(1, 'tamb', .02); d(2, 'tamb', .028); d(4, 'tamb', .02); d(5, 'tamb', .028); } }
+    else if (s === 'shanty') { d(0, 'bod', .24); d(4, 'bod', .2); d(2, 'clap', full ? .09 : .05); d(6, 'clap', full ? .09 : .05); if (full) { d(3, 'tamb', .02); d(7, 'tamb', .02); } }
+    else if (s === 'march') { d(0, 'tabor', .14); d(4, 'tabor', .1); if (full) { d(2, 'tabor', .06); d(6, 'tabor', .06); d(7, 'tabor', .045); d(2, 'tamb', .022); d(6, 'tamb', .022); } }
+    else if (s === 'war') { d(0, 'bod', .3); d(4, 'bod', .24); d(2, 'tabor', .1); d(6, 'tabor', .1); if (full) { d(3, 'tabor', .05); d(7, 'tabor', .06); d(7.5, 'tabor', .05); } }
+    else if (s === 'lilt') { if (full) { d(0, 'bod', .1); d(3, 'bodh', .04); d(1, 'tamb', .015); d(4, 'tamb', .015); } }
+    void b;
+  }
+
+  /* ---------- the player ---------- */
+  const M = { name: null, list: [], li: 0, song: null, ev: [], ei: 0, t0: 0, sp: .2, bus: null, drone: [], ptr: {} };
   function stopDrone(when) { for (const n of M.drone) { try { n.g.gain.cancelScheduledValues(when); n.g.gain.setTargetAtTime(0, when, .35); n.o.stop(when + 2.5); } catch (e) { } } M.drone = []; }
-  function startDrone(sc, bus, when) {
-    if (!sc.drone) return;
-    for (const [m, v] of [[sc.root - 12, .05], [sc.root - 5, .03]]) {
+  // the hurdy-gurdy drone: the home note and its fifth, under the whole tune
+  function startDrone(song, bus, when) {
+    if (!song.drone) return;
+    const soft = song.lead === 'voice' || song.lead === 'harp';
+    for (const [m, v] of [[song.tonic - 12, soft ? .045 : .035], [song.tonic - 5, soft ? .028 : .022]]) {
       const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = hz(m); o.detune.value = Math.random() * 6 - 3;
-      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = sc.lead === 'voice' ? 420 : 560;
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = soft ? 420 : 620;
       const g = ctx.createGain(); g.gain.setValueAtTime(0, when); g.gain.linearRampToValueAtTime(v, when + 2.5);
       o.connect(lp); lp.connect(g); g.connect(bus); o.start(when); M.drone.push({ o, g });
     }
+  }
+  function startSong(key, when) {
+    const song = SONGS[key]; if (!song) return;
+    stopDrone(when);
+    M.song = song; M.ev = arrange(song); M.ei = 0; M.sp = song.e; M.t0 = when;
+    startDrone(song, M.bus, when);
   }
   function setScene(name) {
     if (!live() || name === M.name) return;
     const t = ctx.currentTime;
     if (M.bus) { const old = M.bus; old.gain.cancelScheduledValues(t); old.gain.setTargetAtTime(0, t, .45); setTimeout(() => { try { old.disconnect(); } catch (e) { } }, 3500); }
     stopDrone(t);
-    M.name = name; M.sc = SCENES[name]; M.rounds = 0;
-    M.bus = ctx.createGain(); M.bus.gain.setValueAtTime(0, t); M.bus.gain.linearRampToValueAtTime(1, t + 2.2); M.bus.connect(musicBus);
-    M.notes = tune(M.sc); M.idx = 0; M.next = t + .6; M.beat = 0;
-    startDrone(M.sc, M.bus, t + .2);
+    if (M.name) M.ptr[M.name] = M.li;
+    M.name = name; M.list = PLAYLISTS[name] || PLAYLISTS.village; M.li = M.ptr[name] || 0;
+    M.bus = ctx.createGain(); M.bus.gain.setValueAtTime(0, t); M.bus.gain.linearRampToValueAtTime(1, t + 1.8); M.bus.connect(musicBus);
+    startSong(M.list[M.li % M.list.length], t + .5);
+  }
+  const jit = () => (Math.random() - .5) * .012;
+  function fire(e, t) {
+    const dur = (e.d || 1) * M.sp;
+    switch (e.k) {
+      case 'lead': {
+        const f = hz(e.m), v = e.v * (.92 + Math.random() * .16), tt = t + jit();
+        if (e.inst === 'fiddle') fiddle(f, tt, dur * .95, v, M.bus);
+        else if (e.inst === 'whistle') whistle(f, tt, dur * .92, v, M.bus);
+        else if (e.inst === 'lute') pluck(f, tt, v, M.bus, 2600);
+        else if (e.inst === 'harp') pluck(f, tt, v, M.bus, 3800);
+        else blow(f, tt, dur * (e.inst === 'voice' ? 1 : .94), v, M.bus, e.inst);
+        break;
+      }
+      case 'pluck': pluck(hz(e.m), t + jit() * .5, e.v * (.9 + Math.random() * .2), M.bus, e.br); break;
+      case 'bod': bodhran(t, e.v, M.bus); break;
+      case 'bodh': bodhran(t, e.v, M.bus, 1); break;
+      case 'tabor': tabor(t, e.v, M.bus); break;
+      case 'tamb': tamb(t, e.v, M.bus); break;
+      case 'clap': clap(t, e.v, M.bus); break;
+    }
   }
   function play(until) {
-    if (!live() || !M.sc || (!prefs.music && !offline)) return;
-    const sc = M.sc, spb = 60 / sc.bpm * (sc.metre === 6 ? .5 : 1);
-    while (M.next < (until != null ? until : ctx.currentTime + .6)) {
-      if (M.idx >= M.notes.length) { M.rounds++; M.idx = 0; if (M.rounds % 3 === 0) M.notes = tune(sc); }
-      const n = M.notes[M.idx++], t = M.next, dur = n.len * spb;
-      const barLen = sc.metre === 6 ? 3 : sc.metre;
-      const onBar = Math.abs(M.beat % barLen) < .01;
-      if (!n.rest) {
-        const f = degHz(sc, n.d), v = sc.lead === 'shawm' ? .095 : sc.lead === 'voice' ? .12 : sc.lead === 'lute' ? .32 : .11;
-        if (sc.lead === 'lute') pluck(f, t, v * (onBar ? 1.15 : 1), M.bus);
-        else blow(f, t, dur * .96, v, M.bus, sc.lead);
-        if (sc.organum) blow(f * Math.pow(2, -7 / 12), t, dur * .96, v * .55, M.bus, 'voice');
-        if (sc.lead === 'recorder' && sc.bourdon && onBar) pluck(degHz(sc, -7), t, .12, M.bus, 1500);
-      }
-      if (sc.bourdon && onBar && sc.lead !== 'recorder') { pluck(degHz(sc, -7), t, .13, M.bus, 1400); pluck(degHz(sc, -3), t + .01, .08, M.bus, 1400); }
-      if (sc.tabor) { const e = Math.floor(M.beat * 2) / 2; for (let b = 0; b < n.len; b += .5) { const bt = (e + b) % barLen; if (bt === 0 || bt === 2 || bt === 2.5) drum(t + b * spb, bt === 0 ? .16 : .09, M.bus); } }
-      if (sc.toll && onBar && Math.floor(M.beat / barLen) % 4 === 0) bell(hz(sc.root - 12), t, .05, M.bus, 5);
-      if (sc.lead === 'lute' && onBar && Math.random() < .25) drum(t, .05, M.bus);
-      M.beat += n.len; M.next += dur;
+    if (!live() || !M.song || (!prefs.music && !offline)) return;
+    const lim = until != null ? until : ctx.currentTime + .6;
+    for (let guard = 0; guard < 4000; guard++) {
+      if (M.ei >= M.ev.length) break;
+      const e = M.ev[M.ei], t = M.t0 + e.t * M.sp;
+      if (t >= lim) break;
+      M.ei++;
+      if (e.k === 'end') { M.li = (M.li + 1) % M.list.length; startSong(M.list[M.li], t); continue; }
+      try { fire(e, t); } catch (er) { }
     }
   }
 
@@ -27201,7 +27374,14 @@ YEARLY.push(slYear);
       if (S.vows || (S.job && TRACKS[S.job.track] && TRACKS[S.job.track].vows)) return 'church';
       const war = typeof wAtWar === 'function' && S.world && wAtWar(S.realm).length && (S.ruling || isMil());
       if (war || (typeof isMil === 'function' && isMil() && S.army)) return 'war';
-      if (S.ruling || S.cls === 'royal' || S.cls === 'noble' || S.flags.consort || (S.flags.pc && S.flags.pc.at) || jobFam() === 'court') return 'court';
+      const w = typeof wpNow === 'function' ? wpNow() : null;
+      if (w === 'harbour') return 'sea';
+      if (['church', 'cathedral', 'hospital', 'abbey'].includes(w)) return 'church';
+      if (['tavern', 'market', 'street', 'stable', 'counting'].includes(w)) return 'tavern';
+      if (['hall', 'throne', 'ckitchen', 'claundry', 'cgate', 'cstable', 'nursery'].includes(w)) return 'court';
+      if (S.ruling || S.cls === 'royal' || S.flags.consort || (S.flags.pc && S.flags.pc.at) || jobFam() === 'court') return 'court';
+      if (S.cls === 'noble' && !w) return 'court';
+      if (['merchant', 'craft'].includes(S.cls) && !w) return 'tavern';
     } catch (e) { }
     return 'village';
   }
@@ -27292,7 +27472,7 @@ YEARLY.push(slYear);
     menuHTML = function () {
       const h = _mh.apply(this, arguments);
       const slider = (k, v, label) => `<div class="au-vol"><label for="au_${k}">${label}</label><input type="range" id="au_${k}" data-au="${k}" min="0" max="100" step="5" value="${Math.round(v * 100)}"><span class="au-pc" id="au_${k}_pc">${Math.round(v * 100)}%</span></div>`;
-      const add = btnItem('au_music', '', prefs.music ? '☑️' : '⬜', 'Music', 'Medieval tunes that change with your life: the village, the court, the cloister, the sea, war.', true)
+      const add = btnItem('au_music', '', prefs.music ? '☑️' : '⬜', 'Music', 'Old tunes and new ones that change with your life: jigs in the village and the tavern, Greensleeves at court, sea songs on the quay, hymns in the cloister, drums at war.', true)
         + (prefs.music ? slider('mv', prefs.mv, 'Music volume') : '')
         + btnItem('au_sfx', '', prefs.sfx ? '☑️' : '⬜', 'Sound effects', 'The page turning, coins, bells and drums.', true)
         + (prefs.sfx ? slider('sv', prefs.sv, 'Effects volume') : '')
@@ -27315,7 +27495,7 @@ YEARLY.push(slYear);
     document.head.appendChild(css);
   }
   window.auRender = async (names, secs, withFx) => {
-    const keep = { ctx, master, musicBus, sfxBus, verb, noiseBuf, name: M.name, sc: M.sc, bus: M.bus, notes: M.notes, idx: M.idx, next: M.next, beat: M.beat, rounds: M.rounds, drone: M.drone };
+    const keep = { ctx, master, musicBus, sfxBus, verb, noiseBuf, M: Object.assign({}, M) };
     const sr = 22050, fxLen = withFx ? 16 : 0, total = names.length * secs + fxLen;
     const off = new OfflineAudioContext(1, Math.ceil(sr * total), sr);
     offline = true; rendering = true; ksCache.clear();
@@ -27325,9 +27505,9 @@ YEARLY.push(slYear);
         const t0 = i * secs;
         if (M.bus) { const ob = M.bus; ob.gain.setTargetAtTime(0, t0 - 1.5, .4); }
         stopDrone(t0);
-        M.name = nm; M.sc = SCENES[nm]; M.rounds = 0; M.notes = tune(M.sc); M.idx = 0; M.beat = 0; M.next = t0 + .3;
+        M.name = nm; M.list = SONGS[nm] ? [nm] : PLAYLISTS[nm]; M.li = 0;
         M.bus = off.createGain(); M.bus.gain.setValueAtTime(0, t0); M.bus.gain.linearRampToValueAtTime(1, t0 + 1.5); M.bus.connect(musicBus);
-        startDrone(M.sc, M.bus, t0 + .1);
+        startSong(M.list[0], t0 + .3);
         play(t0 + secs - 1.6);
       });
       if (M.bus) M.bus.gain.setTargetAtTime(0, names.length * secs - 1.5, .4);
@@ -27347,10 +27527,12 @@ YEARLY.push(slYear);
     } finally {
       offline = false; rendering = false; ksCache.clear();
       ({ ctx, master, musicBus, sfxBus, verb, noiseBuf } = keep);
-      Object.assign(M, { name: keep.name, sc: keep.sc, bus: keep.bus, notes: keep.notes, idx: keep.idx, next: keep.next, beat: keep.beat, rounds: keep.rounds, drone: keep.drone });
+      Object.assign(M, keep.M);
     }
   };
-  window.auState = () => ({ ctx: ctx ? ctx.state : 'none', scene: M.name, prefs: Object.assign({}, prefs), started });
+  window.auState = () => ({ ctx: ctx ? ctx.state : 'none', scene: M.name, song: M.song && M.song.name, prefs: Object.assign({}, prefs), started });
+  window.auDebug = () => ({ SONGS, abc, chordOf });
+  window.auSongs = () => Object.fromEntries(Object.entries(SONGS).map(([k, s]) => [k, { name: s.name, parts: Object.fromEntries(['A', 'B'].filter(p => s[p]).map(p => [p, { len: abc(s[p].mel, s.key).reduce((a, n) => a + n.len, 0), bars: s[p].ch.trim().split(/\s+/).length, bar: s.bar }])) }]));
 }
 
 /* ================= v1.13.1 Asking for a rating (prefix rv_) ================= */

@@ -61,27 +61,29 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.14.2.txt`, ready to copy (it covers everything since 1.13.2).
+Also in `store/whats_new_1.15.0.txt`, ready to copy (it covers everything since 1.13.2).
 
 ```
-WORKPLACES
-The picture now follows your work, not your birth: a lord who keeps a shop is painted in the market. New places to work in, each painted inside and out: the throne room, guildhall and court of law; the royal kitchen, forge and mint; a workshop for every trade; the inn; the parish church, cathedral and hospital; the scriptorium, university, laboratory and counting house; the stables, pasture, mine, quarry and building site.
+NEW MUSIC
+A whole little band now plays: fiddle, tin whistle, recorder, lute, harp, voices, a droning hurdy-gurdy, frame drum and tambourine. Real tunes you'll half know, and new ones in the same toe-tapping style:
+- In the village: The Maypole, a new jig, and Tempus adest floridum, the old spring song (the tune of Good King Wenceslas)
+- In the tavern, the market and the streets: The Irish Washerwoman, The Crooked Tankard and The Drunken Sailor
+- At court: The King Rides Out, a new procession, and Greensleeves
+- At sea and on the quay: The Drunken Sailor and Haul Away for Kingsport
+- In the church: a new hymn and the old carol, sung
+- At war: To the Banners, with drums
+- At the grave: a harp lament and Greensleeves on the harp
+- On the title screen: the new Mud & Crowns theme
+Your own music still keeps playing, and the volume is in the menu under Settings.
 
-YOU, IN THE PICTURE
-You are painted where you work, dressed for your job, with a gold mark over your head. The name of the place sits in the corner.
+WORKPLACES
+The picture follows your work: the throne room, the royal kitchen, the forge, a workshop for every trade, the inn, the church, the scriptorium, the stables, the mine, the quarry and more. You are painted there, and the place's name sits in the corner.
 
 THE PEOPLE YOU WORK BESIDE
-Every workplace has its own people, from the master down to the youngest hand. Kin shows them as a ladder with you in your place on it. Those far above you hardly know your name; your equals are easier to win. Work beside them, ask to be taught, cover for a sick friend, or worse.
+Every workplace has its own people, from the master down to the coal boy. Those far above you hardly know your name; your equals are easier to win. Start as a coal boy in the royal castle and climb to master cook.
 
-BELOW STAIRS
-Start as a coal boy in the royal castle and climb to scullion, cook and master cook, or keep the gate, groom the king's horses, or keep the buttery.
-
-BETTER PEOPLE, LIVELIER ROOMS
-- Everyone is redrawn: faces, hair and beards, arms and hands, shoes, and clothes with folds and shadows
-- Women show their hair, loose, braided or pinned up, some with a ribbon; nuns keep their veils
-- Workers swing their own hammers, cleavers, mallets and picks; people sit at tables and on thrones
-- Light through the windows, shadows, painted walls, and cats, hens, mice, lambs and a juggling jester
-- Nothing stands on anything else any more, and the picture fills wide screens
+BETTER PICTURES
+Everyone is redrawn with faces, hair, hands and clothes; women show their hair; rooms have light, shadow, cats, hens and a juggling jester.
 ```
 
 ## Category

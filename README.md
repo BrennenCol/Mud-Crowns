@@ -297,6 +297,30 @@ still be reached from a first job.
   in the great hall. Outdoor scenes show you close up with a companion, and the people who
   walk across them are drawn in the new style.
 
+## New music (v1.15)
+
+- **A band, not a random tune.** The music is now real songs played by a small band made in
+  the browser: fiddle (two bowed strings, body resonance, delayed vibrato), tin whistle,
+  recorder, shawm, lute and harp (plucked strings), voices, a hurdy-gurdy drone, frame drum,
+  tabor, tambourine, hands and feet. Nothing is downloaded and nothing needs a licence.
+- **The songbook** is written in ABC notation inside the game. Old tunes in the public
+  domain: Greensleeves, *Tempus adest floridum* (the 13th-century spring song later sung as
+  Good King Wenceslas), the Irish Washerwoman and the Drunken Sailor. New tunes in the same
+  manner, in the lute-and-fiddle tavern style of fantasy games: the Mud & Crowns theme, The
+  Maypole, The Crooked Tankard, Haul Away for Kingsport, The King Rides Out, To the Banners,
+  Lux in Tenebris and The Long Night. Every part's notes were checked to fill its bars
+  exactly, and its strong beats checked against the chords.
+- **Arranged, not just played.** Each tune is played twice through (A A B B): the first time
+  the lead plays over the lute and a light drum, the second time a second instrument doubles
+  it and the tambourine joins in. Jigs get a boom-chick lute and frame drum, shanties get
+  feet and hands, marches get tabors, Greensleeves gets harp arpeggios, hymns get a choir.
+- **Where you are picks the songs:** the village (The Maypole, Tempus adest floridum, the
+  theme), the tavern, market and streets (the Irish Washerwoman, The Crooked Tankard, the
+  Drunken Sailor), court and the castle's servants (The King Rides Out, Greensleeves), church
+  (the hymn, the carol sung), the sea and the quay (the Drunken Sailor, Haul Away), war (To
+  the Banners), the grave (The Long Night, Greensleeves on the harp) and the title screen
+  (the theme). Each place goes on to its next song when one ends, and remembers where it was.
+
 ## Workplaces (v1.14)
 
 - **Every post has a place.** Each job is worked somewhere: the fields, the pasture, the
