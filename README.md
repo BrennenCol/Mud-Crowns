@@ -297,6 +297,28 @@ still be reached from a first job.
   in the great hall. Outdoor scenes show you close up with a companion, and the people who
   walk across them are drawn in the new style.
 
+### The Hall, gilded (v1.16.1)
+
+- **Rarity.** Every relic is Rare, Epic, Legendary or Mythic, shown on its plate, its apex
+  gem and its glow. Mythic relics shimmer through every colour.
+- **Niches.** Each relic stands in a gilded gothic niche with tracery, damask velvet in its
+  wing's colour, a beam of light and a velvet cushion, gently floating, with a sheen and
+  twinkles. Locked relics are dark shapes behind iron bars, a chain and a padlock.
+- **The reveal.** Winning a relic now opens a full-screen moment: the niche rises in a flash,
+  rays in the relic's rarity colour turn behind it, a ring bursts and sparks fly, then the
+  name, the story, any finished wing and any reward. Tapping a niche in the Hall shows it
+  the same way, slowly turning (or, if locked, how to win it).
+- **The Path of Glory**: rewards at 1, 4, 8, 12 and 16 relics. The Hall's candles are lit;
+  a bronze crest on the main menu; your coat of arms framed in gold in every life; a jewelled
+  silver crest; and the Golden Age, which stays a mystery until it is won. Winning the last
+  relic opens the reliquary with a flash and the crown rises out of it.
+- **The Hall itself** is a gothic nave that lights up as you collect: the rose window has two
+  panes for each wing that light when the wing is finished, the wings' banners hang bright
+  or grey and torn, and more candles burn as the collection grows. The podium has a laurel
+  and a crown for the greatest life. Each wing is its own chapel with a stained-glass window.
+- **The main menu** shows a row of sixteen gems for your relics, a NEW badge when you have
+  won one you have not yet seen, and how many relics to the next reward.
+
 ## The Hall of Legends, the Collection Hall and land for sale (v1.16)
 
 - **Fortune's ladder and the Rise.** Twelve rungs, from Serf to Emperor. The game keeps the

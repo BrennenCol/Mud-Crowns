@@ -61,14 +61,17 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.16.0.txt`, ready to copy (it ends with a line about the updates since 1.13).
+Also in `store/whats_new_1.16.1.txt`, ready to copy (it ends with a line about the updates since 1.13).
 
 ```
 THE HALL OF LEGENDS
 Every life is now weighed by its Rise: how far you climbed from the rung you were born on. Each step up Fortune's ladder is worth more than the last, and the humbler your birth, the more the whole climb counts. A serf who wins a crown outshines any prince born to one. Your greatest lives stand on a gold, silver and bronze podium, and your family houses add up their glory, generation after generation.
 
 THE COLLECTION HALL
-Sixteen relics in four wings, and the only way to win them is to climb from a humble birth: the Broken Fetter, the Merchant's Scales, the Golden Spurs, the Count's Banner, the Great Seal, the Keys of Heaven, the Ploughman's Crown, the Orb of the World and more. Each one sits in its own glass case. Finish a wing and its banner hangs over your main menu. Fill every case, and the sealed reliquary opens...
+Sixteen relics, Rare, Epic, Legendary and Mythic, and the only way to win them is to climb from a humble birth: the Broken Fetter, the Merchant's Scales, the Golden Spurs, the Count's Banner, the Great Seal, the Keys of Heaven, the Ploughman's Crown, the Orb of the World and more. Each one stands in its own gilded niche under a beam of light; the ones you have not won wait behind iron bars and a padlock. Win one and it rises out of the dark in a burst of light and sparks.
+
+THE PATH OF GLORY
+Rewards on the way: at 1 relic the Hall's candles are lit, at 4 a bronze crest crowns your main menu, at 8 your coat of arms is framed in gold in every life, at 12 a jewelled crest. Finish a wing and its banner hangs over your main menu, and its window in the Hall lights up. Fill every case, and the sealed reliquary opens...
 
 LAND FOR SALE
 Rich at last, but no land? Land was almost never sold, so wait for a ruined knight, a widow or a king who needs money. A manor costs about twenty years of its rents, plus the king's licence and the lawyers, and makes you Lord or Lady of it. Lend silver against a manor and take it if the debt goes bad. When the crown is short of money for a war, buy a whole county.
