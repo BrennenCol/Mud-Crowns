@@ -61,7 +61,7 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.15.0.txt`, ready to copy (it covers everything since 1.13.2).
+Also in `store/whats_new_1.15.1.txt`, ready to copy (it covers everything since 1.13.2).
 
 ```
 NEW MUSIC
@@ -81,6 +81,9 @@ The picture follows your work: the throne room, the royal kitchen, the forge, a 
 
 THE PEOPLE YOU WORK BESIDE
 Every workplace has its own people, from the master down to the coal boy. Those far above you hardly know your name; your equals are easier to win. Start as a coal boy in the royal castle and climb to master cook.
+
+CLEARER CHURCH CAREERS
+Prioress (and Prior) now has its own card in Find Work, between Nun and Abbess, so you can see what it takes.
 
 BETTER PICTURES
 Everyone is redrawn with faces, hair, hands and clothes; women show their hair; rooms have light, shadow, cats, hens and a juggling jester.

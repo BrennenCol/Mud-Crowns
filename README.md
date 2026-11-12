@@ -297,6 +297,15 @@ still be reached from a first job.
   in the great hall. Outdoor scenes show you close up with a companion, and the people who
   walk across them are drawn in the new style.
 
+### Prioress in Find Work (v1.15.1)
+
+- The Church ladder's third step, Prior or Prioress (between Monk or Nun and Abbot or
+  Abbess), now has its own card in Find Work. It needs Piety 50, Wits 40, three years of
+  Church experience and service as a Monk or Nun. Before, it could only be reached by
+  promotion, so the Abbot and Abbess card pointed to a post you could not find. Promotion
+  from Monk or Nun still works as before, now also asking for the three years.
+- Fixed: a rare crash in the working-year card when you lost your post before choosing.
+
 ## New music (v1.15)
 
 - **A band, not a random tune.** The music is now real songs played by a small band made in

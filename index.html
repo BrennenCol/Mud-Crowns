@@ -528,7 +528,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.15.0';
+const APP_VERSION = '1.15.1';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -705,6 +705,7 @@ O('high', 'Crown and government', 'chancellor', 'Chancellor', '📜', 220, 'Keep
 O('high', 'The Church', 'novice', null, '📿', null, 'Enter the cloister at the bottom.', { link: ['church', 0] });
 O('high', 'The Church', 'priest', 'Parish Priest', '⛪', 10, 'Baptize, marry, and bury your flock. Collect the tithe.', { fam: 'faith', hire: .6, vows: 1, req: { piety: 40, wits: 35, letters: 1 } });
 O('high', 'The Church', 'monk', null, '🙏', null, 'Pray the hours behind cloister walls.', { link: ['church', 1], skill: { faith: 1 } });
+O('high', 'The Church', 'prior', null, '🕍', null, 'Keep the rule of a priory under the abbot: the bells, the cellar, the guests and the novices.', { link: ['church', 2], skill: { faith: 3 } });
 O('high', 'The Church', 'abbot', null, '🏯', null, 'Rule an abbey and its broad lands.', { link: ['church', 3], skill: { faith: 5 } });
 O('high', 'The Church', 'bishop', null, '⛪', null, 'A diocese, a cathedral, and a seat in council.', { link: ['church', 4], skill: { faith: 7 } });
 O('high', 'The Church', 'archbishop', null, '✝️', null, 'Primate of the realm. You crown kings.', { link: ['church', 5], skill: { faith: 9 } });
