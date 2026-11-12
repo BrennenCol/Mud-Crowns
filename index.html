@@ -528,7 +528,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.14.0';
+const APP_VERSION = '1.14.1';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -5431,7 +5431,7 @@ function showWhatsNew() {
     ['⭐', 'You, in the picture', 'you are painted where you work, dressed for your job, with a gold mark over your head and the name of the place in the corner.'],
     ['🤝', 'The people you work beside', 'every workplace has its own people, from the master down to the youngest hand. Kin shows them as a ladder with you in your place on it. Those far above you hardly know your name; your equals are easier to win. Work beside them, ask to be taught, cover for them, or worse.'],
     ['🪣', 'Below stairs', 'the royal castle has servants now: start as a coal boy and climb to scullion, cook and master cook, or keep the gate, groom the king’s horses, or keep the buttery.'],
-    ['🖌️', 'Better pictures', 'the old scenes no longer have things standing on each other (the manor’s pond is off the haystacks), and the picture fills wide screens.'],
+    ['🖌️', 'Better pictures', 'every person is redrawn with a face, hair, arms and hands, shoes and clothes with folds, holding their own tools; rooms have light and shadow, painted walls, and cats, hens, mice and a juggling jester. Nothing stands on anything else any more, and the picture fills wide screens.'],
   ];
   $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Find work</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
@@ -26570,7 +26570,7 @@ YEARLY.push(slYear);
     L.push(pa(wr(X, cx + 6, gy + 14, 14, 8, .2), 'stone2', 'stroke-width=".5"') + man(X, cx + 26, gy + 22, { h: 26, c: 'earth', hat: 'hood', hc: 'wood2', apron: 'daub2', dir: -1, pose: 'work' }));
     { const [hx, hy] = handAt(cx + 26, gy + 22, 26, -1); inHand(X, hx, hy, -1, 'mallet', .8); }
     X.mid.push(mover(X, cx - 92, gy + 4, 18, 28, man(X, cx - 84, gy + 30, { h: 26, c: 'red', hat: 'cap', hc: 'wood2', hold: (a, b) => pa(`M${n1(a - 3)} ${n1(b - 12)}l6 -2v6l-6 2Z`, 'wood', 'stroke-width=".4"') + ln(`M${n1(a)} ${n1(b - 9)}L${n1(a)} ${n1(b + 3)}`, 'wood2', .8) }), { from: -(cx - 60), to: 24, dur: 24, bobDur: .45 }));
-    X.me = { x: clampX(X, cx + 52, 8), y: gy + 26, h: 28, dir: -1 };
+    X.me = { x: clampX(X, cx + 76, 8), y: gy + 26, h: 28, dir: -1 };
     worldBits(X, { noMarch: true, cartY: 136, riderY: 138, crowX: cx, crowY: 30, noCart: true });
   }
 

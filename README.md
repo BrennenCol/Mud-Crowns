@@ -273,6 +273,22 @@ still be reached from a first job.
 - A double tap never zooms the page. In the phone apps, pinch zoom and
   long-press text selection are off too, so it feels like an app.
 
+### Better people, livelier rooms (v1.14.1)
+
+- **People, close up.** Figures drawn at a readable size have a face (eyes, brows, nose,
+  cheeks, mouth), hair, beards and ears, hoods and veils that frame the face, two arms with
+  hands, legs and shoes or a gown to the floor, a belt and buckle, a neckline, cloth folds,
+  a shadow side and a shadow on the ground. Hats are redrawn (cap, coif, straw hat, helmet,
+  crown, mitre, tonsure). Workers hold and swing their own tools (hammer, cleaver, mallet,
+  pick, plane, knife, brush); drinkers, patients and the jury sit; the monarch faces out.
+- **Rooms.** Skirting, shade under the ceiling, beam grain, shadow along the foot of the
+  walls, daylight falling through the windows onto the floor, shadows under furniture,
+  painted wall friezes; rooms darken at night, lit by their own fires and lamps.
+- **Life.** Cats asleep or watching, hens, mice, frisking lambs, a juggling jester; antlers
+  and a chalk tally at the inn, copper pans, a horseshoe over the smithy door, herbs strewn
+  in the great hall. Outdoor scenes show you close up with a companion, and the people who
+  walk across them are drawn in the new style.
+
 ## Workplaces (v1.14)
 
 - **Every post has a place.** Each job is worked somewhere: the fields, the pasture, the

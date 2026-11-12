@@ -61,29 +61,23 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.14.0.txt`, ready to copy.
+Also in `store/whats_new_1.14.1.txt`, ready to copy.
 
 ```
-WORKPLACES
-The picture now follows your work, not your birth. A lord who keeps a shop in town is painted in the market, not at his manor. New places to work in, each painted inside and out:
-- The throne room, the guildhall and the court of law
-- The royal kitchen, the forge and the royal mint
-- A workshop for every trade: the loom, the bakehouse, the goldsmith's, the apothecary's, the potter's, the carpenter's and more
-- The inn, the parish church, the cathedral and the hospital
-- The scriptorium, the university, the alchemist's laboratory and the counting house
-- The stables, the pasture, the mine, the quarry and the building site
+BETTER PEOPLE, BETTER PLACES
+Every person in the pictures has been redrawn by hand:
+- Faces with eyes, brows and rosy cheeks, hair and beards, ears, and hoods and veils that frame the face
+- Arms and hands, shoes, belts and buckles, and the folds and shadow of their clothes
+- Smiths swing their hammers, cooks chop, masons and miners strike with mallet and pick, grooms brush the horses, all with the tool in their own hand
+- People sit properly at tables and on thrones, and the jury sits on its bench
+- You stand close up in the outdoor scenes too, with a neighbour beside you
 
-YOU, IN THE PICTURE
-You are painted where you work, dressed for your job, with a gold mark over your head. The name of the place sits in the corner.
-
-THE PEOPLE YOU WORK BESIDE
-Every workplace has its own people, from the master down to the youngest hand. Kin shows them as a ladder, with you in your place on it. Those far above you hardly know your name, and your equals are easier to win. Work beside them, ask to be taught, cover for a sick friend, own up for someone else's mistake, or worse.
-
-BELOW STAIRS
-The royal castle has servants now. Start as a coal boy and climb to scullion, cook and master cook, or keep the gate, groom the king's horses, or keep the buttery.
-
-BETTER PICTURES
-The old scenes no longer have things standing on each other (the manor's pond is off the haystacks), and the picture fills wide screens.
+LIVELIER ROOMS
+- Shadows under the tables and barrels, sunlight falling through the windows onto the floor, and shade under the ceilings
+- Painted borders on the walls of the shops, the inn and the guildhall
+- A cat asleep by the kitchen fire and on the shop counter, another watching from beside the inn's barrels, hens in the stables and the village, mice along the walls, lambs frisking on the pasture, and a jester juggling at court
+- Antlers over the inn's hearth and the alewife's chalk tally, copper pans in the kitchen, a lucky horseshoe over the smithy door, and herbs strewn on the great hall floor
+- Rooms grow darker at night, lit by their fires, lamps and candles
 ```
 
 ## Category
