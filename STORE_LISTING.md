@@ -61,32 +61,23 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.15.1.txt`, ready to copy (it covers everything since 1.13.2).
+Also in `store/whats_new_1.16.0.txt`, ready to copy (it ends with a line about the updates since 1.13).
 
 ```
-NEW MUSIC
-A whole little band now plays: fiddle, tin whistle, recorder, lute, harp, voices, a droning hurdy-gurdy, frame drum and tambourine. Real tunes you'll half know, and new ones in the same toe-tapping style:
-- In the village: The Maypole, a new jig, and Tempus adest floridum, the old spring song (the tune of Good King Wenceslas)
-- In the tavern, the market and the streets: The Irish Washerwoman, The Crooked Tankard and The Drunken Sailor
-- At court: The King Rides Out, a new procession, and Greensleeves
-- At sea and on the quay: The Drunken Sailor and Haul Away for Kingsport
-- In the church: a new hymn and the old carol, sung
-- At war: To the Banners, with drums
-- At the grave: a harp lament and Greensleeves on the harp
-- On the title screen: the new Mud & Crowns theme
-Your own music still keeps playing, and the volume is in the menu under Settings.
+THE HALL OF LEGENDS
+Every life is now weighed by its Rise: how far you climbed from the rung you were born on. Each step up Fortune's ladder is worth more than the last, and the humbler your birth, the more the whole climb counts. A serf who wins a crown outshines any prince born to one. Your greatest lives stand on a gold, silver and bronze podium, and your family houses add up their glory, generation after generation.
 
-WORKPLACES
-The picture follows your work: the throne room, the royal kitchen, the forge, a workshop for every trade, the inn, the church, the scriptorium, the stables, the mine, the quarry and more. You are painted there, and the place's name sits in the corner.
+THE COLLECTION HALL
+Sixteen relics in four wings, and the only way to win them is to climb from a humble birth: the Broken Fetter, the Merchant's Scales, the Golden Spurs, the Count's Banner, the Great Seal, the Keys of Heaven, the Ploughman's Crown, the Orb of the World and more. Each one sits in its own glass case. Finish a wing and its banner hangs over your main menu. Fill every case, and the sealed reliquary opens...
 
-THE PEOPLE YOU WORK BESIDE
-Every workplace has its own people, from the master down to the coal boy. Those far above you hardly know your name; your equals are easier to win. Start as a coal boy in the royal castle and climb to master cook.
+LAND FOR SALE
+Rich at last, but no land? Land was almost never sold, so wait for a ruined knight, a widow or a king who needs money. A manor costs about twenty years of its rents, plus the king's licence and the lawyers, and makes you Lord or Lady of it. Lend silver against a manor and take it if the debt goes bad. When the crown is short of money for a war, buy a whole county.
 
-CLEARER CHURCH CAREERS
-Prioress (and Prior) now has its own card in Find Work, between Nun and Abbess, so you can see what it takes.
+FORTUNE'S LADDER
+See where you stand, how far you have climbed and what the next rung is worth, in the Menu and in Find Work.
 
-BETTER PICTURES
-Everyone is redrawn with faces, hair, hands and clothes; women show their hair; rooms have light, shadow, cats, hens and a juggling jester.
+ALSO NEW SINCE 1.13
+New music played by a little band, workplaces you can see, the people you work beside, better pictures, and a Prioress card in Find Work.
 ```
 
 ## Category

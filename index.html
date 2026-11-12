@@ -490,6 +490,196 @@ html,body{overscroll-behavior:none}
 .screen>.start{width:100%;max-width:460px;min-width:0}
 .start .inp,.form label,.seg,.creator,.cr-row,.swatches{min-width:0;max-width:100%}
 select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
+/* ---------- v1.16: the Hall of Legends ---------- */
+.rl-defs{position:absolute;width:0;height:0;overflow:hidden}
+.screen>.hall{margin:auto;flex:none}
+.screen>.start.gilded{flex:none}
+.hall{position:relative;width:100%;max-width:580px;margin:0 auto;padding:0 0 18px;color:#f1e4c3;background:radial-gradient(130% 50% at 50% 0%,rgba(255,196,92,.18),transparent 62%),linear-gradient(180deg,#231a13 0%,#120d09 100%);border-radius:8px;box-shadow:0 0 0 1px #6e5320,0 0 0 4px #1a120a,0 0 0 5px #b08a3a,0 18px 50px rgba(0,0,0,.55);font-family:var(--serif);overflow:hidden}
+.hall-h{position:relative;text-align:center;padding:12px 14px 4px}
+.hall-orn{display:block;width:100%;max-width:440px;height:auto;margin:0 auto}
+.hall-t{margin:2px 0 0;font:clamp(34px,10.5vw,50px)/1.05 var(--black);color:#f3c955;background:linear-gradient(180deg,#fff6c8 0%,#f3c955 45%,#b07a1a 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 0 rgba(0,0,0,.65))}
+.hall-sub{margin:6px auto 0;max-width:38ch;font-style:italic;color:#d4c095;font-size:15.5px;line-height:1.35}
+.hall-glow{animation:hallGlow 3.2s ease-in-out infinite}
+.hall-flame{transform-box:view-box;animation:hallFlame 1.6s ease-in-out infinite alternate}
+@keyframes hallGlow{50%{opacity:.6}}
+@keyframes hallFlame{0%{transform:scale(1,1) rotate(-2deg)}50%{transform:scale(.92,1.08) rotate(2deg)}100%{transform:scale(1.04,.95) rotate(-1deg)}}
+.hall-tabs{display:flex;justify-content:center;gap:5px;margin-top:12px;padding:0 10px;border-top:1px solid rgba(201,149,46,.45);background:linear-gradient(#0d0906,rgba(13,9,6,0))}
+.hall-tab{flex:1 1 0;min-width:0;max-width:100px;padding:9px 2px 18px;border:none;background:linear-gradient(#3a2a1a,#241910);color:#dcc79c;font:600 13.5px/1.1 var(--serif);clip-path:polygon(0 0,100% 0,100% 100%,50% 84%,0 100%);box-shadow:inset 0 3px 0 #8a6420;cursor:pointer;transition:transform .2s,background .2s}
+.hall-tab i{display:block;font-style:normal;font-size:21px;line-height:1.1;margin-bottom:3px}
+.hall-tab[aria-selected="true"]{background:linear-gradient(#c0384a,#6a1220);color:#fff3d6;box-shadow:inset 0 3px 0 #f3c955;transform:translateY(5px)}
+.hall-tab:focus-visible{outline:2px solid #f3c955;outline-offset:-4px}
+.hall-body{padding:16px 14px 4px}
+.hall-foot{padding:6px 14px 0}
+.hall-foot .btn{width:100%}
+.hall-foot .btn,.hall .relq-b{background:linear-gradient(#f2d276,#c4902a);color:#2a1a05;border-color:#7a520c}
+.hall .btn.ghost{background:rgba(255,255,255,.04);color:#f3d983;border-color:#a8771a}
+.hall .stack{margin-top:14px}
+.hall-empty{margin:4px 0 14px;padding:16px;text-align:center;border:1px dashed rgba(201,149,46,.5);border-radius:8px;background:rgba(0,0,0,.2)}
+.hall-empty b{display:block;font:24px/1.1 var(--black);color:#f3c955;margin-bottom:6px}
+.hall-empty span{display:block;color:#d4c095;font-style:italic}
+.hall-note{margin:0 0 8px;text-align:center;font-style:italic;color:#d4c095}
+.hall-list .gr{border-bottom-color:rgba(201,149,46,.22)}
+.hall-list .gr small{color:#cdb98f}
+.hall-list .ft:not(.got){opacity:.62}
+.hall .gr-g{color:#f3c955;border-color:#8a6420}
+/* the ladder */
+.ladder{display:flex;gap:2px;height:7px;margin:6px 0 4px;max-width:260px}
+.ladder i{flex:1;border-radius:2px;background:rgba(150,130,100,.28)}
+.ladder i.b{background:#8a7a5a}
+.ladder i.on{background:linear-gradient(#f7d774,#b8861b);box-shadow:0 0 4px rgba(243,201,85,.5)}
+/* the podium */
+.podium{display:grid;grid-template-columns:1fr 1.18fr 1fr;align-items:end;gap:8px;margin:4px 0 16px}
+.pod{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+.pod-fr{width:80%;aspect-ratio:1;border-radius:50% 50% 10px 10px;overflow:hidden;background:radial-gradient(circle at 50% 30%,#5a4630,#1a120a);box-shadow:0 0 0 3px var(--pm),0 0 0 5px #1a120a,0 0 0 6px var(--pm),0 8px 16px rgba(0,0,0,.6)}
+.pod-fr svg{display:block;width:100%;height:100%}
+.pod.p1 .pod-fr{box-shadow:0 0 0 3px var(--pm),0 0 0 5px #1a120a,0 0 0 6px var(--pm),0 0 22px rgba(243,201,85,.55)}
+.pod b{margin-top:10px;font:600 14.5px/1.15 var(--serif);color:#f6e2a8;overflow-wrap:anywhere}
+.pod small{font-style:italic;color:#cdb98f;font-size:13px;line-height:1.2}
+.pod .pcl{margin-top:3px;font-size:12.5px;line-height:1.25;color:#e1cfa6;overflow-wrap:anywhere}
+.pod .psc{margin-top:5px;font:600 18px/1 var(--serif);color:var(--pm);font-variant-numeric:lining-nums}
+.pod-base{width:100%;margin-top:8px;border-radius:5px 5px 0 0;background:linear-gradient(var(--pm),#2a1e14 92%);display:flex;justify-content:center;padding-top:7px;font:700 22px/1 var(--serif);letter-spacing:.06em;color:#1a120a;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.pod.p1{--pm:#f3c955}.pod.p2{--pm:#d6dce3}.pod.p3{--pm:#cf8f50}
+.pod.p1 .pod-base{height:76px}.pod.p2 .pod-base{height:54px}.pod.p3 .pod-base{height:40px}
+.lgl{list-style:none;margin:0 0 6px;padding:0}
+.lg{display:grid;grid-template-columns:30px 44px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 2px;border-bottom:1px solid rgba(201,149,46,.22)}
+.lg-r{font:600 15px/1 var(--serif);letter-spacing:.04em;color:#c9952e;text-align:center}
+.lg-p{width:44px;height:44px;border-radius:50%;overflow:hidden;background:#2a1e14;box-shadow:0 0 0 2px #8a6420}
+.lg-p svg{display:block;width:100%;height:100%}
+.lg-t{min-width:0}
+.lg-t b{display:block;font-weight:600;color:#f6e2a8;line-height:1.2;overflow-wrap:anywhere}
+.lg-t small{display:block;font-size:13.5px;color:#cdb98f;line-height:1.25}
+.lg-s{text-align:right;font:600 16px/1.1 var(--serif);color:#f3d983;font-variant-numeric:lining-nums}
+.lg-s small{display:block;font-weight:400;font-style:italic;font-size:12px;color:#cdb98f}
+.hall-rules{margin:12px 0 4px;padding:10px 12px;border:1px solid rgba(201,149,46,.4);border-radius:8px;background:rgba(0,0,0,.22)}
+.hall-rules summary{cursor:pointer;font:600 16px/1.2 var(--serif);color:#f3c955}
+.hall-rules p{margin:8px 0;color:#e1cfa6;font-size:15px;line-height:1.4}
+.rungs{list-style:none;margin:6px 0;padding:0}
+.rungs li{display:flex;align-items:center;gap:10px;padding:4px 0;border-bottom:1px solid rgba(201,149,46,.15)}
+.rungs li span{flex:1;min-width:0}
+.rungs li b{display:block;color:#f6e2a8;font-weight:600;font-size:14.5px}
+.rungs li small{display:block;color:#bba67c;font-size:12.5px;line-height:1.2}
+.rungs li em{font-style:normal;font-weight:600;color:#f3c955;font-variant-numeric:lining-nums}
+.mults{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.mults span{padding:6px 4px;text-align:center;border-radius:6px;background:rgba(243,201,85,.08);border:1px solid rgba(201,149,46,.3);font-size:13px;color:#d4c095;line-height:1.2}
+.mults b{display:block;font-size:17px;color:#f3c955}
+/* houses */
+.hsl{list-style:none;margin:0;padding:0}
+.hs{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 2px;border-bottom:1px solid rgba(201,149,46,.22)}
+.hs-shw{width:42px;height:50px;padding:3px;background:linear-gradient(#f3c955,#8a6420);clip-path:polygon(0 0,100% 0,100% 58%,50% 100%,0 58%)}
+.hs-sh{display:block;width:100%;height:100%;background:var(--arm);clip-path:polygon(0 0,100% 0,100% 58%,50% 100%,0 58%)}
+.hs-t b{color:#f6e2a8;font-weight:600}
+.hs-t>b{display:block;font-size:16.5px}
+.hs-t small{display:block;font-size:13.5px;color:#cdb98f;line-height:1.3}
+.hs-s{text-align:right;font:600 17px/1.1 var(--serif);color:#f3d983;font-variant-numeric:lining-nums}
+.hs-s small{display:block;font-weight:400;font-style:italic;font-size:12px;color:#cdb98f}
+/* the Collection Hall */
+.ch-head{text-align:center}
+.ch-t{margin:0;font:clamp(28px,8vw,38px)/1.05 var(--black);color:#f3c955}
+.ch-sub{margin:4px auto 10px;max-width:36ch;font-style:italic;color:#d4c095;font-size:15px}
+.hall-prog{height:10px;max-width:320px;margin:0 auto;border-radius:6px;background:#1a120a;box-shadow:inset 0 0 0 1px #6e5320;overflow:hidden}
+.hall-prog i{display:block;height:100%;background:linear-gradient(90deg,#b8861b,#f7d774,#b8861b);background-size:200% 100%;animation:gildShine 4s linear infinite}
+.ch-n{margin:6px 0 0;color:#d4c095;font-size:14.5px}
+.ch-n b{color:#f3c955;font-size:18px}
+.relq{margin:10px auto 4px;max-width:380px;text-align:center}
+.relq-svg{display:block;width:100%;height:auto}
+.rq-lit{animation:hallGlow 2.6s ease-in-out infinite}
+.rq-key{animation:hallGlow 1.8s ease-in-out infinite}
+.rq-rays{transform-origin:120px 96px;animation:rqRays 9s linear infinite;mix-blend-mode:screen}
+.rq-crown{animation:rlFloat 4s ease-in-out infinite}
+@keyframes rqRays{50%{opacity:.55;transform:scale(1.06)}}
+.relq-t{margin:2px auto 8px;max-width:34ch;color:#e1cfa6;font-size:15px;line-height:1.35}
+.relq-t b{display:block;font:24px/1.15 var(--black);color:#f3c955}
+.relq-b{max-width:260px;margin:0 auto}
+.wing{margin:22px 0 4px}
+.wing-h{display:flex;align-items:center;gap:10px;padding:9px 12px;margin-bottom:12px;border-radius:6px;background:linear-gradient(90deg,var(--wc2),var(--wc) 55%,rgba(0,0,0,0));box-shadow:inset 3px 0 0 #f3c955}
+.wing-h .we{font-size:24px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}
+.wing-h div{min-width:0;flex:1}
+.wing-h b{display:block;font:600 17.5px/1.15 var(--serif);color:#fff0c8}
+.wing-h small{display:block;font-style:italic;color:#e6d4aa;font-size:13.5px;line-height:1.25}
+.wing-h .wc{font-weight:600;color:#f3d983;font-variant-numeric:lining-nums;white-space:nowrap;font-size:16px}
+.wing.done .wing-h{box-shadow:inset 3px 0 0 #f3c955,0 0 0 1px rgba(243,201,85,.6),0 0 14px rgba(243,201,85,.25)}
+.wing-done{margin:8px 0 0;text-align:center;color:#f3c955;font-style:italic;font-size:14px}
+.rl-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 12px}
+@media (min-width:540px){.rl-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.rl-item{display:flex;flex-direction:column;min-width:0}
+.rl-case{position:relative;display:block;width:100%;aspect-ratio:4/5;padding:0;border:none;border-radius:46% 46% 6px 6px/24% 24% 6px 6px;background:radial-gradient(95% 70% at 50% 16%,var(--wc2) 0%,var(--wc) 52%,#07060a 100%);box-shadow:inset 0 0 0 2px #e2b23c,inset 0 0 0 4px #3a2808,inset 0 0 0 5px #8a6420,inset 0 -22px 30px rgba(0,0,0,.6),0 6px 14px rgba(0,0,0,.55);overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.rl-case::before{content:"";position:absolute;inset:0;background:linear-gradient(118deg,transparent 28%,rgba(255,255,255,.14) 40%,transparent 50%);pointer-events:none;z-index:3}
+.rl-case .rl-art{position:absolute;left:7%;right:7%;top:9%;bottom:15%;z-index:2}
+.rl-art svg{display:block;width:100%;height:100%;overflow:visible}
+.rl-case .rl-cush{position:absolute;left:16%;right:16%;bottom:6%;height:12%;border-radius:50%;background:radial-gradient(ellipse at 50% 30%,#5a1a2c,#1e0710);box-shadow:0 4px 8px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,200,200,.25);z-index:1}
+.rl-case.got .rl-art{animation:rlFloat 4.5s ease-in-out infinite;filter:drop-shadow(0 4px 3px rgba(0,0,0,.55))}
+.rl-case.got::after{content:"";position:absolute;top:-30%;bottom:-30%;left:-60%;width:60%;background:linear-gradient(100deg,transparent,rgba(255,244,210,.42),transparent);transform:skewX(-14deg);animation:rlSheen 6s ease-in-out infinite;z-index:4;pointer-events:none}
+.rl-item:nth-child(2) .rl-case.got::after{animation-delay:1.5s}.rl-item:nth-child(3) .rl-case.got::after{animation-delay:3s}.rl-item:nth-child(4) .rl-case.got::after{animation-delay:4.5s}
+.rl-case.locked .rl-art{filter:brightness(0) drop-shadow(0 0 1.2px rgba(226,178,60,.7));opacity:.72}
+.rl-case.locked .rl-halo{display:none}
+.rl-case.locked{background:radial-gradient(95% 70% at 50% 16%,color-mix(in srgb,var(--wc2) 55%,#000),var(--wc) 52%,#050407 100%)}
+.rl-lock{position:absolute;top:9%;right:11%;font-size:14px;z-index:5;opacity:.85;filter:grayscale(.3)}
+.rl-case:focus-visible{outline:2px solid #f3c955;outline-offset:3px}
+.rl-plate{margin:8px 3px 0;padding:5px 6px 6px;text-align:center;background:linear-gradient(#ecd27a,#bf9030 60%,#8f6618);border-radius:3px;color:#2a1a05;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 2px 5px rgba(0,0,0,.55)}
+.rl-plate b{display:block;font:600 13.5px/1.15 var(--serif)}
+.rl-plate small{display:block;font-size:12px;line-height:1.2;opacity:.85;margin-top:2px}
+.rl-item.locked .rl-plate{background:linear-gradient(#5e4d38,#3a2e20);color:#d6c296;box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 2px 5px rgba(0,0,0,.55)}
+@keyframes rlFloat{50%{transform:translateY(-3.5%)}}
+@keyframes rlSheen{0%,62%{left:-60%}100%{left:130%}}
+@keyframes gildShine{to{background-position:-200% 0}}
+/* a relic, up close */
+.rl-pop{text-align:center}
+.rl-new{margin:0 0 8px;font:600 14px/1.2 var(--serif);letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+.rl-new.dim{text-transform:none;letter-spacing:0;font-style:italic;font-weight:400;color:var(--ink-3)}
+.rl-case.big{width:62%;max-width:220px;margin:0 auto 10px;cursor:default}
+.rl-who{margin:6px 0;font-style:italic;color:var(--ink-2)}
+.rl-how{margin:8px 0 12px;color:var(--ink-2);font-size:15px}
+.rl-extra{margin:0 0 12px;padding:10px 12px;border-radius:8px;background:linear-gradient(90deg,var(--wc2),var(--wc));color:#fff3d6;text-align:left;font-size:15px;line-height:1.35}
+.rl-extra.prize{background:linear-gradient(90deg,#b8861b,#f3c955,#b8861b);color:#2a1a05}
+/* the start menu: banners, and the Golden Age */
+.hall-btn{display:flex;flex-direction:column;align-items:center;gap:2px}
+.hall-btn small{font-size:13.5px;font-weight:400;font-style:italic;opacity:.85}
+.menu-banners{display:flex;justify-content:center;gap:10px;margin:-28px 0 4px}
+.mb{position:relative;display:flex;align-items:flex-start;justify-content:center;width:34px;height:58px;padding-top:12px;background:linear-gradient(90deg,var(--wc),var(--wc2) 50%,var(--wc));clip-path:polygon(0 0,100% 0,100% 100%,50% 80%,0 100%);box-shadow:inset 0 3px 0 #f3c955,inset 2px 0 0 #c9952e,inset -2px 0 0 #c9952e;animation:mbSway 5s ease-in-out infinite;transform-origin:50% 0}
+.mb:nth-child(2){animation-delay:-1.2s}.mb:nth-child(3){animation-delay:-2.5s}.mb:nth-child(4){animation-delay:-3.7s}
+.mb i{font-style:normal;font-size:16px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}
+@keyframes mbSway{50%{transform:rotate(2.5deg)}}
+.start.gilded{position:relative;overflow:hidden;color:#f3e6c4;background:radial-gradient(ellipse at 50% -10%,#3b336e 0%,#1b1840 45%,#0b0a1c 100%);border:none;outline:none;box-shadow:0 0 0 2px #e2b23c,0 0 0 5px #2a1d08,0 0 0 7px #f3c955,0 0 40px rgba(243,201,85,.35),0 20px 50px rgba(0,0,0,.6)}
+.start.gilded>*{position:relative;z-index:1}
+.start.gilded .gd-stars,.start.gilded .gd-motes{position:absolute;inset:0;z-index:0;pointer-events:none}
+.gd-stars{background-image:radial-gradient(1.2px 1.2px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 28% 42%,#ffeebb,transparent),radial-gradient(1.4px 1.4px at 46% 12%,#fff,transparent),radial-gradient(1px 1px at 63% 33%,#fff,transparent),radial-gradient(1.3px 1.3px at 82% 16%,#ffeebb,transparent),radial-gradient(1px 1px at 90% 48%,#fff,transparent),radial-gradient(1px 1px at 8% 62%,#fff,transparent),radial-gradient(1.2px 1.2px at 74% 70%,#ffeebb,transparent),radial-gradient(1px 1px at 36% 82%,#fff,transparent),radial-gradient(1.2px 1.2px at 56% 92%,#fff,transparent);animation:gdTwinkle 4s ease-in-out infinite alternate}
+@keyframes gdTwinkle{to{opacity:.45}}
+.mote{position:absolute;top:-12px;width:5px;height:5px;border-radius:1px;background:linear-gradient(135deg,#fff6c8,#e2b23c 60%,#8a5c0a);transform:rotate(45deg);opacity:0;animation:gdFall 9s linear infinite}
+@keyframes gdFall{0%{transform:translate(0,0) rotate(0);opacity:0}10%{opacity:.9}100%{transform:translate(28px,640px) rotate(540deg);opacity:0}}
+.start.gilded .gd-corner{position:absolute;width:56px;height:56px;z-index:2;pointer-events:none}
+.start.gilded .gd-corner.tl{top:6px;left:6px}.start.gilded .gd-corner.tr{top:6px;right:6px;transform:scaleX(-1)}.start.gilded .gd-corner.bl{bottom:6px;left:6px;transform:scaleY(-1)}.start.gilded .gd-corner.br{bottom:6px;right:6px;transform:scale(-1,-1)}
+.start.gilded .crest{margin-top:2px}
+.gd-crown{display:block;width:92px;height:92px;margin:0 auto;filter:drop-shadow(0 0 12px rgba(243,201,85,.55));animation:rlFloat 5s ease-in-out infinite}
+.start.gilded .title{background:linear-gradient(100deg,#8a5a0c 0%,#f7d774 28%,#fffbe6 42%,#e2b23c 58%,#8a5a0c 100%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#f3c955;animation:gildShine 6s linear infinite;filter:drop-shadow(0 2px 0 rgba(0,0,0,.7))}
+.start.gilded .tag{color:#e7d6a8}
+.start.gilded .fine{color:#cbbd96}
+.start.gilded .btn{background:linear-gradient(#f6d77a,#c9952e);color:#2a1a05;border-color:#7a520c;box-shadow:0 2px 0 #5a3a04,0 0 14px rgba(243,201,85,.25)}
+.start.gilded .btn.ghost{background:rgba(255,255,255,.05);color:#f3d983;border-color:#c9952e;box-shadow:none}
+@media (prefers-reduced-motion:reduce){.mote,.gd-motes{display:none}.hall-flame,.hall-glow,.rq-lit,.rq-key,.rq-rays,.rq-crown,.rl-case.got .rl-art,.rl-case.got::after,.mb,.gd-crown,.gd-stars,.start.gilded .title,.hall-prog i{animation:none}}
+/* your climb, while you live and when you die */
+.sumbox.climb small.climb-nx{display:block;margin-top:2px;color:var(--ink-3);font-size:14px}
+.climb-h{display:block;font-weight:600;color:var(--rubric);margin-bottom:2px}
+.rise-box{margin:12px 0 6px;padding:14px 14px 12px;text-align:center;border-radius:10px;background:radial-gradient(120% 80% at 50% 0%,rgba(243,201,85,.22),transparent 70%),var(--vellum-2);border:1px solid var(--rule-2);box-shadow:inset 0 0 0 3px var(--vellum),inset 0 0 0 4px var(--gold)}
+.rise-k{font:600 13px/1 var(--serif);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.rise-n{margin:4px 0 0;font:600 44px/1 var(--serif);color:var(--gold);font-variant-numeric:lining-nums tabular-nums}
+.rise-tier{margin:4px 0 2px;font:22px/1.1 var(--black);color:var(--rubric)}
+.rise-box .ladder{margin:8px auto 6px}
+.rise-from{margin:4px 0;color:var(--ink-2)}
+.rise-parts{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;margin:6px 0}
+.rise-parts div{display:flex;gap:5px;align-items:baseline}
+.rise-parts dt{font-size:13.5px;font-style:italic;color:var(--ink-3)}
+.rise-parts dd{margin:0;font-weight:600;font-size:14.5px;color:var(--ink-2)}
+.rise-rank{margin:6px 0 8px;font-weight:600;color:var(--ink)}
+.rise-box .btn{margin-top:6px}
+/* land for sale */
+.landsteps{list-style:none;margin:6px 20px 10px;padding:0;counter-reset:ls}
+.landsteps li{display:flex;align-items:flex-start;gap:10px;padding:6px 0;border-left:2px solid var(--rule);margin-left:13px;padding-left:16px;position:relative}
+.landsteps .ls-i{position:absolute;left:-15px;top:5px;display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--vellum);border:1px solid var(--rule-2);font-size:15px}
+.landsteps li.ok .ls-i{background:var(--good);color:#fff;border-color:var(--good);font-weight:700}
+.landsteps li>span:last-child{padding-left:8px}
+.landsteps b{display:block;font-weight:600}
+.landsteps small{display:block;font-size:14px;color:var(--ink-2);line-height:1.3}
+.landsteps li.ok b{color:var(--good)}
 </style>
 </head>
 <body>
@@ -528,7 +718,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.15.1';
+const APP_VERSION = '1.16.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -4822,7 +5012,7 @@ Object.assign(ASSET, {
   bees: { n: 'Beehives', i: '🐝', cost: 25, income: 4, desc: 'Honey to sell and wax for the church candles.' },
   herbgarden: { n: 'Herb Garden', i: '🌿', cost: 40, income: 4, land: 1, desc: 'Sage, rue and comfrey for the apothecaries.' },
   oxen: { n: 'Plough Oxen', i: '🐂', cost: 50, income: 6, animal: 1, desc: 'Hire out your team at ploughing time.' },
-  dovecote: { n: 'Dovecote', i: '🕊️', cost: 80, income: 6, land: 1, desc: 'Pigeon pie for the table. By custom, only lords may keep one.', need: () => lordly() || S.cls === 'noble' || S.cls === 'royal' || 'By custom only lords may keep a dovecote' },
+  dovecote: { n: 'Dovecote', i: '🕊️', cost: 80, income: 6, land: 1, desc: 'Pigeon pie for the table. By custom, only lords may keep one.', need: () => lordly() || S.cls === 'noble' || S.cls === 'royal' || 'By custom only lords may keep a dovecote. Buy a manor first (Land for sale)' },
   fishpond: { n: 'Fishpond', i: '🐟', cost: 120, income: 10, land: 1, desc: 'Carp for Fridays and fast days. The Church eats a lot of fish.' },
   ferry: { n: 'River Ferry', i: '⛴️', cost: 180, income: 14, desc: 'A flat boat, a rope, and a penny a crossing.' },
   bakehouse: { n: 'Bakehouse', i: '🍞', cost: 220, income: 18, land: 1, desc: 'Everybody needs bread. Every single day.' },
@@ -4839,13 +5029,13 @@ Object.assign(ASSET, {
   quarry: { n: 'Stone Quarry', i: '🪨', cost: 550, income: 42, land: 1, desc: 'Every castle and cathedral needs your stone.' },
   stud: { n: 'Horse Stud', i: '🐎', cost: 600, income: 45, land: 1, animal: 1, desc: 'Breed palfreys for ladies and destriers for knights.' },
   tollbridge: { n: 'Toll Bridge', i: '🌉', cost: 700, income: 55, land: 1, desc: 'A penny for a man, two for a cart, and no arguments.' },
-  marketcharter: { n: 'Market Charter', i: '📜', cost: 800, income: 60, land: 1, desc: 'The right to hold a weekly market, and take a cut of every stall.', need: () => lordly() || 'Only a lord can hold a market charter' },
+  marketcharter: { n: 'Market Charter', i: '📜', cost: 800, income: 60, land: 1, desc: 'The right to hold a weekly market, and take a cut of every stall.', need: () => lordly() || 'Only a lord can hold a market charter. Buy a manor first (Land for sale)' },
   menagerie: { n: 'Menagerie', i: '🦁', cost: 900, income: -20, uniq: 1, land: 1, renown: 10, happy: 6, desc: 'A lion, two leopards and a very confused camel.' },
-  fair: { n: 'Charter of an Annual Fair', i: '🎪', cost: 1000, income: 80, land: 1, desc: 'Once a year the whole country comes to buy, sell and gawp.', need: () => lordly() || 'Only a lord can hold a fair' },
+  fair: { n: 'Charter of an Annual Fair', i: '🎪', cost: 1000, income: 80, land: 1, desc: 'Once a year the whole country comes to buy, sell and gawp.', need: () => lordly() || 'Only a lord can hold a fair. Buy a manor first (Land for sale)' },
   galley: { n: 'Trading Galley', i: '⛵', cost: 1100, income: 110, desc: 'Oars and sails to Venice and back. Fortunes made and lost.' },
   countinghouse: { n: 'Counting House', i: '🏦', cost: 1200, income: 95, land: 1, desc: 'Lend to lords and kings. Charge interest. Hope they pay.', need: () => CLS_ORDER.indexOf(S.cls) >= CLS_ORDER.indexOf('merchant') || 'A counting house needs a merchant’s name or better' },
   mine: { n: 'Silver Mine', i: '⛏️', cost: 1500, income: 120, land: 1, desc: 'Deep, dark and dangerous. The richest thing you can own.' },
-  castle: { n: 'Stone Castle', i: '🏯', cost: 4000, home: 4, uniq: 1, land: 1, renown: 25, happy: 10, desc: 'Towers, a moat and a great hall. Nobody will ever look down on you again.', need: () => lordly() || S.cls === 'noble' || S.cls === 'royal' || 'Only the nobility may build a castle' },
+  castle: { n: 'Stone Castle', i: '🏯', cost: 4000, home: 4, uniq: 1, land: 1, renown: 25, happy: 10, desc: 'Towers, a moat and a great hall. Nobody will ever look down on you again.', need: () => lordly() || S.cls === 'noble' || S.cls === 'royal' || 'Only the nobility may build a castle. Buy a manor first (Land for sale)' },
 });
 { const sorted = Object.entries(ASSET).sort((a, b) => a[1].cost - b[1].cost); for (const [k] of sorted) { const v = ASSET[k]; delete ASSET[k]; ASSET[k] = v; } }
 // Kinds of holding: what managing it involves, and what a manager is called.
@@ -4885,11 +5075,11 @@ const lvlOf = a => a.lvl || 1;
 const maxLvl = a => (HLV[a.key] || [0]).length;
 const assetName = a => a.label && lvlOf(a) === 1 ? a.label : HLV[a.key] ? HLV[a.key][lvlOf(a) - 1] + (a.label && a.key === 'manor' ? ` of ${a.label.replace(/^Manor of /, '')}` : '') : (a.label || ASSET[a.key].n);
 const upCost = a => Math.round(ASSET[a.key].cost * [0, .9, 1.6][lvlOf(a)]);
-const assetValue = a => Math.round(ASSET[a.key].cost * .7 + (a.inv || 0) * .5);
+const assetValue = a => Math.round((a.paid || ASSET[a.key].cost) * .7 + (a.inv || 0) * .5);
 function assetIncome(a, lv) {
   const d = ASSET[a.key]; if (!d.income) return 0;
   if (d.income < 0) return d.income;
-  let v = d.income * LVL_MULT[(lv || lvlOf(a)) - 1];
+  let v = (a.inc || d.income) * LVL_MULT[(lv || lvlOf(a)) - 1];
   if (a.mgr) v *= 1 + a.mgr.skill * .12;
   return Math.round(v);
 }
@@ -4986,6 +5176,8 @@ function yearHold() {
 /* ---------- the holdings screens ---------- */
 function holdHTML() {
   let h = '';
+  const landFirst = S.age >= 16 && S.cls !== 'serf' && !S.vows && !hasAsset('manor');
+  if (landFirst) h += landHTML();
   const inc = S.assets.reduce((t, a) => t + (ASSET[a.key].income ? assetIncome(a) - (a.mgr ? a.mgr.wage : 0) : 0), 0);
   const lands = heldTs();
   if (S.assets.length || lands.length) h += `<div class="sumbox">You own ${S.assets.length} holding${S.assets.length === 1 ? '' : 's'}${lands.length ? ` and ${lands.length} count${lands.length === 1 ? 'y' : 'ies'}` : ''}. In a normal year they earn about <b style="font-size:inherit">${inc + lands.reduce((t, x) => t + countyIncome(x), 0)}</b> silver. Tap one to run it, grow it or hire a manager.</div>`;
@@ -5004,9 +5196,10 @@ function holdHTML() {
     h += `<button class="item" data-act="asset" data-arg="${a.id}"><span class="ic" aria-hidden="true">${d.i}</span><span class="tx"><b>${esc(assetName(a))}</b><small>${esc(cap(sub))}</small></span><span class="rt">${todo ? '<span class="pill near">Plan</span> ' : ''}›</span></button>`;
   }
   if (S.age < 14) return h + '<h3 class="sec">Market</h3><div class="empty">You may buy and sell from age 14.</div>';
+  if (!landFirst) h += landHTML();
   h += '<h3 class="sec">Market</h3><p class="hint">Animals and land earn silver every year. Grow them later to earn more. Tap a kind to see what is for sale.</p>';
   for (const [c, C] of Object.entries(HCAT)) {
-    const ks = C.keys.filter(k => ASSET[k] && ASSET[k].cost > 0); if (!ks.length) continue;
+    const ks = C.keys.filter(k => ASSET[k] && ASSET[k].cost > 0 && k !== 'manor'); if (!ks.length) continue;
     h += `<h3 class="sec sm">${esc(C.n)}</h3>`;
     for (const k of ks.sort((a, b) => ASSET[a].cost - ASSET[b].cost)) { const d = ASSET[k]; h += btnItem('buy', k, d.i, d.n, `${d.desc}${d.income > 0 ? ` Earns about ${d.income} a year.` : d.income < 0 ? ` Costs ${-d.income} a year.` : ''}`, canBuy(k), `${d.cost} silver`); }
   }
@@ -5276,7 +5469,7 @@ function vassalSheetHTML(x) {
 }
 function landsTabHTML() {
   const mine = heldTs(), vs = vassals();
-  if (!mine.length && !vs.length) return `<div class="empty">You hold no counties yet.<small>A county is won by royal grant, a knight’s petition, an appanage for a royal child, or the sword (Map). Then you can run it here: taxes, building, lords, and a report every year. Smaller estates (a manor) are in Holdings.</small></div>` + btnItem('fortune', '', '🎡', 'Roads of fortune', 'Every way to land and titles, and how hard each is for you.', true, '›');
+  if (!mine.length && !vs.length) return `<div class="empty">You hold no counties yet.<small>A county is won by royal grant, a knight’s petition, an appanage for a royal child, or the sword (Map). Now and then the crown sells one, when it needs money (Holdings, Land for sale). Then you can run it here: taxes, building, lords, and a report every year. Smaller estates (a manor) are in Holdings.</small></div>` + btnItem('fortune', '', '🎡', 'Roads of fortune', 'Every way to land and titles, and how hard each is for you.', true, '›');
   let h = '';
   if (mine.length) {
     const inc = mine.reduce((t, x) => t + countyIncome(x), 0), mood = Math.round(mine.reduce((t, x) => t + cMood(x), 0) / mine.length);
@@ -5428,15 +5621,14 @@ function showWhatsNew() {
   store.set(NEWKEY, APP_VERSION);
   modalOpen = true;
   const items = [
-    ['🎻', 'New music', 'a little band plays real tunes: jigs in the village and the tavern (The Maypole, the Irish Washerwoman), Greensleeves and a royal procession at court, the Drunken Sailor at sea, hymns in church, drums at war. Set the volume in the menu, under Settings.'],
-    ['🏰', 'Workplaces', 'the picture follows your work, not your birth: the throne room, the royal kitchen, the forge, a workshop for every trade, the inn, the church, the stables, the mine and more. You are painted there, with the place named in the corner.'],
-    ['🤝', 'The people you work beside', 'every workplace has its own people, from the master to the youngest hand, on a ladder in Kin with you in your place. Those far above you hardly know your name.'],
-    ['🪣', 'Below stairs', 'start as a coal boy in the royal castle and climb to scullion, cook and master cook, or keep the gate, the stables or the buttery.'],
-    ['🖌️', 'Better pictures', 'everyone redrawn with faces, hair, hands and clothes; women show their hair; rooms with light, shadow, cats, hens and a juggling jester.'],
+    ['🏛️', 'The Hall of Legends', 'every life is now weighed by its Rise: how far you climbed from the rung you were born on. A serf who wins a crown outshines any prince. Your best lives stand on a podium, and your family houses add up their glory generation after generation.'],
+    ['🏺', 'The Collection Hall', 'sixteen relics in four wings, won only by climbing from a humble birth: the Broken Fetter, the Golden Spurs, the Great Seal, the Ploughman’s Crown and more. Finish a wing and its banner hangs over your main menu. Fill every case, and a sealed reliquary opens…'],
+    ['🗺️', 'Land for sale', 'rich at last? Buy a manor when a ruined knight or a widow sells one, at about twenty years of rent plus the king’s licence. You become Lord or Lady of it. Lend against land and take it if the debt goes bad. When the crown needs money for a war, buy a whole county.'],
+    ['🪜', 'Fortune’s ladder', 'see where you stand, and what the next rung is worth, in the Menu and in Find work, Elite.'],
   ];
-  $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Find work</button></div>`;
+  $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">See the Hall</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
-  $('wnCourt').addEventListener('click', () => { modalOpen = false; hideModal(); openSheet('work'); });
+  $('wnCourt').addEventListener('click', () => { modalOpen = false; hideModal(); showHall('app', 'relics'); });
   openModal(); $('wnOk').focus({ preventScroll: true });
 }
 // Only a new feature release (1.4, 1.5...) shows the card; small fixes (1.4.1) do not.
@@ -6786,7 +6978,7 @@ function foldDefault(kind, title, i, count) {
   if (kind === 'deeds') return i < 2;
   if (kind === 'land' || kind === 'vassal') return i < 2;
   if (kind === 'realm' && realmTab === 'map') return false;
-  if (kind === 'realm' && realmTab === 'hold') return false;
+  if (kind === 'realm' && realmTab === 'hold') return /Land for sale/.test(title) && !!S && !hasAsset('manor') && S.cls !== 'serf';
   if (kind === 'realm' && realmTab === 'court') return i < 2;
   if (kind === 'work' && workPaneNow() === 'job') return !/^Your (career|experience)|^Bondage/.test(title);
   if (kind === 'work') return i === 0 || count <= 3;
@@ -28226,11 +28418,11 @@ function ranksHTML() {
     ['👑', ws('King', 'Queen'), S.ruling, 'Inherit the throne, seize your own royal seat by force, or draw the sword from the anvil.'],
     ['🤴', ws('Prince', 'Princess'), S.cls === 'royal' && !S.ruling, 'Be born to the crown, or be the child of a reigning monarch.'],
     ['🦁', ws('Duke', 'Duchess'), has(/^(Duke|Duchess) of /), "Topple a foreign kingdom's royal seat while sworn to your king."],
-    ['🏰', ws('Count', 'Countess'), has(/^(Count|Countess) of /), 'Win a county by royal grant, a knight’s petition, or the sword (Realm).'],
+    ['🏰', ws('Count', 'Countess'), has(/^(Count|Countess) of /), 'Win a county by royal grant, a knight’s petition or the sword, or buy one when the crown needs money (Realm, Holdings, Land for sale).'],
     ['🛡️', ws('Baron', 'Baroness'), isBaron(), 'Hold a manor, then petition the crown for a barony. Brings rents and levies.'],
-    ['🏡', ws('Lord', 'Lady'), has(/^(Lord|Lady) of /), 'Buy or inherit a manor house and its lands (Realm, Holdings).'],
+    ['🏡', ws('Lord', 'Lady'), has(/^(Lord|Lady) of /), 'Buy a manor when one comes up for sale (Realm, Holdings, Land for sale), or inherit one.'],
   ];
-  let h = '<h3 class="sec">Ranks of the realm</h3><p class="hint">These are not posts you apply for. They are won by birth, land, marriage, favour, or the sword.</p>';
+  let h = climbBoxHTML() + '<h3 class="sec">Ranks of the realm</h3><p class="hint">These are not posts you apply for. They are won by birth, land, marriage, favour, or the sword.</p>';
   for (const [i, n, got, how] of rows) h += btnItem('noop', '', i, n, how, true, got ? '✓ yours' : '');
   h += '<h3 class="sec">Roads of fortune</h3>' + btnItem('fortune', '', '🎡', 'Every road from where you stand', 'Freedom, wealth, knighthood, nobility, land, a crown, the Church, the outlaw life, and the ways down. How hard each one is for you right now.', true, '›');
   h += '<h3 class="sec">Roads to the crown</h3>' + crownRoadsHTML();
@@ -28578,9 +28770,8 @@ function menuHTML() {
   h += btnItem('panel', 'realm', '🗺️', 'Realm', 'The map of the kingdoms, the royal Court (and your own council or household), your Holdings and lands, and your Army.', true, '›');
   h += '<h3 class="sec">Roads of fortune</h3>' + btnItem('fortune', '', '🎡', 'Every road from where you stand', 'Freedom, wealth, knighthood, nobility, land, a crown, the Church, the outlaw life, and the ways down. How hard each one is for you right now.', true, '›');
   h += '<h3 class="sec">Roads to the crown</h3>' + crownRoadsHTML();
-  h += '<h3 class="sec">Your lives</h3>';
-  h += btnItem('grave', '', '🪦', 'The graveyard', 'Every life you have lived.', true);
-  h += btnItem('feats', '', '🏅', 'Seals of fame', `Achievements across all your lives. ${FEATS.filter(f => getFeats()[f.k]).length} of ${FEATS.length} earned.`, true);
+  h += '<h3 class="sec">Your lives</h3>' + climbBoxHTML();
+  h += btnItem('hall', '', '🏛️', 'The Hall of Legends', `Your greatest lives, your houses, the Collection Hall (${RELICS.filter(x => relicsGot()[x.k]).length} of ${RELICS.length} relics), seals of fame and the graveyard.`, true);
   h += '<h3 class="sec">Settings</h3>';
   h += btnItem('realism', '', hist() ? '☑️' : '⬜', 'Historical rules for women and men', hist() ? 'On: posts and powers follow the customs of the age. Women have their own roads, and may pass as men.' : 'Off: anyone may hold any post.', true);
   h += btnItem('tips', '', tipsOn() ? '☑️' : '⬜', 'Show the hint line', 'A short line above the buttons telling you what to do next.', true);
@@ -28736,8 +28927,8 @@ function showScreen(html) { const sc = $('screen'); sc.innerHTML = html; sc.hidd
 function hideScreen() { $('screen').hidden = true; }
 function showStart() {
   closeSheet();
-  const saved = loadSave(), gs = getGraves();
-  showScreen(`<div class="start"><div class="crest" aria-hidden="true">⚜️</div><h1 class="title">Mud &amp; Crowns</h1><p class="tag">One life. Many years. Rather a lot of plague.</p><div class="stack">${saved && saved.alive ? `<button class="btn" data-s="continue">Continue as ${esc(saved.first)}, age ${saved.age}</button>` : ''}<button class="btn${saved && saved.alive ? ' ghost' : ''}" data-s="random">Begin a random life</button><button class="btn ghost" data-s="custom">Choose your birth</button>${gs.length ? `<button class="btn ghost" data-s="grave">The graveyard (${gs.length})</button>` : ''}<button class="btn ghost" data-s="feats">Seals of fame (${FEATS.filter(f => getFeats()[f.k]).length} of ${FEATS.length})</button></div><p class="fine">Born a serf or a princess, you will have to make your own way. Thieve, pray, joust, or conquer the known world.</p></div>`);
+  const saved = loadSave(), got = relicsGot(), nRel = RELICS.filter(x => got[x.k]).length, L = legends(), gild = gildOn();
+  showScreen(`<div class="start${gild ? ' gilded' : ''}">${gild ? gildDeco() : ''}${menuBanners(got)}<div class="crest" aria-hidden="true">${gild ? `<svg class="gd-crown" viewBox="0 0 100 100">${RELIC_ART.crown()}</svg>` : '⚜️'}</div><h1 class="title">Mud &amp; Crowns</h1><p class="tag">${gild ? 'The Golden Age. Every crown you ever won, in gold.' : 'One life. Many years. Rather a lot of plague.'}</p><div class="stack">${saved && saved.alive ? `<button class="btn" data-s="continue">Continue as ${esc(saved.first)}, age ${saved.age}</button>` : ''}<button class="btn${saved && saved.alive ? ' ghost' : ''}" data-s="random">Begin a random life</button><button class="btn ghost" data-s="custom">Choose your birth</button><button class="btn ghost hall-btn" data-s="hall"><span>🏛️ The Hall of Legends</span><small>${L.length ? `Best Rise ${nfmt(L[0].sc)} · ` : ''}Relics ${nRel} of ${RELICS.length}</small></button></div><p class="fine">${gild ? 'You filled the Collection Hall. Every serf who ever dreamed of a crown salutes you.' : 'Born a serf or a princess, you will have to make your own way. The lower you start, the greater the legend. Fill the Collection Hall, and something here will change.'}</p></div>`);
 }
 function showCustom() {
   showScreen(`<div class="start form"><h2 class="form-h">Choose your birth</h2>
@@ -28775,7 +28966,7 @@ function showDeath() {
   const lineage = S.lineage.length ? `<p class="hint center">Of the line of ${esc(S.lineage.map(x => `${x.n} ${x.e}`).join(', then '))}.</p>` : '';
   const heirs = kids.length ? `<h3 class="sec">Continue your line</h3>${kids.sort((a, b) => b.age - a.age).map(k => `<button class="item" data-s="heir" data-id="${k.id}"><span class="ic pic" aria-hidden="true">${kinPortrait(k)}</span><span class="tx"><b>Live as ${esc(k.name)}</b><small>Your ${relOf(k).toLowerCase()}, age ${k.age}</small></span><span class="rt chev" aria-hidden="true">›</span></button>`).join('')}` : '<p class="hint center">You leave no living children. Your line ends here.</p>';
   showScreen(`<div class="start"><div class="stone"><div class="arms" style="${armsStyle(S.last)}"><span class="face">${playerPortrait()}</span></div><div class="rip">Here lies</div><h2>${esc(displayName())}</h2><div class="epi">${esc(S.epithet)}</div><div class="yrs">${S.born} – ${S.year}</div><p class="cause">Died ${esc(S.dead.cause)}, aged ${S.age}.</p></div><div class="grass" aria-hidden="true"></div>
-  <dl class="summary"><div><dt>Station</dt><dd>${esc(roleLabel())}</dd></div><div><dt>Purse</dt><dd>${S.coin} silver</dd></div><div><dt>Counties</dt><dd>${heldTs().length}</dd></div><div><dt>Renown</dt><dd>${S.stats.renown}</dd></div><div><dt>Joy</dt><dd>${S.stats.happy}</dd></div><div><dt>Legacy</dt><dd><span class="grade">${g[1]}</span> ${g[0]}</dd></div></dl>
+  <dl class="summary"><div><dt>Station</dt><dd>${esc(roleLabel())}</dd></div><div><dt>Purse</dt><dd>${S.coin} silver</dd></div><div><dt>Counties</dt><dd>${heldTs().length}</dd></div><div><dt>Renown</dt><dd>${S.stats.renown}</dd></div><div><dt>Joy</dt><dd>${S.stats.happy}</dd></div><div><dt>Legacy</dt><dd><span class="grade">${g[1]}</span> ${g[0]}</dd></div></dl>${riseBoxHTML()}
   ${(S.feats || []).length ? `<h3 class="sec">Seals earned in this life</h3><div class="chips">${S.feats.map(k => { const f = FEATS.find(x => x.k === k); return f ? `<span class="chip tag">${f.i} ${esc(f.n)}</span>` : ''; }).join('')}</div>` : ''}${lineage}${heirs}<div class="stack"><button class="btn${kids.length ? ' ghost' : ''}" data-s="random">Begin a new life</button><button class="btn ghost" data-s="chron">Read your chronicle</button><button class="btn ghost" data-s="grave">The graveyard</button></div></div>`);
 }
 function begin(state) { selHex = null; realmTab = 'map'; S = state; S.pend = S.pend || null; for (const k in prevStats) delete prevStats[k]; save(); hideScreen(); closeSheet(); lastLines = -1; render(); if (!resumePending() && S.alive) { if (store.get(TOURKEY) !== 'done') setTimeout(() => { if (!modalOpen) showTour(0); }, 350); else setTimeout(maybeWhatsNew, 450); } }
@@ -28803,9 +28994,587 @@ function screenAct(s, el) {
     case 'chron': hideScreen(); break;
     case 'epitaph': showDeath(); break;
     case 'feats': showFeats(S && S.dead && !$('screen').hidden && $('screen').querySelector('.stone') ? 'death' : 'start'); break;
+    case 'hall': showHall(S && S.dead && !$('screen').hidden && $('screen').querySelector('.stone') ? 'death' : $('screen').querySelector('.start') ? 'start' : hallFrom, 'legends'); break;
+    case 'htab': hallTab = el.dataset.v; showHall(); break;
+    case 'relic': relicShow(el.dataset.v, false); break;
+    case 'gild': { const m = jget(MKEY, {}); m.gild = gildOn() ? 0 : 1; jset(MKEY, m); showHall(); toast(m.gild ? '✨ The golden menu is on' : 'The plain menu is back'); break; }
+    case 'hallClearGrave': store.set(GKEY, '[]'); showHall(); break;
+    case 'hallBack': if (hallFrom === 'death') showDeath(); else if (hallFrom === 'app' && S) hideScreen(); else showStart(); break;
   }
 }
 
+
+/* ================= v1.16: Fortune's ladder, the Hall of Legends, the Collection Hall, and land for sale ================= */
+const LKEY = 'mudcrowns.legends.v1', HKEY = 'mudcrowns.houses.v1', CKEY = 'mudcrowns.relics.v1', MKEY = 'mudcrowns.menu.v1';
+const jget = (k, d) => { try { const v = JSON.parse(store.get(k) || 'null'); return v == null ? d : v; } catch (e) { return d; } };
+const jset = (k, v) => { try { store.set(k, JSON.stringify(v)); } catch (e) { } };
+const nfmt = n => Math.round(n || 0).toLocaleString('en-GB');
+const ROMAN = n => { let s = ''; for (const [v, r] of [[40, 'XL'], [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']]) while (n >= v) { s += r; n -= v; } return s; };
+
+/* ---------- the rungs of Fortune's ladder ---------- */
+const RUNGS = [
+  { n: 'Serf', d: 'Bound to the soil, and to your lord' },
+  { n: 'Free commoner', d: 'Free, poor, and your own master' },
+  { n: 'Craftsman', d: 'A trade, a bench, and a name in the street' },
+  { n: 'Burgher', d: 'A townsman of means' },
+  { n: 'Rich burgher', d: 'Silver enough to lend to lords' },
+  { n: 'Gentry', d: 'A knight, or the lord of a manor' },
+  { n: 'Baron', d: 'A lord of the realm, called to council' },
+  { n: 'Count', d: 'A whole county, and its knights' },
+  { n: 'Great lord', d: 'A duke, a chancellor, a great prince of the Church' },
+  { n: 'Prince', d: 'Royal blood, or a cardinal’s red hat' },
+  { n: 'Crowned', d: 'A king, a queen, or the Pope' },
+  { n: 'Emperor', d: 'Master of the known world' },
+];
+const CLS_RUNG = { serf: 0, peasant: 1, craft: 2, merchant: 3, noble: 5, royal: 9 };
+const RISE_STEP = [0, 100, 150, 220, 300, 450, 600, 800, 1000, 1300, 1700, 2200];
+const RISE_MULT = { serf: 3, peasant: 2.5, craft: 2, merchant: 1.6, noble: 1.25, royal: 1 };
+const RISE_TIER = [[20000, 'A Myth', '🌟'], [13000, 'A Legend', '👑'], [7000, 'A Saga', '📯'], [3000, 'A Chronicle', '📜'], [1000, 'A Ballad', '🎻'], [300, 'A Village Tale', '🏡'], [0, 'A Footnote', '🪶']];
+const riseTier = t => RISE_TIER.find(x => t >= x[0]);
+const birthRung = c => CLS_RUNG[c] != null ? CLS_RUNG[c] : 1;
+const clsName = c => (CLASSES[c] ? CLASSES[c].n : 'Commoner');
+const BORN_AS = { serf: 'a serf', peasant: 'a free peasant', craft: 'to craftsfolk', merchant: 'to a merchant house', noble: 'noble', royal: 'royal' };
+const bornAs = c => BORN_AS[c] || 'a commoner';
+const climbText = (bc, l, b, p) => p > b ? `${clsName(bc)} → ${l}` : `${clsName(bc)}, and no higher`;
+
+// Where you stand right now: the highest rung anything about you reaches, and a name for it.
+function rungInfo() {
+  if (!S) return { r: 0, l: 'Serf' };
+  let r = birthRung(S.cls), l = clsName(S.cls);
+  const up = (v, t) => { if (v > r) { r = v; l = t; } };
+  const tt = re => S.titles.find(t => re.test(t));
+  if (S.coin >= 1000) up(3, 'a burgher of means');
+  if (S.coin >= 4000) up(4, 'a rich burgher');
+  if (S.job && S.job.track !== 'crown') {
+    const tr = S.job.track, lv = S.job.level || 0;
+    if (tr === 'church') up([1, 2, 3, 5, 7, 8, 9, 10][lv] || 1, jobTitle());
+    else if (tr === 'chancellor' || tr === 'general' || tr === 'constable') up(8, jobTitle());
+    else { const t = tierOfJob(); up(t === 'high' ? 4 : (t === 'mid' || t === 'mil') ? 2 : 0, jobTitle()); }
+  }
+  if (S.flags.knight) up(5, ws('a knight', 'a dame'));
+  const lord = tt(/^(Lord|Lady) of /); if (lord) up(5, lord);
+  const bar = tt(/^(Baron|Baroness) of /); if (bar) up(6, bar);
+  const cnt = tt(/^(Count|Countess) of /); if (cnt) up(7, cnt);
+  const nC = heldTs().length; if (nC >= 3) up(8, `${ws('Lord', 'Lady')} of ${nC} counties`);
+  const duk = tt(/^(Duke|Duchess) of /); if (duk) up(8, duk);
+  if (S.cls === 'royal') up(9, `${ws('Prince', 'Princess')} of ${S.realm}`);
+  if (S.flags.consort) up(9, roleLabel());
+  if (S.ruling) up(S.flags.emperor ? 11 : 10, `${honor()} of ${S.realm}`);
+  return { r: Math.min(11, r), l };
+}
+function riseOf() {
+  if (!S) return null;
+  if (!S.dyn) S.dyn = Math.random().toString(36).slice(2, 10);
+  if (!S.found) S.found = { n: `${S.first} ${S.last}`, bc: S.birthCls || S.cls, y: S.born };
+  if (!S.rise) {
+    const b = birthRung(S.birthCls || S.cls), ri = rungInfo();
+    S.rise = { b, p: Math.max(b, ri.r), l: ri.r > b ? ri.l : clsName(S.birthCls || S.cls), pc: Math.max(0, S.coin), c0: Math.max(0, S.coin), pa: S.age, rel: [] };
+  }
+  if (!S.rise.rel) S.rise.rel = [];
+  return S.rise;
+}
+function riseScore() {
+  const r0 = riseOf(); const bc = RISE_MULT[S.birthCls] ? S.birthCls : 'peasant', m = RISE_MULT[bc];
+  let climb = 0; for (let i = r0.b + 1; i <= r0.p; i++) climb += RISE_STEP[i];
+  const wealth = Math.sqrt(Math.max(0, r0.pc - r0.c0)) * 4;
+  const seals = (S.feats || []).length * 40, relics = r0.rel.length * 300;
+  const summit = r0.p > r0.b && rungInfo().r >= r0.p ? Math.round(climb * m * .1) : 0;
+  const c = Math.round(climb * m), w = Math.round(wealth * m);
+  return { climb: c, wealth: w, seals, relics, summit, m, bc, t: c + w + seals + relics + summit };
+}
+// Called whenever the seals are checked: keeps the peak, and notices new rungs and relics.
+function riseTick() {
+  if (!S || !S.alive) return;
+  const r0 = riseOf();
+  if (S.coin > r0.pc) r0.pc = S.coin;
+  const ri = rungInfo();
+  if (ri.r > r0.p) {
+    r0.p = ri.r; r0.l = ri.l; r0.pa = S.age; r0.py = S.year;
+    if (S.age >= 6) { say(`🪜 You climbed a rung of Fortune’s ladder: ${RUNGS[ri.r].n}. Your Rise in this life is now ${nfmt(riseScore().t)}.`, 'gold'); if (!relicCheck() && !modalOpen) toast(`🪜 New rung: ${RUNGS[ri.r].n}`); return; }
+  }
+  relicCheck();
+}
+
+/* ---------- the Hall of Legends: every life weighed ---------- */
+function recordLegend() {
+  if (!S || !S.dead || S.dead.rise) return;
+  const r0 = riseOf(), sc = riseScore();
+  const role = S.ruling || S.flags.consort ? 'crown' : (inTrack('church') && S.job.level >= 4) ? 'mitre' : S.flags.knight ? 'helm' : '';
+  const rec = { id: uid(), n: `${S.first} ${S.last}`, h: honor(), e: S.epithet || '', sx: S.sex, lk: S.look || null, cls: S.cls, role, bc: sc.bc, b: r0.b, p: r0.p, l: r0.l, sc: sc.t, w: r0.pc, a: S.age, pa: r0.pa || S.age, y0: S.born, y1: S.year, gen: S.gen || 1, dyn: S.dyn, last: S.last, realm: S.realm, rel: r0.rel.slice(), hist: hist() ? 1 : 0 };
+  const L = jget(LKEY, []); L.push(rec); L.sort((a, z) => z.sc - a.sc);
+  const kept = L.slice(0, 40); jset(LKEY, kept);
+  const rank = kept.indexOf(rec) + 1;
+  const H = jget(HKEY, {});
+  const hh = H[S.dyn] || { last: S.last, fn: S.found.n, fb: S.found.bc, fy: S.found.y, best: -1, sum: 0, lives: 0, gens: 1 };
+  hh.sum += sc.t; hh.lives++; hh.gens = Math.max(hh.gens, S.gen || 1); hh.y1 = S.year; hh.last = S.last;
+  if (r0.p > hh.best) { hh.best = r0.p; hh.bl = r0.l; hh.bn = `${S.first} ${S.last}`; }
+  H[S.dyn] = hh;
+  const ks = Object.keys(H); if (ks.length > 30) { ks.sort((a, z) => H[z].sum - H[a].sum).slice(30).forEach(k => delete H[k]); }
+  jset(HKEY, H);
+  S.dead.rise = { t: sc.t, sc, rank, top: rank === 1 && kept.length > 1 };
+}
+const legends = () => jget(LKEY, []);
+const houses = () => { const H = jget(HKEY, {}); return Object.keys(H).map(k => Object.assign({ k }, H[k])).sort((a, z) => z.sum - a.sum); };
+
+/* ---------- relics: drawn in gold, iron and gems ---------- */
+const OL = '#2b1a05';
+const RL_DEFS = `<svg class="rl-defs" width="0" height="0" aria-hidden="true" focusable="false"><defs>
+<linearGradient id="rl-au" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6c4"/><stop offset=".35" stop-color="#f3c955"/><stop offset=".72" stop-color="#b9851a"/><stop offset="1" stop-color="#6e4a08"/></linearGradient>
+<linearGradient id="rl-au2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff2b0"/><stop offset=".5" stop-color="#d9a634"/><stop offset="1" stop-color="#7a520c"/></linearGradient>
+<linearGradient id="rl-ag" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#cfd5dc"/><stop offset="1" stop-color="#5f6874"/></linearGradient>
+<linearGradient id="rl-fe" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b4b6ba"/><stop offset=".5" stop-color="#5d6065"/><stop offset="1" stop-color="#26282c"/></linearGradient>
+<linearGradient id="rl-wd" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5a3518"/><stop offset=".5" stop-color="#b07a45"/><stop offset="1" stop-color="#5a3518"/></linearGradient>
+<linearGradient id="rl-rd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ea4458"/><stop offset=".55" stop-color="#a8162c"/><stop offset="1" stop-color="#5a0614"/></linearGradient>
+<linearGradient id="rl-wh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#ece6d8"/><stop offset="1" stop-color="#b9b0a0"/></linearGradient>
+<linearGradient id="rl-bl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a8fe0"/><stop offset="1" stop-color="#173a80"/></linearGradient>
+<radialGradient id="rl-ru" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffd6d6"/><stop offset=".3" stop-color="#e3233c"/><stop offset="1" stop-color="#4a0010"/></radialGradient>
+<radialGradient id="rl-sa" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#d8eeff"/><stop offset=".3" stop-color="#2c6be0"/><stop offset="1" stop-color="#081a4d"/></radialGradient>
+<radialGradient id="rl-em" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#d6ffe4"/><stop offset=".3" stop-color="#1fae5c"/><stop offset="1" stop-color="#033a1a"/></radialGradient>
+<radialGradient id="rl-pe" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#ece6dc"/><stop offset="1" stop-color="#9f978a"/></radialGradient>
+<radialGradient id="rl-orb" cx=".36" cy=".3" r=".78"><stop offset="0" stop-color="#fff6c8"/><stop offset=".35" stop-color="#ecc04a"/><stop offset=".8" stop-color="#9a6a10"/><stop offset="1" stop-color="#5a3a04"/></radialGradient>
+<radialGradient id="rl-wx" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#f26a78"/><stop offset=".45" stop-color="#b8142a"/><stop offset="1" stop-color="#560010"/></radialGradient>
+<linearGradient id="hall-ban" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".35"/><stop offset=".5" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></linearGradient>
+<radialGradient id="rl-glow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".9"/><stop offset=".45" stop-color="#ffc85a" stop-opacity=".35"/><stop offset="1" stop-color="#ffc85a" stop-opacity="0"/></radialGradient>
+</defs></svg>`;
+try { if (!document.getElementById('rl-au')) document.body.insertAdjacentHTML('afterbegin', RL_DEFS); } catch (e) { }
+const sp = (x, y, s) => `<path d="M${x} ${y - s}L${x + s * .22} ${y - s * .22}L${x + s} ${y}L${x + s * .22} ${y + s * .22}L${x} ${y + s}L${x - s * .22} ${y + s * .22}L${x - s} ${y}L${x - s * .22} ${y - s * .22}Z" fill="#fff8d0"/>`;
+const gem = (x, y, r, g) => `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#rl-${g})" stroke="${OL}" stroke-width=".7"/><circle cx="${(x - r * .35).toFixed(1)}" cy="${(y - r * .35).toFixed(1)}" r="${(r * .28).toFixed(1)}" fill="#fff" opacity=".75"/>`;
+const pearl = (x, y, r) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}" fill="url(#rl-pe)" stroke="#5a5040" stroke-width=".6"/>`;
+const qpt = (a, c, b, t) => [(1 - t) * (1 - t) * a[0] + 2 * t * (1 - t) * c[0] + t * t * b[0], (1 - t) * (1 - t) * a[1] + 2 * t * (1 - t) * c[1] + t * t * b[1]];
+function keyArt(fill, tr, flip) {
+  return `<g transform="${tr}${flip ? ' scale(1 -1)' : ''}"><circle cx="-25" cy="0" r="8.6" fill="none" stroke="${OL}" stroke-width="6"/><circle cx="-25" cy="0" r="8.6" fill="none" stroke="${fill}" stroke-width="4"/>${[[-29, 0], [-21, 0], [-25, -4], [-25, 4]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.9" fill="${fill}" stroke="${OL}" stroke-width=".6"/>`).join('')}<rect x="-17" y="-4.2" width="4.5" height="8.4" rx="1.2" fill="${fill}" stroke="${OL}" stroke-width=".9"/><rect x="-13" y="-2.4" width="38" height="4.8" rx="1.2" fill="${fill}" stroke="${OL}" stroke-width=".9"/><path d="M15 2V13H18.5V9H21V13H23.5V9.5H26V2Z" fill="${fill}" stroke="${OL}" stroke-width=".9" stroke-linejoin="round"/><path d="M-12 -1.2H24" stroke="#fff" stroke-opacity=".5" stroke-width=".9"/></g>`;
+}
+function coronetBase(capFill) {
+  const A = [22, 60], C = [50, 72], B = [78, 60];
+  let s = `<path d="M24 60Q22 24 50 22Q78 24 76 60Z" fill="${capFill}" stroke="${OL}" stroke-width=".9"/><path d="M34 32Q42 26 50 26" stroke="#fff" stroke-opacity=".3" stroke-width="2" fill="none"/>`;
+  s += `<ellipse cx="50" cy="60" rx="28" ry="7" fill="#6e4a08" stroke="${OL}" stroke-width=".8"/>`;
+  s += `<path d="M22 60Q50 72 78 60L78 72Q50 84 22 72Z" fill="url(#rl-au)" stroke="${OL}" stroke-width="1.1"/><path d="M23 63Q50 75 77 63" stroke="#fff6c4" stroke-opacity=".6" stroke-width="1" fill="none"/>`;
+  for (const [t, g] of [[.22, 'sa'], [.5, 'ru'], [.78, 'em']]) { const [x, y] = qpt([22, 66], [50, 78], [78, 66], t); s += gem(+x.toFixed(1), +y.toFixed(1), t === .5 ? 3.2 : 2.5, g); }
+  return { s, pt: t => qpt(A, C, B, t) };
+}
+const leaf = (x, y, k) => `<path transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${k})" d="M0 0C-6 -1 -8 -7 -4 -9C-5 -14 0 -16 0 -16C0 -16 5 -14 4 -9C8 -7 6 -1 0 0Z" fill="url(#rl-au)" stroke="${OL}" stroke-width="${(1 / k).toFixed(2)}"/>`;
+const fleur = (x, y, k) => `<g transform="translate(${x} ${y}) scale(${k})" fill="url(#rl-au)" stroke="${OL}" stroke-width="${(.9 / k).toFixed(2)}"><path d="M0 -12C3.5 -8 3.5 -4 0 -1C-3.5 -4 -3.5 -8 0 -12Z"/><path d="M0 -2C3 -8 9 -7 8 -2C6.5 -4.5 3.5 -4 1.5 0Z"/><path d="M0 -2C-3 -8 -9 -7 -8 -2C-6.5 -4.5 -3.5 -4 -1.5 0Z"/><rect x="-4.5" y="-2.2" width="9" height="2.6" rx=".8"/></g>`;
+const crossP = (x, y, k) => `<path transform="translate(${x} ${y}) scale(${k})" d="M-1.6 -11H1.6L3 -7.5L7 -6V-2.6L3 -1.2L1.6 2H-1.6L-3 -1.2L-7 -2.6V-6L-3 -7.5Z" fill="url(#rl-au)" stroke="${OL}" stroke-width="${(.9 / k).toFixed(2)}"/>`;
+function waxEdge(cx, cy, r) { let d = ''; for (let i = 0; i < 28; i++) { const a = i / 28 * Math.PI * 2, rr = r + (i % 2 ? 1.6 : -.4) + Math.sin(i * 1.7) * .8; d += `${i ? 'L' : 'M'}${(cx + Math.cos(a) * rr).toFixed(1)} ${(cy + Math.sin(a) * rr).toFixed(1)}`; } return d + 'Z'; }
+
+const RELIC_ART = {
+  fetter: () => `<path d="M36 72A21 21 0 1 1 64 72" fill="none" stroke="#141417" stroke-width="12.5" stroke-linecap="round"/><path d="M36 72A21 21 0 1 1 64 72" fill="none" stroke="url(#rl-fe)" stroke-width="9" stroke-linecap="round"/><path d="M33.6 61A18.5 18.5 0 0 1 49 37.8" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.6" stroke-linecap="round"/><path d="M58 39A19 19 0 0 1 67 50" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="1.2"/>`
+    + `<circle cx="36" cy="73" r="4.6" fill="url(#rl-fe)" stroke="#141417" stroke-width="1.2"/><circle cx="36" cy="73" r="1.4" fill="#141417"/><circle cx="64" cy="73" r="4.6" fill="url(#rl-fe)" stroke="#141417" stroke-width="1.2"/><circle cx="64" cy="73" r="1.4" fill="#141417"/>`
+    + `<g fill="none" stroke-linecap="round"><ellipse cx="30" cy="81" rx="3.2" ry="5.6" transform="rotate(38 30 81)" stroke="#141417" stroke-width="4.4"/><ellipse cx="30" cy="81" rx="3.2" ry="5.6" transform="rotate(38 30 81)" stroke="url(#rl-fe)" stroke-width="2.4"/><ellipse cx="24.5" cy="88" rx="5.6" ry="2" transform="rotate(38 24.5 88)" stroke="#141417" stroke-width="4.4"/><ellipse cx="24.5" cy="88" rx="5.6" ry="2" transform="rotate(38 24.5 88)" stroke="url(#rl-fe)" stroke-width="2.4"/>`
+    + `<ellipse cx="70" cy="81" rx="3.2" ry="5.6" transform="rotate(-38 70 81)" stroke="#141417" stroke-width="4.4"/><ellipse cx="70" cy="81" rx="3.2" ry="5.6" transform="rotate(-38 70 81)" stroke="url(#rl-fe)" stroke-width="2.4"/><path d="M73 86.5Q77 85 79 89" stroke="#141417" stroke-width="4.4"/><path d="M73 86.5Q77 85 79 89" stroke="url(#rl-fe)" stroke-width="2.4"/><path d="M83 89.5Q86 93 83 96" stroke="#141417" stroke-width="4.4"/><path d="M83 89.5Q86 93 83 96" stroke="url(#rl-fe)" stroke-width="2.4"/></g>`
+    + `<path d="M80.5 88.5l2.5 -3M81 91l3.5 .5M80 90.5l1.5 3" stroke="#ffd56a" stroke-width=".9" stroke-linecap="round"/>${sp(81.5, 84, 3.2)}${sp(44, 33, 2.4)}${sp(66, 46, 1.8)}`,
+  hammer: () => `<g transform="rotate(-32 50 55)"><rect x="46" y="34" width="8" height="58" rx="3" fill="url(#rl-wd)" stroke="${OL}" stroke-width="1"/><rect x="45.4" y="73" width="9.2" height="18" rx="2.2" fill="#4a2a14" stroke="${OL}" stroke-width="1"/><path d="M45.4 77.5h9.2M45.4 82h9.2M45.4 86.5h9.2" stroke="#2a160a" stroke-width=".7"/><rect x="24" y="22" width="52" height="16" rx="2.5" fill="url(#rl-fe)" stroke="#16161a" stroke-width="1.2"/><rect x="21.5" y="20.5" width="6" height="19" rx="1.5" fill="url(#rl-fe)" stroke="#16161a" stroke-width="1.2"/><rect x="72.5" y="20.5" width="6" height="19" rx="1.5" fill="url(#rl-fe)" stroke="#16161a" stroke-width="1.2"/><rect x="40.5" y="21" width="4" height="18" fill="url(#rl-au)" stroke="${OL}" stroke-width=".7"/><rect x="55.5" y="21" width="4" height="18" fill="url(#rl-au)" stroke="${OL}" stroke-width=".7"/><path d="M27 25h46" stroke="#fff" stroke-opacity=".45" stroke-width="1.4"/></g>`
+    + `<path d="M21 58L27 70L33 58" fill="none" stroke="#7a0c1e" stroke-width="5"/><path d="M21 58L27 70L33 58" fill="none" stroke="#c02440" stroke-width="3"/><circle cx="27" cy="79" r="10" fill="url(#rl-au)" stroke="${OL}" stroke-width="1.1"/><circle cx="27" cy="79" r="7.2" fill="none" stroke="#8a5a0a" stroke-width="1"/><path d="M23 83L30 76M28.5 74.5l3 3l2 -2l-3 -3z" stroke="#6e4a08" stroke-width="1.6" fill="#6e4a08" stroke-linejoin="round"/>${sp(24, 74, 1.8)}${sp(70, 26, 2.6)}`,
+  scales: () => `<path d="M38 92H62L57 85H43Z" fill="url(#rl-au)" stroke="${OL}" stroke-width="1"/><rect x="48.2" y="30" width="3.6" height="56" rx="1.4" fill="url(#rl-au)" stroke="${OL}" stroke-width=".9"/><circle cx="50" cy="27.5" r="3.4" fill="url(#rl-au)" stroke="${OL}" stroke-width=".9"/>`
+    + `<g transform="rotate(-8 50 37)"><rect x="21" y="35.4" width="58" height="3.6" rx="1.5" fill="url(#rl-au)" stroke="${OL}" stroke-width=".9"/><circle cx="21" cy="37.2" r="2" fill="url(#rl-au)" stroke="${OL}" stroke-width=".8"/><circle cx="79" cy="37.2" r="2" fill="url(#rl-au)" stroke="${OL}" stroke-width=".8"/></g>`
+    + `<path d="M21.3 40.9L11 69M21.3 40.9L22 69M21.3 40.9L33 69M78.7 33.1L68 61M78.7 33.1L79 61M78.7 33.1L90 61" stroke="#9a7020" stroke-width=".8"/>`
+    + `<path d="M9 69Q22 80 35 69Z" fill="url(#rl-au)" stroke="${OL}" stroke-width="1"/><path d="M66 61Q79 72 92 61Z" fill="url(#rl-au)" stroke="${OL}" stroke-width="1"/>`
+    + `${[[17, 67.5], [23, 67.8], [29, 67.4], [20, 64.6], [26, 64.6], [23, 61.7]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="3.4" ry="1.5" fill="url(#rl-au)" stroke="${OL}" stroke-width=".7"/>`).join('')}<rect x="76" y="55" width="6" height="5" rx="1" fill="url(#rl-fe)" stroke="#16161a" stroke-width=".7"/>${sp(23, 57, 2.2)}${sp(60, 30, 1.8)}`,
+  keys: () => `${keyArt('url(#rl-ag)', 'translate(50 50) rotate(-130) scale(1.22)', true)}${keyArt('url(#rl-au)', 'translate(50 50) rotate(-50) scale(1.22)')}<path d="M50 50V70" stroke="#7a0c1e" stroke-width="2"/><circle cx="50" cy="70" r="2.6" fill="url(#rl-au)" stroke="${OL}" stroke-width=".7"/><path d="M47 72H53L55.5 88H44.5Z" fill="url(#rl-rd)" stroke="#4a0410" stroke-width=".8"/><path d="M47 80V88M50 80V88M53 80V88" stroke="#4a0410" stroke-width=".5"/>${sp(70, 30, 2.6)}`,
+  spurs: () => `<g transform="translate(9 -7) scale(.86)" opacity=".75"><path d="M18 38Q18 68 50 70Q82 68 82 38" fill="none" stroke="${OL}" stroke-width="9" stroke-linecap="round"/><path d="M18 38Q18 68 50 70Q82 68 82 38" fill="none" stroke="#9a6a10" stroke-width="6" stroke-linecap="round"/></g>`
+    + `<path d="M18 40Q18 70 50 72Q82 70 82 40" fill="none" stroke="${OL}" stroke-width="9.5" stroke-linecap="round"/><path d="M18 40Q18 70 50 72Q82 70 82 40" fill="none" stroke="url(#rl-au)" stroke-width="6.5" stroke-linecap="round"/><path d="M21 44Q24 64 46 68" fill="none" stroke="#fff6c4" stroke-opacity=".7" stroke-width="1.3" stroke-linecap="round"/>`
+    + `<path d="M18 40C13 32 12 25 16 19M82 40C87 32 88 25 84 19" fill="none" stroke="#3a2010" stroke-width="5" stroke-linecap="round"/><rect x="12.5" y="14.5" width="7" height="7" rx="1" fill="none" stroke="url(#rl-au)" stroke-width="2"/><rect x="80.5" y="14.5" width="7" height="7" rx="1" fill="none" stroke="url(#rl-au)" stroke-width="2"/>`
+    + `<rect x="47" y="70" width="6" height="12" rx="1.5" fill="url(#rl-au)" stroke="${OL}" stroke-width="1"/><path d="${Array.from({ length: 16 }, (_, i) => { const a = i / 16 * Math.PI * 2, r = i % 2 ? 3.4 : 10; return `${i ? 'L' : 'M'}${(50 + Math.cos(a) * r).toFixed(1)} ${(88 + Math.sin(a) * r).toFixed(1)}`; }).join('')}Z" fill="url(#rl-au)" stroke="${OL}" stroke-width="1"/>${gem(50, 88, 2.4, 'ru')}${sp(30, 58, 2.2)}${sp(72, 30, 2)}`,
+  baton: () => `<g transform="rotate(-34 50 54)"><rect x="14" y="47" width="72" height="14" rx="7" fill="url(#rl-rd)" stroke="${OL}" stroke-width="1.2"/><path d="M18 50.5H82" stroke="#fff" stroke-opacity=".35" stroke-width="1.6"/><rect x="9" y="44.5" width="11" height="19" rx="3" fill="url(#rl-au)" stroke="${OL}" stroke-width="1.1"/><rect x="80" y="44.5" width="11" height="19" rx="3" fill="url(#rl-au)" stroke="${OL}" stroke-width="1.1"/><rect x="46.5" y="45.5" width="7" height="17" rx="1.5" fill="url(#rl-au)" stroke="${OL}" stroke-width="1"/>${[26, 36, 64, 74].map(x => fleur(x, 58, .42)).join('')}<circle cx="6" cy="54" r="3.2" fill="url(#rl-au)" stroke="${OL}" stroke-width=".9"/><circle cx="94" cy="54" r="3.2" fill="url(#rl-au)" stroke="${OL}" stroke-width=".9"/></g>${sp(76, 22, 2.6)}${sp(30, 80, 2)}`,
+  banner: () => `<rect x="24" y="14" width="4" height="82" rx="2" fill="url(#rl-wd)" stroke="${OL}" stroke-width=".9"/><path d="M26 2L30.5 13H21.5Z" fill="url(#rl-au)" stroke="${OL}" stroke-width=".9"/><circle cx="26" cy="15" r="2.6" fill="url(#rl-au)" stroke="${OL}" stroke-width=".8"/><rect x="24" y="18" width="56" height="3.2" rx="1.6" fill="url(#rl-au)" stroke="${OL}" stroke-width=".8"/><circle cx="80" cy="19.6" r="2.4" fill="url(#rl-au)" stroke="${OL}" stroke-width=".7"/>`
+    + `<path d="M28 21H78V80L53 66L28 80Z" fill="url(#rl-rd)" stroke="${OL}" stroke-width="1.1" stroke-linejoin="round"/><path d="M31 24H75V74.5L53 62L31 74.5Z" fill="none" stroke="url(#rl-au)" stroke-width="2" stroke-linejoin="round"/><path d="M40 22V64M64 22V64" stroke="#000" stroke-opacity=".16" stroke-width="3.5"/>`
+    + `<rect x="45" y="37" width="16" height="16" fill="url(#rl-au)" stroke="${OL}" stroke-width=".8"/><rect x="44" y="33" width="4.2" height="5" fill="url(#rl-au)" stroke="${OL}" stroke-width=".7"/><rect x="50.9" y="33" width="4.2" height="5" fill="url(#rl-au)" stroke="${OL}" stroke-width=".7"/><rect x="57.8" y="33" width="4.2" height="5" fill="url(#rl-au)" stroke="${OL}" stroke-width=".7"/><path d="M50.5 53V48.5A2.5 2.5 0 0 1 55.5 48.5V53Z" fill="#6a0d1a"/><rect x="52" y="40" width="2" height="3" fill="#6a0d1a"/>${sp(70, 10, 2.4)}`,
+  helm: () => `<path d="M52 22C47 8 62 1 74 6C65 8 61 14 58 22Z" fill="url(#rl-rd)" stroke="#4a0410" stroke-width=".9"/><path d="M55 20C54 12 60 8 68 7" stroke="#ff8a96" stroke-opacity=".6" stroke-width="1" fill="none"/>`
+    + `<path d="M30 33Q30 23 50 22Q70 23 70 33V72Q70 80 50 85Q30 80 30 72Z" fill="url(#rl-ag)" stroke="#1f2328" stroke-width="1.2"/><path d="M35 34V70" stroke="#fff" stroke-opacity=".6" stroke-width="2.4" stroke-linecap="round"/>`
+    + `<rect x="30" y="41" width="40" height="3.2" fill="url(#rl-au)" stroke="${OL}" stroke-width=".7"/><rect x="48" y="22" width="4" height="63" fill="url(#rl-au)" stroke="${OL}" stroke-width=".7"/><rect x="32.5" y="46" width="14" height="3.6" rx="1" fill="#0d0e10"/><rect x="53.5" y="46" width="14" height="3.6" rx="1" fill="#0d0e10"/>`
+    + `${[[57, 60], [61, 60], [65, 60], [57, 65], [61, 65], [65, 65], [57, 70], [61, 70]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1" fill="#0d0e10"/>`).join('')}`
+    + `<path d="M31 32L34 20L39 27L44 16L50 25L56 16L61 27L66 20L69 32Z" fill="url(#rl-au)" stroke="${OL}" stroke-width="1" stroke-linejoin="round"/>${gem(44, 21.5, 1.7, 'ru')}${gem(56, 21.5, 1.7, 'sa')}${gem(50, 28.5, 1.5, 'em')}${sp(24, 40, 2.4)}`,
+  crozier: () => `<rect x="47.4" y="40" width="5.2" height="57" rx="2.2" fill="url(#rl-au)" stroke="${OL}" stroke-width="1"/><path d="M48.5 44V94" stroke="#fff6c4" stroke-opacity=".6" stroke-width="1"/>`
+    + `<path d="M50 42C50 20 54 11 64 11C76 11 81 21 79 30C77 39 66 41 62 35C59 30 63 24 68 26" fill="none" stroke="${OL}" stroke-width="8" stroke-linecap="round"/><path d="M50 42C50 20 54 11 64 11C76 11 81 21 79 30C77 39 66 41 62 35C59 30 63 24 68 26" fill="none" stroke="url(#rl-au)" stroke-width="5.2" stroke-linecap="round"/>`
+    + `${[[51.5, 26], [55, 15.5], [66, 8], [78, 13], [82.5, 26]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2.2" fill="url(#rl-au)" stroke="${OL}" stroke-width=".7"/>`).join('')}${gem(68.5, 30, 3.4, 'ru')}`
+    + `<ellipse cx="50" cy="46" rx="6.4" ry="4.6" fill="url(#rl-au)" stroke="${OL}" stroke-width="1"/><path d="M45 50C38 56 41 66 35 76C42 74 45 68 47 60Z" fill="url(#rl-wh)" stroke="#8a7a60" stroke-width=".8"/><path d="M41 60C40 65 39 69 37 73" stroke="#c9b48a" stroke-width=".7" fill="none"/>${sp(32, 22, 2.4)}`,
+  mitre: () => `<path d="M36 81L35 96H42L42 81Z" fill="url(#rl-au)" stroke="${OL}" stroke-width=".9"/><path d="M58 81L58 96H65L64 81Z" fill="url(#rl-au)" stroke="${OL}" stroke-width=".9"/><path d="M35 96v3M37 96v3M39 96v3M41 96v3M58 96v3M60 96v3M62 96v3M64 96v3" stroke="#b9851a" stroke-width=".8"/>`
+    + `<path d="M28 83L29 46Q31 30 50 11Q69 30 71 46L72 83Q50 87 28 83Z" fill="url(#rl-wh)" stroke="#6b5a3a" stroke-width="1.2"/><path d="M33 46Q36 32 48 18" stroke="#fff" stroke-width="1.5" fill="none" stroke-opacity=".8"/>`
+    + `<path d="M46.4 15.5L53.6 15.5L54 85L46 85Z" fill="url(#rl-au)" stroke="${OL}" stroke-width=".8"/><path d="M28.6 72Q50 76 71.4 72L72 83Q50 87 28 83Z" fill="url(#rl-au)" stroke="${OL}" stroke-width=".9"/>`
+    + `<path d="M36 51h7M39.5 47.5v7M57 51h7M60.5 47.5v7" stroke="#c9952e" stroke-width="1.4"/>${gem(38, 78.5, 2, 'sa')}${gem(62, 78.5, 2, 'sa')}${gem(50, 79.5, 2.6, 'ru')}${gem(50, 30, 2, 'ru')}${gem(50, 46, 2, 'em')}${gem(50, 61, 2, 'sa')}${sp(76, 22, 2.4)}`,
+  seal: () => `<path d="M16 4H84V18Q50 23 16 18Z" fill="#ead9b0" stroke="#a88c5b" stroke-width="1"/><path d="M23 9H77M23 13H68" stroke="#8a6b3a" stroke-width=".7"/>`
+    + `<path d="M44 18C41 27 44 33 46 40M56 18C59 27 56 33 54 40" fill="none" stroke="#0e2a60" stroke-width="4"/><path d="M44 18C41 27 44 33 46 40M56 18C59 27 56 33 54 40" fill="none" stroke="url(#rl-bl)" stroke-width="2.6"/>`
+    + `<path d="${waxEdge(50, 65, 27)}" fill="url(#rl-wx)" stroke="#3a0008" stroke-width="1"/><circle cx="50" cy="65" r="21.5" fill="none" stroke="#5a0010" stroke-width="1.4" stroke-opacity=".8"/><circle cx="50" cy="65" r="18.8" fill="none" stroke="#e85a6a" stroke-opacity=".5" stroke-width="1" stroke-dasharray="1 2.4"/>`
+    + `<rect x="43" y="61" width="14" height="15" rx="2" fill="#8a0a18"/><rect x="41" y="74" width="18" height="3" rx="1" fill="#7a0614"/><circle cx="50" cy="58" r="4" fill="#a8122a"/><path d="M45.6 55l1.5 -4.5 2 3 .9 -4 .9 4 2 -3 1.5 4.5Z" fill="#d42438"/><path d="M58 60V73" stroke="#d42438" stroke-width="1.3"/><circle cx="58" cy="59" r="1.4" fill="#d42438"/>`
+    + `<path d="M33 54A20 20 0 0 1 46 44" stroke="#fff" stroke-opacity=".35" stroke-width="2.2" fill="none" stroke-linecap="round"/>${sp(76, 42, 2.4)}`,
+  heaven: () => `<g transform="translate(0 6)">${keyArt('url(#rl-ag)', 'translate(50 62) rotate(-128) scale(.82)', true)}${keyArt('url(#rl-au)', 'translate(50 62) rotate(-52) scale(.82)')}</g><path d="M50 68V84" stroke="#7a0c1e" stroke-width="1.8"/><path d="M47.5 84H52.5L54.5 95H45.5Z" fill="url(#rl-rd)" stroke="#4a0410" stroke-width=".7"/>`
+    + `<path d="M37 44Q35 22 50 11Q65 22 63 44Z" fill="url(#rl-wh)" stroke="#6b5a3a" stroke-width="1.1"/><path d="M41 40Q40 26 48 16" stroke="#fff" stroke-width="1.3" fill="none" stroke-opacity=".8"/>`
+    + `<path d="M37.3 38Q50 42 62.7 38L63 44Q50 48 37 44Z" fill="url(#rl-au)" stroke="${OL}" stroke-width=".8"/><path d="M37.6 28.5Q50 32.5 62.4 28.5L62.2 33.5Q50 37.5 37.8 33.5Z" fill="url(#rl-au)" stroke="${OL}" stroke-width=".8"/><path d="M40.5 19.5Q50 23 59.5 19.5L60.6 24Q50 27.6 39.4 24Z" fill="url(#rl-au)" stroke="${OL}" stroke-width=".8"/>`
+    + `${gem(50, 42.5, 1.6, 'ru')}${gem(50, 33, 1.5, 'sa')}${gem(50, 23.5, 1.4, 'em')}<circle cx="50" cy="8.6" r="2.6" fill="url(#rl-au)" stroke="${OL}" stroke-width=".7"/><path d="M50 1.5V6.5M48 3.5H52" stroke="url(#rl-au)" stroke-width="1.4"/>${sp(76, 18, 2.6)}`,
+  coronet: () => { const c = coronetBase('url(#rl-rd)'); let s = c.s; for (const t of [.06, .28, .5, .72, .94]) { const [x, y] = c.pt(t); s += `<path d="M${x.toFixed(1)} ${(y - 1).toFixed(1)}V${(y - 6).toFixed(1)}" stroke="url(#rl-au)" stroke-width="2"/>` + pearl(x, y - 8.5, 4); } return s + `<circle cx="50" cy="21" r="2.6" fill="url(#rl-au)" stroke="${OL}" stroke-width=".7"/>${sp(78, 30, 2.4)}`; },
+  ducal: () => { const c = coronetBase('url(#rl-rd)'); let s = c.s; for (const [t, k] of [[.05, .8], [.27, 1.02], [.5, 1.3], [.73, 1.02], [.95, .8]]) { const [x, y] = c.pt(t); s += leaf(x, y + 1, k); } for (const t of [.16, .38, .62, .84]) { const [x, y] = c.pt(t); s += pearl(x, y - 3, 2.2); } return s + `<path d="M50 22V14" stroke="url(#rl-au)" stroke-width="2"/><circle cx="50" cy="12" r="3.2" fill="url(#rl-au)" stroke="${OL}" stroke-width=".8"/>${sp(22, 30, 2.4)}`; },
+  crown: () => `<path d="M28 70Q30 36 50 32Q70 36 72 70Z" fill="url(#rl-rd)" stroke="${OL}" stroke-width=".8"/>`
+    + `<path d="M27 71Q28 34 50 30Q72 34 73 71" fill="none" stroke="${OL}" stroke-width="5.6"/><path d="M27 71Q28 34 50 30Q72 34 73 71" fill="none" stroke="url(#rl-au)" stroke-width="3.6"/><path d="M50 74V30" stroke="${OL}" stroke-width="5.6"/><path d="M50 74V30" stroke="url(#rl-au)" stroke-width="3.6"/>`
+    + `${[[33, 48], [38, 39], [44, 33.5], [56, 33.5], [62, 39], [67, 48], [50, 42], [50, 54], [50, 64]].map(([x, y]) => pearl(x, y, 1.5)).join('')}`
+    + `<circle cx="50" cy="25" r="5.2" fill="url(#rl-orb)" stroke="${OL}" stroke-width=".9"/><path d="M50 13V20.5M46 16.5H54" stroke="${OL}" stroke-width="3.4"/><path d="M50 13V20.5M46 16.5H54" stroke="url(#rl-au)" stroke-width="2"/>`
+    + `${fleur(31, 71, .75)}${fleur(69, 71, .75)}${crossP(50, 73, .8)}`
+    + `<path d="M23 71Q50 80 77 71L77 84Q50 93 23 84Z" fill="url(#rl-au)" stroke="${OL}" stroke-width="1.1"/><path d="M24 74Q50 83 76 74" stroke="#fff6c4" stroke-opacity=".6" stroke-width="1" fill="none"/>`
+    + `${gem(50, 83, 3.4, 'ru')}${gem(36, 80.5, 2.6, 'sa')}${gem(64, 80.5, 2.6, 'em')}${gem(27.5, 77.5, 1.7, 'ru')}${gem(72.5, 77.5, 1.7, 'ru')}<path d="M40 87.5C42 85 44 85 45 87M55 87C56 85 58 85 60 87.5" stroke="#8a5a0a" stroke-width=".8" fill="none"/>${sp(78, 36, 2.6)}${sp(20, 58, 1.8)}`,
+  orb: () => `<circle cx="50" cy="63" r="26" fill="url(#rl-orb)" stroke="${OL}" stroke-width="1.2"/><ellipse cx="41" cy="52" rx="8" ry="5" fill="#fff" opacity=".35" transform="rotate(-30 41 52)"/>`
+    + `<path d="M24.5 63Q50 74 75.5 63" fill="none" stroke="${OL}" stroke-width="6"/><path d="M24.5 63Q50 74 75.5 63" fill="none" stroke="url(#rl-au2)" stroke-width="4.2"/><path d="M50 37Q58 50 50 68.5" fill="none" stroke="${OL}" stroke-width="6"/><path d="M50 37Q58 50 50 68.5" fill="none" stroke="url(#rl-au2)" stroke-width="4.2"/>`
+    + `${[[.15, 'pe'], [.3, 'sa'], [.7, 'sa'], [.85, 'pe']].map(([t, g]) => { const [x, y] = qpt([24.5, 63], [50, 74], [75.5, 63], t); return g === 'pe' ? pearl(x, y, 1.6) : gem(+x.toFixed(1), +y.toFixed(1), 2, g); }).join('')}${gem(50, 68.4, 3.4, 'ru')}${gem(54, 49, 2, 'em')}`
+    + `<rect x="46.6" y="14" width="6.8" height="25" rx="1" fill="url(#rl-au)" stroke="${OL}" stroke-width="1"/><rect x="40" y="20" width="20" height="6.6" rx="1" fill="url(#rl-au)" stroke="${OL}" stroke-width="1"/>${pearl(50, 12, 2.2)}${pearl(38.6, 23.3, 2)}${pearl(61.4, 23.3, 2)}${gem(50, 23.3, 1.8, 'sa')}${sp(78, 40, 2.8)}${sp(22, 82, 2)}`,
+};
+
+const WINGS = [
+  { k: 'toil', n: 'The Wing of Toil', m: 'From the furrow to the counting house.', c: '#173f2b', c2: '#3c8a5a', e: '🌾' },
+  { k: 'sword', n: 'The Wing of the Sword', m: 'What the sword wins, the sword keeps.', c: '#4e1019', c2: '#b8343f', e: '⚔️' },
+  { k: 'cross', n: 'The Wing of Cross and Quill', m: 'Ink and incense: the quiet roads to power.', c: '#132a55', c2: '#3c6cc4', e: '✒️' },
+  { k: 'crown', n: 'The Wing of the Crown', m: 'Every crown was once a ploughshare.', c: '#331548', c2: '#8a4cba', e: '👑' },
+];
+const LOW2 = ['serf', 'peasant'], COMMONS = ['serf', 'peasant', 'craft'];
+const RELICS = [
+  { k: 'fetter', w: 'toil', n: 'The Broken Fetter', from: ['serf'], d: 'Win your freedom.', ok: () => !!S.flags.free && S.cls !== 'serf', lore: 'An iron fetter, snapped clean through. Whoever wore it walked out of the manor gate one spring morning and never once looked back.' },
+  { k: 'hammer', w: 'toil', n: 'The Master’s Hammer', from: LOW2, d: 'Rise to Guild Master or Master Architect.', ok: () => jobIn('guildmaster', 'architect'), lore: 'Carried before the master of the guild on feast days. Its handle is worn smooth by hands that were never born to hold it.' },
+  { k: 'scales', w: 'toil', n: 'The Merchant’s Scales', from: LOW2, d: 'Hold 3,000 silver at once.', ok: () => S.coin >= 3000, lore: 'Gold scales that weighed out a fortune, penny by penny, from a single market stall to a counting house on the quay.' },
+  { k: 'keys', w: 'toil', n: 'The Keys of the Manor', from: LOW2, d: 'Become Lord or Lady of a manor.', ok: () => S.titles.some(t => /^(Lord|Lady) of /.test(t)), lore: 'The keys to a great hall, a mill, and a hundred acres. The tenants bowed to a face they had once seen behind a plough.' },
+  { k: 'spurs', w: 'sword', n: 'The Golden Spurs', from: LOW2, d: 'Be knighted.', ok: () => !!S.flags.knight, lore: 'Only a knight may wear gilt spurs. These were buckled on by a king, onto boots that had walked barefoot as a child.' },
+  { k: 'banner', w: 'sword', n: 'The Count’s Banner', from: COMMONS, d: 'Hold a county of your own.', ok: () => heldTs().length > 0, lore: 'A banner that flew over a whole county. Its arms were new, and the old families sneered, and none of them dared say it aloud.' },
+  { k: 'baton', w: 'sword', n: 'The Captain’s Baton', from: COMMONS, d: 'Command armies as General or Lord High Constable.', ok: () => jobIn('general', 'constable'), lore: 'The staff of command. Ten thousand men moved when it moved, and every one of them knew where its holder had come from.' },
+  { k: 'helm', w: 'sword', n: 'The Conqueror’s Helm', from: LOW2, d: 'Hold five counties at once.', ok: () => heldTs().length >= 5, lore: 'A great helm crowned in gold, battered by a dozen sieges. Five counties bent the knee to the one beneath it.' },
+  { k: 'crozier', w: 'cross', n: 'The Abbot’s Crozier', from: LOW2, d: 'Become Abbot or Abbess, or rise higher in the Church.', ok: () => inTrack('church') && S.job.level >= 3, lore: 'The shepherd’s crook of an abbey. Its holder once herded real sheep, and found the new flock far harder to keep.' },
+  { k: 'mitre', w: 'cross', n: 'The Bishop’s Mitre', from: LOW2, d: 'Become a Bishop, or rise higher.', ok: () => inTrack('church') && S.job.level >= 4, lore: 'White silk and gold thread. Lords knelt to kiss the ring of a peasant’s child, and some of them even meant it.' },
+  { k: 'seal', w: 'cross', n: 'The Great Seal', from: COMMONS, d: 'Become Chancellor of the realm.', ok: () => inTrack('chancellor'), lore: 'Whatever this seal touches becomes the law of the land. It was pressed into the wax by a hand that once could not write its own name.' },
+  { k: 'heaven', w: 'cross', n: 'The Keys of Heaven', from: ['serf'], d: 'Be elected Pope.', ok: () => inTrack('church') && S.job.level >= 7, lore: 'The keys of Saint Peter, and the triple crown. A serf’s child sat on the throne of the Fisherman, which was, after all, how it began.' },
+  { k: 'coronet', w: 'crown', n: 'The Baron’s Coronet', from: LOW2, d: 'Be created a Baron or Baroness.', ok: () => isBaron(), lore: 'A plain gold circlet set with pearls, and a summons to sit among the lords of the realm.' },
+  { k: 'ducal', w: 'crown', n: 'The Ducal Coronet', from: COMMONS, d: 'Become a Duke or Duchess.', ok: () => S.titles.some(t => /^(Duke|Duchess) of /.test(t)), lore: 'Strawberry leaves in gold. Only the king stands higher, and on a bad day for the king, not even he.' },
+  { k: 'crown', w: 'crown', n: 'The Ploughman’s Crown', from: LOW2, d: 'Rule a kingdom.', ok: () => !!S.ruling, lore: 'They say it was forged from the iron of a plough and gilded afterwards. Kings who were born to their crowns have never liked this one.' },
+  { k: 'orb', w: 'crown', n: 'The Orb of the World', from: ['serf'], d: 'Become Emperor or Empress of the known world.', ok: () => !!S.ruling && !!S.flags.emperor, lore: 'The whole world, held in one hand. The hand had blisters once, from a hoe, in a muddy field nobody remembers.' },
+];
+const fromText = x => x.from.length === 1 ? 'Born a serf' : x.from.length === 2 ? 'Born a serf or free peasant' : 'Born a commoner';
+const relicArt = (x, big) => `<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"${big ? ' class="big"' : ''}><circle class="rl-halo" cx="50" cy="56" r="46" fill="url(#rl-glow)"/>${RELIC_ART[x.k]()}</svg>`;
+const relicsGot = () => jget(CKEY, {});
+const wingDone = (got, w) => RELICS.filter(x => x.w === w).every(x => got[x.k]);
+const prizeWon = got => RELICS.every(x => (got || relicsGot())[x.k]);
+const gildOn = () => prizeWon() && jget(MKEY, { gild: 1 }).gild !== 0;
+
+function relicCheck() {
+  if (!S || !S.alive) return 0;
+  const r0 = riseOf(), got = relicsGot(); const fresh = [];
+  for (const x of RELICS) {
+    if (!x.from.includes(S.birthCls)) continue;
+    let ok = false; try { ok = !!x.ok(); } catch (e) { }
+    if (!ok) continue;
+    if (!r0.rel.includes(x.k)) r0.rel.push(x.k);
+    if (got[x.k]) continue;
+    got[x.k] = { who: `${S.first} ${S.last}`, y: S.year, bc: S.birthCls };
+    fresh.push(x);
+  }
+  if (!fresh.length) return 0;
+  jset(CKEY, got);
+  for (const x of fresh) {
+    say(`🏛️ A new relic for the Collection Hall: ${x.n}.`, 'gold');
+    const W = WINGS.find(w => w.k === x.w), wingNow = wingDone(got, x.w), prize = prizeWon(got);
+    relicShow(x.k, true, prize ? 'prize' : wingNow ? W.k : '');
+  }
+  return fresh.length;
+}
+function relicCard(k, fresh, extra) {
+  const x = RELICS.find(r => r.k === k), W = WINGS.find(w => w.k === x.w), g = relicsGot()[k];
+  let h = `<div class="rl-pop" style="--wc:${W.c};--wc2:${W.c2}">${fresh ? '<p class="rl-new">✦ A new relic for the Hall ✦</p>' : `<p class="rl-new dim">${esc(W.n)}</p>`}<div class="rl-case big ${g ? 'got' : 'locked'}"><span class="rl-art">${relicArt(x, true)}</span><span class="rl-cush" aria-hidden="true"></span></div><h2 class="card-h">${esc(x.n)}</h2>`;
+  h += g ? `<p class="story plain">${esc(x.lore)}</p><p class="rl-who">Won by ${esc(g.who)}, born ${esc(bornAs(g.bc))}, in the year ${g.y}.</p>` : `<p class="story plain">The case is dark. Something glints inside it.</p>`;
+  h += `<p class="rl-how"><b>${esc(fromText(x))}.</b> ${esc(x.d)}</p>`;
+  if (extra === 'prize') h += `<div class="rl-extra prize"><b>Every case in the Hall is full.</b> Something is opening in the Collection Hall…</div>`;
+  else if (extra) { const w = WINGS.find(z => z.k === extra); h += `<div class="rl-extra"><b>${esc(w.e)} ${esc(w.n)} is complete!</b> Its banner now hangs over your main menu.</div>`; }
+  return h + '</div>';
+}
+function relicShow(k, fresh, extra) {
+  const go = () => {
+    modalOpen = true;
+    $('card').innerHTML = relicCard(k, fresh, extra) + `<button class="btn wide" id="okBtn">${extra === 'prize' ? 'Go and see' : 'Continue'}</button>`;
+    $('okBtn').addEventListener('click', () => { if (extra === 'prize') { Q.length = 0; modalOpen = false; hideModal(); if (S) save(); showHall(S && S.alive ? 'app' : 'start', 'relics'); return; } nextModal(); });
+    openModal(); try { if (window.auSfx) window.auSfx('chime'); } catch (e) { }
+  };
+  if (modalOpen) Q.push(go); else go();
+}
+
+/* ---------- the Hall of Legends screen ---------- */
+let hallTab = 'legends', hallFrom = 'start';
+const ladderHTML = (b, p) => `<span class="ladder" role="img" aria-label="From ${esc(RUNGS[b].n)} to ${esc(RUNGS[p].n)}">${RUNGS.map((_, i) => `<i class="${i === b ? 'b' : i > b && i <= p ? 'on' : ''}"></i>`).join('')}</span>`;
+function legPortrait(r) {
+  try { return portraitSVG({ seed: r.n + r.y0, look: r.lk || undefined, sex: r.sx, age: Math.max(18, Math.min(r.pa || 30, 55)), cls: r.cls, mood: 2, role: r.role || '', job: '' }); } catch (e) { return '<span class="lg-np">👤</span>'; }
+}
+function hallHeadSVG() {
+  const petals = Array.from({ length: 8 }, (_, i) => { const a = i / 8 * Math.PI * 2 - Math.PI / 2, x = 200 + Math.cos(a) * 17.5, y = 46 + Math.sin(a) * 17.5; return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="8.4" fill="${WINGS[i % 4].c2}" fill-opacity=".9" stroke="#e2b23c" stroke-width="1.6"/>`; }).join('');
+  const candle = x => `<circle class="hall-glow" cx="${x}" cy="34" r="24" fill="url(#rl-glow)"/><path d="M${x - 9} 100h18l-3 -6h-12z" fill="url(#rl-au)" stroke="${OL}"/><rect x="${x - 2}" y="68" width="4" height="26" fill="url(#rl-au)" stroke="${OL}" stroke-width=".6"/><path d="M${x - 10} 68h20l-3 -4h-14z" fill="url(#rl-au)" stroke="${OL}"/><rect x="${x - 4.5}" y="40" width="9" height="24" rx="1.5" fill="#f3ead2" stroke="#8a7a5a" stroke-width=".8"/><path d="M${x} 40v-3" stroke="#222" stroke-width="1"/><g class="hall-flame" style="transform-origin:${x}px 38px"><path d="M${x} 22c4.5 6.5 5.5 10 0 15c-5.5 -5 -4.5 -8.5 0 -15z" fill="#ffc94a"/><path d="M${x} 28c2.2 4 2.6 5.8 0 8c-2.6 -2.2 -2.2 -4 0 -8z" fill="#fff6d0"/></g>`;
+  const ban = (x, c) => `<path d="M${x - 16} 0h32v62l-16 -11l-16 11z" fill="${c}" stroke="#e2b23c" stroke-width="2" stroke-linejoin="round"/><path d="M${x - 16} 0h32v62l-16 -11l-16 11z" fill="url(#hall-ban)"/><path d="M${x - 9} 31l2 -10 4 5 3 -8 3 8 4 -5 2 10z" fill="url(#rl-au)" stroke="${OL}" stroke-width=".6"/>`;
+  return `<svg class="hall-orn" viewBox="0 0 400 104" aria-hidden="true" focusable="false">${ban(30, '#5a1420')}${ban(370, '#132a55')}${candle(110)}${candle(290)}<circle class="hall-glow" cx="200" cy="46" r="50" fill="url(#rl-glow)"/><circle cx="200" cy="46" r="31" fill="#120c08" stroke="#e2b23c" stroke-width="3"/>${petals}<circle cx="200" cy="46" r="6.5" fill="url(#rl-au)" stroke="#e2b23c" stroke-width="1.2"/><circle cx="200" cy="46" r="34.5" fill="none" stroke="#7a520c" stroke-width="1.2"/></svg>`;
+}
+function podHTML(r, place) {
+  return `<div class="pod p${place}"><div class="pod-fr">${legPortrait(r)}</div><b>${esc(r.h ? r.h + ' ' : '')}${esc(r.n)}</b><small>${esc(r.e)}</small><span class="pcl">${esc(climbText(r.bc, r.l, r.b, r.p))}</span><span class="psc">${nfmt(r.sc)}</span><div class="pod-base" aria-hidden="true">${ROMAN(place)}</div></div>`;
+}
+function lgRow(r, i) {
+  return `<li class="lg"><span class="lg-r">${ROMAN(i)}</span><span class="lg-p" aria-hidden="true">${legPortrait(r)}</span><div class="lg-t"><b>${esc(r.h ? r.h + ' ' : '')}${esc(r.n)} ${esc(r.e)}</b><small>${esc(climbText(r.bc, r.l, r.b, r.p))} · ${r.y0}–${r.y1}${r.gen > 1 ? ` · gen. ${r.gen}` : ''}</small>${ladderHTML(r.b, r.p)}</div><span class="lg-s">${nfmt(r.sc)}<small>${esc(riseTier(r.sc)[1])}</small></span></li>`;
+}
+function riseRulesHTML(open) {
+  return `<details class="hall-rules"${open ? ' open' : ''}><summary>How a life is weighed</summary><p>Your <b>Rise</b> is how far you climbed in one life: from the rung you were born on to the highest you ever reached. Each rung is worth more than the one below.</p><ol class="rungs">${RUNGS.map((r, i) => `<li><span><b>${esc(r.n)}</b><small>${esc(r.d)}</small></span><em>${i ? '+' + nfmt(RISE_STEP[i]) : 'start'}</em></li>`).reverse().join('')}</ol><p>Then the whole climb is multiplied by how humble your birth was:</p><div class="mults">${CLS_ORDER.map(c => `<span><b>×${RISE_MULT[c]}</b>${esc(clsName(c))}</span>`).join('')}</div><p>Wealth you gain adds a little more. Every seal of fame adds 40, every relic you win adds 300, and dying at the top of your climb adds a tenth more. A serf who wins a crown outshines any prince born to one.</p></details>`;
+}
+function hallLegends() {
+  const L = legends();
+  let h = '';
+  if (!L.length) h += `<div class="hall-empty"><b>No legend yet.</b><span>Every life you finish is weighed here. The lower you are born, the more each step up is worth.</span></div>`;
+  else {
+    const top = L.slice(0, 3), order = [[top[1], 2], [top[0], 1], [top[2], 3]];
+    h += `<div class="podium">${order.map(([r, pl]) => r ? podHTML(r, pl) : '<div class="pod empty"></div>').join('')}</div>`;
+    if (L.length > 3) h += `<ol class="lgl">${L.slice(3, 25).map((r, i) => lgRow(r, i + 4)).join('')}</ol>`;
+  }
+  return h + riseRulesHTML(!L.length);
+}
+function hallHouses() {
+  const H = houses();
+  if (!H.length) return `<div class="hall-empty"><b>No great houses yet.</b><span>When you die, play on as one of your children. Your family’s glory adds up here, life after life, generation after generation.</span></div>`;
+  return `<ul class="hsl">${H.slice(0, 20).map(x => { const fb = birthRung(x.fb); return `<li class="hs"><span class="hs-shw" aria-hidden="true"><span class="hs-sh" style="${armsStyle(x.last)}"></span></span><div class="hs-t"><b>House ${esc(x.last)}</b><small>Founded by ${esc(x.fn)}, born ${esc(bornAs(x.fb))}${x.fy ? ` in ${x.fy}` : ''}.</small><small>Highest: <b>${esc(x.bl || clsName(x.fb))}</b>${x.bn ? `, ${esc(x.bn)}` : ''}.</small>${ladderHTML(fb, Math.max(fb, x.best))}<small>${x.gens} generation${x.gens > 1 ? 's' : ''} · ${x.lives} li${x.lives > 1 ? 'ves' : 'fe'} weighed</small></div><span class="hs-s">${nfmt(x.sum)}<small>glory</small></span></li>`; }).join('')}</ul>`;
+}
+function reliquarySVG(got, won) {
+  let s = '';
+  RELICS.forEach((x, i) => {
+    const a = Math.PI + (i + .5) / RELICS.length * Math.PI, gx = 120 + Math.cos(a) * 104, gy = 118 + Math.sin(a) * 96, W = WINGS.find(w => w.k === x.w), on = !!got[x.k];
+    s += on ? `<circle class="rq-lit" cx="${gx.toFixed(1)}" cy="${gy.toFixed(1)}" r="11" fill="url(#rl-glow)" style="animation-delay:${(-i * .4).toFixed(1)}s"/><circle cx="${gx.toFixed(1)}" cy="${gy.toFixed(1)}" r="6.2" fill="${W.c2}" stroke="#f3c955" stroke-width="2"/><circle cx="${(gx - 2).toFixed(1)}" cy="${(gy - 2).toFixed(1)}" r="1.8" fill="#fff" opacity=".75"/>`
+      : `<circle cx="${gx.toFixed(1)}" cy="${gy.toFixed(1)}" r="6.2" fill="#140e09" stroke="#6e5320" stroke-width="2"/>`;
+  });
+  const body = `<rect x="76" y="96" width="88" height="46" rx="4" fill="url(#rl-wd)" stroke="${OL}" stroke-width="1.4"/><path d="M76 106H164M76 132H164" stroke="#3a2010" stroke-width="1"/><rect x="94" y="96" width="7" height="46" fill="url(#rl-au)" stroke="${OL}" stroke-width=".8"/><rect x="139" y="96" width="7" height="46" fill="url(#rl-au)" stroke="${OL}" stroke-width=".8"/><path d="M74 96h8v8h-8zM158 96h8v8h-8zM74 134h8v8h-8zM158 134h8v8h-8z" fill="url(#rl-au)" stroke="${OL}" stroke-width=".7"/>`;
+  if (!won) {
+    s += `${body}<path d="M76 96V86Q120 64 164 86V96Z" fill="url(#rl-wd)" stroke="${OL}" stroke-width="1.4"/><path d="M94 96V81M146 96V81" stroke="url(#rl-au)" stroke-width="7"/><path d="M78 88Q120 67 162 88" stroke="#f3c955" stroke-opacity=".5" stroke-width="1" fill="none"/>`;
+    s += `<path d="M64 84L176 144M176 84L64 144" stroke="#16161a" stroke-width="6.5" stroke-dasharray="7 2.6"/><path d="M64 84L176 144M176 84L64 144" stroke="url(#rl-fe)" stroke-width="4" stroke-dasharray="7 2.6"/>`;
+    s += `<circle class="rq-key" cx="120" cy="114" r="16" fill="url(#rl-glow)"/><path d="M110 104h20v20h-20z" fill="url(#rl-au)" stroke="${OL}" stroke-width="1"/><circle cx="120" cy="111.5" r="2.6" fill="#1a0e04"/><path d="M118.8 112.5h2.4l1 6h-4.4z" fill="#1a0e04"/><text x="120" y="70" text-anchor="middle" font-family="UnifrakturMaguntia, Georgia, serif" font-size="30" fill="#f3c955" opacity=".9">?</text>`;
+  } else {
+    s += `<g class="rq-rays"><path d="M120 96L70 0H96L120 96L144 0H170Z" fill="url(#rl-glow)" opacity=".9"/><path d="M120 96L30 20L50 8L120 96L190 8L210 20Z" fill="url(#rl-glow)" opacity=".6"/></g>${body}<path d="M76 96L70 72Q120 52 170 72L164 96Z" fill="#3a2010" stroke="${OL}" stroke-width="1.4"/><path d="M80 94L76 76Q120 58 164 76L160 94Z" fill="#ffd56a" opacity=".35"/>`;
+    s += `<g class="rq-crown" transform="translate(84 18) scale(.72)">${RELIC_ART.crown()}</g>`;
+  }
+  return `<svg class="relq-svg" viewBox="0 0 240 150" role="img" aria-label="${won ? 'The reliquary stands open' : `The sealed reliquary, ${RELICS.filter(x => got[x.k]).length} of ${RELICS.length} gems lit`}">${s}</svg>`;
+}
+function hallRelics() {
+  const got = relicsGot(), n = RELICS.filter(x => got[x.k]).length, won = n === RELICS.length;
+  let h = `<div class="ch-head"><h2 class="ch-t">The Collection Hall</h2><p class="ch-sub">Relics are won only by climbing. Each one needs a humble birth, and a great rise.</p><div class="hall-prog" role="img" aria-label="${n} of ${RELICS.length} relics"><i style="width:${(n / RELICS.length * 100).toFixed(1)}%"></i></div><p class="ch-n"><b>${n}</b> of ${RELICS.length} relics</p></div>`;
+  h += `<div class="relq${won ? ' open' : ''}">${reliquarySVG(got, won)}${won ? `<p class="relq-t"><b>The Golden Age</b>The reliquary stands open. Your main menu now shines with the gold of every crown you won.</p><button class="btn ghost relq-b" data-s="gild">${gildOn() ? '✨ Golden menu: on' : 'Golden menu: off'}</button>` : `<p class="relq-t"><b>The Sealed Reliquary</b>Fill every case in the Hall and it will open. No one living knows what is inside.</p>`}</div>`;
+  for (const W of WINGS) {
+    const xs = RELICS.filter(x => x.w === W.k), wn = xs.filter(x => got[x.k]).length;
+    h += `<section class="wing${wn === xs.length ? ' done' : ''}" style="--wc:${W.c};--wc2:${W.c2}"><div class="wing-h"><span class="we" aria-hidden="true">${W.e}</span><div><b>${esc(W.n)}</b><small>${esc(W.m)}</small></div><span class="wc">${wn}/${xs.length}</span></div><div class="rl-grid">`;
+    h += xs.map(x => { const g = got[x.k]; return `<div class="rl-item${g ? ' got' : ' locked'}"><button class="rl-case ${g ? 'got' : 'locked'}" data-s="relic" data-v="${x.k}" aria-label="${esc(x.n)}${g ? '' : ', not yet won'}"><span class="rl-art">${relicArt(x)}</span><span class="rl-cush" aria-hidden="true"></span>${g ? '' : '<span class="rl-lock" aria-hidden="true">🔒</span>'}</button><div class="rl-plate"><b>${esc(x.n)}</b><small>${g ? `${esc(g.who)}, ${g.y}` : esc(fromText(x))}</small></div></div>`; }).join('');
+    h += `</div>${wn === xs.length ? '<p class="wing-done">✦ Complete. Its banner hangs over your main menu. ✦</p>' : ''}</section>`;
+  }
+  return h;
+}
+function hallSeals() {
+  const got = getFeats(), n = FEATS.filter(f => got[f.k]).length;
+  return `<p class="hall-note">${n} of ${FEATS.length} seals earned across all your lives.</p><ul class="graves hall-list">${FEATS.map(f => `<li class="gr ft${got[f.k] ? ' got' : ''}"><span class="ft-i" aria-hidden="true">${got[f.k] ? f.i : '🔒'}</span><div><b>${esc(f.n)}</b><small>${esc(f.d)}${got[f.k] ? ` Earned by ${esc(got[f.k].who)}.` : ''}</small></div></li>`).join('')}</ul>`;
+}
+function hallGraves() {
+  const gs = getGraves();
+  if (!gs.length) return '<div class="hall-empty"><b>No one rests here yet.</b><span>Every life you live ends here in the end.</span></div>';
+  return `<ul class="graves hall-list">${gs.map(g => `<li class="gr"><span class="gr-g" title="${esc(g.g[0])}">${esc(g.g[1])}</span><div><b>${esc(g.h ? g.h + ' ' : '')}${esc(g.n)} ${esc(g.e)}</b><small>${g.b}–${g.d}, aged ${g.a}. ${esc(cap(g.t))}. Died ${esc(g.c)}.${g.gen > 1 ? ` Generation ${g.gen}.` : ''}</small></div></li>`).join('')}</ul><div class="stack"><button class="btn ghost" data-s="hallClearGrave">Clear the graveyard</button></div>`;
+}
+function showHall(from, tab) {
+  if (from) hallFrom = from; if (tab) hallTab = tab;
+  const sc = $('screen'), prev = sc.hidden ? 0 : sc.scrollTop, wasHall = !sc.hidden && !!sc.querySelector('.hall');
+  const got = relicsGot(), nRel = RELICS.filter(x => got[x.k]).length, L = legends();
+  const tabs = [['legends', 'Legends', '🏆'], ['houses', 'Houses', '🛡️'], ['relics', 'Relics', '🏺'], ['seals', 'Seals', '🏅'], ['graves', 'Graves', '🪦']];
+  const body = { legends: hallLegends, houses: hallHouses, relics: hallRelics, seals: hallSeals, graves: hallGraves }[hallTab] || hallLegends;
+  const sub = L.length ? `Your greatest life: ${esc(L[0].n)}, born ${esc(bornAs(L[0].bc))}${L[0].p > L[0].b ? `, who rose to become ${esc(L[0].l)}` : ''}. Relics: ${nRel} of ${RELICS.length}.` : 'Every life is weighed here. The lower you are born, the more your climb is worth.';
+  showScreen(`<div class="hall"><header class="hall-h">${hallHeadSVG()}<h1 class="hall-t">The Hall of Legends</h1><p class="hall-sub">${sub}</p></header><nav class="hall-tabs" role="tablist" aria-label="Rooms of the Hall">${tabs.map(([k, n, i]) => `<button class="hall-tab" role="tab" data-s="htab" data-v="${k}" aria-selected="${hallTab === k}"><i aria-hidden="true">${i}</i>${n}</button>`).join('')}</nav><div class="hall-body" role="tabpanel">${body()}</div><div class="hall-foot"><button class="btn" data-s="hallBack">Back</button></div></div>`);
+  if (wasHall) { const t = sc.querySelector('.hall-tabs'); if (t && prev > t.offsetTop) sc.scrollTop = t.offsetTop - 4; }
+}
+
+/* ---------- the start menu: banners, and the Golden Age ---------- */
+function gildDeco() {
+  const motes = Array.from({ length: 16 }, (_, i) => `<i class="mote" style="left:${((i * 37) % 97 + 1.5).toFixed(1)}%;animation-delay:${(-i * 1.13).toFixed(2)}s;animation-duration:${(7 + (i % 5) * 1.7).toFixed(1)}s"></i>`).join('');
+  const corner = c => `<svg class="gd-corner ${c}" viewBox="0 0 60 60" aria-hidden="true" focusable="false"><path d="M4 56V18Q4 4 18 4H56" fill="none" stroke="url(#rl-au2)" stroke-width="3"/><path d="M10 50V22Q10 10 22 10H50" fill="none" stroke="url(#rl-au2)" stroke-width="1.2"/><path d="M18 18q9 -3 12 6q-9 3 -12 -6zM18 18q-3 9 6 12q3 -9 -6 -12z" fill="url(#rl-au2)"/><circle cx="18" cy="18" r="3.4" fill="url(#rl-ru)" stroke="#7a520c" stroke-width=".8"/></svg>`;
+  return `<div class="gd-stars" aria-hidden="true"></div><div class="gd-motes" aria-hidden="true">${motes}</div>${['tl', 'tr', 'bl', 'br'].map(corner).join('')}`;
+}
+function menuBanners(got) {
+  const ws2 = WINGS.filter(w => wingDone(got, w.k));
+  if (!ws2.length) return '';
+  return `<div class="menu-banners" role="img" aria-label="Banners won: ${esc(ws2.map(w => w.n).join(', '))}">${ws2.map(w => `<span class="mb" style="--wc:${w.c};--wc2:${w.c2}"><i aria-hidden="true">${w.e}</i></span>`).join('')}</div>`;
+}
+
+/* ---------- your climb, shown while you live and when you die ---------- */
+function climbBoxHTML() {
+  if (!S || !S.alive) return '';
+  const r0 = riseOf(), ri = rungInfo(), sc = riseScore(), tier = riseTier(sc.t), nx = r0.p < 11 ? RUNGS[r0.p + 1] : null;
+  return `<div class="sumbox climb"><span class="climb-h">🪜 Fortune’s ladder</span>Born ${esc(bornAs(S.birthCls))}. Now: <b style="font-size:inherit">${esc(RUNGS[ri.r].n)}</b>. Highest this life: <b style="font-size:inherit">${esc(RUNGS[r0.p].n)}</b>.${ladderHTML(r0.b, r0.p)}Rise so far: <b style="font-size:inherit">${nfmt(sc.t)}</b> (${esc(tier[1])}).${nx ? `<small class="climb-nx">Next rung: <b>${esc(nx.n)}</b> (${esc(nx.d.toLowerCase())}), worth ${nfmt(RISE_STEP[r0.p + 1] * sc.m)}.</small>` : ''}</div>`;
+}
+function riseBoxHTML() {
+  const d = S && S.dead && S.dead.rise; if (!d) return '';
+  const sc = d.sc, r0 = riseOf(), tier = riseTier(d.t);
+  const parts = [[`Climb ×${sc.m}`, sc.climb], ['Wealth gained', sc.wealth], ['Seals of fame', sc.seals], ['Relics', sc.relics], ['Died at the top', sc.summit]].filter(p => p[1]);
+  const rel = r0.rel.map(k => RELICS.find(x => x.k === k)).filter(Boolean);
+  return `<div class="rise-box"><div class="rise-k">Your Rise</div><div class="rise-n" data-to="${d.t}">${nfmt(d.t)}</div><div class="rise-tier">${tier[2]} ${esc(tier[1])}</div>${ladderHTML(r0.b, r0.p)}<p class="rise-from">${r0.p > r0.b ? `Born ${esc(bornAs(sc.bc))}, you rose to become <b>${esc(r0.l)}</b>.` : `Born ${esc(bornAs(sc.bc))}, you held your place, but climbed no higher.`}</p>${parts.length ? `<dl class="rise-parts">${parts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>+${nfmt(v)}</dd></div>`).join('')}</dl>` : ''}<p class="rise-rank">${d.rank ? (d.rank === 1 ? (d.top ? '🏆 The greatest life in your Hall of Legends!' : '🏆 The first name in your Hall of Legends.') : `Number ${d.rank} in your Hall of Legends.`) : 'Not enough to enter the Hall this time.'}</p>${rel.length ? `<div class="chips">${rel.map(x => `<span class="chip tag">🏺 ${esc(x.n)}</span>`).join('')}</div>` : ''}<button class="btn ghost" data-s="hall">Visit the Hall of Legends</button></div>`;
+}
+function riseCount() {
+  const el = document.querySelector('#screen .rise-n'); if (!el) return;
+  const to = +el.dataset.to || 0; let still = false; try { still = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { }
+  if (to < 50 || still) return;
+  const t0 = performance.now(), dur = 1500;
+  const step = now => { const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3); el.textContent = nfmt(to * e); if (k < 1 && el.isConnected) requestAnimationFrame(step); };
+  el.textContent = '0'; requestAnimationFrame(step);
+}
+
+/* ---------- land for sale: dear, rare, and the way into the nobility ---------- */
+const LP1 = ['Ash', 'Thorn', 'Brad', 'Kings', 'Stan', 'Mar', 'Wood', 'Hal', 'Lang', 'Sut', 'Hay', 'Bur', 'Wal', 'Ox', 'Elm', 'Cold', 'Brook', 'Fen', 'Hart', 'Swan', 'Long', 'Ravens', 'Oak', 'Willow'];
+const LP2 = ['ley', 'ford', 'ton', 'by', 'ham', 'well', 'combe', 'thorpe', 'field', 'wick', 'stead', 'hurst', 'den', 'bury', 'mere'];
+const SELL_M = ['ruined by his ransom after the last war', 'who has taken the cross and needs silver for the voyage', 'who owes the Lombard bankers more than he can ever repay', 'whose only son died of the sweating sickness, and who means to end his days in an abbey', 'who gambled away his rents at court', 'whose barns burned and whose tenants fled after the murrain'];
+const SELL_F = ['a widow with no children, who means to take the veil', 'whose husband left her nothing but the land and his debts', 'who must raise dowries for five daughters'];
+function landPlace() { const used = new Set([S.village, ...S.assets.map(a => a.place)]); let n = ''; for (let i = 0; i < 30; i++) { n = pick(LP1) + pick(LP2); if (!used.has(n)) break; } return n; }
+function landSeller() {
+  const r = Math.random();
+  if (r < .12) return { s: `the abbey of St ${pick(['Aldhelm', 'Cuthbert', 'Swithun', 'Frideswide', 'Botolph', 'Edith'])}`, why: 'which needs silver to rebuild its church after a fire', inst: 1 };
+  if (r < .22) return { s: 'the crown', why: `selling the land of a traitor, taken for treason against the ${KT() === 'Queen' ? 'queen' : 'king'}`, inst: 1 };
+  const sx = P(.75) ? 'm' : 'f';
+  return { s: `${sx === 'm' ? 'Sir' : 'Dame'} ${pick(NAMES[sx])} ${pick(SUR.noble)}`, why: pick(sx === 'm' ? SELL_M : SELL_F) };
+}
+function manorOffer() { const inc = R(10, 20) * 10, yrs = R(18, 24); return Object.assign({ id: uid(), k: 'manor', pl: landPlace(), inc, yrs, price: Math.round(inc * yrs / 50) * 50, fee: Math.round((inc * 1.4 + 80) / 10) * 10 }, landSeller()); }
+function gageOffer() { const sl = landSeller(); if (sl.inst) return null; const inc = R(9, 16) * 10; return Object.assign({ id: uid(), k: 'gage', pl: landPlace(), inc, amt: Math.round(inc * R(9, 12) / 50) * 50 }, sl); }
+function countyOffer() {
+  if (!S.world || S.ruling) return null;
+  const war = wAtWar(S.realm).filter(r => r !== 'civil').length > 0;
+  if (!P(war ? .4 : .12)) return null;
+  const xs = grantable(); if (!xs.length) return null;
+  const x = pick(xs), price = Math.round(x.wealth * R(480, 680) / 500) * 500;
+  return { id: uid(), k: 'county', x: x.id, price, fee: Math.round(price * .1 / 50) * 50, war };
+}
+function landMkt() {
+  const L = S.land = S.land || { y: 0, offers: [], gage: [] };
+  if (!L.gage) L.gage = [];
+  if (L.y !== S.year) {
+    L.y = S.year; L.offers = [];
+    if (P(.85)) L.offers.push(manorOffer());
+    if (P(.3)) L.offers.push(manorOffer());
+    if (P(.35)) { const g = gageOffer(); if (g) L.offers.push(g); }
+    const c = countyOffer(); if (c) L.offers.push(c);
+  }
+  return L;
+}
+const landCost = o => o.k === 'gage' ? o.amt : o.price + o.fee;
+const manorsHeld = () => S.assets.filter(a => a.key === 'manor' || a.key === 'estate').length;
+function landWhy(o) {
+  if (!S.alive) return 'You are dead';
+  if (S.jail) return 'You are imprisoned';
+  if (S.age < 16) return 'From age 16';
+  if (S.cls === 'serf') return 'Serfs may not own land. Buy your freedom first';
+  if (S.vows) return 'Your vows forbid owning land';
+  if (o.k === 'county') {
+    const x = TT(o.x);
+    if (S.ruling) return 'You already rule';
+    if (!x || x.you || x.realm !== S.realm) return 'No longer for sale';
+    if (S.flags.rebel) return 'The crown does not sell land to rebels';
+    if (!(isLord() || heldTs().length || ['noble', 'royal'].includes(S.cls))) return 'Only a landed lord may buy a county. Buy a manor first';
+    if (S.stats.renown < 40) return 'Needs Renown 40';
+  }
+  if (S.coin < landCost(o)) return `Costs ${nfmt(landCost(o))} silver`;
+  return true;
+}
+function landTake(o, paid) {
+  if (!hasAsset('manor')) {
+    const t = `${ws('Lord', 'Lady')} of ${o.pl}`;
+    addAsset('manor', { label: `Manor of ${o.pl}`, place: o.pl, inc: o.inc, paid, title: t });
+    addTitle(t); st('renown', ASSET.manor.renown || 15); st('happy', ASSET.manor.happy || 8);
+    return t;
+  }
+  addAsset('estate', { label: `Manor of ${o.pl}`, place: o.pl, inc: o.inc, paid });
+  st('renown', 5);
+  return '';
+}
+function landHTML() {
+  if (!S || S.age < 14) return '';
+  const L = landMkt();
+  let h = '<h3 class="sec">🗺️ Land for sale</h3><p class="hint">Land is the true wealth of the age, and it is almost never sold. A family sells only when it is ruined, has no heir, or the king needs money for a war. The price is about twenty years of the land’s rents, and the king’s licence and the lawyers cost more on top.</p>';
+  const steps = [
+    [S.cls !== 'serf', '🕊️', 'Be free', 'Serfs may not own land.'],
+    [S.titles.some(t => /^(Lord|Lady) of /.test(t)), '🏡', 'Buy a manor', `You become ${ws('Lord', 'Lady')} of it, and a lord’s rights open up: a dovecote, a market charter, a fair, a castle.`],
+    [manorsHeld() >= 3, '🌾', 'Gather three manors', 'An estate fit for a baron, and rents to match.'],
+    [isBaron(), '📜', 'Petition for a barony', 'Needs a manor and Renown 50 (Work, Elite, Ranks of the realm).'],
+    [heldTs().length > 0, '🏰', 'Buy a county', 'Only when the crown needs money. Needs a manor and Renown 40.'],
+  ];
+  h += `<ol class="landsteps">${steps.map(([ok, i, n, d]) => `<li class="${ok ? 'ok' : ''}"><span class="ls-i" aria-hidden="true">${ok ? '✓' : i}</span><span><b>${esc(n)}</b><small>${esc(d)}</small></span></li>`).join('')}</ol>`;
+  if (!L.offers.length) h += '<div class="empty">No land came up for sale this year.<small>Turn the page, and ask again next year.</small></div>';
+  for (const o of L.offers) {
+    if (o.k === 'manor') h += btnItem('land', o.id, '🏡', `The manor of ${o.pl}`, `Sold by ${o.s}, ${o.why}. Rents about ${o.inc} a year. ${nfmt(o.price)} silver (${o.yrs} years of rent), plus ${nfmt(o.fee)} for the king’s licence and the lawyers.${hasAsset('manor') ? '' : ` You would become ${ws('Lord', 'Lady')} of ${o.pl}.`}`, landWhy(o), `${nfmt(landCost(o))} silver`);
+    else if (o.k === 'gage') h += btnItem('land', o.id, '📜', `Lend against the manor of ${o.pl}`, `${cap(o.s)}, ${o.why}, will pledge the manor for a loan of ${nfmt(o.amt)} silver. You take its rents (about ${o.inc} a year) while the loan stands. In three years the debt is repaid, or the manor is yours.`, landWhy(o), `${nfmt(o.amt)} silver`);
+    else if (o.k === 'county') { const x = TT(o.x); if (!x) continue; h += btnItem('land', o.id, '🏰', `The county of ${x.n}, sold by the crown`, `The last count died without an heir, and the county fell back to the crown. ${KT()} ${S.king} ${o.war ? 'needs silver for the war' : 'has an empty treasury'}, and will sell it: its castle, its knights and all its rents. You would be ${countTitle(x)}.`, landWhy(o), `${nfmt(landCost(o))} silver`); }
+  }
+  if (L.gage.length) h += '<h3 class="sec sm">Land pledged to you</h3>' + L.gage.map(g => btnItem('noop', '', '⏳', `The manor of ${g.pl}`, `Pledged by ${g.s} for ${nfmt(g.amt)} silver. You take about ${g.inc} a year in rents. The debt falls due in ${g.due}.`, true)).join('');
+  return h;
+}
+function landDo(id) {
+  const L = landMkt(), o = L.offers.find(x => x.id === id);
+  if (!o || landWhy(o) !== true) return 'The sale fell through at the last moment.';
+  coin(-landCost(o)); L.offers = L.offers.filter(x => x !== o);
+  if (o.k === 'manor') {
+    const t = landTake(o, o.price);
+    say(`You bought the manor of ${o.pl} for ${nfmt(landCost(o))} silver.`, 'money');
+    if (t) say(`You are now ${t}!`, 'gold');
+    checkFeats();
+    return t ? `The lawyers argued for a month, the king’s clerks took their fee, and at last the charter was sealed. The tenants of ${o.pl} lined the road and bowed as you rode in. You are ${t}.` : `The charter was sealed. ${o.pl} is yours: its fields, its mill, its tenants and their rents.`;
+  }
+  if (o.k === 'gage') {
+    L.gage.push({ pl: o.pl, s: o.s, inc: o.inc, amt: o.amt, due: S.year + 3 });
+    say(`You lent ${nfmt(o.amt)} silver to ${o.s}, against the manor of ${o.pl}.`, 'money');
+    return `You counted out ${nfmt(o.amt)} silver and took the manor of ${o.pl} in pledge. The Church forbids interest, so instead you will take its rents for as long as the loan stands. The debt falls due in ${S.year + 3}: repaid, or the manor is yours.`;
+  }
+  const x = TT(o.x);
+  grantCounty(x);
+  say(`You bought the county of ${x.n} from the crown for ${nfmt(landCost(o))} silver.`, 'money');
+  say(`You are now ${countTitle(x)}!`, 'gold');
+  try { wNews(`${KT()} ${S.king} sold the county of ${x.n} to ${S.first} ${S.last} for a mountain of silver. The old families are appalled.`, '🏰', true); } catch (e) { }
+  checkFeats();
+  return `The royal clerks weighed your silver for three days. Then ${KT() === 'Queen' ? 'the queen' : 'the king'} put the great seal to the charter, and the county of ${x.n} was yours: its castle, its knights, its courts and every penny of its rents. The old families sneer that you bought what they were born to. Let them.`;
+}
+function landAsk(id) {
+  const L = landMkt(), o = L.offers.find(x => x.id === id); if (!o) return toast('That land is no longer for sale');
+  const why = landWhy(o); if (why !== true) return toast(why);
+  const c = nfmt(landCost(o));
+  if (o.k === 'manor') confirmEv('🏡', `Buy the manor of ${o.pl} from ${o.s}? The price is ${nfmt(o.price)} silver, and ${nfmt(o.fee)} more for the king’s licence, the lawyers, and a feast for your new tenants.`, `Buy it for ${c} silver`, () => landDo(id));
+  else if (o.k === 'gage') confirmEv('📜', `Lend ${c} silver to ${o.s} against the manor of ${o.pl}? You take its rents while the loan stands. In three years the debt is repaid, or the manor is yours.`, `Lend ${c} silver`, () => landDo(id));
+  else confirmEv('🏰', `Buy the county of ${TT(o.x).n} from the crown for ${c} silver? It is the price of a fortune, and it makes you a ${ws('count', 'countess')}.`, `Buy it for ${c} silver`, () => landDo(id));
+}
+// Each year: rents from pledged land, and debts falling due.
+function landYear() {
+  const L = S && S.land; if (!L || !L.gage || !L.gage.length || !S.alive) return;
+  const fx0 = FX; FX = null; let rent = 0;
+  try {
+    for (const g of L.gage.slice()) {
+      if (S.year < g.due) { rent += g.inc; continue; }
+      L.gage.splice(L.gage.indexOf(g), 1);
+      const r = Math.random();
+      if (r < .5) { coin(g.amt); say(`${cap(g.s)} repaid the ${nfmt(g.amt)} silver you lent, and took back the manor of ${g.pl}. You kept three years of its rents.`, 'money'); }
+      else if (r < .9 && S.cls !== 'serf' && !S.vows) { const t = landTake(g, g.amt); say(`${cap(g.s)} could not repay you. By the terms of the pledge, the manor of ${g.pl} is now yours.`, 'gold'); if (t) say(`You are now ${t}!`, 'gold'); checkFeats(); }
+      else { coin(Math.round(g.amt / 2)); say(`${cap(g.s)} died owing you ${nfmt(g.amt)} silver. The heirs fought you in the courts, and you got back half.`, 'money'); }
+    }
+    if (rent) { coin(rent); say(`Rents from land pledged to you: ${rent} silver.`, 'money'); }
+  } finally { FX = fx0; }
+}
+
+/* ---------- hooks into the rest of the game ---------- */
+Object.assign(ASSET, { estate: { n: 'Manor', i: '🏡', cost: 0, income: 120, land: 1, renown: 5, desc: 'Another manor, with its fields, its mill and its tenants. Its rents add to your wealth, and its acres to the weight of your name.' } });
+HCAT.estate.keys.push('estate');
+{ const _cf = checkFeats; checkFeats = function () { _cf.apply(this, arguments); try { riseTick(); } catch (e) { console.error(e); } }; }
+{
+  const _fd = finalizeDeath;
+  finalizeDeath = function () {
+    const first = !!(S && S.dead && !S.dead.done);
+    if (first) { try { riseTick(); } catch (e) { console.error(e); } }
+    const r = _fd.apply(this, arguments);
+    if (first) { try { recordLegend(); save(); } catch (e) { console.error(e); } }
+    return r;
+  };
+}
+{ const _sd = showDeath; showDeath = function () { const r = _sd.apply(this, arguments); try { riseCount(); } catch (e) { } return r; }; }
+{ const _bg = begin; begin = function (state) { const r = _bg.apply(this, arguments); try { if (S && S.alive) { riseOf(); save(); } } catch (e) { console.error(e); } return r; }; }
+{
+  const _ca = continueAs;
+  continueAs = function (id) {
+    const old = S; let dyn = null, found = null, gage = null;
+    try { riseOf(); dyn = old.dyn; found = old.found; gage = old.land && old.land.gage && old.land.gage.length ? old.land.gage.slice() : null; } catch (e) { }
+    const r = _ca.apply(this, arguments);
+    if (S && S !== old) { if (dyn) S.dyn = dyn; if (found) S.found = found; if (gage) { S.land = S.land || { y: 0, offers: [], gage: [] }; S.land.gage = gage; } save(); }
+    return r;
+  };
+}
+{ const _au = ageUp; ageUp = function () { const a = S && S.alive && !modalOpen ? S.age : null; const r = _au.apply(this, arguments); try { if (a != null && S && S.age > a) landYear(); } catch (e) { console.error(e); } return r; }; }
+XACT.land = id => landAsk(id);
+XACT.hall = () => { closeSheet(); showHall('app'); };
+ACT.grave = () => { closeSheet(); showHall('app', 'graves'); };
+ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
 
 /* ---------- first-time tour ---------- */
 const TOUR = [
@@ -28832,13 +29601,13 @@ function showTour(i = 0) {
 }
 
 /* ---------- moving your game to another device ---------- */
-function exportCode() { try { return btoa(unescape(encodeURIComponent(JSON.stringify({ app: 'mudcrowns', v: APP_VERSION, s: store.get(KEY), g: store.get(GKEY), f: store.get(FKEY) })))); } catch (e) { return ''; } }
+function exportCode() { try { return btoa(unescape(encodeURIComponent(JSON.stringify({ app: 'mudcrowns', v: APP_VERSION, s: store.get(KEY), g: store.get(GKEY), f: store.get(FKEY), l: store.get(LKEY), h: store.get(HKEY), c: store.get(CKEY), m: store.get(MKEY) })))); } catch (e) { return ''; } }
 function importCode(code) {
   try {
     const d = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
     if (!d || d.app !== 'mudcrowns') return 'That is not a Mud & Crowns backup code.';
     if (d.s && !parseSave(d.s)) return 'The saved life in that code is damaged.';
-    if (d.s) store.set(KEY, d.s); if (d.g) store.set(GKEY, d.g); if (d.f) store.set(FKEY, d.f);
+    if (d.s) store.set(KEY, d.s); if (d.g) store.set(GKEY, d.g); if (d.f) store.set(FKEY, d.f); if (d.l) store.set(LKEY, d.l); if (d.h) store.set(HKEY, d.h); if (d.c) store.set(CKEY, d.c); if (d.m) store.set(MKEY, d.m);
     return true;
   } catch (e) { return 'That code could not be read. Copy the whole thing and try again.'; }
 }

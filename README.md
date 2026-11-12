@@ -297,6 +297,31 @@ still be reached from a first job.
   in the great hall. Outdoor scenes show you close up with a companion, and the people who
   walk across them are drawn in the new style.
 
+## The Hall of Legends, the Collection Hall and land for sale (v1.16)
+
+- **Fortune's ladder and the Rise.** Twelve rungs, from Serf to Emperor. The game keeps the
+  highest rung you reach in each life (titles, knighthood, counties, high office, the Church,
+  wealth). Each rung is worth more than the one below, and the climb is multiplied by your
+  birth: ×3 for a serf down to ×1 for royalty. Wealth gained, seals, relics and dying at the
+  top add a little more. A new rung is written in your chronicle as you reach it.
+- **The Hall of Legends** (main menu, in-game Menu, and the death screen) has five rooms:
+  Legends (your best lives on a podium, with portraits), Houses (family lines, their glory
+  summed over every heir), Relics, Seals of fame and the Graveyard. The death screen shows
+  your Rise counting up, how it was earned, and your place in the Hall.
+- **The Collection Hall**: sixteen relics in four wings (Toil, the Sword, Cross and Quill, the
+  Crown), drawn as gold, iron and jewelled objects in glass cases. Each needs a humble birth
+  (serf, free peasant or commoner) and a great rise. Locked cases show a dark silhouette.
+  A finished wing hangs its banner over the main menu. All sixteen open the sealed reliquary
+  and turn the main menu golden (it can be switched off in the Hall).
+- **Land for sale** (Realm, Holdings): each year a manor may come up for sale from a ruined
+  knight, a widow, an abbey or the crown, priced at about twenty years of its rents plus the
+  king's licence and lawyers. The first makes you Lord or Lady of it; more manors add rents.
+  Lend silver against a manor: you take its rents for three years, then the debt is repaid or
+  the manor is yours. Now and then the crown sells a county, more often in wartime (needs a
+  manor and Renown 40). The plain manor is no longer in the market list, and lord-only
+  holdings now say to buy a manor first.
+- Backups now carry the Hall of Legends and the Collection Hall.
+
 ### Prioress in Find Work (v1.15.1)
 
 - The Church ladder's third step, Prior or Prioress (between Monk or Nun and Abbot or
