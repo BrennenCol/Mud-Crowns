@@ -65,7 +65,7 @@ Also in `store/whats_new_1.20.1.txt`, ready to copy (it covers 1.20 and its fix,
 
 ```
 FIXED IN 1.20.1
-In the sickroom, your patient now lies properly under the blanket, with shoulders, a turned-down sheet and an arm resting on top.
+In the sickroom, your patient now lies properly in bed: face turned up to the ceiling, a neck and shoulders, a turned-down sheet, and an arm resting on the blanket.
 
 EVERY OFFICE, PLAYED
 All the work you play in high office has been rebuilt as real games, each in its own painted scene with people who walk, react and celebrate:
