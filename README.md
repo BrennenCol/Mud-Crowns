@@ -379,6 +379,33 @@ fills in anything a newer version expects, and drops a job whose career no longe
   looks so it is the same as a child and as your heir), fades smoothly to grey over about
   twenty years, then to white, and never goes back.
 
+## Battles you fight, letters you seal, children who live (v1.19)
+
+- **The field of battle** replaces the war table (same laurels): a painted field with three
+  lanes of terrain (open fields, a hill, woods, marsh) and weather (rain, fog, wind). Place your
+  archers, pikes and horse (tap a company, then a place), and the enemy you can see. The fight
+  plays out: volleys of arrows, the lines march, a clash with dust and a shaking field. Then a
+  three-second call: the weakest flank breaks (or the enemy wavers), and sending the reserve
+  knights to the right lane turns it. Winners advance, losers fall back. Spoils: knights (and a
+  count for a crushing win) taken for ransom, counted into a chest.
+- **The Curia's letters** (bishops, archbishops, cardinals, legates, mitred abbots): each day has
+  a true seal (wax colour, sign, and cord: red or blue silk, or hemp rope). Letters slide in;
+  seal the true ones (a stamp lands), burn the forgeries (into the brazier), before a 40-second
+  candle burns down. Five right in a row doubles the score. Sealed forgeries and burned true
+  letters cost standing with the Church.
+- **The rival at court** game is removed.
+- **Children live their own lives.** At fourteen each child takes up a trade (often the parent's,
+  or one fitting their station and, under Historical rules, their sex), is promoted every few
+  years (rarely into the highest posts), saves part of their pay, marries, and has children.
+  Their news appears in your chronicle. Playing on as one of them takes over their job, years,
+  savings, spouse and children. Grown children from older saves catch up the years they lived.
+- **The road to Rome.** A named Pope ages and dies; once you are a Cardinal he is old and frail,
+  and his death brings the conclave (usually within one to five years). Church posts show a
+  ladder of every rank and what the next one needs; under Historical rules women are told the
+  ladder ends at Abbess unless Relaxed rules are on.
+- **Type.** Headings and buttons use IM Fell English SC (bundled in fonts/ for the app); the title
+  keeps UnifrakturMaguntia.
+
 ## Choices that come back (v1.18)
 
 - **Storylines removed.** The Storylines module (26 multi-chapter tales, about 4,000 lines)

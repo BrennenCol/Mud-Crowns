@@ -61,9 +61,24 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.18.3.txt`, ready to copy (it includes 1.17 and ends with a line about the updates since 1.13).
+Also in `store/whats_new_1.19.0.txt`, ready to copy (it includes everything since 1.17 and ends with a line about the updates since 1.13).
 
 ```
+THE FIELD OF BATTLE
+Generals, marshals and captains now fight real battles. Read the ground (woods, marsh, hills) and the weather, place your archers, pikes and horse, then watch the arrows fly and the lines clash. When a flank starts to break, you have three seconds to send your reserve knights to the right place. Win, and count the ransoms for every knight and lord you took.
+
+THE CURIA'S LETTERS
+Bishops and cardinals sit at the desk of the Church. Letters pour in from all Christendom, and forgers send their own: check the wax, the sign and the cord against today's true seal, then seal or burn before the candle burns down.
+
+YOUR CHILDREN LIVE THEIR OWN LIVES
+From fourteen, your children learn a trade and climb in it, marry, have children of their own and save. Play on as one of them and you take over the life they have been living.
+
+THE ROAD TO ROME
+Church posts now show every rank up to Pope, and what the next one needs. There is a real Pope, who grows old; when he dies, a cardinal can win the conclave.
+
+EASIER TO READ
+Headings and buttons use a clearer old English type.
+
 CHOICES THAT COME BACK
 Small choices at work are remembered. Lend your neighbour your ox, take a soldier's sword for his drinking debt, rush a rich customer's order, keep a purse you found on a dead knight, warn a kind steward of a plot. A year or three later the consequence turns up at your door, with a reminder of what you did, and another choice to make. There are 26 of these, across every kind of work, from the fields and the bakehouse to the Church, the army and the sea.
 
@@ -84,7 +99,6 @@ High posts now come with real work you play yourself, once a year, without spend
 - Hear the petitions: three petitioners, two choices each, and four great powers to keep in balance
 - The Exchequer: count the sheriffs' tally sticks and catch the cheats
 - The assize: weigh the evidence, spot the lie, and give your verdict (and maybe a bribe)
-- The war table: set your archers, pikes and horse against the enemy, read the ground and the weather, and take knights and lords for ransom
 - The visitation: find the rotten priests and protect the good ones
 - The sickroom: read the signs and choose the cure, from a carter's wife up to the king
 - The great work: raise a bridge, a tower or a cathedral over the years, and survive the floods and cracks
@@ -94,9 +108,6 @@ High posts now come with real work you play yourself, once a year, without spend
 
 THE FOUR POWERS
 Crown, Church, Lords and Commons each watch what you do. Too low and they turn on you; too high and the others grow jealous.
-
-A RIVAL AT COURT
-Someone wants your post. Beat them in a battle of wits each year; break them three times and they are ruined.
 
 THE CONCLAVE
 As a cardinal, win the papal election yourself, one vote at a time.

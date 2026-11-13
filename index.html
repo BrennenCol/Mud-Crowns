@@ -959,6 +959,93 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .pp-steps li.done{color:var(--good);border-color:var(--good)}
 .pp-steps li.now{background:var(--rubric);color:var(--rubric-ink);border-color:var(--seal-lo)}
 .pp-road p{margin:6px 0 0;font-size:15px;line-height:1.4}
+/* ---------- v1.19 the field of battle ---------- */
+.bf-wrap{position:relative;margin:4px 0 8px;border-radius:10px;overflow:hidden;box-shadow:0 0 0 2px #8a6420,0 4px 10px rgba(0,0,0,.3)}
+.bf{display:block;width:100%;height:auto}
+.bf .bf-mv{transition:transform 1.4s cubic-bezier(.4,0,.2,1),opacity .8s}
+.bf.adv .bf-me .bf-mv{transform:translateY(-46px)}
+.bf.adv .bf-en .bf-mv{transform:translateY(42px)}
+.bf.clash{animation:bfShake .28s 3}
+@keyframes bfShake{25%{transform:translate(2px,-1px)}75%{transform:translate(-2px,1px)}}
+.bf-dust{opacity:0;transform-box:fill-box;transform-origin:center}
+.bf.clash .bf-dust{animation:bfDust 2.4s ease-out forwards}
+@keyframes bfDust{0%{opacity:0;transform:scale(.3)}20%{opacity:.9}100%{opacity:0;transform:scale(1.7)}}
+.bf-arrow{fill:none;stroke:#2a1a0c;stroke-width:1.3;stroke-dasharray:7 260;stroke-dashoffset:7;opacity:0;animation:bfArrow 1s ease-in forwards}
+.bf-arrow.theirs{stroke:#4a0a0a}
+@keyframes bfArrow{0%{opacity:1;stroke-dashoffset:7}100%{opacity:1;stroke-dashoffset:-135}}
+.bf.done .bf-me.win .bf-mv{transform:translateY(-78px)}
+.bf.done .bf-me.lose .bf-mv{transform:translateY(24px);opacity:.3}
+.bf.done .bf-en.win .bf-mv{transform:translateY(74px)}
+.bf.done .bf-en.lose .bf-mv{transform:translateY(-22px);opacity:.3}
+.bf-me.danger .bf-mv{animation:bfBlink .45s infinite alternate}
+.bf-me.chance .bf-mv{animation:bfBlink .6s infinite alternate}
+@keyframes bfBlink{to{opacity:.55}}
+.bf-reserve{transform:translate(180px,284px);transition:transform 1.1s ease-in-out}
+.bf-call{position:absolute;left:50%;top:46%;padding:6px 12px;border-radius:8px;background:rgba(155,31,18,.94);color:#fff3e2;font:20px/1.15 var(--black);white-space:nowrap;transform:translate(-50%,-50%);animation:bfPop .3s ease-out;box-shadow:0 4px 10px rgba(0,0,0,.4)}
+@keyframes bfPop{from{transform:translate(-50%,-50%) scale(.6);opacity:0}}
+.bf-rain{animation:bfRain .45s linear infinite}
+@keyframes bfRain{to{transform:translate(-6px,12px)}}
+.bf-slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:6px 0}
+.bf-slots .mg-b{padding:8px 4px;font-size:14px}
+.bf-slots .mg-b.arm{box-shadow:0 0 0 2px var(--gold);animation:glPulse 1.4s ease-in-out infinite}
+.bf-slots .mg-b.full{background:var(--vellum-2)}
+.bf-tray{display:flex;gap:6px;justify-content:center;margin:6px 0}
+.bf-tray .mg-b{flex:1;width:auto}
+.bf-send .mg-b{background:var(--rubric);color:var(--rubric-ink);border-color:var(--seal-lo);animation:glPulse 1s ease-in-out infinite}
+.bf-timer{height:8px;margin:4px 0;border-radius:4px;background:var(--rule);overflow:hidden}
+.bf-timer i{display:block;width:100%;height:100%;background:linear-gradient(90deg,#a3251a,#d65a42);transition:width 3s linear}
+.bf-timer.go i{width:0}
+.bf-spoils{text-align:center}
+.bf-pris{margin:8px 0;font-size:30px;letter-spacing:4px;animation:bfPop .5s ease-out}
+.bf-chest{position:relative;max-width:220px;margin:16px auto 10px;padding:18px 12px 12px;border-radius:12px;background:linear-gradient(#6b4a2e,#3a2414);color:#f3d983;box-shadow:inset 0 0 0 3px #c9952e,0 6px 14px rgba(0,0,0,.35)}
+.bf-chest b{display:block;font:40px/1 var(--black)}
+.bf-chest small{color:#e8d7aa}
+.bf-coins i{position:absolute;left:50%;top:-24px;width:14px;height:14px;margin-left:var(--x);border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3c0,#e2b23c 60%,#8a5c0a);animation:bfCoin .9s var(--d) ease-in both}
+@keyframes bfCoin{0%{transform:translateY(-40px);opacity:0}30%{opacity:1}100%{transform:translateY(46px);opacity:0}}
+/* ---------- v1.19 the Curia's letters ---------- */
+.cu-desk{position:relative;padding:10px;border-radius:12px;background:linear-gradient(#5a3a22,#36210f);box-shadow:inset 0 0 0 3px #8a6420,inset 0 0 34px rgba(0,0,0,.55);color:#f1e4c3}
+.cu-say{margin:8px 4px;font-size:15px;line-height:1.42;color:#f1e4c3}
+.cu-say b{color:#f3d983}
+.cu-top{display:flex;align-items:stretch;gap:8px}
+.cu-ref{display:flex;flex:1;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;background:rgba(0,0,0,.28);box-shadow:inset 0 0 0 1px rgba(243,201,85,.5)}
+.cu-ref>span:first-child{width:66px;font:15px/1.1 var(--black);color:#f3c955}
+.cu-ref .cu-seal{flex:none;width:46px;height:46px}
+.cu-ref small{font-size:12.5px;line-height:1.3;color:#e8d7aa}
+.cu-candle{position:relative;flex:none;width:26px;height:66px;align-self:flex-end}
+.cu-wax{position:absolute;bottom:0;left:6px;width:14px;height:100%;border-radius:3px 3px 1px 1px;background:linear-gradient(90deg,#e8dcc0,#fff8e6,#d9ccad)}
+.cu-flame{position:absolute;left:2px;top:-17px;width:10px;height:16px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:radial-gradient(circle at 50% 72%,#fff6d0,#ffc94a 50%,#e2691c);box-shadow:0 0 14px 4px rgba(255,190,80,.45);animation:cuFlick .5s ease-in-out infinite alternate;transform-origin:50% 100%}
+@keyframes cuFlick{to{transform:scale(.88,1.1) rotate(3deg)}}
+.cu-hud{display:flex;justify-content:center;gap:18px;margin:8px 0 4px;font-size:15px;color:#e8d7aa}
+.cu-hud b{color:#fff3d6;font-size:18px}
+.cu-hud .hot{color:#ffb53d;font-weight:700}
+.cu-stage{position:relative;height:214px;overflow:hidden}
+.cu-letter{position:absolute;left:0;right:0;top:4px;width:min(260px,86%);margin:0 auto;padding:10px 12px 70px;border-radius:4px;background:linear-gradient(#f6ecd2,#e6d6ae);color:#2a1d14;text-align:center;box-shadow:0 6px 14px rgba(0,0,0,.45)}
+.cu-letter b{display:block;font:600 15px/1.2 var(--serif)}
+.cu-letter p{margin:4px 0 0;font-size:14px;font-style:italic;line-height:1.3}
+.cu-letter .cu-seal{position:absolute;left:50%;bottom:-6px;width:58px;height:58px;margin-left:-29px}
+.cu-cord{position:absolute;left:50%;bottom:36px;width:14px;height:26px;margin-left:-7px}
+.cu-cordv{display:block;width:100%;height:100%;border-radius:3px;background:linear-gradient(90deg,rgba(0,0,0,.25),transparent 30%,rgba(255,255,255,.25) 50%,transparent 70%,rgba(0,0,0,.25)),var(--cc);box-shadow:0 0 0 1.5px rgba(0,0,0,.55)}
+.cu-cordv.hemp{border-radius:6px;background:repeating-linear-gradient(135deg,#a8865a 0 4px,#6e5230 4px 7px);box-shadow:0 0 0 1.5px rgba(0,0,0,.6)}
+.cu-ref .cu-refcord{flex:none;width:12px;height:40px;font:inherit}
+.cu-ref .cu-cordv{width:100%}
+.cu-letter.in{animation:cuIn .35s cubic-bezier(.2,.8,.3,1.2)}
+@keyframes cuIn{from{transform:translateX(120%) rotate(6deg)}}
+.cu-letter.sealed{animation:cuOut .45s .2s ease-in forwards}
+@keyframes cuOut{to{transform:translateX(-140%) rotate(-8deg);opacity:0}}
+.cu-letter.burned{animation:cuBurn .5s ease-in forwards}
+@keyframes cuBurn{to{transform:translate(-40%,120%) rotate(-30deg) scale(.4);opacity:0;filter:sepia(1) brightness(.4)}}
+.cu-letter.right{box-shadow:0 0 0 3px #3f8a52,0 6px 14px rgba(0,0,0,.45)}
+.cu-letter.wrong{box-shadow:0 0 0 3px #a3251a,0 6px 14px rgba(0,0,0,.45)}
+.cu-stamp{position:absolute;left:50%;top:38%;display:grid;place-items:center;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;border:4px solid #7a1010;color:#7a1010;font-size:34px;opacity:0;animation:cuStamp .22s ease-out forwards}
+@keyframes cuStamp{0%{transform:scale(2.2);opacity:0}100%{transform:scale(1) rotate(-12deg);opacity:.85}}
+.cu-brazier{position:absolute;left:12px;bottom:8px;font-size:28px;animation:cuFlick 1.1s ease-in-out infinite alternate}
+.cu-act .mg-b{padding:14px;font-size:18px}
+.mg-b.cu-burn{background:#5a1a10;color:#ffd9a8;border-color:#3a0a04}
+.mg-b.cu-sealb{background:#2f6a3c;color:#eaffe8;border-color:#1a4022}
+.cu-final{padding:14px;text-align:center}
+.cu-final b{display:block;font:48px/1 var(--black);color:#f3c955}
+.cu-final small{color:#e8d7aa}
+@media (prefers-reduced-motion:reduce){.bf.clash,.bf-rain,.cu-flame,.cu-brazier,.bf-me.danger .bf-mv,.bf-me.chance .bf-mv{animation:none}}
 </style>
 </head>
 <body>
@@ -997,7 +1084,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.18.3';
+const APP_VERSION = '1.19.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -5900,9 +5987,11 @@ function showWhatsNew() {
   store.set(NEWKEY, APP_VERSION);
   modalOpen = true;
   const items = [
-    ['↩️', 'Choices that come back', 'small choices at work are remembered. Lend your neighbour your ox, take a soldier’s sword for his debt, rush a rich customer’s order, keep a dead knight’s purse: a year or three later it comes back, with a reminder of what you did, and another choice.'],
-    ['✂️', 'No more storylines', 'the long tales that came back chapter by chapter are gone. Your own work and your own choices tell the story now.'],
-    ['🎲', 'Your office, played', 'high posts have work you play yourself once a year, in Work: petitions, the Exchequer, the assize, the war table, the visitation, the sickroom, a great building, the envoy’s game, the market, the spymaster’s web, and a rival at court.'],
+    ['🎌', 'The field of battle', 'generals and captains now fight real battles: read the ground and the weather, place your archers, pikes and horse, then watch the arrows fly and the lines clash. When a flank breaks you have three seconds to send your reserve knights to the right place. Win, and count your ransoms.'],
+    ['📜', 'The Curia’s letters', 'bishops and cardinals sit at the desk of the Church: letters pour in from all Christendom, and forgers send their own. Check the wax, the sign and the cord, then seal or burn before the candle burns down.'],
+    ['👨‍👩‍👧', 'Your children live their own lives', 'from fourteen they learn a trade and climb in it, marry, have children and save. Play on as one of them and you take over the life they have been living.'],
+    ['⛪', 'The road to Rome', 'Church posts now show every rank to Pope and what the next one needs. There is a real Pope, who grows old; when he dies, a cardinal can win the conclave.'],
+    ['🖋️', 'Easier to read', 'headings and buttons use a clearer old English type.'],
   ];
   $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Open Work</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
@@ -26279,45 +26368,129 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       draw();
     } });
 
-  /* ---------- 4. The War Table: three lanes, terrain, weather, and ransoms ---------- */
-  const TER = { open: ['🌾', 'Open fields'], hill: ['⛰️', 'A hill'], marsh: ['🌿', 'Marsh'], wood: ['🌲', 'Woods'] };
-  const UNIT = { horse: ['🐎', 'Horse'], foot: ['🛡️', 'Pikes'], bow: ['🏹', 'Archers'] };
-  const BEATS = { horse: 'bow', bow: 'foot', foot: 'horse' };
-  const TMOD = { open: { horse: 1 }, hill: { bow: 1, horse: -1 }, marsh: { horse: -2, foot: -1 }, wood: { bow: -1, foot: 1 } };
-  const warFoe = () => { const ws = S.world ? wAtWar(S.realm).filter(r => r !== 'civil') : []; return ws.length ? { r: pick(ws), war: true } : { r: pick(REALMS.filter(r => r !== S.realm)), war: false }; };
-  mgAdd({ k: 'war', i: '🎌', n: 'The War Table', d: 'Place your archers, pikes and horse against the enemy, read the ground, and fight.', seal: 'mg_war', payK: .5, who: () => mgIn('general', 'constable', 'marshal', 'knightcmd', 'dukecmd', 'barcmd', 'jb_condottiero', 'jb_grandmaster', 'jb_preceptor', 'jb_guardcaptain', 'jb_gunner', 'knightmil'),
+
+  /* ---------- 4. The field of battle: deploy, watch it play out, and send the reserve in time ---------- */
+  const BF_TER = { open: 'Open fields', hill: 'A hill', wood: 'Woods', marsh: 'Marsh' };
+  const BF_U = { horse: ['🐎', 'Horse'], foot: ['🛡️', 'Pikes'], bow: ['🏹', 'Archers'] };
+  const BF_BEATS = { horse: 'bow', bow: 'foot', foot: 'horse' };
+  const BF_TMOD = { open: { horse: 1 }, hill: { bow: 1, horse: -1 }, marsh: { horse: -2, foot: -1 }, wood: { bow: -1, foot: 1 } };
+  const BF_X = [60, 180, 300];
+  const bfFoe = () => { const ws = S.world ? wAtWar(S.realm).filter(r => r !== 'civil') : []; return ws.length ? { r: pick(ws), war: true } : { r: pick(REALMS.filter(r => r !== S.realm)), war: false }; };
+  // a company of little soldiers, drawn facing up (yours) or down (theirs)
+  function bfCompany(kind, col, up) {
+    const d = up ? 1 : -1; let s = '';
+    if (kind === 'horse') {
+      for (let i = 0; i < 3; i++) { const x = -16 + i * 16, y = (i % 2) * 4 * d; s += `<g transform="translate(${x} ${y})"><ellipse cx="0" cy="4" rx="6.5" ry="3.2" fill="#6b4a2e" stroke="#2a1a0c" stroke-width=".6"/><path d="M${4 * d > 0 ? 5 : -5} 2l${d > 0 ? 3 : -3} -4" stroke="#6b4a2e" stroke-width="2.4" stroke-linecap="round"/><path d="M-4 6v4M-1.5 6v4M2 6v4M4.5 6v4" stroke="#2a1a0c" stroke-width=".9"/><rect x="-2" y="-5" width="4" height="7" rx="1" fill="${col}" stroke="#1a1208" stroke-width=".5"/><circle cx="0" cy="-7" r="2.1" fill="#d9b48c" stroke="#1a1208" stroke-width=".4"/><path d="M2 -6l${d * 2} ${-12 * d}" stroke="#bfb6a8" stroke-width=".9"/></g>`; }
+    } else {
+      for (let r = 0; r < 2; r++) for (let i = 0; i < 4; i++) {
+        const x = -15 + i * 10 + (r % 2) * 5, y = r * 9 * d;
+        s += `<g transform="translate(${x} ${y})"><rect x="-2" y="-3" width="4" height="7" rx="1" fill="${col}" stroke="#1a1208" stroke-width=".5"/><circle cx="0" cy="-5" r="2" fill="#d9b48c" stroke="#1a1208" stroke-width=".4"/>${kind === 'foot' ? `<path d="M2.5 4V-16" stroke="#8a7a5a" stroke-width=".9"/><path d="M1.6 -16l.9 -3l.9 3z" fill="#cfd5dc"/>` : `<path d="M2.5 -6q4 4 0 8" fill="none" stroke="#6b4a2e" stroke-width=".9"/>`}</g>`;
+      }
+    }
+    return s + `<g transform="translate(${up ? 22 : -22} ${up ? -14 : 14})"><path d="M0 0V-16" stroke="#3a2a1a" stroke-width="1"/><path d="M0 -16h9l-2 3l2 3h-9z" fill="${col}" stroke="#1a1208" stroke-width=".4"/></g>`;
+  }
+  function bfTerrain(t, x) {
+    const g = { open: '#7fa25a', hill: '#8a9b55', wood: '#5f7f45', marsh: '#6f8a6a' }[t];
+    let s = `<rect x="${x - 58}" y="96" width="116" height="92" fill="${g}" opacity=".55"/>`;
+    if (t === 'hill') s += `<ellipse cx="${x}" cy="150" rx="50" ry="30" fill="#9aa860" stroke="#6e7a3e" stroke-width="1"/><ellipse cx="${x}" cy="148" rx="32" ry="18" fill="none" stroke="#6e7a3e" stroke-width=".8"/><ellipse cx="${x}" cy="146" rx="14" ry="8" fill="none" stroke="#6e7a3e" stroke-width=".8"/>`;
+    if (t === 'wood') for (const [dx, dy] of [[-34, 120], [-12, 132], [14, 118], [36, 136], [-24, 162], [4, 158], [30, 168]]) s += `<path d="M${x + dx} ${dy + 10}v6" stroke="#4a3220" stroke-width="2"/><circle cx="${x + dx}" cy="${dy + 4}" r="9" fill="#3f6a35" stroke="#2a4a22" stroke-width=".8"/>`;
+    if (t === 'marsh') for (const [dx, dy] of [[-30, 124], [10, 132], [-12, 158], [28, 164]]) s += `<ellipse cx="${x + dx}" cy="${dy}" rx="15" ry="5" fill="#5f8a8f" opacity=".8"/><path d="M${x + dx - 6} ${dy - 2}v-7M${x + dx - 3} ${dy - 2}v-9M${x + dx + 4} ${dy - 2}v-6" stroke="#3f5a2a" stroke-width=".9"/>`;
+    if (t === 'open') for (const [dx, dy] of [[-36, 118], [-6, 128], [24, 120], [-24, 154], [10, 150], [38, 164], [-40, 176]]) s += `<path d="M${x + dx} ${dy}l-2 -4M${x + dx} ${dy}l0 -5M${x + dx} ${dy}l2 -4" stroke="#55703a" stroke-width=".8"/>`;
+    return s;
+  }
+  mgAdd({ k: 'war', i: '🎌', n: 'The field of battle', d: 'Read the ground, deploy your companies, watch the fight, and send your reserve knights in time.', seal: 'mg_war', payK: .5, who: () => mgIn('general', 'constable', 'marshal', 'knightcmd', 'dukecmd', 'barcmd', 'jb_condottiero', 'jb_grandmaster', 'jb_preceptor', 'jb_guardcaptain', 'jb_gunner', 'knightmil'),
     play() {
-      const foe = warFoe(), ter = shuf(Object.keys(TER)).slice(0, 3), enemy = shuf(Object.keys(UNIT)), weather = pick(['clear', 'clear', 'rain', 'fog']);
-      let mine = shuf(Object.keys(UNIT)), sel = -1, res = null;
+      const foe = bfFoe(), ter = shuf(Object.keys(BF_TER)).slice(0, 3), enemy = shuf(Object.keys(BF_U)), weather = pick(['clear', 'clear', 'rain', 'fog', 'wind']);
+      const mineCol = REALM_COL[S.realm] || '#23427a', foeCol = REALM_COL[foe.r] || '#9b1f12';
       const seeN = Math.max(1, Math.min(3, 1 + (mgTier('war') >= 1 ? 1 : 0) + (S.stats.wits >= 70 ? 1 : 0) - (weather === 'fog' ? 1 : 0)));
       const seen = new Set(shuf([0, 1, 2]).slice(0, seeN));
-      const wx = { clear: '☀️ A clear day.', rain: '🌧️ Rain: wet bowstrings, archers are weaker.', fog: '🌫️ Fog: your scouts saw less.' }[weather];
-      const draw = () => {
-        mgShow(`${mgHead(MG_BY.war, foe.war ? `Against ${foe.r}` : `Against raiders from ${foe.r}`, res ? 3 : 0, 3)}<p class="mg-tip">${wx} Horse beat archers, archers beat pikes, pikes beat horse. The ground helps some and hinders others. ${res ? '' : 'Tap two of your companies to swap them.'}</p><p class="mg-lk"><span>Top: the enemy</span><span>Middle: the ground</span><span>Bottom: you</span></p><div class="mg-lanes">${[0, 1, 2].map(j => `<div class="mg-lane${res ? (res[j].win ? ' won' : ' lost') : ''}"><span class="mg-en">${seen.has(j) || res ? `${UNIT[enemy[j]][0]}<small>${UNIT[enemy[j]][1]}</small>` : '❓<small>Unseen</small>'}</span><span class="mg-ter">${TER[ter[j]][0]}<small>${TER[ter[j]][1]}</small></span>${res ? `<span class="mg-me">${UNIT[mine[j]][0]}<small>${res[j].win ? '✔ Won' : '✖ Lost'}</small></span>` : mgBtn('sw', j, `${UNIT[mine[j]][0]}<small>${UNIT[mine[j]][1]}</small>`, `mg-me${sel === j ? ' sel' : ''}`)}</div>`).join('')}</div>${res ? mgBtn('end', '', 'Count the field', 'go') : mgBtn('fight', '', '🎺 Sound the trumpets', 'go')}`);
+      const slot = [null, null, null]; let pickU = null;
+      const wx = { clear: '☀️ A clear day.', rain: '🌧️ Rain: wet bowstrings, archers are weaker.', fog: '🌫️ Fog: your scouts saw less.', wind: '🌬️ A wind at your backs: your arrows fly further.' }[weather];
+      const field = (inner, cls) => `<svg id="mgbf" class="bf ${cls || ''} wx-${weather}" viewBox="0 0 360 290" role="img" aria-label="The battlefield"><defs><linearGradient id="bf-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9cfd9"/><stop offset="1" stop-color="#e4e0c8"/></linearGradient><linearGradient id="bf-gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9bb46a"/><stop offset="1" stop-color="#6f8f48"/></linearGradient></defs><rect width="360" height="290" fill="url(#bf-gr)"/><rect width="360" height="34" fill="url(#bf-sky)"/><path d="M0 34Q40 18 90 28T190 24T290 30T360 22V34Z" fill="#8a9a6a"/><path d="M0 34Q60 26 120 32T240 30T360 34" fill="none" stroke="#6f7f50" stroke-width="1"/>${ter.map((t, j) => bfTerrain(t, BF_X[j])).join('')}<path d="M120 40V286M240 40V286" stroke="#4a5a32" stroke-width="1" stroke-dasharray="3 5" opacity=".5"/>${inner}${weather === 'rain' ? '<rect class="bf-rain" width="360" height="290" fill="url(#bf-rainp)"/><defs><pattern id="bf-rainp" width="12" height="12" patternUnits="userSpaceOnUse"><path d="M10 0L4 12" stroke="#cfe0ea" stroke-width=".8" opacity=".7"/></pattern></defs>' : ''}${weather === 'fog' ? '<rect width="360" height="120" fill="#f2f2ec" opacity=".55"/>' : ''}</svg>`;
+      const enemyRow = (show) => [0, 1, 2].map(j => `<g class="bf-en" id="bf-e${j}" transform="translate(${BF_X[j]} 66)"><g class="bf-mv">${show || seen.has(j) ? `<g transform="scale(1.3)">${bfCompany(enemy[j], foeCol, false)}</g>` : '<text x="0" y="6" text-anchor="middle" font-size="22">❓</text><text x="0" y="22" text-anchor="middle" font-size="9" fill="#2a1a0c">unseen</text>'}</g></g>`).join('');
+      const deploy = () => {
+        const myRow = [0, 1, 2].map(j => slot[j] ? `<g transform="translate(${BF_X[j]} 230) scale(1.3)">${bfCompany(slot[j], mineCol, true)}</g>` : `<g transform="translate(${BF_X[j]} 230)"><circle r="20" fill="#fff" fill-opacity=".25" stroke="#2a1a0c" stroke-dasharray="4 3"/><text y="5" text-anchor="middle" font-size="12" fill="#2a1a0c">empty</text></g>`).join('');
+        const tray = Object.keys(BF_U).filter(u => !slot.includes(u));
+        mgShow(`${mgHead(MG_BY.war, foe.war ? `Against ${foe.r}` : `Against raiders from ${foe.r}`, 0, 3)}<div class="bf-wrap">${field(enemyRow(false) + myRow)}</div><p class="mg-tip">${wx} Horse beat archers, archers beat pikes, pikes beat horse. Hills help archers, marsh drowns horse, woods shelter pikes.</p><div class="bf-slots">${[0, 1, 2].map(j => mgBtn('slot', j, `${slot[j] ? BF_U[slot[j]][0] + ' ' + BF_U[slot[j]][1] : 'Place here'}<small>${['Left', 'Centre', 'Right'][j]} · ${BF_TER[ter[j]]}</small>`, `${pickU ? 'arm' : ''}${slot[j] ? ' full' : ''}`)).join('')}</div><div class="bf-tray">${tray.length ? tray.map(u => mgBtn('pick', u, `${BF_U[u][0]} ${BF_U[u][1]}`, pickU === u ? 'sel' : '')).join('') : '<span class="mg-tip">All your companies are placed. Tap a place to swap.</span>'}</div>${mgBtn('fight', '', slot.every(Boolean) ? '🎺 Sound the trumpets' : 'Place all three companies', 'go', !slot.every(Boolean))}<p class="mg-tip bf-res">Your reserve of knights waits behind the lines. Watch for the moment they are needed.</p>`);
       };
-      const str = (u, o, t) => 3 + (BEATS[u] === o ? 2 : BEATS[o] === u ? -2 : 0) + ((TMOD[t] || {})[u] || 0) + (u === 'bow' && weather === 'rain' ? -1 : 0) + R(-1, 1);
-      mgOn = (act, v) => {
-        if (act === 'sw' && !res) { const j = +v; if (sel < 0) sel = j; else if (sel === j) sel = -1; else { [mine[sel], mine[j]] = [mine[j], mine[sel]]; sel = -1; } return draw(); }
-        if (act === 'fight' && !res) { res = [0, 1, 2].map(j => { const a = str(mine[j], enemy[j], ter[j]), b = str(enemy[j], mine[j], ter[j]); return { win: a > b || (a === b && P(.5)) }; }); return draw(); }
-        if (act === 'end') {
-          const w = res.filter(x => x.win).length, score = [0, .3, .7, 1][w];
-          const story = ['A rout. Your lines broke and ran.', 'A defeat. You held one flank, and lost the field.', 'A victory, hard won.', 'A crushing victory. The field was yours by noon.'][w];
-          mgFinish('war', score, story, (grade, mult, pay) => {
+      const str = (u, o, t, extra) => 3 + (BF_BEATS[u] === o ? 2 : BF_BEATS[o] === u ? -2 : 0) + ((BF_TMOD[t] || {})[u] || 0) + (u === 'bow' && weather === 'rain' ? -1 : 0) + (u === 'bow' && weather === 'wind' ? 1 : 0) + (extra || 0) + R(-1, 1);
+      const battle = () => {
+        const base = [0, 1, 2].map(j => ({ me: str(slot[j], enemy[j], ter[j]), them: str(enemy[j], slot[j], ter[j]) }));
+        const worst = [0, 1, 2].sort((a, b) => (base[a].me - base[a].them) - (base[b].me - base[b].them))[0];
+        const losing = base[worst].me <= base[worst].them;
+        const target = losing ? worst : [0, 1, 2].sort((a, b) => (base[b].me - base[b].them) - (base[a].me - base[a].them))[0];
+        const SIDE = ['left', 'centre', 'right'];
+        const myRow = [0, 1, 2].map(j => `<g class="bf-me" id="bf-m${j}" transform="translate(${BF_X[j]} 230)"><g class="bf-mv"><g transform="scale(1.3)">${bfCompany(slot[j], mineCol, true)}</g></g></g>`).join('');
+        const vol = (from, to, cls) => Array.from({ length: 7 }, (_, i) => `<path class="bf-arrow ${cls}" d="M${from[0] - 12 + i * 4} ${from[1]}L${to[0] - 10 + i * 3} ${to[1]}" style="animation-delay:${(i * .06).toFixed(2)}s"/>`).join('');
+        let arrows = '';
+        [0, 1, 2].forEach(j => { if (slot[j] === 'bow') arrows += vol([BF_X[j], 214], [BF_X[j], 86], 'mine'); if (enemy[j] === 'bow') arrows += vol([BF_X[j], 84], [BF_X[j], 212], 'theirs'); });
+        const dust = [0, 1, 2].map(j => `<g transform="translate(${BF_X[j]} 150)"><g class="bf-dust"><circle r="16" fill="#d9c9a0"/><circle cx="-14" cy="6" r="11" fill="#cdbb8e"/><circle cx="15" cy="4" r="12" fill="#e2d4ae"/></g></g>`).join('');
+        const reserve = `<g class="bf-reserve" id="bf-rsv"><g transform="scale(1.2)">${bfCompany('horse', mineCol, true)}</g></g>`;
+        mgShow(`${mgHead(MG_BY.war, 'The battle is joined', 1, 3)}<div class="bf-wrap">${field(enemyRow(true) + myRow + `<g class="bf-arrows">${arrows}</g>` + dust + reserve, 'run')}<div class="bf-call" id="bf-call" hidden></div></div><div class="bf-slots bf-send" id="bf-send" hidden>${[0, 1, 2].map(j => mgBtn('send', j, `Send them ${['left', 'to the centre', 'right'][j]}`)).join('')}</div><div class="bf-timer" id="bf-timer" hidden><i></i></div><p class="mg-tip" id="bf-log">Arrows darken the sky…</p>`);
+        const el = id => document.getElementById(id), alive = () => !!el('mgbf');
+        const log = t => { const l = el('bf-log'); if (l) l.textContent = t; };
+        let sent = -1, answered = false;
+        setTimeout(() => { if (!alive()) return; el('mgbf').classList.add('adv'); log('The lines march toward each other.'); }, 1300);
+        setTimeout(() => { if (!alive()) return; el('mgbf').classList.add('clash'); log('They meet with a crash you can hear for miles!'); try { if (window.auSfx) window.auSfx('clash'); } catch (e) { } }, 2700);
+        setTimeout(() => {
+          if (!alive()) return;
+          const call = el('bf-call'); call.hidden = false;
+          call.textContent = losing ? `‼ Your ${SIDE[target]} is breaking!` : `⚑ They waver on your ${SIDE[target]}!`;
+          el('bf-m' + target).classList.add(losing ? 'danger' : 'chance');
+          el('bf-send').hidden = false; el('bf-timer').hidden = false;
+          requestAnimationFrame(() => el('bf-timer').classList.add('go'));
+          log('Quick! Where do your reserve knights ride?');
+          setTimeout(() => { if (!answered && alive()) finishBattle(-1); }, 3200);
+        }, 3600);
+        const finishBattle = j => {
+          if (answered) return; answered = true; sent = j;
+          el('bf-send').hidden = true; el('bf-timer').hidden = true; el('bf-call').hidden = true;
+          if (j >= 0) { const r = el('bf-rsv'); r.style.transform = `translate(${BF_X[j]}px, 196px)`; r.classList.add('ride'); }
+          log(j < 0 ? 'Too late! Your reserve never moved.' : j === target ? 'The knights crash in exactly where they are needed!' : 'The knights ride, but to the wrong place.');
+          const res = [0, 1, 2].map(k => { const b = base[k], me = b.me + (k === j ? (k === target ? 3 : 1) : 0); return me > b.them || (me === b.them && P(.5)); });
+          setTimeout(() => {
+            if (!alive()) return;
+            res.forEach((w, k) => { el('bf-m' + k).classList.add(w ? 'win' : 'lose'); el('bf-e' + k).classList.add(w ? 'lose' : 'win'); });
+            el('mgbf').classList.add('done');
+            const nw = res.filter(Boolean).length;
+            log(['A rout. Your lines broke and ran.', 'A defeat. You held one flank, and lost the field.', 'A victory, hard won!', 'A crushing victory! The field is yours by noon.'][nw]);
+            setTimeout(() => { if (alive()) spoils(nw, sent === target); }, 1700);
+          }, 1300);
+        };
+        mgOn = (act, v) => { if (act === 'send') finishBattle(+v); };
+      };
+      const spoils = (w, sharp) => {
+        const knights = w >= 2 ? (w === 3 ? R(2, 4) : R(1, 3)) + (sharp ? 1 : 0) : 0, lord = w === 3;
+        const mult = MG_TIER[mgTier('war')][2];
+        const rk = Math.round(knights * R(40, 70) * mult), rl = lord ? Math.round(R(250, 500) * mult) : 0, total = rk + rl;
+        const prisoners = Array.from({ length: knights }, () => '🛡️').join('') + (lord ? '👑' : '');
+        mgShow(`${mgHead(MG_BY.war, 'Counting the field', 3, 3)}<div class="bf-spoils"><div class="bf-pris">${prisoners || '—'}</div><p class="mg-tip">${knights ? `${knights} knight${knights > 1 ? 's' : ''}${lord ? ' and a count' : ''} taken for ransom.` : w >= 2 ? 'No prisoners worth a ransom.' : 'No prisoners: you were lucky to get away.'}</p><div class="bf-chest"><span class="bf-coins">${total ? Array.from({ length: Math.min(12, 3 + Math.round(total / 60)) }, (_, i) => `<i style="--d:${(i * .12).toFixed(2)}s;--x:${R(-40, 40)}px"></i>`).join('') : ''}</span><b id="bf-sum">0</b><small>silver in ransoms</small></div></div>${mgBtn('end', '', 'Ride home', 'go')}`);
+        const sum = document.getElementById('bf-sum'), t0 = performance.now();
+        const tick = now => { if (!sum.isConnected) return; const k = Math.min(1, (now - t0) / 1400); sum.textContent = Math.round(total * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(tick); };
+        if (total) requestAnimationFrame(tick);
+        mgOn = act => {
+          if (act !== 'end') return;
+          mgFinish('war', [0, .3, .7, 1][w], ['A rout. Your lines broke and ran.', 'A defeat. You held one flank, and lost the field.', 'A victory, hard won.', 'A crushing victory. The field was yours by noon.'][w], (grade, m2, pay) => {
             const ls = [];
             const war = foe.war && S.world ? (S.world.wars || []).find(z => (z.a === S.realm && z.b === foe.r) || (z.b === S.realm && z.a === foe.r)) : null;
             if (war) war.sc = (war.sc || 0) + (war.a === S.realm ? 1 : -1) * [-2, -1, 2, 3][w];
-            if (w >= 2) { const kn = w === 3 ? R(2, 4) : R(1, 3), rk = Math.round(kn * R(40, 70) * mult); coin(rk); ls.push(`You took ${kn} knight${kn > 1 ? 's' : ''} for ransom: ${rk} silver.`); }
-            if (w === 3) { const lord = `the Count of ${pick(S.world && S.world.t ? S.world.t.filter(x => x.realm === foe.r).map(x => x.n).concat(['Varn']) : ['Varn'])}`, rl = Math.round(R(250, 500) * mult); coin(rl); st('renown', 4); fac('crown', 6); ls.push(`Your men dragged ${lord} out of the mud. His ransom: ${rl} silver.`); }
+            if (total) { coin(total); ls.push(`Ransoms: ${total} silver.`); }
+            if (lord) { st('renown', 4); fac('crown', 6); }
+            if (sharp && w >= 2) { st('renown', 2); ls.push('Men will talk about that charge of your reserve for years.'); }
             if (w === 1) { st('health', -R(3, 8)); ls.push('You came home with a wound and a story.'); }
             if (w === 0) { if (P(.35)) { const rn = Math.min(Math.max(0, S.coin), pay * 2); coin(-rn); st('renown', -5); ls.push(`You were taken prisoner, and ransomed for ${rn} silver.`); } else { st('health', -R(8, 15)); ls.push('You were carried off the field half dead.'); } fac('crown', -6); }
             if (war) ls.push(w >= 2 ? `The war with ${foe.r} turns your way.` : `The war with ${foe.r} turns against ${S.realm}.`);
             return ls;
           });
-        }
+        };
       };
-      draw();
+      mgOn = (act, v) => {
+        if (act === 'pick') { pickU = pickU === v ? null : v; return deploy(); }
+        if (act === 'slot') { const j = +v; if (pickU) { const prev = slot.indexOf(pickU); if (prev >= 0) slot[prev] = null; slot[j] = pickU; pickU = null; } else if (slot[j]) { pickU = slot[j]; slot[j] = null; } return deploy(); }
+        if (act === 'fight' && slot.every(Boolean)) return battle();
+      };
+      deploy();
     } });
-
   /* ---------- 5. The Visitation: rumours, two close looks, and judgement ---------- */
   const SINS = [
     { r: 'Folk say Father {n} drinks.', c: 'You find him snoring in the vestry at noon, beside an empty cask.', s: 'He is sober as a stone at dawn mass. The man who accused him owes three years of tithes.' },
@@ -26649,6 +26822,82 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     { k: 'mg_market', i: '📈', n: 'Lord of the Market', d: 'Become Legendary at cornering the market.' },
     { k: 'mg_spy', i: '🕸️', n: 'The Web Holds', d: 'Become a Legendary spymaster.' },
   );
+
+  /* ---------- 13. The Curia's letters: seal the true ones, burn the forgeries, before the candle burns down ---------- */
+  const CU_WAX = { red: ['#b3202c', 'red'], green: ['#2f7a3a', 'green'], gold: ['#c9952e', 'gold'] };
+  const CU_SIGN = { keys: ['🗝️', 'crossed keys'], dove: ['🕊️', 'a dove'], cross: ['✝️', 'a cross'], lamb: ['🐑', 'a lamb'] };
+  const CU_CORD = { silk: ['#c0283a', 'red silk'], hemp: ['#8a6a3a', 'hemp rope'], blue: ['#2f5fa8', 'blue silk'] };
+  const cordHTML = c => `<span class="cu-cordv ${c}" style="--cc:${CU_CORD[c][0]}"></span>`;
+  const CU_ASK = [
+    ['The Abbot of St {s}', 'asks leave to rebuild his tower, which fell in the storm.'],
+    ['A knight of {t}', 'asks to marry his cousin, and swears he loves her truly.'],
+    ['The nuns of {v}', 'ask for a relic of Saint {s} for their new altar.'],
+    ['The Bishop of {t}', 'asks for money to fight the heretics in the weavers’ quarter.'],
+    ['A merchant of {t}', 'asks pardon for lending money at interest.'],
+    ['The friars of {t}', 'ask leave to preach in the market square.'],
+    ['A widow of {v}', 'asks that her son be freed from his monastery vows.'],
+    ['The King of {r}', 'asks the Pope to bless his war.'],
+    ['A priest of {v}', 'asks forgiveness for selling the church’s silver candlesticks.'],
+    ['The University of {t}', 'asks for a charter to teach medicine.'],
+    ['A pilgrim from {r}', 'asks for a letter of safe passage to the Holy Land.'],
+    ['The monks of St {s}', 'ask to be freed from paying tithes to the bishop.'],
+  ];
+  mgAdd({ k: 'curia', i: '📜', n: 'The Curia’s letters', d: 'Letters pour in from all Christendom. Seal the true ones, burn the forgeries, before the candle burns down.', seal: 'mg_curia', payK: .5, who: () => mgIn('cardinal', 'archbishop', 'bishop', 'jb_legate', 'wm_princeabbess'),
+    play() {
+      // today's true seal: wax, sign and cord. A forgery gets one of them wrong.
+      const T = { w: pick(Object.keys(CU_WAX)), s: pick(Object.keys(CU_SIGN)), c: pick(Object.keys(CU_CORD)) };
+      const TIME = 40000, other = (o, v) => pick(Object.keys(o).filter(k => k !== v));
+      let ok = 0, bad = 0, streak = 0, best = 0, n = 0, cur = null, t0 = 0, over = false, busy = false, sealedForged = 0, burnedTrue = 0, timer = 0;
+      const make = () => {
+        const fake = P(.42), a = pick(CU_ASK), L = { w: T.w, s: T.s, c: T.c, fake, who: fill(a[0], { s: pick(SAINTS), t: pick(TOWNS), v: pick(VILLAGES), r: pick(REALMS.filter(r => r !== S.realm)) }), ask: a[1] };
+        L.who = fill(L.who, {}); L.ask = fill(a[1], { s: pick(SAINTS) });
+        if (fake) { const k = pick(['w', 's', 'c']); L[k] = other(k === 'w' ? CU_WAX : k === 's' ? CU_SIGN : CU_CORD, T[k]); }
+        return L;
+      };
+      const sealSVG = (w, sg) => `<svg class="cu-seal" viewBox="0 0 60 60" aria-hidden="true"><path d="${waxEdge(30, 30, 24)}" fill="${CU_WAX[w][0]}" stroke="rgba(0,0,0,.45)" stroke-width="1.2"/><circle cx="30" cy="30" r="17" fill="none" stroke="rgba(0,0,0,.3)" stroke-width="1.4"/><circle cx="24" cy="22" r="6" fill="#fff" opacity=".18"/><text x="30" y="37" text-anchor="middle" font-size="20">${CU_SIGN[sg][0]}</text></svg>`;
+      const letter = L => `<div class="cu-letter in" id="cu-l"><div class="cu-cord">${cordHTML(L.c)}</div><b>${esc(L.who)}</b><p>${esc(L.ask)}</p>${sealSVG(L.w, L.s)}</div>`;
+      const ref = `<div class="cu-ref"><span>Today’s true seal</span>${sealSVG(T.w, T.s)}<small>${CU_WAX[T.w][1]} wax, ${CU_SIGN[T.s][1]},<br>on ${CU_CORD[T.c][1]}</small><span class="cu-refcord">${cordHTML(T.c)}</span></div>`;
+      const intro = () => {
+        mgShow(`${mgHead(MG_BY.curia, 'At your desk in the Curia')}<div class="cu-desk intro">${ref}<p class="cu-say">Letters come from every corner of Christendom, and forgers send their own. A true letter has <b>all three</b>: the right wax, the right sign and the right cord.</p><p class="cu-say">Tap <b>Seal</b> to send a true letter on, <b>Burn</b> to throw a forgery on the brazier. You have until the candle burns down. Five right in a row doubles your score.</p></div>${mgBtn('start', '', '🕯️ Light the candle', 'go')}`);
+      };
+      const hud = () => { const h = document.getElementById('cu-hud'); if (h) h.innerHTML = `<span>✔ <b>${ok}</b></span><span>✖ <b>${bad}</b></span><span class="${streak >= 5 ? 'hot' : ''}">🔥 ${streak >= 5 ? '×2' : streak}</span>`; };
+      const desk = () => {
+        mgShow(`${mgHead(MG_BY.curia, 'Seal or burn', 1, 2)}<div class="cu-desk" id="cu-desk"><div class="cu-top">${ref}<div class="cu-candle"><div class="cu-wax" id="cu-wax"><div class="cu-flame"></div></div></div></div><div class="cu-hud" id="cu-hud"></div><div class="cu-stage" id="cu-stage"></div><div class="cu-brazier" aria-hidden="true">🔥</div></div><div class="mg-two cu-act">${mgBtn('burn', '', '🔥 Burn', 'cu-burn')}${mgBtn('seal', '', '✅ Seal', 'cu-sealb')}</div>`);
+        hud(); t0 = performance.now(); next();
+        const wax = document.getElementById('cu-wax'); requestAnimationFrame(() => { wax.style.transition = `height ${TIME}ms linear`; wax.style.height = '8%'; });
+        timer = setInterval(() => { if (!document.getElementById('cu-desk')) { clearInterval(timer); return; } if (performance.now() - t0 >= TIME) { clearInterval(timer); end(); } }, 200);
+      };
+      const next = () => { cur = make(); n++; const st = document.getElementById('cu-stage'); if (st) st.innerHTML = letter(cur); busy = false; };
+      const judge = seal => {
+        if (busy || over || !cur) return; busy = true;
+        const right = seal ? !cur.fake : cur.fake;
+        if (right) { ok += streak >= 5 ? 2 : 1; streak++; best = Math.max(best, streak); } else { bad++; streak = 0; if (seal) sealedForged++; else burnedTrue++; }
+        const l = document.getElementById('cu-l'); if (l) { l.classList.remove('in'); l.classList.add(seal ? 'sealed' : 'burned', right ? 'right' : 'wrong'); }
+        if (seal && l) l.insertAdjacentHTML('beforeend', '<div class="cu-stamp">✠</div>');
+        hud();
+        try { if (window.auSfx) window.auSfx(right ? 'card' : 'tick'); } catch (e) { }
+        setTimeout(() => { if (!over) next(); }, 520);
+      };
+      const end = () => {
+        if (over) return; over = true; clearInterval(timer);
+        const handled = ok + bad, score = Math.max(0, Math.min(1, (ok - bad * 1.5) / 14));
+        mgShow(`${mgHead(MG_BY.curia, 'The candle is out', 2, 2)}<div class="cu-desk"><div class="cu-final"><b>${ok}</b><small>points</small></div><p class="cu-say">${handled} letters read. ${bad ? `${bad} mistake${bad > 1 ? 's' : ''}.` : 'Not one mistake.'} Best run: ${best} in a row.</p></div>${mgBtn('done', '', 'Leave the desk', 'go')}`);
+        mgOn = act => {
+          if (act !== 'done') return;
+          mgFinish('curia', score, score >= .8 ? 'The Curia has never run so smoothly. The Pope himself asked who was at the desk today.' : score >= .5 ? 'A good day’s work. The letters went where they should.' : 'A muddle of a day. Some letters went where they should not.', () => {
+            const ls = [];
+            if (sealedForged) { st('piety', -2); fac('church', -4 * sealedForged); ls.push(`${sealedForged} forged letter${sealedForged > 1 ? 's' : ''} went out under the Church’s seal. Somewhere a forger is laughing.`); }
+            if (burnedTrue) { fac('church', -2 * burnedTrue); ls.push(`${burnedTrue} true letter${burnedTrue > 1 ? 's were' : ' was'} burned by mistake, and their writers will complain.`); }
+            if (best >= 8) { st('renown', 2); ls.push('Your speed at the desk is the talk of the Curia.'); }
+            if (score >= .8) fac('church', 6);
+            return ls;
+          });
+        };
+      };
+      mgOn = act => { if (act === 'start') desk(); else if (act === 'seal') judge(true); else if (act === 'burn') judge(false); };
+      intro();
+    } });
+  FEATS.push({ k: 'mg_curia', i: '📜', n: 'The Pope’s Right Hand', d: 'Become Legendary at the Curia’s letters.' });
   window.mgDebug = { MG, MG_BY, mgS, mgStart, mgElite, mgTier, mgK };
 }
 
