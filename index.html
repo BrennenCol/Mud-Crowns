@@ -1045,6 +1045,217 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .cu-final{padding:14px;text-align:center}
 .cu-final b{display:block;font:48px/1 var(--black);color:#f3c955}
 .cu-final small{color:#e8d7aa}
+/* ---------- v1.20 every game a scene ---------- */
+.sc{position:relative;margin:4px 0 8px;border-radius:10px;overflow:hidden;box-shadow:0 0 0 2px #8a6420,0 4px 10px rgba(0,0,0,.3);background:#2a1a0c;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+.sc-svg{display:block;width:100%;height:auto}
+.sc-act{transition:transform .9s ease-in-out,opacity .6s}
+.sc-act.hid{opacity:0}
+.sc-act.walk .sc-bob{animation:scBob .26s ease-in-out infinite alternate}
+@keyframes scBob{to{transform:translateY(-2.6px)}}
+.sc-bob.hop{animation:scHop .45s ease-out 2}
+@keyframes scHop{50%{transform:translateY(-11px)}}
+.sc-bob.slump{transform:translateY(2px);transition:transform .3s}
+.sc-bob.shake{animation:scShake .12s linear 5}
+@keyframes scShake{25%{transform:translateX(-2.4px)}75%{transform:translateX(2.4px)}}
+.sc-bob.nod{animation:scNod .28s ease-in-out 2}
+@keyframes scNod{50%{transform:translateY(2px)}}
+.sc-flick{animation:cuFlick .45s ease-in-out infinite alternate}
+.sc-pop{position:absolute;z-index:6;transform:translate(-50%,-50%);font:700 15px/1 var(--serif);color:#fff;text-shadow:0 1px 2px #000,0 0 6px rgba(0,0,0,.7);pointer-events:none;white-space:nowrap;animation:scPop 1.15s ease-out forwards}
+.sc-pop.gold{color:#ffd76a;font-size:17px}
+.sc-pop.bad,.sc-pop.down{color:#ff8a7a}
+.sc-pop.up{color:#a6f2ae}
+.sc-pop.dim{color:#efe6d4;font-weight:400;font-size:13px}
+@keyframes scPop{0%{opacity:0;transform:translate(-50%,-30%) scale(.7)}15%{opacity:1;transform:translate(-50%,-60%) scale(1.08)}100%{opacity:0;transform:translate(-50%,-200%)}}
+.sc-say{margin:6px 0;padding:8px 10px;min-height:46px;border-radius:10px;background:var(--vellum-2);box-shadow:inset 0 0 0 1px var(--rule)}
+.sc-say p{margin:2px 0;font-size:15px;line-height:1.38}
+.sc-who{font-weight:600}
+.sc-q{font-style:italic}
+.sc-res.good{color:var(--good)}
+.sc-res.bad{color:var(--low)}
+.sc-tip{margin-top:2px}
+.sc-rum{margin:4px 0 6px;font-style:italic;font-size:14.5px;line-height:1.35;color:var(--ink-2)}
+.sc-time{height:7px;margin:4px 0;border-radius:4px;background:var(--rule);overflow:hidden}
+.sc-time i{display:block;width:100%;height:100%;background:linear-gradient(90deg,#b8861b,#e8c45a);transition:width .1s linear}
+.sc-time i.low{background:linear-gradient(90deg,#a3251a,#d65a42)}
+/* petitions */
+.pt-cloth{transform-box:fill-box;transform-origin:50% 0;transition:transform .8s cubic-bezier(.3,1.4,.5,1)}
+.pt-ban.warn .pt-cloth path:first-child{stroke:#ffd76a;stroke-width:2.2;animation:ptWarn .7s infinite alternate}
+@keyframes ptWarn{to{stroke:#ff4a2a}}
+.pt-mark{stroke:rgba(255,240,200,.6);stroke-width:1.2;stroke-dasharray:5 3}
+.pt-mk{font:italic 600 10px var(--serif);fill:#fff3d6;paint-order:stroke;stroke:rgba(40,24,10,.7);stroke-width:2.4px}
+/* the exchequer */
+.ex{height:214px;background:#3a2410}
+.ex-cloth{position:absolute;inset:8px;border-radius:6px;background:repeating-conic-gradient(#1f3f24 0 25%,#2c5232 0 50%) 0 0/34px 34px;box-shadow:inset 0 0 0 3px #6b4a2e,inset 0 0 22px rgba(0,0,0,.5)}
+.ex-chest{position:absolute;left:2px;top:50%;z-index:2;width:62px;text-align:center;transform:translateY(-50%);pointer-events:none}
+.ex-chest svg{width:58px}
+.ex-chest small{display:block;font-size:10px;line-height:1.1;color:#f3d983}
+.ex-sher{position:absolute;right:2px;bottom:6px;z-index:2;width:58px;height:94px;transition:transform .6s ease,opacity .6s;pointer-events:none}
+.ex-sher svg{width:100%;height:100%}
+.ex-sher.in{animation:exIn .6s ease-out}
+.ex-sher.out{transform:translateX(70px);opacity:0}
+@keyframes exIn{from{transform:translateX(70px);opacity:0}}
+.ex-lanes{position:absolute;inset:0;z-index:3}
+.ex-coin{position:absolute;width:38px;height:38px;padding:0;border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;animation:exRoll linear forwards}
+.ex-coin svg{width:100%;height:100%;animation:exSpin 1.1s linear infinite;filter:drop-shadow(0 2px 1px rgba(0,0,0,.45))}
+@keyframes exRoll{0%{left:calc(100% - 96px);opacity:0}8%{opacity:1}92%{opacity:1}100%{left:22px;opacity:0}}
+@keyframes exSpin{to{transform:rotate(-360deg)}}
+@keyframes exGot{to{transform:translateY(-50px) scale(1.5);opacity:0}}
+@keyframes exOops{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}100%{transform:none;opacity:.35}}
+.ex-key{display:flex;justify-content:space-around;margin:6px 0}
+.ex-key span{display:flex;flex-direction:column;align-items:center;gap:2px}
+.ex-key svg{width:34px;height:34px}
+.ex-key b{font-size:22px;line-height:1.2}
+.ex-key small{font-size:11.5px;color:#e8d7aa;text-align:center;line-height:1.15}
+.ex-key span.bad small{color:#ff9a8a}
+.cu-hud.ex-hud{flex-wrap:wrap;gap:4px 14px;color:var(--ink-2);font-size:14px}
+.cu-hud.ex-hud b{color:var(--ink);font-size:16px}
+/* the assize */
+.as-gav.bang{animation:asBang .42s ease-in}
+@keyframes asBang{40%{transform:rotate(-38deg)}100%{transform:rotate(0)}}
+.tl{opacity:0;transition:opacity .15s}
+.w-sweat .tl.sweat,.w-blush .tl.blush,.w-fing .tl.fing,.w-shift .tl.shift,.w-fly .tl.fly,.w-yawn .tl.yawn{opacity:1}
+.tl.sweat path{animation:asDrip .9s ease-in infinite}
+@keyframes asDrip{from{transform:translateY(-2px)}to{transform:translateY(5px);opacity:.2}}
+.tl-eyes{animation:asEyes .34s steps(1) infinite}
+@keyframes asEyes{50%{transform:translateX(-2.6px)}}
+.tl-fly{animation:asFly 1.4s linear infinite}
+@keyframes asFly{0%,100%{transform:translate(-12px,-46px)}25%{transform:translate(9px,-52px)}50%{transform:translate(13px,-36px)}75%{transform:translate(-10px,-30px)}}
+.mg-b.as-liar{grid-column:1/-1;padding:13px;font-size:18px;background:#5a1a10;color:#ffd9a8;border-color:#3a0a04}
+.as-tag{display:inline-block;padding:1px 7px;border-radius:99px;font:600 11.5px/1.45 var(--serif);letter-spacing:.04em;text-transform:uppercase;vertical-align:1px}
+.as-tag.g{background:rgba(163,37,26,.14);color:var(--low)}
+.as-tag.i{background:rgba(63,138,82,.16);color:var(--good)}
+.as-tag.n{background:rgba(0,0,0,.07);color:var(--ink-3)}
+.as-st{margin:5px 0!important;font-size:14.5px!important}
+.as-lie{color:var(--low)}
+.as-hon{color:var(--ink-3);font-size:13px}
+.mg-b.as-wide{grid-column:1/-1}
+.mg-b.as-wide small{display:inline}
+/* the visitation */
+.vi-it{position:absolute;z-index:2;padding:3px;border:0;border-radius:50%;background:none;line-height:1;cursor:pointer;transform:translate(-50%,-50%) rotate(var(--r));-webkit-tap-highlight-color:transparent;filter:saturate(.7)}
+.vi-it.dk{filter:brightness(.5) saturate(.6)}
+.vi-it.found{filter:none;background:rgba(255,240,200,.4);box-shadow:0 0 0 3px #ffd76a,0 0 14px #ffd76a;animation:viFound .5s ease-out forwards}
+@keyframes viFound{50%{transform:translate(-50%,-50%) scale(1.8)}100%{transform:translate(-50%,-50%) scale(1.35)}}
+.vi-it.meh{opacity:.3}
+.vi-it.missed{filter:none;box-shadow:0 0 0 3px #ff6a5a,0 0 10px #ff6a5a;animation:viMiss .5s 3}
+@keyframes viMiss{50%{transform:translate(-50%,-50%) scale(1.4)}}
+.vi-bell{position:absolute;right:8px;top:6px;z-index:3;font-size:20px;transform-origin:50% 10%}
+.vi-bell.ding{animation:viRing .22s 6 alternate}
+@keyframes viRing{from{transform:rotate(-22deg)}to{transform:rotate(22deg)}}
+/* the conclave */
+.cv-sky{position:relative;height:50px;margin:4px 0 -6px;border-radius:10px 10px 0 0;overflow:hidden;background:linear-gradient(#7ea6cf,#c9d8e6);box-shadow:0 0 0 2px #8a6420}
+.cv-sky svg{position:absolute;inset:0;width:100%;height:100%}
+.cv-puff{position:absolute;left:50%;top:2px;width:16px;height:16px;margin-left:-8px;border-radius:50%;opacity:0;animation:cvPuff 2.2s ease-out forwards}
+.cv-puff.w{background:radial-gradient(circle,#fff,#ececec 55%,rgba(255,255,255,0) 72%)}
+.cv-puff.b{background:radial-gradient(circle,#202022,#38383a 55%,rgba(40,40,40,0) 72%)}
+@keyframes cvPuff{0%{opacity:0;transform:translate(0,4px) scale(.4)}15%{opacity:.95}100%{opacity:0;transform:translate(var(--dx),-34px) scale(3.2)}}
+.cv-hit{position:absolute;z-index:2;padding:0;border:0;border-radius:8px;background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cv-hit:focus-visible{outline:2px solid #ffd76a}
+.cv-bal{position:absolute;z-index:3;width:9px;height:7px;margin:-3px 0 0 -4px;background:#fffbea;box-shadow:0 0 0 1px #8a7a5a;transition:left .55s ease-in,top .55s ease-in,opacity .55s}
+.cv-meter{position:relative;height:28px;margin:10px 6px 6px;border-radius:14px;background:linear-gradient(90deg,#5a1a10,#8a3a20 50%,#5a1a10);box-shadow:inset 0 0 0 2px #3a1008}
+.cv-meter b{position:absolute;top:3px;bottom:3px;border-radius:10px;background:linear-gradient(#ffe28a,#d9a22a);box-shadow:0 0 8px rgba(255,210,100,.7)}
+.cv-meter i{position:absolute;top:-5px;bottom:-5px;width:5px;margin-left:-2.5px;border-radius:3px;background:#f4efe2;box-shadow:0 0 0 1.5px #1a1208;animation:cvSwing .95s linear infinite alternate}
+@keyframes cvSwing{from{left:1%}to{left:99%}}
+/* the sickroom */
+.sk-hp{position:absolute;left:8px;top:8px;z-index:2;display:flex;align-items:center;gap:5px;width:44%}
+.sk-hp span{color:#c0302a;font-size:15px}
+.sk-hp b{flex:1;height:9px;border-radius:5px;background:rgba(0,0,0,.25);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(0,0,0,.3)}
+.sk-hp i{display:block;width:100%;height:100%;background:linear-gradient(90deg,#3f8a52,#7ac07a);transition:width .1s linear}
+.sk-hp i.low{background:linear-gradient(90deg,#a3251a,#d65a42)}
+.sk-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:6px 0}
+.sk-tabs .mg-b{padding:7px 4px;font-size:13.5px;background:linear-gradient(#f6ecd2,#e6d6ae);border-color:#8a6a3a}
+.sk-tabs .mg-b.sel{background:var(--rubric);color:var(--rubric-ink)}
+.sk-rx{display:flex;align-items:center;justify-content:center;gap:4px;margin:4px 0 6px;padding:6px;border-radius:8px;background:#f6ecd2;box-shadow:inset 0 0 0 1px #c9b48a}
+.sk-rx span{margin-right:4px;font-style:italic;font-size:13px;color:var(--ink-3)}
+.sk-rx b{display:flex;flex-direction:column;align-items:center;min-width:58px;font-size:22px;line-height:1.1}
+.sk-rx b small{font:400 11px/1.1 var(--serif);color:var(--ink-2);text-align:center}
+.sk-rx b.now{animation:glPulse 1.2s ease-in-out infinite;border-radius:8px}
+.sk-rx b.got{opacity:.35}
+.sk-rx i{font-style:normal;color:var(--ink-3)}
+.sk-hint{margin:4px 0;font-size:14px;color:var(--ink-2);text-align:center}
+.sk-shelf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:6px 0;padding:8px;border-radius:10px;background:linear-gradient(#6b4a2e,#4a2e16);box-shadow:inset 0 -6px 0 #3a2410}
+.mg-b.sk-jar{padding:6px 2px;font-size:22px;border-color:#8a6a3a;border-radius:14px 14px 8px 8px;background:radial-gradient(circle at 40% 30%,#fff8e6,#e8dcc0)}
+.mg-b.sk-jar small{font-size:10.5px;line-height:1.1}
+.sk-shiver{animation:skShiver .12s linear infinite}
+@keyframes skShiver{25%{transform:translateX(-.8px)}75%{transform:translateX(.8px)}}
+.sk-drip path{animation:asDrip 1s ease-in infinite}
+.sk-throb{transform-box:fill-box;transform-origin:center;animation:skThrob .8s ease-in-out infinite alternate}
+@keyframes skThrob{to{transform:scale(1.14)}}
+.sk-pestle{transform-origin:322px 98px}
+.sk-pestle.hit{animation:skHit .18s ease-out}
+@keyframes skHit{50%{transform:rotate(-24deg) translateY(4px)}}
+.mg-b.sk-grind,.mg-b.bd-drop{padding:14px;font-size:19px}
+/* the great work */
+.wk-pic{display:block;width:100%;max-width:300px;height:auto;margin:4px auto 6px;border-radius:8px;background:linear-gradient(#cfe0ec,#eef2ef);box-shadow:inset 0 0 0 1px var(--rule)}
+.bd-hud{position:absolute;left:8px;top:18px;display:flex;gap:10px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.65);color:#2a1a0c;font-size:13px}
+.bd-hud .bad{color:var(--low)}
+.bd-shift{transition:transform .4s ease}
+.bd-fall{transform-box:fill-box;transform-origin:center;animation:bdFall .9s ease-in forwards}
+@keyframes bdFall{to{transform:translateY(130px) rotate(40deg);opacity:0}}
+.bd.crash .sc-svg{animation:bfShake .28s 4}
+.bd-wind path{animation:bdWind 1.6s linear infinite}
+@keyframes bdWind{0%{transform:translateX(-20px);opacity:0}30%{opacity:.8}100%{transform:translateX(60px);opacity:0}}
+/* the envoy */
+.ev-tr{transition:transform .8s cubic-bezier(.3,1.3,.5,1)}
+.ev-seal{opacity:0;transform-box:fill-box;transform-origin:center}
+.ev-seal.on{animation:cuStamp .3s ease-out forwards}
+.ev-think{position:absolute;left:80%;top:19%;z-index:3;display:grid;place-items:center;width:46px;height:40px;margin-left:-23px;border-radius:50%;background:#fffdf4;box-shadow:0 2px 6px rgba(0,0,0,.35);font-size:24px;opacity:0;transform:scale(.4);transition:opacity .18s,transform .18s}
+.ev-think::after{content:"";position:absolute;left:12px;bottom:-9px;width:10px;height:10px;border-radius:50%;background:#fffdf4;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+.ev-think.on{opacity:1;transform:scale(1)}
+.ev-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:8px 0}
+.mg-b.ev-c{padding:6px 2px;font-size:12.5px;line-height:1.15}
+.ev-c span{display:block;margin-bottom:2px;font-size:22px}
+/* the market */
+.mk-board{position:absolute;left:8px;top:8px;z-index:2;padding:4px 10px;border-radius:8px;background:#2a2a28;color:#f1e8d2;text-align:center;box-shadow:inset 0 0 0 2px #6b4a2e,0 3px 6px rgba(0,0,0,.35)}
+.mk-board small{display:block;font-size:11px;color:#c9c0a8}
+.mk-board b{font:32px/1 var(--black)}
+.mk-board b.up{color:#a6f2ae}
+.mk-board b.dn{color:#ff9a8a}
+.mk-board i{margin-left:4px;font-style:normal;font-size:16px}
+.mk-spark{position:absolute;left:0;right:0;bottom:0;z-index:1;width:100%;height:50px;background:linear-gradient(rgba(20,14,8,0),rgba(20,14,8,.7))}
+.mk-news{position:absolute;right:8px;top:8px;z-index:3;max-width:58%;padding:6px 10px;border-radius:8px;background:rgba(155,31,18,.95);color:#fff3e2;font-size:13.5px;line-height:1.25;box-shadow:0 4px 10px rgba(0,0,0,.4);transform:translateY(-160%);transition:transform .35s ease}
+.mk-news span{margin-right:6px;font-size:20px;vertical-align:-3px}
+.mk-news.on{transform:none}
+.mk-pile{position:absolute;right:8px;bottom:54px;z-index:2;display:flex;flex-wrap:wrap-reverse;justify-content:flex-end;gap:2px;width:84px}
+.mk-pile i{width:18px;height:14px;border-radius:2px;background:linear-gradient(#d2ae72,#8a6a3a);box-shadow:inset 0 0 0 1px #4a2e16}
+.mk-pile b{font-size:12px;color:#fff;text-shadow:0 1px 2px #000}
+.mk-hud .up{color:var(--good)}
+.mk-hud .dn{color:var(--low)}
+.mg-b.mk-buy{background:#2f6a3c;color:#eaffe8;border-color:#1a4022}
+.mg-b.mk-sell{background:#8a5a10;color:#fff3d6;border-color:#5a3a08}
+/* the spymaster */
+.sp{background:#14141e}
+.sp-map{display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(5,1fr);width:100%;aspect-ratio:7/5}
+.sp-c{position:relative;margin:0;padding:0;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.sp-s{background:#2a2a36 radial-gradient(circle at 30% 30%,rgba(255,255,255,.07) 2px,transparent 3px) 0 0/12px 12px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);transition:background-color .3s}
+.sp-h{background:#16161c}
+.sp-roof{position:absolute;inset:8%;border-radius:4px;background:linear-gradient(135deg,#5a3a2a,#3a2418);box-shadow:inset 0 0 0 2px #2a1810}
+.sp-h.let .sp-roof::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:12px;margin:-6px;border-radius:50%;background:#ffd36a;box-shadow:0 0 10px 4px rgba(255,200,90,.65);animation:cuFlick .6s ease-in-out infinite alternate}
+.sp-h.let .sp-roof::before{content:"✉";position:absolute;right:3px;top:1px;font-size:12px;color:#f3d983}
+.sp-h.took .sp-roof{opacity:.7}
+.sp-c.home{background-color:#24402a}
+.sp-c.home::after{content:"🏠";position:absolute;inset:0;display:grid;place-items:center;font-size:16px;opacity:.8}
+.sp-c.lit{background-color:#8a7030;background-image:radial-gradient(circle,rgba(255,220,120,.7),rgba(255,190,80,.25) 65%,rgba(255,190,80,.1))}
+.sp-tok{position:absolute;z-index:2;width:12%;aspect-ratio:1;transform:translate(-50%,-62%);transition:left .2s linear,top .2s linear;pointer-events:none}
+.sp-tok svg{width:100%;height:100%}
+.sp-tok.w{z-index:3;transition:left .5s linear,top .5s linear}
+.sp-tok.me.seen{animation:spSeen .14s 5 alternate}
+@keyframes spSeen{to{opacity:.2}}
+.sp-moon{position:absolute;top:2px;left:4%;z-index:4;font-size:16px;opacity:.9;pointer-events:none;transition:left .1s linear}
+.sp-clues{margin:6px 0;padding:8px 10px;border-radius:10px;background:var(--vellum-2);box-shadow:inset 0 0 0 1px var(--rule)}
+.sp-clues p{margin:3px 0;font-size:14.5px;line-height:1.35}
+.sp-clues small{color:var(--ink-3);font-style:italic}
+.sp-list{display:grid;gap:6px;margin:8px 0}
+.sp-sus{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px;background:var(--vellum);box-shadow:inset 0 0 0 1px var(--rule-2)}
+.sp-sus svg{flex:none;width:32px;height:54px}
+.sp-sus>div{flex:1;min-width:0}
+.sp-sus b{display:block;font-size:15px;font-weight:600}
+.sp-sus small{display:block;font-size:12px;line-height:1.3;color:var(--ink-3)}
+.sp-b{display:flex;flex-direction:column;gap:4px}
+.sp-b .mg-b{width:auto;padding:5px 8px;font-size:13px}
+.sp-sus.out{opacity:.45}
+.sp-sus.traitor{opacity:1;box-shadow:inset 0 0 0 2px var(--low)}
+.sp-sus.wrongly{opacity:.55}
+@media (prefers-reduced-motion:reduce){.sc-flick,.ex-coin svg,.tl-eyes,.tl-fly,.sk-shiver,.sk-throb,.bd-wind path,.cv-meter i{animation-duration:2s}.sc-act.walk .sc-bob{animation:none}}
 @media (prefers-reduced-motion:reduce){.bf.clash,.bf-rain,.cu-flame,.cu-brazier,.bf-me.danger .bf-mv,.bf-me.chance .bf-mv{animation:none}}
 </style>
 </head>
@@ -1084,7 +1295,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.19.0';
+const APP_VERSION = '1.20.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -5987,11 +6198,11 @@ function showWhatsNew() {
   store.set(NEWKEY, APP_VERSION);
   modalOpen = true;
   const items = [
-    ['🎌', 'The field of battle', 'generals and captains now fight real battles: read the ground and the weather, place your archers, pikes and horse, then watch the arrows fly and the lines clash. When a flank breaks you have three seconds to send your reserve knights to the right place. Win, and count your ransoms.'],
-    ['📜', 'The Curia’s letters', 'bishops and cardinals sit at the desk of the Church: letters pour in from all Christendom, and forgers send their own. Check the wax, the sign and the cord, then seal or burn before the candle burns down.'],
-    ['👨‍👩‍👧', 'Your children live their own lives', 'from fourteen they learn a trade and climb in it, marry, have children and save. Play on as one of them and you take over the life they have been living.'],
-    ['⛪', 'The road to Rome', 'Church posts now show every rank to Pope and what the next one needs. There is a real Pope, who grows old; when he dies, a cardinal can win the conclave.'],
-    ['🖋️', 'Easier to read', 'headings and buttons use a clearer old English type.'],
+    ['🎭', 'Every office, played', 'all the work you play in high office is now a real game in its own painted scene, with people who walk, react and celebrate.'],
+    ['⚖️', 'Catch the liar', 'at the assize, watch each witness: sweat, a red face, shifty eyes or crossed fingers give a liar away. Petitioners queue at your door and storm out if you keep them waiting.'],
+    ['🧮', 'Quick hands', 'pull clipped and lead coins off the Exchequer cloth, search a priest’s house before the bell, mix a remedy before your patient fades, and lay stones from a swinging crane.'],
+    ['🕊️', 'Timing is everything', 'speak to a cardinal at just the right moment and watch the smoke turn white. At a king’s feast, play the offer he is thinking of. Buy and sell as prices leap at the fair.'],
+    ['🕸️', 'The night streets', 'as spymaster, slip past the watchmen’s lanterns to your informants’ letters, then name the traitor.'],
   ];
   $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Open Work</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
@@ -26223,7 +26434,105 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
   const factionHTML = () => { const f = mgS().fac; return `<div class="sumbox mg-facbox"><span class="climb-h">The four powers</span>How the realm’s great powers feel about you. Keep them all between the warning marks: too low and they turn on you, too high and the others grow jealous.<div class="mg-fac">${FACS.map(([k, i, n]) => `<span class="mgf ${f[k] <= 15 || f[k] >= 85 ? 'warn' : ''}"><i aria-hidden="true">${i}</i><b style="--v:${f[k]}%"></b><small>${n} ${f[k]}</small></span>`).join('')}</div></div>`; };
   JOBPANELS.unshift({ k: 'mg_panel', when: () => S && S.alive && mgElite() && S.age >= 14, html: mgHTML });
 
-  /* ---------- 1. Hear the petitions: four powers to keep in balance ---------- */
+  /* ---------- v1.20 every game a scene: the pieces they share ---------- */
+  const mgSnd = k => { try { if (window.auSfx) window.auSfx(k); } catch (e) { } };
+  // wait, but only if the scene is still on screen
+  const mgAfter = (ms, keep, fn) => setTimeout(() => { if (!keep || document.getElementById(keep)) { try { fn(); } catch (e) { console.error(e); } } }, ms);
+  // a clock that runs while its scene is on screen, and stops itself when the scene goes
+  function mgClock(ms, keep, tick, end) {
+    let t0 = performance.now(), dead = false, id = 0;
+    const stop = () => { dead = true; clearInterval(id); };
+    id = setInterval(() => {
+      if (dead) return;
+      if (!document.getElementById(keep)) return stop();
+      const f = Math.min(1, (performance.now() - t0) / ms);
+      try { if (tick) tick(f); } catch (e) { console.error(e); }
+      if (f >= 1) { stop(); try { if (end) end(); } catch (e) { console.error(e); } }
+    }, 100);
+    return { stop, f: () => Math.min(1, (performance.now() - t0) / ms), cut: d => { t0 -= d; }, dead: () => dead };
+  }
+  // call fn every frame while the scene is on screen; fn returns false to stop
+  function mgLoop(keep, fn) {
+    let last = performance.now();
+    const step = now => { if (!document.getElementById(keep)) return; const dt = Math.min(50, now - last); last = now; let go = true; try { go = fn(now, dt) !== false; } catch (e) { console.error(e); go = false; } if (go) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }
+  // a word that floats up from a point in the scene (x, y in % of the scene) and fades
+  function mgPop(host, text, cls, x, y) {
+    const h = typeof host === 'string' ? document.getElementById(host) : host; if (!h) return;
+    const e = document.createElement('span'); e.className = `sc-pop ${cls || ''}`; e.textContent = text;
+    e.style.left = `${x}%`; e.style.top = `${y}%`; h.appendChild(e); setTimeout(() => e.remove(), 1200);
+  }
+  const mgStep = n => document.querySelectorAll('#card .mg-step i').forEach((e, j) => e.classList.toggle('on', j < n));
+  const mgSub = t => { const e = document.querySelector('#card .mg-ht small'); if (e) e.textContent = t; };
+  const mgSet = (id, html) => { const e = document.getElementById(id); if (e) e.innerHTML = html; return e; };
+  const timeBar = id => `<div class="sc-time" aria-hidden="true"><i id="${id}"></i></div>`;
+  const setBar = (id, f) => { const e = document.getElementById(id); if (e) { e.style.width = `${Math.max(0, (1 - f) * 100)}%`; e.classList.toggle('low', f > .7); } };
+  const FIG_SKIN = ['#f5dcc4', '#ecc8a6', '#e0b48c', '#cf9b72', '#b07a52', '#8a5a3a'];
+  const FIG_HAIR = ['#1e1612', '#3b2618', '#5a3a22', '#7a4e2a', '#a8723a', '#d6ae62', '#b3502c', '#a9a297'];
+  const FIG_ROBE = ['#7a2a1e', '#2f4f7a', '#4f6a2a', '#6a4a2a', '#5a3a6a', '#7a6a4a', '#3a3a3a', '#8a5a1a', '#2f6a5c', '#6a2a3a'];
+  // a little person with their feet at (0, 0), about 46 tall: robe, skin, hair, hat, f (a woman), beard, mood, arms
+  const FIG_HAT = {
+    crown: () => '<path d="M-6.2 -41L-6.6 -48L-3.2 -44.6L0 -49.4L3.2 -44.6L6.6 -48L6.2 -41Z" fill="#e2b23c" stroke="#7a5a10" stroke-width=".6"/><circle cx="0" cy="-43" r="1" fill="#b3202c"/>',
+    mitre: () => '<path d="M-5.6 -41Q-6.4 -49 0 -55Q6.4 -49 5.6 -41Z" fill="#f4efe2" stroke="#8a7a5a" stroke-width=".6"/><path d="M0 -54V-41M-3.2 -46.5H3.2" stroke="#c9952e" stroke-width="1"/>',
+    red: () => '<path d="M-6.6 -38.6Q-6.6 -45 0 -45Q6.6 -45 6.6 -38.6Z" fill="#b3202c" stroke="#6a1010" stroke-width=".5"/>',
+    hood: o => `<path d="M-7.6 -31Q-9 -46 0 -46.5Q9 -46 7.6 -31Q6.4 -40 0 -41.2Q-6.4 -40 -7.6 -31Z" fill="${o.hood || o.robe || '#5a4a3a'}" stroke="rgba(0,0,0,.45)" stroke-width=".6"/>`,
+    coif: o => `<path d="M-7.2 -29Q-8.8 -45 0 -45.5Q8.8 -45 7.2 -29Q5.4 -38.4 0 -39.6Q-5.4 -38.4 -7.2 -29Z" fill="${o.coifc || '#f4efe2'}" stroke="#9a8a6a" stroke-width=".6"/>`,
+    cap: o => `<path d="M-6.6 -39Q-5.4 -46.4 1 -45.6Q7.2 -44.6 6.9 -39Z" fill="${o.capc || '#3a2a1a'}"/>`,
+    brim: o => `<path d="M-5.6 -40.4Q-5.2 -47.4 0 -47.4Q5.2 -47.4 5.6 -40.4Z" fill="${o.capc || '#3a2a1a'}"/><ellipse cx="0" cy="-40.4" rx="10.4" ry="2.2" fill="${o.capc || '#3a2a1a'}"/>`,
+    helm: () => '<path d="M-6.9 -34.6Q-7.5 -46 0 -46.4Q7.5 -46 6.9 -34.6Z" fill="#b8bec6" stroke="#4a5058" stroke-width=".7"/><path d="M0 -46.4V-34.6M-6.9 -38H6.9" stroke="#4a5058" stroke-width=".6"/>',
+  };
+  function fig(o = {}) {
+    const r = o.robe || '#6a4a2a', sk = o.skin || FIG_SKIN[1], hr = o.hair || FIG_HAIR[2], dk = 'rgba(0,0,0,.55)', m = o.mood || 'calm';
+    let s = '<ellipse cx="0" cy="0" rx="12" ry="3" fill="rgba(0,0,0,.22)"/>';
+    s += `<path d="M-7 -29Q-10 -14 -12 -1Q0 2 12 -1Q10 -14 7 -29Q0 -32 -7 -29Z" fill="${r}" stroke="${dk}" stroke-width=".8"/><path d="M0 -27Q-1 -12 .5 0" stroke="rgba(0,0,0,.16)" stroke-width="1.6" fill="none"/><path d="M-6 -28Q0 -25 6 -28" stroke="rgba(255,255,255,.16)" stroke-width="1" fill="none"/>`;
+    if (!o.f) s += `<path d="M-8.6 -17H8.6" stroke="${o.belt || 'rgba(30,18,8,.75)'}" stroke-width="1.6"/>`;
+    const hand = (x, y) => `<circle cx="${x}" cy="${y}" r="2.1" fill="${sk}" stroke="${dk}" stroke-width=".4"/>`;
+    if (o.arms === 'up') s += `<path d="M-6.6 -26L-12 -39M6.6 -26L12 -39" stroke="${r}" stroke-width="4.2" stroke-linecap="round"/>${hand(-12.4, -40)}${hand(12.4, -40)}`;
+    else if (o.arms === 'hold') s += `<path d="M-6.8 -26Q-7 -18 -2.4 -17.4M6.8 -26Q7 -18 2.4 -17.4" stroke="${r}" stroke-width="4.2" fill="none" stroke-linecap="round"/>${hand(0, -17.2)}`;
+    else if (o.arms === 'fist') s += `<path d="M-6.8 -26L-9.6 -14M6.6 -26L13 -36" stroke="${r}" stroke-width="4.2" stroke-linecap="round"/>${hand(-9.8, -13)}${hand(13.4, -37.4)}`;
+    else s += `<path d="M-6.8 -26L-9.6 -14M6.8 -26L9.6 -14" stroke="${r}" stroke-width="4.2" stroke-linecap="round"/>${hand(-9.8, -13)}${hand(9.8, -13)}`;
+    s += `<path d="M-2.4 -30.6V-28.6H2.4V-30.6Z" fill="${sk}"/><circle cx="0" cy="-36" r="6.4" fill="${sk}" stroke="${dk}" stroke-width=".7"/>`;
+    if (o.hat !== 'coif' && o.hat !== 'hood') s += o.f ? `<path d="M-6.8 -35.6Q-7.4 -44.2 0 -43.8Q7.4 -44.2 6.8 -35.6Q7.6 -30 8.4 -26.6L5.2 -30.4Q6 -38 0 -39.2Q-6 -38 -5.2 -30.4L-8.4 -26.6Q-7.6 -30 -6.8 -35.6Z" fill="${hr}"/>` : (o.bald ? '' : `<path d="M-6.6 -36Q-6.9 -43.6 0 -43.2Q6.9 -43.6 6.6 -36Q4 -40.2 0 -40.2Q-4 -40.2 -6.6 -36Z" fill="${hr}"/>`);
+    s += `<circle cx="-2.3" cy="-36.4" r=".85" fill="#1a1208"/><circle cx="2.3" cy="-36.4" r=".85" fill="#1a1208"/>`;
+    s += m === 'happy' ? '<path d="M-2.6 -33.4Q0 -30.8 2.6 -33.4" stroke="#5a2a1a" stroke-width=".85" fill="none"/>'
+      : m === 'sad' ? '<path d="M-2.3 -32.2Q0 -34.2 2.3 -32.2" stroke="#5a2a1a" stroke-width=".85" fill="none"/><path d="M-3.6 -38.8L-1.2 -38.2M3.6 -38.8L1.2 -38.2" stroke="#1a1208" stroke-width=".6"/>'
+      : m === 'angry' ? '<path d="M-3.6 -39.2L-1 -37.8M3.6 -39.2L1 -37.8" stroke="#1a1208" stroke-width=".9"/><path d="M-2.2 -32.6Q0 -33.8 2.2 -32.6" stroke="#5a2a1a" stroke-width=".9" fill="none"/>'
+      : '<path d="M-1.8 -33H1.8" stroke="#5a2a1a" stroke-width=".75"/>';
+    if (o.beard && !o.f) s += `<path d="M-5.4 -34.4Q-5.4 -27.6 0 -26.6Q5.4 -27.6 5.4 -34.4Q3 -31.2 0 -31.4Q-3 -31.2 -5.4 -34.4Z" fill="${hr}"/>`;
+    if (o.hat && FIG_HAT[o.hat]) s += FIG_HAT[o.hat](o);
+    if (o.extra) s += o.extra;
+    return s;
+  }
+  const randFolk = (f, rich) => { f = f == null ? P(.45) : f; return { f, robe: pick(FIG_ROBE), skin: pick(FIG_SKIN), hair: pick(FIG_HAIR.slice(0, 7)), hat: f ? pick(['coif', 'coif', 'hood', '']) : pick(['cap', 'hood', 'brim', '', rich ? 'brim' : 'cap']), capc: pick(['#3a2a1a', '#6a2a1e', '#2f4f7a', '#4f6a2a']), beard: !f && P(.35) }; };
+  // how you look in the pictures: your colours, your hair, and the hat of your office
+  function meLook() {
+    const L = S.look || {}, k = mgK(), f = S.sex === 'f';
+    const o = { f, skin: typeof L.skin === 'number' && typeof SKINS !== 'undefined' ? SKINS[L.skin] || FIG_SKIN[1] : FIG_SKIN[1], hair: S.age >= 55 ? '#a9a297' : typeof L.hair === 'number' && typeof HAIRS !== 'undefined' ? HAIRS[L.hair] || FIG_HAIR[2] : FIG_HAIR[2], robe: REALM_COL[S.realm] || '#9b1f12', hat: f ? 'coif' : 'cap', capc: '#2a1a0c', beard: !f && L.beard > 1 };
+    if (S.ruling) o.hat = 'crown';
+    else if (k === 'cardinal') Object.assign(o, { robe: '#b3202c', hat: 'red', beard: false });
+    else if (['bishop', 'archbishop', 'jb_legate', 'abbot'].includes(k)) Object.assign(o, { robe: '#efe6cf', hat: 'mitre' });
+    else if (['wm_princeabbess', 'wm_grandmistress'].includes(k)) Object.assign(o, { robe: '#2a2a2a', hat: 'coif' });
+    else if (/general|constable|marshal|cmd|knight|captain|master|preceptor|gunner|condottiero/.test(k)) o.hat = f ? 'coif' : 'helm';
+    else if (/physician|nurse|midwife|hosp/.test(k)) Object.assign(o, { robe: '#5a2a4a', hat: f ? 'coif' : 'cap', capc: '#2a1a2a' });
+    return o;
+  }
+  // a person you can move about a scene: outer group is the place, middle the bob, inner the size
+  const actor = (id, x, y, s, look, cls) => `<g id="${id}" class="sc-act ${cls || ''}" style="transform:translate(${x}px,${y}px)"><g class="sc-bob"><g transform="scale(${s})">${fig(look)}</g></g></g>`;
+  function actMove(id, x, y, ms) {
+    const g = document.getElementById(id); if (!g) return;
+    if (ms === 0) { g.style.transition = 'none'; g.style.transform = `translate(${x}px,${y}px)`; void g.getBoundingClientRect(); g.style.transition = ''; return; }
+    if (ms) g.style.transitionDuration = `${ms}ms`;
+    g.classList.add('walk'); g.style.transform = `translate(${x}px,${y}px)`;
+    setTimeout(() => g.classList.remove('walk'), ms || 900);
+  }
+  function actLook(id, look, s) { const g = document.getElementById(id); if (!g) return; const inner = g.querySelector('.sc-bob>g'); if (inner) inner.innerHTML = fig(look); if (s) inner.setAttribute('transform', `scale(${s})`); }
+  function actDo(id, cls, ms) { const g = document.getElementById(id); if (!g) return; const b = g.querySelector('.sc-bob'); if (!b) return; b.classList.remove('hop', 'slump', 'shake', 'nod'); void b.getBoundingClientRect(); b.classList.add(cls); if (ms) setTimeout(() => b.classList.remove(cls), ms); }
+  // a flickering torch on a wall
+  const torchSVG = (x, y) => `<path d="M${x - 2} ${y}h4l-1 12h-2z" fill="#3a2410"/><path d="M${x - 4} ${y}h8" stroke="#2a1a0c" stroke-width="2"/><g class="sc-flick" style="transform-origin:${x}px ${y}px"><path d="M${x} ${y - 13}Q${x + 5} ${y - 5} ${x + 3} ${y - 1}Q${x} ${y + 1} ${x - 3} ${y - 1}Q${x - 5} ${y - 5} ${x} ${y - 13}Z" fill="#ffb53d"/><path d="M${x} ${y - 8}Q${x + 2.4} ${y - 4} ${x + 1.4} ${y - 1.6}Q${x} ${y - .6} ${x - 1.4} ${y - 1.6}Q${x - 2.4} ${y - 4} ${x} ${y - 8}Z" fill="#fff2b0"/></g><circle cx="${x}" cy="${y - 5}" r="22" fill="url(#sc-glow)"/>`;
+  const glowDef = '<radialGradient id="sc-glow"><stop offset="0" stop-color="#ffc860" stop-opacity=".35"/><stop offset="1" stop-color="#ffc860" stop-opacity="0"/></radialGradient>';
+
+  /* ---------- 1. Hear the petitions: the great hall, a line at the door, the four powers' banners on the wall ---------- */
   const PET = [
     { i: '👵', w: 'A widow in black', t: 'My husband died in the king’s war. Now the bailiff wants our only cow as a death-duty.', a: ['Let her keep the cow', { commons: 10, crown: -6 }], b: ['The law is the law', { crown: 6, commons: -10 }] },
     { i: '🧑‍🌾', w: 'Villagers with muddy boots', t: 'The lord has fenced the common where our pigs have always fed. We will starve.', a: ['Tear down the fences', { commons: 12, lords: -12 }], b: ['A lord may do as he likes with his land', { lords: 10, commons: -10 }] },
@@ -26246,85 +26555,189 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     { i: '🐑', w: 'Wool merchants', t: 'Tax the foreign weavers, so our own cloth sells first.', a: ['Tax the foreigners', { commons: 8, crown: 4, lords: -6 }], b: ['Free trade fills the treasury', { crown: 6, commons: -6 }] },
     { i: '🔔', w: 'The bakers’ guild', t: 'Grant our guild the only right to sell bread in the town. We will pay you for it.', a: ['Grant it (they pay you)', { crown: 4, commons: -9 }, .3], b: ['Anyone may bake', { commons: 8, crown: -3 }] },
   ];
-  mgAdd({ k: 'pet', i: '🙇', n: 'Hear the petitions', d: 'Three petitioners, three choices, four great powers to keep happy.', seal: 'mg_pet', payK: .6, who: () => mgElite(),
+  // how each petitioner looks; ':na' marks the one whose first answer is a refusal of what they asked
+  const PET_LK = ['widow', 'peasant', 'friar', 'baron', 'scholar', 'merchant', 'forester:na', 'messenger', 'soldier', 'lady', 'preacher:na', 'knight', 'serf', 'townsfolk', 'pilgrim', 'lender', 'player', 'abbot', 'wool', 'guild'];
+  const PET_LOOK = {
+    widow: { f: 1, robe: '#262422', hat: 'coif', coifc: '#3a3634', mood: 'sad' }, peasant: { robe: '#7a6a4a', hat: 'cap', capc: '#5a4a2a', beard: 1 },
+    friar: { robe: '#7a7a72', hat: 'hood', hood: '#6a6a62', bald: 1 }, baron: { robe: '#5a2a6a', hat: 'brim', capc: '#2a1a3a', beard: 1, belt: '#e2b23c' },
+    scholar: { robe: '#2a2a2a', hat: 'cap', capc: '#1a1a1a', mood: 'angry' }, merchant: { robe: '#2f4f7a', hat: 'brim', capc: '#6a2a1e', beard: 1 },
+    forester: { robe: '#3f5a2a', hat: 'hood', hood: '#4f6a2a' }, messenger: { robe: '#9b1f12', hat: 'cap', capc: '#e2b23c', belt: '#e2b23c' },
+    soldier: { robe: '#6a6a6a', hat: 'helm', mood: 'sad' }, lady: { f: 1, robe: '#7a2a4a', hat: 'coif', belt: '#e2b23c', mood: 'angry' },
+    preacher: { robe: '#5a4a3a', beard: 1, bald: 1, mood: 'angry', hair: '#a9a297' }, knight: { robe: '#8a8a90', hat: 'helm', beard: 1 },
+    serf: { robe: '#6a5a3a', mood: 'sad' }, townsfolk: { f: 1, robe: '#8a5a1a', hat: 'coif', mood: 'sad' },
+    pilgrim: { robe: '#6a5a4a', hat: 'brim', capc: '#4a3a2a', beard: 1 }, lender: { robe: '#3a3a5a', hat: 'cap', capc: '#2a2a2a', beard: 1 },
+    player: { robe: '#b3202c', hat: 'cap', capc: '#2f6a3c', mood: 'happy' }, abbot: { robe: '#2a2a2a', hat: 'mitre', mood: 'angry' },
+    wool: { robe: '#7a6a4a', hat: 'brim', capc: '#2a1a0c' }, guild: { robe: '#8a5a1a', hat: 'cap', capc: '#f4efe2' },
+  };
+  PET.forEach((p, j) => { const [l, na] = (PET_LK[j] || 'peasant').split(':'); p.look = Object.assign({ skin: FIG_SKIN[j % 5], hair: FIG_HAIR[j % 7] }, PET_LOOK[l]); p.na = !!na; });
+  // the banners of the four powers: the longer the banner, the better they like you
+  const PB = { crown: ['#9b1f12', '#e2b23c'], church: ['#efe6cf', '#b3202c'], lords: ['#23427a', '#e8d7aa'], commons: ['#4f6a2a', '#f1e4c3'] };
+  const PICON = {
+    crown: '<path d="M-5.5 2.5L-5.5 -3L-2.6 -.6L0 -4.4L2.6 -.6L5.5 -3L5.5 2.5Z"/>', church: '<path d="M-1.2 -5.5H1.2V-2.4H4.4V0H1.2V5.5H-1.2V0H-4.4V-2.4H-1.2Z"/>',
+    lords: '<path d="M-4.6 -4.6H4.6V0Q4.6 4.4 0 6Q-4.6 4.4 -4.6 0Z"/>', commons: '<path d="M0 6V-5M0 -3L-3 -5.5M0 -3L3 -5.5M0 0L-3.4 -2.6M0 0L3.4 -2.6M0 3L-3 .6M0 3L3 .6" stroke-width="1.6" stroke-linecap="round" fill="none" stroke="currentColor"/>',
+  };
+  const banLen = v => 12 + clamp(v) * .9;
+  const banSVG = (k, x, v) => `<g id="pt-b-${k}" class="pt-ban${v <= 15 || v >= 85 ? ' warn' : ''}" transform="translate(${x} 8)"><rect x="-17" y="-3" width="34" height="3.4" rx="1.6" fill="#4a2e16"/><g class="pt-cloth" style="transform:scaleY(${(banLen(v) / 102).toFixed(3)})"><path d="M-13 0H13V102L0 93L-13 102Z" fill="${PB[k][0]}" stroke="rgba(0,0,0,.45)" stroke-width=".8"/><path d="M-13 5H13M-13 9H13" stroke="${PB[k][1]}" stroke-width="1.1" opacity=".75"/></g><g transform="translate(0 20)" fill="${PB[k][1]}" color="${PB[k][1]}">${PICON[k]}</g></g>`;
+  const hallSVG = () => `<defs>${glowDef}<linearGradient id="sc-hw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8d7b64"/><stop offset="1" stop-color="#65543f"/></linearGradient><pattern id="sc-hs" width="30" height="16" patternUnits="userSpaceOnUse"><path d="M0 .5H30M0 8.5H30M.5 0V8M15.5 8V16" stroke="rgba(40,28,16,.3)" stroke-width="1" fill="none"/></pattern></defs>
+    <rect width="360" height="152" fill="url(#sc-hw)"/><rect width="360" height="152" fill="url(#sc-hs)"/>
+    <path d="M262 76V36Q270 20 278 36V76Z" fill="#9cc0dc" stroke="#3a2a1a" stroke-width="2.4"/><path d="M270 24V76M262 50H278" stroke="#3a2a1a" stroke-width="1.2"/>
+    <rect y="150" width="360" height="60" fill="#5b4a38"/><path d="M0 150H360" stroke="#3a2a1a" stroke-width="2"/><path d="M0 172H360M0 196H360M40 150L30 210M110 150L106 210M180 150V210M250 150L254 210M320 150L330 210" stroke="rgba(0,0,0,.18)"/>
+    <rect x="58" y="168" width="232" height="24" fill="#7a1e16"/><path d="M58 170H290M58 190H290" stroke="#c9952e" stroke-width="1.2"/>
+    <path d="M12 152V92Q12 64 35 64Q58 64 58 92V152Z" fill="#2a1a0e"/><path d="M17 152V93Q17 70 35 70Q53 70 53 93V152Z" fill="#5a3a1e"/><path d="M26 74V152M35 70V152M44 74V152" stroke="#3a2412" stroke-width="1"/><circle cx="47" cy="114" r="2" fill="#c9952e"/>
+    ${torchSVG(70, 92)}${torchSVG(246, 92)}
+    <rect x="284" y="170" width="76" height="10" fill="#4a3a2a"/><path d="M284 170H360" stroke="#2a1a0e" stroke-width="1.5"/>
+    <rect x="304" y="94" width="30" height="78" rx="3" fill="#5a2a14" stroke="#2a1208" stroke-width="1.2"/><rect x="308" y="100" width="22" height="42" rx="2" fill="#9b1f12"/><circle cx="319" cy="92" r="4" fill="#e2b23c"/>`;
+  const petLow = (() => { const a = (8 + banLen(15)).toFixed(1), b = (8 + banLen(85)).toFixed(1); return `<path d="M86 ${a}H256" class="pt-mark"/><path d="M86 ${b}H256" class="pt-mark"/><text x="84" y="${+a + 3}" class="pt-mk" text-anchor="end">low</text><text x="84" y="${+b + 3}" class="pt-mk" text-anchor="end">high</text>`; })();
+  mgAdd({ k: 'pet', i: '🙇', n: 'Hear the petitions', d: 'Petitioners queue at your door. Answer each before they lose patience, and keep the four powers’ banners in balance.', seal: 'mg_pet', payK: .6, who: () => mgElite(),
     play() {
-      const list = shuf(PET).slice(0, 3); let i = 0, last = '';
+      const N = 5, list = shuf(PET).slice(0, N), F = mgS().fac, me = meLook(), X = [108, 152, 196, 240];
+      let i = -1, bribe = 0, lost = 0, busy = true, clock = null;
+      const queue = () => [1, 2].map(d => list[i + d] ? `<g transform="translate(${30 - d * 9} ${156 - d * 2}) scale(.82)" opacity="${1 - d * .18}">${fig(Object.assign({}, list[i + d].look, { mood: 'calm' }))}</g>` : '').reverse().join('');
+      const say = h => mgSet('pt-say', h);
+      const btns = (on) => { const p = list[i]; if (!p) return mgSet('pt-btns', ''); const dots = d => Object.keys(d[1]).map(k => FACS.find(x => x[0] === k)[1]).join(''); mgSet('pt-btns', ['a', 'b'].map(v => mgBtn('pa', v, `${esc(p[v][0])}<small>${dots(p[v])}</small>`, '', !on)).join('')); };
       const draw = () => {
-        const p = list[i], f = mgS().fac;
-        const dots = d => Object.keys(d).map(k => FACS.find(x => x[0] === k)[1]).join('');
-        mgShow(`${mgHead(MG_BY.pet, 'Your door is open', i, 3)}<div class="mg-fac big">${FACS.map(([k, ic, n]) => `<span class="mgf ${f[k] <= 15 || f[k] >= 85 ? 'warn' : ''}"><i aria-hidden="true">${ic}</i><b style="--v:${f[k]}%"></b><small>${n}</small></span>`).join('')}</div>${last ? `<p class="mg-last">${esc(last)}</p>` : ''}<div class="mg-pet"><span class="mg-pi" aria-hidden="true">${p.i}</span><b>${esc(p.w)}</b><p>“${esc(p.t)}”</p></div><div class="mg-two">${mgBtn('pa', 'a', `${esc(p.a[0])}<small aria-label="moves ${p.a[1] ? Object.keys(p.a[1]).join(', ') : ''}">${dots(p.a[1])}</small>`)}${mgBtn('pa', 'b', `${esc(p.b[0])}<small>${dots(p.b[1])}</small>`)}</div><p class="mg-tip">The little icons show which powers a choice will move, but not which way.</p>`);
+        mgShow(`${mgHead(MG_BY.pet, 'Your door is open', 0, N)}<div class="sc pt" id="pt-stage"><svg class="sc-svg" viewBox="0 0 360 210" aria-hidden="true">${hallSVG()}${petLow}${FACS.map(([k], j) => banSVG(k, X[j], F[k])).join('')}<g transform="translate(319 177) scale(1.12)">${fig(Object.assign({ arms: 'hold' }, me))}</g><g id="pt-q"></g>${actor('pt-p', 30, 188, 1.28, {}, 'hid')}</svg></div><div class="sc-say" id="pt-say"><p>The banners show how the four powers feel about you. Keep each between the <b>low</b> and <b>high</b> marks.</p></div><div class="mg-two" id="pt-btns"></div><p class="mg-tip sc-tip">The little icons show which powers an answer moves, but not which way.</p>`);
+        mgAfter(700, 'pt-stage', next);
       };
-      let bribe = 0;
-      mgOn = (act, v) => {
-        if (act !== 'pa') return;
-        const c = list[i][v]; for (const [k, d] of Object.entries(c[1])) fac(k, Math.round(d * 1.6));
-        if (c[2]) bribe += c[2];
-        last = `${list[i].w}: “${c[0]}.” ${Object.entries(c[1]).map(([k, d]) => `${FACS.find(x => x[0] === k)[1]}${d > 0 ? '▲' : '▼'}`).join(' ')}`;
-        i++;
-        if (i < 3) return draw();
+      const banners = () => FACS.forEach(([k], j) => { const g = document.getElementById(`pt-b-${k}`); if (!g) return; const c = g.querySelector('.pt-cloth'); c.style.transform = `scaleY(${(banLen(F[k]) / 102).toFixed(3)})`; g.classList.toggle('warn', F[k] <= 15 || F[k] >= 85); });
+      const next = () => {
+        i++; if (i >= N) return end();
+        const p = list[i]; mgStep(i); mgSub(`Petitioner ${i + 1} of ${N}`);
+        mgSet('pt-q', queue());
+        const g = document.getElementById('pt-p'); g.style.opacity = 1; actMove('pt-p', 30, 188, 0); actLook('pt-p', p.look);
+        say(`<p class="sc-who">${p.i} ${esc(p.w)} comes forward…</p>`); btns(false);
+        actMove('pt-p', 214, 188, 1000);
+        mgAfter(1050, 'pt-stage', () => {
+          say(`<p class="sc-who">${p.i} ${esc(p.w)}</p><p class="sc-q">“${esc(p.t)}”</p>${timeBar('pt-t')}`); btns(true); busy = false;
+          clock = mgClock(11000, 'pt-stage', f => setBar('pt-t', f), timeout);
+        });
+      };
+      const leave = () => { const g = document.getElementById('pt-p'); if (!g) return; actMove('pt-p', 24, 188, 900); g.style.opacity = 0; mgAfter(950, 'pt-stage', next); };
+      const timeout = () => {
+        if (busy) return; busy = true; lost++; fac('commons', -4); fac('crown', -2); banners(); btns(false);
+        const p = list[i]; actLook('pt-p', Object.assign({}, p.look, { mood: 'angry', arms: 'fist' })); actDo('pt-p', 'shake', 700); mgSnd('bad');
+        say(`<p class="sc-who">${p.i} ${esc(p.w)}</p><p class="sc-res bad">Tired of waiting, they storm out, cursing your name. The common folk hear of it.</p>`);
+        mgAfter(1500, 'pt-stage', leave);
+      };
+      const decide = v => {
+        if (busy) return; busy = true; if (clock) clock.stop(); btns(false);
+        const p = list[i], c = p[v], pleased = (v === 'a') !== p.na;
+        const moves = Object.entries(c[1]);
+        for (const [k, d] of moves) { fac(k, Math.round(d * 1.15)); const j = FACS.findIndex(x => x[0] === k); mgPop('pt-stage', d > 0 ? '▲' : '▼', d > 0 ? 'up' : 'down', X[j] / 3.6, 6); }
+        banners();
+        if (c[2]) { bribe += c[2]; mgPop('pt-stage', '🪙🪙', 'gold', 59, 50); mgSnd('coins'); } else mgSnd(pleased ? 'good' : 'card');
+        actLook('pt-p', Object.assign({}, p.look, { mood: pleased ? 'happy' : 'sad', arms: pleased ? 'up' : undefined })); actDo('pt-p', pleased ? 'hop' : 'slump', 900);
+        say(`<p class="sc-who">${p.i} ${esc(p.w)}</p><p class="sc-res ${pleased ? 'good' : 'bad'}">You: “${esc(c[0])}.” ${pleased ? 'They bow low and thank you.' : 'They go away grumbling.'}</p>`);
+        mgAfter(1500, 'pt-stage', leave);
+      };
+      const end = () => {
+        mgStep(N);
         const f = mgS().fac, out = FACS.filter(([k]) => f[k] < 25 || f[k] > 75).length, tight = FACS.every(([k]) => f[k] >= 32 && f[k] <= 68), extreme = FACS.some(([k]) => f[k] <= 10 || f[k] >= 90);
-        const score = extreme ? .3 : tight ? 1 : out === 0 ? .6 : out === 1 ? .45 : .3;
-        mgFinish('pet', score, out === 0 ? 'You sent them all away grumbling a little and satisfied a little, which is the art of it.' : 'Some went home cheering, some went home cursing your name.', (grade, mult, pay) => {
+        const score = Math.max(0, (extreme ? .3 : tight ? 1 : out === 0 ? .7 : out === 1 ? .5 : .3) - lost * .15);
+        mgFinish('pet', score, lost ? `${lost} petitioner${lost > 1 ? 's' : ''} gave up waiting. ${out === 0 ? 'Still, the four powers are in balance.' : 'And the powers of the realm are out of balance.'}` : out === 0 ? 'You sent them all away grumbling a little and satisfied a little, which is the art of it.' : 'Some went home cheering, some went home cursing your name.', (grade, mult, pay) => {
           const ls = [];
           if (bribe) { coin(Math.round(pay * bribe * mult)); ls.push('Some of them showed their gratitude in silver.'); }
-          const F = mgS().fac;
-          if (F.crown <= 10) { jobPerf(-12); ls.push('The king has heard you ignore his wishes. Your standing falls.'); F.crown = 30; }
-          if (F.crown >= 90) { fac('lords', -12); ls.push('The lords call you the king’s lapdog.'); F.crown = 70; }
-          if (F.church <= 10) { st('piety', -8); ls.push('The bishop preached against you by name on Sunday.'); F.church = 30; }
-          if (F.church >= 90) { coin(-Math.round(pay * .3)); ls.push('The friars sing your praises, and send you the bill for their new roof.'); F.church = 70; }
-          if (F.lords <= 10) { const r = makePeer({ rv: 1, bond: R(5, 12) }); r.cls = 'noble'; r.sur = pick(SUR.noble); r.job = 'a great lord'; S.kin.push(r); ls.push(`${fullName(r)}, a great lord, has sworn to bring you down.`); F.lords = 30; }
-          if (F.lords >= 90) { fac('commons', -12); ls.push('The commons say you are in the lords’ pocket.'); F.lords = 70; }
-          if (F.commons <= 10) { coin(-Math.round(pay * .5)); st('health', -5); ls.push('A mob stoned your windows and broke into your stores.'); F.commons = 30; }
-          if (F.commons >= 90) { st('renown', 5); fac('crown', -10); ls.push('They sing your name in the alehouses, and the king does not like it.'); F.commons = 70; }
+          const F2 = mgS().fac;
+          if (F2.crown <= 10) { jobPerf(-12); ls.push('The king has heard you ignore his wishes. Your standing falls.'); F2.crown = 30; }
+          if (F2.crown >= 90) { fac('lords', -12); ls.push('The lords call you the king’s lapdog.'); F2.crown = 70; }
+          if (F2.church <= 10) { st('piety', -8); ls.push('The bishop preached against you by name on Sunday.'); F2.church = 30; }
+          if (F2.church >= 90) { coin(-Math.round(pay * .3)); ls.push('The friars sing your praises, and send you the bill for their new roof.'); F2.church = 70; }
+          if (F2.lords <= 10) { const r = makePeer({ rv: 1, bond: R(5, 12) }); r.cls = 'noble'; r.sur = pick(SUR.noble); r.job = 'a great lord'; S.kin.push(r); ls.push(`${fullName(r)}, a great lord, has sworn to bring you down.`); F2.lords = 30; }
+          if (F2.lords >= 90) { fac('commons', -12); ls.push('The commons say you are in the lords’ pocket.'); F2.lords = 70; }
+          if (F2.commons <= 10) { coin(-Math.round(pay * .5)); st('health', -5); ls.push('A mob stoned your windows and broke into your stores.'); F2.commons = 30; }
+          if (F2.commons >= 90) { st('renown', 5); fac('crown', -10); ls.push('They sing your name in the alehouses, and the king does not like it.'); F2.commons = 70; }
           return ls;
         });
       };
+      mgOn = (act, v) => { if (act === 'pa') decide(v); };
       draw();
     } });
 
-  /* ---------- 2. The Exchequer: count the tally sticks, catch the cheats ---------- */
-  const tallySVG = (big, small) => {
-    const n = big + small, w = Math.max(150, 28 + big * 15 + small * 8);
-    let s = `<rect x="2" y="12" width="${w - 4}" height="24" rx="5" fill="url(#rl-wd)" stroke="#3a2010" stroke-width="1.2"/><path d="M6 16H${w - 8}" stroke="#e8c690" stroke-opacity=".5"/>`;
-    let x = 14;
-    for (let j = 0; j < big; j++) { s += `<path d="M${x - 5} 12L${x} 27L${x + 5} 12Z" fill="#2a1608"/>`; x += 15; }
-    x += 2;
-    for (let j = 0; j < small; j++) { s += `<path d="M${x} 12V22" stroke="#2a1608" stroke-width="2"/>`; x += 8; }
-    return `<svg class="mg-tally" viewBox="0 0 ${w} 40" role="img" aria-label="${big} big notches and ${small} small notches">${s}</svg>`;
+  /* ---------- 2. The Exchequer: coins roll across the chequered cloth; pull out the bad ones before they reach the chest ---------- */
+  const EX_COIN = {
+    good: '<circle r="9" fill="#d9dde0" stroke="#5a5e62" stroke-width="1.3"/><circle r="6.2" fill="none" stroke="#9aa0a6" stroke-width=".8"/><path d="M0 -4.2V4.2M-4.2 0H4.2" stroke="#5a5e62" stroke-width="1.5"/><circle cx="-3.4" cy="-3.6" r="2" fill="#fff" opacity=".7"/>',
+    gold: '<circle r="9" fill="#e9bb3e" stroke="#7a5a10" stroke-width="1.3"/><circle r="6.2" fill="none" stroke="#a8801e" stroke-width=".8"/><path d="M-3.6 2.4L-3.6 -2L-1.8 -.4L0 -3.2L1.8 -.4L3.6 -2L3.6 2.4Z" fill="#7a5a10"/><circle cx="-3.4" cy="-3.6" r="2" fill="#fff6c8" opacity=".8"/>',
+    lead: '<circle r="9" fill="#6c6e70" stroke="#3a3c3e" stroke-width="1.3"/><path d="M-.6 -4V4M-4 .6H3.4" stroke="#47494b" stroke-width="1.6"/><circle cx="3" cy="3" r="1.4" fill="#57595b"/>',
+    clip: '<path d="M9 0A9 9 0 1 1 3.4 -8.3L1.4 -3.2L6.4 -2.6Z" fill="#d9dde0" stroke="#5a5e62" stroke-width="1.3"/><circle r="5.6" fill="none" stroke="#9aa0a6" stroke-width=".8"/><path d="M0 -4.2V4.2M-4.2 0H4.2" stroke="#5a5e62" stroke-width="1.5"/>',
   };
-  mgAdd({ k: 'exch', i: '🧮', n: 'The Exchequer', d: 'Count the sheriffs’ tally sticks and catch the ones who cheat the crown.', seal: 'mg_exch', who: () => mgIn('chancellor', 'treasurer', 'official', 'jb_mintmaster', 'jb_royalbanker', 'jb_seneschal', 'steward', 'castellan'),
+  const exCoin = k => `<svg viewBox="-10 -10 20 20" aria-hidden="true">${EX_COIN[k]}</svg>`;
+  const EX_SHER = () => `<svg viewBox="-20 -60 40 64" aria-hidden="true">${fig(Object.assign(randFolk(false, true), { arms: 'hold', robe: pick(['#2f4f7a', '#6a2a3a', '#4f6a2a', '#5a3a6a']) }))}<path d="M-9 -16Q-14 -2 -6 0H6Q14 -2 9 -16Q0 -20 -9 -16Z" fill="#a8865a" stroke="#5a3a1e" stroke-width=".9"/><path d="M-4 -17Q0 -21 4 -17" stroke="#5a3a1e" stroke-width="1.4" fill="none"/></svg>`;
+  mgAdd({ k: 'exch', i: '🧮', n: 'The Exchequer', d: 'Sheriffs pour the shires’ silver onto the chequered cloth. Pull out the clipped and lead coins before they reach the king’s chest.', seal: 'mg_exch', who: () => mgIn('chancellor', 'treasurer', 'official', 'jb_mintmaster', 'jb_royalbanker', 'jb_seneschal', 'steward', 'castellan'),
     play() {
-      const shires = S.world && S.world.t ? shuf(S.world.t.map(x => x.n)).slice(0, 5) : shuf(TOWNS.concat(VILLAGES)).slice(0, 5);
-      const nCheat = R(1, 3), cheats = new Set(shuf([0, 1, 2, 3, 4]).slice(0, nCheat));
-      const rows = shires.map((sh, j) => {
-        const big = R(3, 7), small = R(2, 9), owed = big * 20 + small;
-        let pb = big, ps = small;
-        if (cheats.has(j)) { if (P(.5)) pb = big - 1; else ps = small - R(2, Math.min(5, small)); }
-        return { who: `${pick(NAMES.m)} ${pick(SUR.low)}`, sh, owed, pb, ps, cheat: cheats.has(j), call: null };
+      const shires = S.world && S.world.t ? shuf(S.world.t.map(x => x.n)).slice(0, 4) : shuf(TOWNS.concat(VILLAGES)).slice(0, 4);
+      while (shires.length < 4) shires.push(pick(TOWNS));
+      const cheats = new Set(shuf([0, 1, 2, 3]).slice(0, R(2, 3)));
+      const rounds = shires.map((sh, j) => {
+        const n = 13, fakes = cheats.has(j) ? R(4, 6) : R(0, 1), golds = R(1, 2);
+        const kinds = shuf(Array.from({ length: n }, (_, q) => q < fakes ? pick(['lead', 'clip']) : q < fakes + golds ? 'gold' : 'good'));
+        return { sh, who: `${pick(NAMES.m)} ${pick(SUR.low)}`, kinds, cheat: cheats.has(j), caught: 0, slip: 0, wrong: 0 };
       });
-      let done = false;
-      const draw = () => {
-        const all = rows.every(r => r.call != null);
-        mgShow(`${mgHead(MG_BY.exch, 'Michaelmas at the chequered cloth', rows.filter(r => r.call != null).length, 5)}<p class="mg-tip">Each <b>big notch</b> is 20 silver, each <b>small notch</b> is 1. Does the stick match what the sheriff owes?</p>${rows.map((r, j) => `<div class="mg-row${done ? (r.call === r.cheat ? ' right' : ' wrong') : ''}"><div class="mg-rt"><b>${esc(r.who)}</b><small>Sheriff of ${esc(r.sh)} · owes <b>${r.owed}</b></small></div>${tallySVG(r.pb, r.ps)}${done ? `<p class="mg-rv">${r.cheat ? `Short: the stick shows ${r.pb * 20 + r.ps}.` : 'Honest: every penny there.'} ${r.call === r.cheat ? '✔' : '✖'}</p>` : `<div class="mg-two sm">${mgBtn('ex', `${j}:0`, '✔ Honest', r.call === false ? 'sel' : '')}${mgBtn('ex', `${j}:1`, '✖ Short', r.call === true ? 'sel' : '')}</div>`}</div>`).join('')}${done ? mgBtn('end', '', 'Seal the accounts', 'go') : mgBtn('close', '', all ? 'Close the accounts' : 'Judge every sheriff first', 'go', !all)}`);
+      let r = -1, caught = 0, slip = 0, wrong = 0, seq = 0, live = 0, spawning = false;
+      const hud = () => mgSet('ex-hud', `<span>✋ Pulled out <b>${caught}</b></span><span>✖ Slipped by <b>${slip}</b></span><span>⚠ Good coins pulled <b>${wrong}</b></span>`);
+      const intro = () => {
+        mgShow(`${mgHead(MG_BY.exch, 'Michaelmas at the chequered cloth')}<div class="cu-desk ex-intro"><p class="cu-say">The sheriffs bring the year’s silver. Most of it is honest. Some has been <b>clipped</b> (a bite cut from the edge) or is cheap <b>lead</b>, grey and dull.</p><div class="ex-key"><span>${exCoin('good')}<small>Good silver</small></span><span>${exCoin('gold')}<small>Gold, good</small></span><span class="bad">${exCoin('clip')}<small>Clipped</small></span><span class="bad">${exCoin('lead')}<small>Lead</small></span></div><p class="cu-say">Tap the bad coins as they roll across the cloth. Leave the good ones alone: pulling an honest sheriff’s coin is an insult.</p></div>${mgBtn('start', '', '🧮 Open the accounts', 'go')}`);
       };
-      mgOn = (act, v) => {
-        if (act === 'ex' && !done) { const [j, c] = v.split(':'); rows[+j].call = c === '1'; return draw(); }
-        if (act === 'close') { done = true; return draw(); }
-        if (act === 'end') {
-          const right = rows.filter(r => r.call === r.cheat).length, caught = rows.filter(r => r.cheat && r.call).length, wrongly = rows.filter(r => !r.cheat && r.call).length, missed = rows.filter(r => r.cheat && !r.call).length;
-          mgFinish('exch', right / 5, `${caught} cheat${caught === 1 ? '' : 's'} caught${missed ? `, ${missed} slipped through` : ''}${wrongly ? `, and ${wrongly} honest sheriff${wrongly === 1 ? '' : 's'} wrongly accused` : ''}.`, (grade, mult, pay) => {
-            const ls = [];
-            if (caught) { coin(Math.round(pay * .15 * caught * mult)); fac('crown', 3 * caught); ls.push('The fines went to the crown, and a share to you, as is the custom.'); }
-            if (wrongly) { fac('lords', -4 * wrongly); ls.push('The sheriffs you wrongly accused have powerful friends.'); }
-            if (missed) fac('crown', -3 * missed);
-            return ls;
-          });
-        }
+      const table = () => {
+        mgShow(`${mgHead(MG_BY.exch, 'At the chequered cloth', 0, 4)}<div class="sc ex" id="ex-stage"><div class="ex-cloth"></div><div class="ex-chest" aria-hidden="true"><svg viewBox="0 0 60 50"><rect x="4" y="18" width="52" height="30" rx="3" fill="#5a3a1e" stroke="#2a1a0c" stroke-width="1.5"/><path d="M4 18Q30 2 56 18Z" fill="#6b4a2e" stroke="#2a1a0c" stroke-width="1.5"/><path d="M18 9V48M42 9V48" stroke="#8a8a90" stroke-width="3"/><rect x="26" y="24" width="8" height="9" rx="1" fill="#c9952e"/></svg><small>The king’s chest</small></div><div class="ex-sher" id="ex-sher"></div><div class="ex-lanes" id="ex-coins"></div></div><div class="sc-say ex-say" id="ex-say"></div><div class="cu-hud ex-hud" id="ex-hud"></div>`);
+        hud(); const st0 = document.getElementById('ex-stage');
+        st0.addEventListener('animationend', e => {
+          const el = e.target.closest('.ex-coin'); if (!el || e.animationName !== 'exRoll') return;
+          if (!el.dataset.done) { el.dataset.done = 1; const k = el.dataset.k; if (k === 'lead' || k === 'clip') { slip++; rounds[r].slip++; mgPop('ex-stage', 'slipped by!', 'bad', 9, 58); mgSnd('bad'); hud(); } }
+          el.remove(); live--; if (!spawning && live <= 0) roundEnd();
+        });
+        mgAfter(300, 'ex-stage', nextSheriff);
       };
-      draw();
+      const nextSheriff = () => {
+        r++; if (r >= rounds.length) return finish();
+        const R0 = rounds[r]; mgStep(r); mgSub(`Sheriff ${r + 1} of ${rounds.length}`);
+        const sh = mgSet('ex-sher', EX_SHER()); sh.className = 'ex-sher in';
+        mgSet('ex-say', `<p class="sc-who">${esc(R0.who)}, Sheriff of ${esc(R0.sh)}, empties his sack.</p>`);
+        const speed = 3300 - r * 250; let q = 0; spawning = true;
+        const drop = () => {
+          if (!document.getElementById('ex-stage')) return;
+          if (q >= R0.kinds.length) { spawning = false; if (live <= 0) roundEnd(); return; }
+          const k = R0.kinds[q++], id = ++seq, lane = (q * 7 + r) % 3;
+          const b = document.createElement('button'); b.type = 'button'; b.className = 'ex-coin'; b.dataset.mg = 'coin'; b.dataset.v = id; b.dataset.k = k;
+          b.style.top = `${[14, 41, 68][lane]}%`; b.style.animationDuration = `${speed + R(-200, 200)}ms`; b.setAttribute('aria-label', k === 'lead' || k === 'clip' ? 'a bad coin' : 'a good coin');
+          b.innerHTML = exCoin(k); document.getElementById('ex-coins').appendChild(b); live++;
+          setTimeout(drop, 520 - r * 40 + R(-80, 80));
+        };
+        mgAfter(900, 'ex-stage', drop);
+      };
+      const roundEnd = () => {
+        const R0 = rounds[r]; if (!R0 || R0.over) return; R0.over = true;
+        const bad = R0.kinds.filter(k => k === 'lead' || k === 'clip').length;
+        mgSet('ex-say', `<p class="sc-res ${R0.slip || R0.wrong ? 'bad' : 'good'}">Sheriff of ${esc(R0.sh)}: ${bad ? `${bad} bad coin${bad > 1 ? 's' : ''}, ${R0.caught} pulled out${R0.slip ? `, ${R0.slip} slipped by` : ''}.` : 'every coin honest.'}${R0.wrong ? ` You pulled ${R0.wrong} good coin${R0.wrong > 1 ? 's' : ''}, and he is offended.` : ''}</p>`);
+        const sh = document.getElementById('ex-sher'); if (sh) sh.className = 'ex-sher out';
+        mgAfter(1500, 'ex-stage', nextSheriff);
+      };
+      const tap = (v, el) => {
+        if (!el || el.dataset.done) return; el.dataset.done = 1;
+        const k = el.dataset.k, bad = k === 'lead' || k === 'clip', box = el.getBoundingClientRect(), st0 = document.getElementById('ex-stage').getBoundingClientRect();
+        const x = (box.left + box.width / 2 - st0.left) / st0.width * 100, y = (box.top - st0.top) / st0.height * 100;
+        el.style.left = `${box.left - st0.left}px`; el.style.animation = `${bad ? 'exGot' : 'exOops'} .5s ease-out forwards`;
+        setTimeout(() => { if (el.isConnected) { el.remove(); live--; if (!spawning && live <= 0) roundEnd(); } }, 520);
+        if (bad) { caught++; rounds[r].caught++; mgPop('ex-stage', '+ fine', 'gold', x, y); mgSnd('coins'); }
+        else { wrong++; rounds[r].wrong++; mgPop('ex-stage', 'honest coin!', 'bad', x, y); mgSnd('bad'); }
+        hud();
+      };
+      const finish = () => {
+        mgStep(4);
+        const fakes = rounds.reduce((a, x) => a + x.kinds.filter(k => k === 'lead' || k === 'clip').length, 0) || 1;
+        const score = clamp((caught - wrong * .8) / fakes * 100) / 100;
+        mgFinish('exch', score, `${caught} bad coin${caught === 1 ? '' : 's'} pulled out of ${fakes}${slip ? `, ${slip} slipped into the chest` : ''}${wrong ? `, and ${wrong} good coin${wrong === 1 ? '' : 's'} wrongly pulled` : ''}.`, (grade, mult, pay) => {
+          const ls = [];
+          if (caught) { coin(Math.round(pay * .04 * caught * mult)); fac('crown', Math.min(12, caught)); ls.push('The cheating sheriffs were fined, and a share came to you, as is the custom.'); }
+          if (wrong) { fac('lords', -Math.min(15, 3 * wrong)); ls.push('The honest sheriffs you insulted have powerful friends.'); }
+          if (slip) { fac('crown', -Math.min(12, 2 * slip)); if (slip >= 4) { jobPerf(-6); ls.push('The king’s chest is full of lead and clipped silver. Questions are being asked.'); } }
+          return ls;
+        });
+      };
+      mgOn = (act, v, el) => { if (act === 'start') table(); else if (act === 'coin') tap(v, el); };
+      intro();
     } });
 
-  /* ---------- 3. The Assize: weigh the evidence, spot the lie, give a verdict ---------- */
+  /* ---------- 3. The Assize: watch each witness for the tell of a liar, then bang the gavel ---------- */
   const CRIMES = [
     { c: 'stealing a silver cup from the inn', item: 'silver cup', place: 'the inn' }, { c: 'stealing the reeve’s prize ram', item: 'ram', place: 'the sheepfold' },
     { c: 'setting fire to the tithe barn', item: 'tinderbox', place: 'the barn' }, { c: 'poaching the lord’s deer', item: 'venison', place: 'the forest' },
@@ -26336,38 +26749,103 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     IT: ['The priest swears {he} was at vespers when it happened, along with forty others.', 'The real {item} turned up at the next fair, sold by a stranger in a red cap.', '{He} was in bed with a broken leg that whole week, and the barber who set it swears to it.', 'Five men drank with {him} at the alehouse until dawn, and the alewife agrees.'],
     IF: ['{His} own brother swears {he} was home all night, and that brother would swear the sky is green for {him}.', '{He} swears on {his} mother’s grave. {His} mother is sitting in the front row.', 'A friend gives {him} an alibi, but that friend spent the same night in the stocks.'],
   };
-  mgAdd({ k: 'assize', i: '⚖️', n: 'Ride the assize', d: 'Three cases. Weigh the evidence, spot the lie, and judge.', seal: 'mg_assize', who: () => mgIn('judge', 'magistrate', 'jb_serjeant', 'jb_sheriff', 'jb_highsheriff', 'jb_mayor', 'jb_lordmayor', 'jb_alderman', 'jb_inquisitor'),
+  const NEUT = ['{He} has lived in the parish all {his} life and never missed a mass.', '{He} has a sharp tongue and few friends.', 'Everyone was at the market that week, {he} like the rest.', 'The neighbours say {he} keeps {him}self to {him}self.', '{He} owes money to half the village, like most folk.', '{He} was seen arguing with the reeve a month before.'];
+  // the tells a liar gives away, and the harmless things an honest witness may do
+  const AS_TELL = ['sweat', 'blush', 'fing', 'shift'], AS_DECOY = ['fly', 'yawn'];
+  const asTells = sk => `<g class="tl sweat"><path d="M7 -42q1.8 3.4 0 5q-1.8 -1.6 0 -5z" fill="#6fb8ee"/><path d="M-7.6 -39q1.6 3 0 4.4q-1.6 -1.4 0 -4.4z" fill="#6fb8ee"/></g><g class="tl blush"><circle cx="-3.8" cy="-34.2" r="2.2" fill="#e0504a" opacity=".75"/><circle cx="3.8" cy="-34.2" r="2.2" fill="#e0504a" opacity=".75"/></g><text class="tl fing" x="5" y="-19" font-size="9">🤞</text><g class="tl shift"><rect x="-4.6" y="-38" width="9.2" height="3.2" fill="${sk}"/><g class="tl-eyes"><circle cx="-1.2" cy="-36.4" r=".95" fill="#1a1208"/><circle cx="3.4" cy="-36.4" r=".95" fill="#1a1208"/></g></g><g class="tl fly"><g class="tl-fly"><ellipse cx="-1.2" cy="-1.3" rx="1.5" ry=".8" fill="#e8eef4" opacity=".85"/><circle r="1.2" fill="#111"/></g></g><ellipse class="tl yawn" cx="0" cy="-32.4" rx="1.7" ry="2.3" fill="#3a1a10"/>`;
+  const courtSVG = () => `<defs>${glowDef}<linearGradient id="sc-cw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b4a2e"/><stop offset="1" stop-color="#4a301c"/></linearGradient></defs>
+    <rect width="360" height="160" fill="url(#sc-cw)"/>${Array.from({ length: 12 }, (_, j) => `<rect x="${j * 30 + 3}" y="10" width="24" height="56" rx="2" fill="none" stroke="rgba(0,0,0,.28)" stroke-width="1.4"/><rect x="${j * 30 + 3}" y="74" width="24" height="40" rx="2" fill="none" stroke="rgba(0,0,0,.22)" stroke-width="1.2"/>`).join('')}
+    <path d="M166 14H194V36Q194 46 180 50Q166 46 166 36Z" fill="${REALM_COL[S.realm] || '#9b1f12'}" stroke="#e2b23c" stroke-width="1.6"/><path d="M174 28L176.5 23L180 27L183.5 23L186 28V32H174Z" fill="#e2b23c"/>
+    ${torchSVG(124, 60)}${torchSVG(236, 60)}
+    <rect y="158" width="360" height="62" fill="#5a4632"/><path d="M0 158H360" stroke="#2a1a0c" stroke-width="2"/>
+    <rect x="116" y="106" width="128" height="10" fill="#3a2414"/>`;
+  const dockSVG = (x, front) => front ? `<rect x="${x - 34}" y="170" width="68" height="40" fill="#6b4a2e" stroke="#2a1a0c" stroke-width="1.4"/><path d="M${x - 34} 178H${x + 34}" stroke="#3a2414" stroke-width="2.4"/><path d="M${x - 17} 178V210M${x} 178V210M${x + 17} 178V210" stroke="#3a2414" stroke-width="1.8"/>` : '';
+  const gavelSVG = '<g id="as-gav" class="as-gav" style="transform-origin:224px 108px"><rect x="204" y="92" width="26" height="10" rx="2" fill="#7a4e2a" stroke="#2a1a0c" stroke-width="1"/><path d="M217 102V118" stroke="#5a3a1e" stroke-width="3.4"/></g>';
+  mgAdd({ k: 'assize', i: '⚖️', n: 'Ride the assize', d: 'Three cases. One witness in each is lying: watch for the liar’s tell, catch them out, and judge.', seal: 'mg_assize', who: () => mgIn('judge', 'magistrate', 'jb_serjeant', 'jb_sheriff', 'jb_highsheriff', 'jb_mayor', 'jb_lordmayor', 'jb_alderman', 'jb_inquisitor'),
     play() {
+      const me = meLook();
       const cases = shuf(CRIMES).slice(0, 3).map(cr => {
         const sx = pick(['m', 'f']), T = P(.5) ? 'G' : 'I', o = Object.assign({ name: `${pick(NAMES[sx])} ${pick(SUR.low)}` }, cr, pr(sx));
-        const tr = shuf(EV[T + 'T']).slice(0, 2).map(t => ({ t: fill(t, o), side: T })), fa = { t: fill(pick(EV[(T === 'G' ? 'I' : 'G') + 'F']), o), side: T === 'G' ? 'I' : 'G' };
-        return { o, T, ev: shuf(tr.concat([fa])), bribe: P(.35) ? Math.round(mgPay() * R(6, 12) / 10) : 0, v: null };
+        const truth = { t: fill(pick(EV[T + 'T']), o), side: T }, lie = { t: fill(pick(EV[(T === 'G' ? 'I' : 'G') + 'T']), o), side: T === 'G' ? 'I' : 'G', liar: true }, neu = { t: fill(pick(NEUT), o), side: 'N' };
+        const ws = shuf([truth, lie, neu]).map(w => Object.assign(w, { look: randFolk() }));
+        return { o, T, ws, look: Object.assign(randFolk(sx === 'f'), { mood: 'sad' }), bribe: P(.35) ? Math.round(mgPay() * R(6, 12) / 10) : 0, v: null, caught: -1, called: -1 };
       });
-      let i = 0, shown = false, took = 0, corrupt = 0;
-      const draw = () => {
-        const c = cases[i], o = c.o;
-        if (!shown) return mgShow(`${mgHead(MG_BY.assize, `Case ${i + 1} of 3`, i, 3)}<div class="mg-case"><b>${esc(o.name)}</b><small>accused of ${esc(o.c)}</small></div>${c.ev.map(e => `<div class="mg-ev ${e.side === 'G' ? 'g' : 'i'}"><span>${e.side === 'G' ? '⚔️ Against' : '🛡️ For'}</span><p>${esc(e.t)}</p></div>`).join('')}<p class="mg-tip">One of these is a lie. Find it, and judge by the rest.</p>${c.bribe ? `<p class="mg-bribe">💰 ${esc(o.name)}’s family slips you a note: ${c.bribe} silver if the verdict is “not guilty”.</p>` : ''}<div class="mg-two">${mgBtn('vd', 'G', 'Guilty')}${mgBtn('vd', 'I', 'Not guilty')}</div>${c.bribe ? mgBtn('vd', 'B', `Take the ${c.bribe} silver: not guilty`, 'dim') : ''}`);
-        const right = c.v === c.T;
-        const why = c.T === 'G' ? `${o.He} did it. ${c.v === 'G' ? 'Justice was done.' : `${o.He} walked free, laughing, and did it again within the year.`}` : `${o.He} was innocent. ${c.v === 'I' ? 'You saw through the lie.' : `Years later the truth came out, and the whole county knows you condemned an innocent ${o.he === 'he' ? 'man' : 'woman'}.`}`;
-        mgShow(`${mgHead(MG_BY.assize, `Case ${i + 1} of 3`, i + 1, 3)}<div class="mg-verdict ${right ? 'right' : 'wrong'}"><b>${right ? '✔ A just verdict' : '✖ A wrong verdict'}</b><p>${esc(why)}</p></div>${mgBtn('next', '', i < 2 ? 'The next case' : 'Close the assize', 'go')}`);
+      let i = -1, w = -1, speaking = false, took = 0, corrupt = 0, timers = [];
+      const later = (ms, fn) => timers.push(mgAfter(ms, 'as-stage', fn));
+      const intro = () => {
+        mgShow(`${mgHead(MG_BY.assize, 'The assize comes to town')}<div class="cu-desk as-intro"><p class="cu-say">In each case one witness is <b>lying</b>, and liars give themselves away. Watch their faces and hands while they speak:</p><div class="ex-key as-key"><span><b>💧</b><small>a bead of sweat</small></span><span><b>😳</b><small>a red face</small></span><span><b>👀</b><small>shifty eyes</small></span><span><b>🤞</b><small>crossed fingers</small></span></div><p class="cu-say">Tap <b>Liar!</b> while the liar speaks. Honest folk sometimes yawn or swat a fly: that proves nothing. Catch the liar, and the truth is plain. Miss them, and you must guess.</p></div>${mgBtn('start', '', '⚖️ Open the court', 'go')}`);
       };
-      mgOn = (act, v) => {
-        if (act === 'vd') { const c = cases[i]; if (v === 'B') { took += c.bribe; c.v = 'I'; if (c.T === 'G') corrupt++; } else c.v = v; shown = true; return draw(); }
-        if (act === 'next') {
-          i++; shown = false; if (i < 3) return draw();
-          const right = cases.filter(c => c.v === c.T).length;
-          mgFinish('assize', right / 3, `${right} of 3 verdicts were just.`, (grade, mult) => {
-            const ls = [];
-            if (took) { coin(took); ls.push('You pocketed the bribes.'); }
-            if (corrupt && P(.25 * corrupt)) { jobPerf(-15); st('renown', -8); fac('commons', -10); ls.push('Somebody talked. Everyone knows the judge can be bought.'); }
-            if (right === 3) { fac('commons', 6); fac('crown', 3); }
-            return ls;
-          });
-        }
+      const stage = () => `<div class="sc as" id="as-stage"><svg class="sc-svg" viewBox="0 0 360 220" aria-hidden="true">${courtSVG()}<g transform="translate(180 152) scale(1.5)">${fig(Object.assign({ arms: 'hold' }, me))}</g><rect x="120" y="114" width="120" height="50" fill="#5a3a1e" stroke="#2a1a0c" stroke-width="1.4"/><path d="M150 120V160M180 120V160M210 120V160" stroke="rgba(0,0,0,.25)"/>${gavelSVG}${actor('as-acc', -40, 214, 1.85, {})}${dockSVG(58, true)}<g id="as-wit" class="sc-act" style="transform:translate(420px,214px)"><g class="sc-bob"><g transform="scale(2.05)" id="as-wfig"></g></g></g>${dockSVG(302, true)}<g id="as-grd" class="sc-act" style="transform:translate(-50px,216px)"><g class="sc-bob"><g transform="scale(1.7)">${fig({ robe: '#4a4a52', hat: 'helm', beard: 1, arms: 'hold' })}<path d="M10 -2V-58" stroke="#5a3a1e" stroke-width="1.6"/><path d="M8 -58L10 -66L12 -58Z" fill="#b8bec6"/></g></g></g></svg></div><div class="sc-say" id="as-say"></div><div class="mg-two" id="as-btns"></div>`;
+      const say = h => mgSet('as-say', h), btns = h => mgSet('as-btns', h);
+      const sideTag = s => s === 'G' ? '<span class="as-tag g">⚔️ Against</span>' : s === 'I' ? '<span class="as-tag i">🛡️ For</span>' : '<span class="as-tag n">· About them</span>';
+      const nextCase = () => {
+        i++; if (i >= 3) return finish();
+        const c = cases[i]; w = -1;
+        mgShow(`${mgHead(MG_BY.assize, `Case ${i + 1} of 3`, i, 3)}${stage()}`);
+        actLook('as-acc', c.look); actMove('as-acc', 58, 214, 1100);
+        say(`<p class="sc-who">${esc(c.o.name)}</p><p class="sc-q">accused of ${esc(c.o.c)}. Three witnesses will speak.</p>`); btns('');
+        later(1500, nextWitness);
       };
-      draw();
+      const witFig = (x, mood) => { const g = document.getElementById('as-wfig'); if (g) g.innerHTML = fig(Object.assign({}, x.look, mood ? { mood } : {})) + asTells(x.look.skin); };
+      const nextWitness = () => {
+        const c = cases[i]; w++;
+        if (w >= 3) return verdict();
+        const x = c.ws[w]; witFig(x);
+        const g = document.getElementById('as-wit'); g.setAttribute('class', 'sc-act'); actMove('as-wit', 420, 214, 0); actMove('as-wit', 302, 214, 800);
+        say(`<p class="sc-who">Witness ${w + 1} of 3 takes the stand…</p>`);
+        btns(mgBtn('liar', '', '🔍 Liar!', 'as-liar', true));
+        later(850, () => {
+          speaking = true;
+          say(`<p class="sc-who">Witness ${w + 1} ${sideTag(x.side)}</p><p class="sc-q">“${esc(x.t)}”</p>${timeBar('as-t')}`);
+          btns(mgBtn('liar', '', '🔍 Liar!', 'as-liar', c.called >= 0));
+          const SPEAK = 4800;
+          mgClock(SPEAK, 'as-t', f => setBar('as-t', f));
+          const tl = x.liar ? shuf(AS_TELL).slice(0, 2) : P(.55) ? [pick(AS_DECOY)] : [];
+          tl.forEach((t, q) => { const at = x.liar ? (q ? R(2400, 3300) : R(500, 1500)) : R(700, 3000); later(at, () => { const gg = document.getElementById('as-wit'); if (gg && speaking) gg.classList.add(`w-${t}`); }); later(at + 1250, () => { const gg = document.getElementById('as-wit'); if (gg) gg.classList.remove(`w-${t}`); }); });
+          later(SPEAK, () => { if (w !== c.ws.indexOf(x)) return; speaking = false; const gg = document.getElementById('as-wit'); if (gg) gg.setAttribute('class', 'sc-act'); actMove('as-wit', 420, 214, 650); btns(mgBtn('liar', '', '🔍 Liar!', 'as-liar', true)); later(700, nextWitness); });
+        });
+      };
+      const callLiar = () => {
+        const c = cases[i], x = c.ws[w]; if (!speaking || c.called >= 0 || !x) return;
+        c.called = w;
+        if (x.liar) { c.caught = w; witFig(x, 'sad'); actDo('as-wit', 'slump', 900); mgPop('as-stage', 'Caught in a lie!', 'gold', 70, 40); mgSnd('good'); say(`<p class="sc-who">Witness ${w + 1} ${sideTag(x.side)}</p><p class="sc-q"><s>“${esc(x.t)}”</s></p><p class="sc-res good">The witness breaks down: “I lied, my lord! Forgive me!”</p>`); }
+        else { witFig(x, 'angry'); actDo('as-wit', 'shake', 700); fac('commons', -1); mgPop('as-stage', 'An honest witness!', 'bad', 70, 40); mgSnd('bad'); say(`<p class="sc-who">Witness ${w + 1} ${sideTag(x.side)}</p><p class="sc-q">“${esc(x.t)}”</p><p class="sc-res bad">“How dare you! I swore on the Gospels!” The court mutters.</p>`); }
+        btns(mgBtn('liar', '', '🔍 Liar!', 'as-liar', true));
+      };
+      const verdict = () => {
+        const c = cases[i];
+        say(`<p class="sc-who">${esc(c.o.name)}: what is your verdict?</p>${c.ws.map((x, j) => `<p class="as-st">${sideTag(x.side)} ${j === c.caught ? `<s>${esc(x.t)}</s> <b class="as-lie">a lie</b>` : esc(x.t)}${j === c.called && j !== c.caught ? ' <i class="as-hon">(you called this one a liar)</i>' : ''}</p>`).join('')}${c.bribe ? `<p class="mg-bribe">💰 A purse slides onto the bench: ${c.bribe} silver if the verdict is “not guilty”.</p>` : ''}`);
+        btns(`${mgBtn('vd', 'G', '⚖️ Guilty')}${mgBtn('vd', 'I', '🕊️ Not guilty')}${c.bribe ? mgBtn('vd', 'B', `💰 Take the purse <small>and say “not guilty”</small>`, 'red as-wide') : ''}`);
+        const b = document.getElementById('as-btns'); if (b) b.className = 'mg-two';
+      };
+      const judge = v => {
+        const c = cases[i]; if (c.v) return;
+        if (v === 'B') { took += c.bribe; c.v = 'I'; if (c.T === 'G') corrupt++; mgSnd('coins'); } else c.v = v;
+        btns(''); const g = document.getElementById('as-gav'); if (g) g.classList.add('bang'); later(240, () => mgSnd('clash'));
+        const right = c.v === c.T, o = c.o;
+        later(500, () => {
+          if (c.v === 'G') { actLook('as-acc', Object.assign({}, c.look, { mood: 'sad' })); actMove('as-grd', 24, 216, 900); later(1000, () => { actMove('as-grd', -60, 216, 1100); actMove('as-acc', -40, 214, 1100); }); }
+          else { actLook('as-acc', Object.assign({}, c.look, { mood: 'happy', arms: 'up' })); actDo('as-acc', 'hop', 900); later(900, () => actMove('as-acc', -40, 214, 1000)); }
+          const why = c.T === 'G' ? `${o.He} did it. ${c.v === 'G' ? 'Justice was done.' : `${o.He} walked free, laughing, and did it again within the year.`}` : `${o.He} was innocent. ${c.v === 'I' ? 'You saw through the lie.' : `Years later the truth came out, and the whole county knows you condemned an innocent ${o.he === 'he' ? 'man' : 'woman'}.`}`;
+          say(`<p class="sc-res ${right ? 'good' : 'bad'}"><b>${right ? '✔ A just verdict.' : '✖ A wrong verdict.'}</b> ${esc(why)}</p>`);
+          mgSnd(right ? 'good' : 'bad');
+          later(1400, () => { btns(mgBtn('next', '', i < 2 ? 'The next case' : 'Close the assize', 'go')); const b = document.getElementById('as-btns'); if (b) b.className = 'mg-col'; });
+        });
+      };
+      const finish = () => {
+        const right = cases.filter(c => c.v === c.T).length, caught = cases.filter(c => c.caught >= 0).length;
+        mgFinish('assize', right / 3, `${right} of 3 verdicts were just. You caught ${caught} liar${caught === 1 ? '' : 's'}.`, (grade, mult) => {
+          const ls = [];
+          if (took) { coin(took); ls.push('You pocketed the bribes.'); }
+          if (corrupt && P(.25 * corrupt)) { jobPerf(-15); st('renown', -8); fac('commons', -10); ls.push('Somebody talked. Everyone knows the judge can be bought.'); }
+          if (right === 3) { fac('commons', 6); fac('crown', 3); }
+          if (caught === 3) { st('wits', 2); ls.push('No liar gets past you. Folk say you can see into a man’s soul.'); }
+          return ls;
+        });
+      };
+      mgOn = (act, v) => { if (act === 'start') nextCase(); else if (act === 'liar') callLiar(); else if (act === 'vd') judge(v); else if (act === 'next') nextCase(); };
+      intro();
     } });
-
 
   /* ---------- 4. The field of battle: deploy, watch it play out, and send the reserve in time ---------- */
   const BF_TER = { open: 'Open fields', hill: 'A hill', wood: 'Woods', marsh: 'Marsh' };
@@ -26491,7 +26969,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       };
       deploy();
     } });
-  /* ---------- 5. The Visitation: rumours, two close looks, and judgement ---------- */
+  /* ---------- 5. The Visitation: search each priest's house for what the rumours say is hidden there ---------- */
   const SINS = [
     { r: 'Folk say Father {n} drinks.', c: 'You find him snoring in the vestry at noon, beside an empty cask.', s: 'He is sober as a stone at dawn mass. The man who accused him owes three years of tithes.' },
     { r: 'They say Father {n} sells the same grave twice.', c: 'The burial book has two names on half the plots, and fresh silver in his chest.', s: 'The book is in perfect order. The sexton who complained was dismissed for stealing candles.' },
@@ -26499,66 +26977,156 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     { r: 'The parish says their relic of Saint {s} has stopped working miracles.', c: 'The “finger of Saint {s}” is a chicken bone. Father {n} sold the real one.', s: 'The relic is real. The man who said otherwise wanted to sell them a better one.' },
     { r: 'Folk say Father {n} skips the holy days to go hunting.', c: 'His hounds are fat, his altar is dusty, and nobody has heard mass since Easter.', s: 'He has said every mass, and his “hunting” is visiting the sick in the hills.' },
   ];
+  SINS.push({ r: 'They say Father {n} plays at dice with the sexton every night.', c: 'Dice and cards are tucked behind the psalter, and the poor box is empty.', s: 'The “dice” are the bones of the parish chess set, which he plays with the blind miller.' });
+  const SIN_KEY = ['drink', 'grave', 'house', 'relic', 'hunt', 'dice'];
+  const SIN_IT = { drink: [['🍷', 'a jug of the altar wine'], ['🍺', 'a tankard of ale']], grave: [['💰', 'a purse of burial fees'], ['📜', 'a grave sold twice']], house: [['👗', 'a woman’s gown'], ['💌', 'a love letter']], relic: [['🍗', 'a chicken bone'], ['💰', 'silver from the real relic']], hunt: [['🏹', 'a hunting bow'], ['🦌', 'a stag’s antlers']], dice: [['🎲', 'dice'], ['🃏', 'playing cards']] };
+  const VI_DECOY = [['🕯️', 'a candle'], ['📖', 'a psalter'], ['🍞', 'a loaf'], ['🧺', 'a basket'], ['🥣', 'a bowl'], ['🔑', 'a key'], ['🍎', 'an apple'], ['🧀', 'a cheese'], ['🐈', 'the cat'], ['🧹', 'a broom'], ['🥄', 'a spoon'], ['🐁', 'a mouse'], ['⚱️', 'an urn']];
+  // where things can be hidden, in % of the picture; d: in shadow
+  const VI_SLOT = [[9, 79, 1], [22, 80, 1], [12, 52], [27, 55], [44, 56], [41, 81], [60, 49], [71, 50], [64, 81, 1], [46, 24], [58, 24], [68, 24], [91, 53], [82, 82], [25, 33], [53, 91]];
   const SOUND = ['No complaints. The roof leaks and the bell is cracked, nothing more.', 'All quiet. The priest is old and dull, and the parish loves him.'];
-  mgAdd({ k: 'visit', i: '⛪', n: 'The visitation', d: 'Ride round four parishes. Find the rotten priests and protect the good ones.', seal: 'mg_visit', who: () => mgIn('abbot', 'bishop', 'archbishop', 'cardinal', 'jb_legate', 'wm_princeabbess', 'wm_grandmistress'),
+  const viSVG = () => `<defs><pattern id="sc-vb" width="40" height="12" patternUnits="userSpaceOnUse"><path d="M0 .5H40M20 0V12" stroke="rgba(0,0,0,.22)" fill="none"/></pattern></defs>
+    <rect width="360" height="150" fill="#d8c8a6"/><path d="M0 12H360M0 96H360" stroke="#5a3a1e" stroke-width="6"/><path d="M60 12V96M180 12V96M300 12V96" stroke="#5a3a1e" stroke-width="5"/><path d="M60 54L100 12M180 54L140 12M300 54L260 12" stroke="#5a3a1e" stroke-width="3"/>
+    <path d="M78 104V62Q90 46 102 62V104Z" fill="#9cc0dc" stroke="#3a2a1a" stroke-width="2.4"/><path d="M90 50V104M78 80H102" stroke="#3a2a1a" stroke-width="1.2"/>
+    <path d="M336 42V74M326 52H346" stroke="#3a2412" stroke-width="3.4"/>
+    <rect y="148" width="360" height="62" fill="#7a5a3a"/><rect y="148" width="360" height="62" fill="url(#sc-vb)"/><path d="M0 148H360" stroke="#3a2412" stroke-width="2"/>
+    <rect x="148" y="44" width="110" height="6" fill="#5a3a1e"/><rect x="150" y="28" width="7" height="16" fill="#7a2a1e"/><rect x="158" y="31" width="6" height="13" fill="#2f4f7a"/><rect x="240" y="30" width="7" height="14" fill="#4f6a2a"/>
+    <path d="M4 150V112H122V150" fill="none" stroke="#4a2e16" stroke-width="5"/><rect x="6" y="122" width="114" height="22" rx="4" fill="#ece2c8"/><path d="M40 122H120V144H40Z" fill="#8a3a2a"/><rect x="10" y="114" width="30" height="12" rx="5" fill="#f6efdc"/><rect x="4" y="142" width="118" height="20" fill="rgba(0,0,0,.35)"/>
+    <rect x="134" y="118" width="54" height="34" rx="2" fill="#6b4a2e" stroke="#2a1a0c" stroke-width="1.4"/><path d="M134 126H188" stroke="#2a1a0c" stroke-width="1.4"/><path d="M146 118V152M176 118V152" stroke="#8a8a90" stroke-width="2.6"/>
+    <rect x="198" y="100" width="76" height="7" fill="#6b4a2e" stroke="#2a1a0c" stroke-width="1"/><path d="M204 107V156M268 107V156" stroke="#4a2e16" stroke-width="5"/><rect x="200" y="150" width="72" height="18" fill="rgba(0,0,0,.3)"/>
+    <path d="M308 118Q302 140 308 164H346Q352 140 346 118Z" fill="#7a4e2a" stroke="#2a1a0c" stroke-width="1.4"/><path d="M305 128H349M304 154H350" stroke="#4a4c4e" stroke-width="2.4"/><circle cx="327" cy="141" r="3" fill="#3a2412"/>`;
+  mgAdd({ k: 'visit', i: '⛪', n: 'The visitation', d: 'Ride round four parishes and search each priest’s house before the bell rings. Punish the guilty; protect the slandered.', seal: 'mg_visit', who: () => mgIn('abbot', 'bishop', 'archbishop', 'cardinal', 'jb_legate', 'wm_princeabbess', 'wm_grandmistress'),
     play() {
       const ps = shuf(VILLAGES).slice(0, 4).map(v => {
         const kind = wpick([['corrupt', 4], ['slander', 3], ['sound', 2]], x => x[1])[0];
-        const sin = pick(SINS), o = { n: pick(NAMES.m), s: pick(SAINTS) };
-        return { v, kind, o, rum: kind === 'sound' ? pick(SOUND) : fill(sin.r, o), look: kind === 'corrupt' ? fill(sin.c, o) : kind === 'slander' ? fill(sin.s, o) : 'All is as it seems: an honest parish.', seen: false, call: null };
+        const si = R(0, SINS.length - 1), sin = SINS[si], o = { n: pick(NAMES.m), s: pick(SAINTS) };
+        return { v, kind, si, o, rum: kind === 'sound' ? pick(SOUND) : fill(sin.r, o), look: kind === 'corrupt' ? fill(sin.c, o) : kind === 'slander' ? fill(sin.s, o) : 'All is as it seems: an honest parish.', call: null, found: 0 };
       });
-      if (!ps.some(p => p.kind === 'corrupt')) { const p = ps[0], sin = pick(SINS); p.kind = 'corrupt'; p.rum = fill(sin.r, p.o); p.look = fill(sin.c, p.o); }
-      let looks = 2, done = false;
-      const draw = () => {
-        const all = ps.every(p => p.call != null);
-        mgShow(`${mgHead(MG_BY.visit, `${looks} close look${looks === 1 ? '' : 's'} left`, ps.filter(p => p.call != null).length, 4)}<p class="mg-tip">Rumours can be true, or the work of an enemy. You have time for two close looks. Punish the guilty; protect the slandered.</p>${ps.map((p, j) => `<div class="mg-row${done ? ((p.call === 'pun') === (p.kind === 'corrupt') ? ' right' : ' wrong') : ''}"><div class="mg-rt"><b>${esc(p.v)}</b><small>${esc(p.rum)}</small></div>${p.seen || done ? `<p class="mg-look">🔍 ${esc(p.look)}</p>` : ''}${done ? '' : `<div class="mg-three">${p.seen ? '' : mgBtn('look', j, `🔍 Look closely`, '', looks <= 0)}${mgBtn('call', `${j}:pun`, '⚖️ Punish', p.call === 'pun' ? 'sel' : '')}${mgBtn('call', `${j}:ok`, '🙏 Praise', p.call === 'ok' ? 'sel' : '')}</div>`}</div>`).join('')}${done ? mgBtn('end', '', 'Ride home', 'go') : mgBtn('close', '', all ? 'Give your judgements' : 'Judge every parish first', 'go', !all)}`);
+      if (!ps.some(p => p.kind === 'corrupt')) { const p = ps[0], sin = SINS[p.si]; p.kind = 'corrupt'; p.rum = fill(sin.r, p.o); p.look = fill(sin.c, p.o); }
+      let j = -1, clock = null, over = true, items = [];
+      const intro = () => {
+        mgShow(`${mgHead(MG_BY.visit, 'Your visitation')}<div class="cu-desk"><p class="cu-say">Four parishes, four priests, and a rumour about each. Some rumours are true. Some are the work of enemies.</p><p class="cu-say">In each house, <b>tap anything that should not be there</b> before the bell rings: wine, dice, a purse, a woman’s gown. Then judge: <b>Punish</b> the guilty, or say <b>All is well</b>. Punish a good priest and his parish will never forgive you.</p></div>${mgBtn('start', '', '🐎 Ride out', 'go')}`);
       };
-      mgOn = (act, v) => {
-        if (act === 'look' && looks > 0 && !done) { ps[+v].seen = true; looks--; return draw(); }
-        if (act === 'call' && !done) { const [j, c] = v.split(':'); ps[+j].call = c; return draw(); }
-        if (act === 'close') { done = true; return draw(); }
-        if (act === 'end') {
-          const right = ps.filter(p => (p.call === 'pun') === (p.kind === 'corrupt')).length;
-          mgFinish('visit', right / 4, `${right} of 4 parishes judged rightly.`, () => {
-            const ls = [], wrongPun = ps.filter(p => p.call === 'pun' && p.kind !== 'corrupt').length, missed = ps.filter(p => p.kind === 'corrupt' && p.call !== 'pun').length;
-            if (right === 4) { st('piety', 4); fac('church', 8); ls.push('Your diocese is cleaner than it has been in a generation.'); }
-            if (wrongPun) { fac('commons', -5 * wrongPun); ls.push('You punished a good priest, and his parish will not forgive you.'); }
-            if (missed) { fac('church', -4 * missed); ls.push('A rotten priest you praised went on as before. People notice.'); }
-            return ls;
-          });
-        }
+      const house = () => {
+        j++; if (j >= ps.length) return finish();
+        const p = ps[j]; over = false;
+        const slots = shuf(VI_SLOT), sins = p.kind === 'corrupt' ? SIN_IT[SIN_KEY[p.si] || 'drink'] : [];
+        items = sins.map(x => ({ e: x[0], n: x[1], sin: true })).concat(shuf(VI_DECOY).slice(0, 9 - sins.length).map(x => ({ e: x[0], n: x[1] })));
+        items = items.map((x, q) => Object.assign(x, { at: slots[q], r: R(-28, 28), s: x.sin ? R(13, 17) : R(15, 21) }));
+        mgShow(`${mgHead(MG_BY.visit, `${p.v}: the priest’s house`, j, ps.length)}<p class="sc-rum">🗣️ ${esc(p.rum)}</p><div class="sc vi" id="vi-stage"><svg class="sc-svg" viewBox="0 0 360 210" aria-hidden="true">${viSVG()}</svg>${items.map((x, q) => `<button type="button" class="vi-it${x.at[2] ? ' dk' : ''}" data-mg="it" data-v="${q}" style="left:${x.at[0]}%;top:${x.at[1]}%;font-size:${x.s}px;--r:${x.r}deg" aria-label="${esc(x.n)}">${x.e}</button>`).join('')}<div class="vi-bell" id="vi-bell" aria-hidden="true">🔔</div></div>${timeBar('vi-t')}<div class="sc-say" id="vi-say"><p>Search the house. The bell rings for vespers soon.</p></div><div class="mg-two" id="vi-btns">${mgBtn('call', 'pun', '⚖️ Punish him')}${mgBtn('call', 'ok', '🙏 All is well')}</div>`);
+        clock = mgClock(10000, 'vi-stage', f => setBar('vi-t', f), () => { const b = document.getElementById('vi-bell'); if (b) b.classList.add('ding'); mgSnd('chime'); judge(p.found ? 'pun' : 'ok', true); });
       };
-      draw();
+      const look = (q, el) => {
+        if (over || !el || el.dataset.done) return; el.dataset.done = 1;
+        const x = items[+q], p = ps[j];
+        if (x.sin) { p.found++; el.classList.add('found'); mgPop('vi-stage', `Found: ${x.n}!`, 'gold', Math.min(80, x.at[0]), x.at[1] - 8); mgSnd('good'); }
+        else { el.classList.add('meh'); mgPop('vi-stage', 'nothing wrong', 'dim', Math.min(80, x.at[0]), x.at[1] - 8); if (clock) clock.cut(700); mgSnd('tick'); }
+      };
+      const judge = (c, rang) => {
+        if (over) return; over = true; if (clock) clock.stop();
+        const p = ps[j]; p.call = c; const right = (c === 'pun') === (p.kind === 'corrupt');
+        document.querySelectorAll('#vi-stage .vi-it').forEach((el, q) => { if (items[q].sin && !el.classList.contains('found')) el.classList.add('missed'); });
+        mgSet('vi-say', `<p class="sc-res ${right ? 'good' : 'bad'}">${rang ? '🔔 The bell rang. ' : ''}${c === 'pun' ? 'You punish Father ' + esc(p.o.n) + '.' : 'You declare all is well.'} ${esc(p.look)} <b>${right ? '✔' : '✖'}</b></p>`);
+        mgSnd(right ? 'good' : 'bad');
+        mgSet('vi-btns', mgBtn('next', '', j < ps.length - 1 ? '🐎 Ride to the next parish' : 'Ride home', 'go')).className = 'mg-col';
+      };
+      const finish = () => {
+        const right = ps.filter(p => (p.call === 'pun') === (p.kind === 'corrupt')).length;
+        mgFinish('visit', right / 4, `${right} of 4 parishes judged rightly.`, () => {
+          const ls = [], wrongPun = ps.filter(p => p.call === 'pun' && p.kind !== 'corrupt').length, missed = ps.filter(p => p.kind === 'corrupt' && p.call !== 'pun').length;
+          if (right === 4) { st('piety', 4); fac('church', 8); ls.push('Your diocese is cleaner than it has been in a generation.'); }
+          if (wrongPun) { fac('commons', -5 * wrongPun); ls.push('You punished a good priest, and his parish will not forgive you.'); }
+          if (missed) { fac('church', -4 * missed); ls.push('A rotten priest you praised went on as before. People notice.'); }
+          return ls;
+        });
+      };
+      mgOn = (act, v, el) => { if (act === 'start' || act === 'next') house(); else if (act === 'it') look(v, el); else if (act === 'call') judge(v); };
+      intro();
     } });
 
-  /* ---------- 6. The Conclave: win the cardinals' votes, one by one ---------- */
+  /* ---------- 6. The Conclave: whisper to the cardinals, speak at the right moment, and watch the smoke ---------- */
   const CARD_W = {
     gold: ['💰', 'Offer gold', 'a Venetian with expensive tastes and a new palace to pay for'],
     office: ['📜', 'Promise an office', 'a Roman with eleven nephews and no posts for any of them'],
     faith: ['🙏', 'Speak of God', 'an old hermit who eats only bread and distrusts anyone who smiles'],
     rival: ['🐍', 'Whisper against your rival', 'a fierce old man who hates your rival over a quarrel forty years old'],
   };
+  const CV_X = [28, 62, 96, 130, 230, 264, 298, 332];
+  const chapelSVG = () => `<defs><pattern id="sc-cst" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="9" cy="9" r="1.1" fill="#e2b23c" opacity=".75"/><circle cx="0" cy="0" r=".8" fill="#e2b23c" opacity=".5"/></pattern><pattern id="sc-cmb" width="24" height="24" patternUnits="userSpaceOnUse"><rect width="24" height="24" fill="#e6dcc8"/><path d="M12 0L24 12L12 24L0 12Z" fill="#b9a98a"/></pattern></defs>
+    <rect width="360" height="152" fill="#26335c"/><rect width="360" height="100" fill="url(#sc-cst)"/>
+    <rect y="96" width="360" height="56" fill="#7a1e16"/>${Array.from({ length: 24 }, (_, j) => `<path d="M${j * 15 + 7} 98V150" stroke="rgba(0,0,0,.22)" stroke-width="2"/>`).join('')}<path d="M0 98H360" stroke="#e2b23c" stroke-width="2"/>
+    <path d="M150 96V40Q180 4 210 40V96Z" fill="#33467a" stroke="#e2b23c" stroke-width="1.6"/><path d="M180 26V60M168 38H192" stroke="#e2b23c" stroke-width="2.4"/>
+    <rect y="150" width="360" height="80" fill="url(#sc-cmb)"/><path d="M0 150H360" stroke="#5a4632" stroke-width="2"/>
+    <rect x="8" y="150" width="144" height="12" fill="#4a2e16"/><rect x="208" y="150" width="144" height="12" fill="#4a2e16"/>
+    <rect x="174" y="80" width="12" height="46" fill="#2e2e32"/><rect x="168" y="100" width="24" height="26" rx="2" fill="#3a3a40" stroke="#1a1a1e"/><circle cx="180" cy="114" r="4" fill="#ff9a3d" opacity=".8"/>
+    <rect x="156" y="126" width="48" height="34" fill="#f4efe2" stroke="#9a8a6a"/><path d="M156 132H204" stroke="#c9952e" stroke-width="2"/><path d="M180 132V160" stroke="#c9952e" stroke-width="1.4"/>
+    <path d="M172 112Q172 124 180 124Q188 124 188 112Z" fill="#e2b23c" stroke="#7a5a10"/><path d="M180 124V128M175 128H185" stroke="#c9952e" stroke-width="1.8"/>
+    <path d="M160 126V114M200 126V114" stroke="#f4efe2" stroke-width="2.4"/><circle cx="160" cy="112" r="1.6" fill="#ffc94a"/><circle cx="200" cy="112" r="1.6" fill="#ffc94a"/>`;
+  const cvSky = `<div class="cv-sky" id="cv-sky" aria-hidden="true"><svg viewBox="0 0 360 60" preserveAspectRatio="xMidYMax slice"><path d="M0 60V44L60 30L120 44V60ZM240 60V40L300 24L360 40V60Z" fill="#4a3a30"/><rect x="120" y="36" width="120" height="24" fill="#5a4636"/><path d="M110 38L180 20L250 38Z" fill="#6a5240"/><rect x="176" y="8" width="8" height="22" fill="#3a3a40"/></svg></div>`;
   mgAdd({ k: 'conclave', i: '🕊️', n: 'The conclave', d: 'Win the votes of the cardinals.', event: true, who: () => inTrack('church') && S.job.level === 6,
     play() {
-      const rivalN = `Cardinal ${pick(SUR.noble)}`, nat = ['of Venice', 'of Rome', 'of Lyon', 'of Toledo', 'of Prague', 'of Naples', 'of Cologne', 'of Lisbon'];
-      const cards = shuf(nat).map((place, j) => { const want = pick(Object.keys(CARD_W)); return { n: `Cardinal ${pick(NAMES.m)} ${place}`, want, vote: j < 2 ? 'you' : j < 3 ? 'rival' : null }; });
-      let ballot = 1, acts = 2, msg = 'The doors are locked. Eight cardinals, and you need six votes. Each day you may speak to two of them.', sel = -1, over = null, spent = 0;
+      const rivalN = `Cardinal ${pick(SUR.noble)}`, nat = ['of Venice', 'of Rome', 'of Lyon', 'of Toledo', 'of Prague', 'of Naples', 'of Cologne', 'of Lisbon'], me = meLook();
+      const cards = shuf(nat).map((place, j) => { const want = pick(Object.keys(CARD_W)); return { n: `Cardinal ${pick(NAMES.m)} ${place}`, want, vote: j < 2 ? 'you' : j < 3 ? 'rival' : null, look: { robe: '#b3202c', hat: 'red', skin: pick(FIG_SKIN), hair: pick(['#a9a297', '#c9c4ba', '#5a3a22']), beard: P(.4), belt: want === 'gold' ? '#e2b23c' : undefined } }; });
+      let day = 1, talks = 2, sel = -1, over = null, spent = 0, busy = false, approach = null;
       const votes = w => cards.filter(c => c.vote === w).length;
+      const sash = c => c.vote === 'you' ? '<path d="M-6.6 -27L6.6 -15" stroke="#f4efe2" stroke-width="3.2"/><circle cx="0" cy="-21" r="2.2" fill="#e2b23c"/>' : c.vote === 'rival' ? '<path d="M-6.6 -27L6.6 -15" stroke="#1a1a1e" stroke-width="3.2"/>' : '';
+      const cardG = (c, j) => `<g id="cv-c${j}" class="cv-card${sel === j ? ' sel' : ''}" transform="translate(${CV_X[j]} 168)">${sel === j ? '<ellipse cx="0" cy="-24" rx="16" ry="31" fill="rgba(255,215,106,.18)" stroke="#ffd76a" stroke-width="2"/>' : ''}${fig(Object.assign({}, c.look, { extra: sash(c), mood: c.vote === 'you' ? 'happy' : c.vote === 'rival' ? 'angry' : 'calm' }))}<text x="0" y="-56" text-anchor="middle" font-size="11">${CARD_W[c.want][0]}</text></g>`;
+      const tally = () => mgSet('cv-tally', `<span>🟥 You <b>${votes('you')}</b></span><span>⬜ Undecided <b>${votes(null)}</b></span><span>⬛ ${esc(rivalN)} <b>${votes('rival')}</b></span>`);
+      const redraw = () => { cards.forEach((c, j) => { const g = document.getElementById(`cv-c${j}`); if (g) g.outerHTML = cardG(c, j); }); tally(); };
+      const say = h => mgSet('cv-say', h), act = h => mgSet('cv-act', h);
       const draw = () => {
-        const c = sel >= 0 ? cards[sel] : null;
-        mgShow(`${mgHead(MG_BY.conclave, over ? (over === 'won' ? 'White smoke!' : 'Black smoke') : `Ballot ${ballot} of 3 · ${acts} talk${acts === 1 ? '' : 's'} left today`, ballot - 1, 3)}<div class="mg-tally2"><span>🟥 You <b>${votes('you')}</b></span><span>⬜ Undecided <b>${votes(null)}</b></span><span>⬛ ${esc(rivalN)} <b>${votes('rival')}</b></span></div><p class="mg-last">${esc(msg)}</p>${over ? mgBtn('end', '', over === 'won' ? 'Take the throne of Saint Peter' : 'Leave the chapel', 'go') : `<div class="mg-cards">${cards.map((k, j) => `<button type="button" class="mg-cd ${k.vote || 'open'}${sel === j ? ' sel' : ''}" data-mg="pick" data-v="${j}"${k.vote === 'you' ? ' disabled' : ''}><b>${esc(k.n)}</b><small>${k.vote === 'you' ? 'Votes for you' : k.vote === 'rival' ? 'Votes for your rival' : 'Undecided'}</small><small class="mg-cw">${esc(CARD_W[k.want][2])}</small></button>`).join('')}</div>${c ? `<div class="mg-four">${Object.entries(CARD_W).map(([w, x]) => mgBtn('offer', w, `${x[0]} ${x[1]}${w === 'gold' ? ` (${Math.round(mgPay() * 1.2)})` : ''}`, '', acts <= 0 || (w === 'gold' && S.coin < Math.round(mgPay() * 1.2)))).join('')}</div>` : '<p class="mg-tip">Tap a cardinal to speak to them. Read what kind of man each one is.</p>'}${mgBtn('ballot', '', acts > 0 ? 'Call the vote early' : 'Call the vote', 'go')}`}`);
+        mgShow(`${mgHead(MG_BY.conclave, `Day ${day} of 3`, day - 1, 3)}${cvSky}<div class="sc cv" id="cv-stage"><svg class="sc-svg" viewBox="0 0 360 230" aria-hidden="true">${chapelSVG()}${cards.map(cardG).join('')}<g transform="translate(180 224) scale(1.14)">${fig(Object.assign({}, me, { arms: 'hold' }))}</g></svg>${cards.map((c, j) => `<button type="button" class="cv-hit" data-mg="pick" data-v="${j}" style="left:${(CV_X[j] - 17) / 3.6}%;top:${100 / 2.3}%;width:${34 / 3.6}%;height:${74 / 2.3}%" aria-label="${esc(c.n)}"></button>`).join('')}</div><div class="mg-tally2" id="cv-tally"></div><div class="sc-say" id="cv-say"></div><div id="cv-act"></div>`);
+        tally(); idle('The doors are locked. Eight cardinals, and you need six votes. The sign above each one shows what moves him.');
       };
-      const ballotNow = () => {
-        // your rival works the room too
-        const open = cards.filter(k => k.vote === null); if (open.length) pick(open).vote = 'rival';
-        if (votes('you') >= 6) { over = 'won'; msg = 'Six votes, then seven. The smoke over the chapel turns white, and the crowd in the square roars.'; return; }
-        if (votes('rival') >= 6) { over = 'lost'; msg = `${rivalN} has his six votes. You kneel and kiss his ring, and smile, and smile.`; return; }
-        ballot++; acts = 2; sel = -1;
-        if (ballot > 3) { over = 'lost'; msg = 'Three ballots and no pope. The cardinals settle on a harmless old man nobody fears, and it is not you.'; return; }
-        msg = `Black smoke. Ballot ${ballot - 1} gave you ${votes('you')} and ${rivalN} ${votes('rival')}. Another day of bread and water.`;
+      const idle = msg => {
+        sel = -1; approach = null; busy = false; redraw(); mgSub(`Day ${day} of 3 · ${talks} talk${talks === 1 ? '' : 's'} left`);
+        say(`<p>${esc(msg)}</p><p class="sc-q">${talks ? 'Tap a cardinal to speak with him.' : 'You have spoken to all you can today.'}</p>`);
+        act(mgBtn('ballot', '', talks ? '🗳️ Call the ballot now' : '🗳️ Call the ballot', talks ? 'dim' : 'go'));
       };
-      mgOn = (act, v) => {
-        if (over && act === 'end') {
+      const choose = j => {
+        if (busy || over || !talks) return; const c = cards[j]; if (c.vote === 'you') return say(`<p>${esc(c.n)} is already yours.</p>`);
+        sel = j; redraw();
+        say(`<p class="sc-who">${CARD_W[c.want][0]} ${esc(c.n)}${c.vote === 'rival' ? ' <small>(your rival’s man)</small>' : ''}</p><p class="sc-q">${esc(cap(CARD_W[c.want][2]))}.</p>`);
+        act(`<div class="mg-four">${Object.entries(CARD_W).map(([k, x]) => mgBtn('way', k, `${x[0]} ${esc(x[1])}`)).join('')}</div>${mgBtn('back', '', 'Speak to someone else', 'dim')}`);
+      };
+      const meter = v => {
+        const c = cards[sel]; approach = v;
+        let zw = v === c.want ? 32 : v === 'faith' ? 10 + S.stats.piety / 8 : 9; if (c.vote === 'rival') zw *= .7; zw = Math.round(Math.max(6, Math.min(40, zw)));
+        const z0 = R(4, 96 - zw);
+        say(`<p class="sc-who">${CARD_W[v][0]} ${esc(CARD_W[v][1])}</p><p class="sc-q">Choose your moment: speak when the needle is in the gold.</p>`);
+        act(`<div class="cv-meter" id="cv-m"><b style="left:${z0}%;width:${zw}%"></b><i id="cv-n"></i></div>${mgBtn('speak', `${z0}:${zw}`, '🗣️ Speak!', 'go')}`);
+      };
+      const speak = v => {
+        if (busy || sel < 0) return; busy = true;
+        const [z0, zw] = v.split(':').map(Number), m = document.getElementById('cv-m'), n = document.getElementById('cv-n');
+        let pos = 50; if (m && n) { const a = m.getBoundingClientRect(), b = n.getBoundingClientRect(); pos = (b.left + b.width / 2 - a.left) / a.width * 100; n.style.animationPlayState = 'paused'; }
+        const c = cards[sel], ok = pos >= z0 - 1 && pos <= z0 + zw + 1; talks--;
+        if (approach === 'gold') spent += Math.round(mgPay() * 1.2);
+        if (ok) { c.vote = 'you'; mgPop('cv-stage', 'Yes!', 'gold', CV_X[sel] / 3.6, 40); mgSnd('good'); }
+        else { if (c.vote === null && P(.4)) c.vote = 'rival'; mgPop('cv-stage', 'No…', 'bad', CV_X[sel] / 3.6, 40); mgSnd('bad'); }
+        const msg = ok ? `${c.n} takes your hand. “You have my vote.”` : `${c.n} looks at you coldly. ${c.vote === 'rival' ? 'He walks over to your rival.' : 'He says nothing.'}`;
+        mgAfter(900, 'cv-stage', () => { if (votes('you') >= 6) { redraw(); say(`<p>${esc(msg)}</p>`); return ballot(); } idle(msg); });
+      };
+      const smoke = white => { const sk = document.getElementById('cv-sky'); if (!sk) return; for (let q = 0; q < 9; q++) { const e = document.createElement('i'); e.className = `cv-puff ${white ? 'w' : 'b'}`; e.style.animationDelay = `${q * .28}s`; e.style.setProperty('--dx', `${R(-22, 22)}px`); sk.appendChild(e); } };
+      const ballot = () => {
+        if (busy && !over && votes('you') < 6) return; busy = true; act(''); sel = -1;
+        if (votes('you') < 6) { const open = cards.filter(k => k.vote === null); if (open.length) pick(open).vote = 'rival'; }
+        say('<p>One by one the cardinals walk to the altar and drop their folded ballots into the chalice…</p>');
+        const st0 = document.getElementById('cv-stage');
+        cards.forEach((c, j) => mgAfter(300 + j * 240, 'cv-stage', () => { const b = document.createElement('i'); b.className = 'cv-bal'; b.style.left = `${CV_X[j] / 3.6}%`; b.style.top = '45%'; st0.appendChild(b); requestAnimationFrame(() => requestAnimationFrame(() => { b.style.left = '50%'; b.style.top = '50%'; b.style.opacity = '.2'; })); setTimeout(() => b.remove(), 800); mgSnd('tick'); }));
+        mgAfter(300 + 8 * 240 + 500, 'cv-stage', () => {
+          redraw(); const y = votes('you'), r = votes('rival');
+          if (y >= 6) { over = 'won'; smoke(true); mgSnd('fanfare'); say(`<p class="sc-res good">${y} votes for you. The smoke over the chapel turns <b>white</b>, and the crowd in the square roars.</p>`); }
+          else if (r >= 6) { over = 'lost'; smoke(false); mgSnd('knell'); say(`<p class="sc-res bad">${esc(rivalN)} has ${r} votes. You kneel and kiss his ring, and smile, and smile.</p>`); }
+          else if (day >= 3) { over = 'lost'; smoke(false); say(`<p class="sc-res bad">Three ballots and no pope. The cardinals settle on a harmless old man nobody fears, and it is not you.</p>`); }
+          else { smoke(false); say(`<p>Black smoke. You have ${y}, ${esc(rivalN)} has ${r}. Another day of bread and water.</p>`); }
+          mgAfter(2200, 'cv-stage', () => {
+            if (over) return act(mgBtn('end', '', over === 'won' ? '👑 Take the throne of Saint Peter' : 'Leave the chapel', 'go'));
+            day++; talks = 2; mgStep(day - 1); idle(`Day ${day}. Your rival has been busy in the night.`);
+          });
+        });
+      };
+      mgOn = (a, v) => {
+        if (over && a === 'end') {
           const won = over === 'won';
           return mgFinish('conclave', won ? 1 : 0, won ? 'Habemus papam. You are the Pope.' : 'Another man wears the triple crown.', () => {
             if (spent) coin(-spent);
@@ -26566,22 +27134,15 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
             st('happy', -6); return '';
           });
         }
-        if (act === 'pick') { sel = +v; return draw(); }
-        if (act === 'offer' && sel >= 0 && acts > 0) {
-          const c = cards[sel]; acts--;
-          if (v === 'gold') spent += Math.round(mgPay() * 1.2);
-          const base = v === c.want ? .85 : v === 'faith' ? .15 + S.stats.piety / 400 : .1, ok = P(c.vote === 'rival' ? base * .7 : base);
-          if (ok) { c.vote = 'you'; msg = `${c.n} takes your hand. “You have my vote.”`; } else { if (c.vote === null && P(.4)) c.vote = 'rival'; msg = `${c.n} looks at you coldly. ${c.vote === 'rival' ? 'He walks over to your rival.' : 'He says nothing.'}`; }
-          sel = -1; if (votes('you') >= 6) { over = 'won'; msg = 'Six votes before the ballot is even called. The smoke turns white.'; }
-          return draw();
-        }
-        if (act === 'ballot') { ballotNow(); return draw(); }
+        if (over) return;
+        if (a === 'pick') choose(+v); else if (a === 'way' && sel >= 0) meter(v); else if (a === 'back') idle('You step back to think.'); else if (a === 'speak') speak(v); else if (a === 'ballot' && !busy) ballot();
       };
       draw();
     } });
+
   { const cv = EVENTS.find(e => e.id === 'conclave'); if (cv) cv.choices.unshift({ t: 'Work the conclave yourself (a game)', fx: () => { Q.unshift(() => { if (S.alive) mgStart('conclave'); else nextModal(); }); return 'You count the cardinals on your fingers, and work out who wants what.'; } }); }
 
-  /* ---------- 7. The Sickroom: three patients, three remedies ---------- */
+  /* ---------- 7. The Sickroom: read the patient, open the book, mix the remedy in the mortar before they fade ---------- */
   const DIS = [
     { n: 'a tertian fever', sym: ['a fever that comes back every third day', 'shivering fits', 'aching bones'], best: 'Willow-bark tea and rest', ok: 'Bleed a little', bad: 'A scalding hot bath' },
     { n: 'the gout', sym: ['a burning great toe', 'swollen feet', 'a love of meat and wine'], best: 'No meat or wine, and rest the foot', ok: 'Meadow saffron, carefully', bad: 'Bleed heavily' },
@@ -26592,34 +27153,102 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     { n: 'the sailors’ scurvy', sym: ['bleeding gums', 'old wounds opening again', 'a great weariness'], best: 'Fresh fruit and green herbs', ok: 'Hot broth', bad: 'Bleed the patient' },
     { n: 'a quinsy of the throat', sym: ['a throat too sore to swallow', 'a muffled voice', 'a high fever'], best: 'Lance the swelling', ok: 'Gargle salt and vinegar', bad: 'A strong purge' },
   ];
-  mgAdd({ k: 'sick', i: '🩺', n: 'The sickroom', d: 'Three patients, from a carter’s wife to the great. Read the signs and choose the cure.', seal: 'mg_sick', who: () => mgIn('physician', 'wm_hospmistress', 'wm_royalmidwife', 'wm_royalnurse'),
+  const JARS = { willow: ['🌿', 'Willow bark'], honey: ['🍯', 'Honey'], wine: ['🍷', 'Wine'], mint: ['🌱', 'Mint'], salt: ['🧂', 'Salt'], fruit: ['🍎', 'Fresh fruit'], garlic: ['🧄', 'Garlic'], flower: ['🌼', 'Saint John’s wort'] };
+  // each sickness: its remedy (three things, in order), the colour it leaves in the face, and what you can see
+  const SK = {
+    'a tertian fever': { rx: ['willow', 'honey', 'mint'], tint: '#e99a84', mark: 'fever' }, 'the gout': { rx: ['willow', 'salt', 'flower'], tint: '#e8b898', mark: 'gout' },
+    'a festering wound': { rx: ['wine', 'honey', 'salt'], tint: '#dcc0a0', mark: 'wound' }, 'the bloody flux': { rx: ['salt', 'honey', 'mint'], tint: '#c9c99a', mark: 'flux' },
+    'the pestilence': { rx: ['garlic', 'wine', 'flower'], tint: '#b8b0a0', mark: 'plague' }, 'melancholy': { rx: ['flower', 'honey', 'wine'], tint: '#b8c0cc', mark: 'sad' },
+    'the sailors’ scurvy': { rx: ['fruit', 'mint', 'honey'], tint: '#d8c8b0', mark: 'scurvy' }, 'a quinsy of the throat': { rx: ['salt', 'wine', 'garlic'], tint: '#e0a890', mark: 'quinsy' },
+  };
+  const mixHex = (a, b, t) => { const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); const A = p(a), B = p(b); return '#' + A.map((x, i) => Math.round(x + (B[i] - x) * t).toString(16).padStart(2, '0')).join(''); };
+  // the patient in bed: their face shows how they are, and the sickness shows on them
+  function patientSVG(d, health, cured, royal) {
+    const k = SK[d.n] || SK['a tertian fever'], t = cured ? 1 : Math.max(0, Math.min(1, health / 100)) * .45, face = mixHex(k.tint, '#f1c8a8', t), m = k.mark;
+    let s = `<rect x="18" y="112" width="190" height="10" fill="#5a3a1e"/><path d="M20 112V86M206 112V100" stroke="#4a2e16" stroke-width="6"/><rect x="22" y="94" width="184" height="20" rx="5" fill="#ece2c8"/>`;
+    s += `<path d="M72 92Q74 80 120 82Q170 80 202 92V114H72Z" fill="${royal ? '#5a2a6a' : '#8a3a2a'}" stroke="rgba(0,0,0,.35)"/><path d="M72 96H202" stroke="${royal ? '#e2b23c' : '#c9a060'}" stroke-width="2"/>`;
+    s += `<rect x="28" y="84" width="38" height="16" rx="7" fill="#f6efdc"/>`;
+    if (m === 'gout' && !cured) s += `<g class="sk-throb"><ellipse cx="212" cy="98" rx="9" ry="7" fill="#e0605a" stroke="#8a2a2a"/><path d="M219 94q4 -2 5 2" stroke="#8a2a2a" fill="none"/></g>`;
+    if (m === 'wound' && !cured) s += `<path d="M92 88Q100 76 112 80" stroke="${face}" stroke-width="7" stroke-linecap="round"/><rect x="96" y="76" width="12" height="9" rx="2" fill="#f4efe2" transform="rotate(-25 102 80)"/><circle cx="103" cy="80" r="2.6" fill="#b3202c"/>`;
+    if (m === 'flux' && !cured) s += `<path d="M110 84q4 -5 8 0q4 -5 8 0" stroke="#5a4a2a" stroke-width="1.4" fill="none"/>`;
+    s += `<g class="${m === 'fever' && !cured ? 'sk-shiver' : ''}"><circle cx="50" cy="80" r="12" fill="${face}" stroke="rgba(0,0,0,.5)" stroke-width=".9"/><path d="M38 78Q38 64 50 64Q62 64 62 78Q58 70 50 70Q42 70 38 78Z" fill="#5a3a22"/>`;
+    s += cured ? '<path d="M44 78q2 -2 4 0M52 78q2 -2 4 0" stroke="#1a1208" stroke-width="1" fill="none"/><path d="M45 85Q50 89 55 85" stroke="#5a2a1a" stroke-width="1.2" fill="none"/>' : '<path d="M43.6 79H47.6M52.4 79H56.4" stroke="#1a1208" stroke-width="1.2"/><path d="M46 87Q50 84.4 54 87" stroke="#5a2a1a" stroke-width="1.1" fill="none"/>';
+    if (!cured) {
+      if (m === 'fever') s += '<circle cx="43" cy="83" r="2.6" fill="#e0504a" opacity=".6"/><circle cx="57" cy="83" r="2.6" fill="#e0504a" opacity=".6"/><g class="sk-drip"><path d="M62 70q2 4 0 6q-2 -2 0 -6z" fill="#6fb8ee"/></g>';
+      if (m === 'plague') s += '<circle cx="40" cy="91" r="2.4" fill="#2a2420"/><circle cx="60" cy="92" r="2" fill="#2a2420"/><circle cx="55" cy="71" r="1.4" fill="#4a3a3a"/>';
+      if (m === 'sad') s += '<g class="sk-drip"><path d="M45 81q1.6 3 0 4.6q-1.6 -1.6 0 -4.6z" fill="#6fb8ee"/></g>';
+      if (m === 'scurvy') s += '<ellipse cx="50" cy="86.6" rx="3.6" ry="2" fill="#b3202c"/>';
+      if (m === 'quinsy') s += '<ellipse cx="50" cy="93" rx="8" ry="4" fill="#e0806a" stroke="#8a3a2a" stroke-width=".7"/>';
+    } else s += '<g class="sk-glow"><circle cx="50" cy="78" r="18" fill="none" stroke="#f3d983" stroke-width="2" opacity=".7"/></g>';
+    return s + '</g>';
+  }
+  const sickRoom = () => `<rect width="360" height="190" fill="#d9c9a6"/><path d="M0 140H360" stroke="#7a5a3a" stroke-width="2"/><rect y="140" width="360" height="50" fill="#8a6a4a"/><path d="M290 20V80Q300 64 310 80V20Z" fill="#9cc0dc"/><path d="M286 84V16H314V84" fill="none" stroke="#4a2e16" stroke-width="4"/><path d="M300 16V84M286 50H314" stroke="#4a2e16" stroke-width="1.6"/>
+    <rect x="236" y="120" width="112" height="7" fill="#6b4a2e" stroke="#2a1a0c"/><path d="M244 127V172M340 127V172" stroke="#4a2e16" stroke-width="5"/>
+    <path d="M256 120L262 104H276L282 120Z" fill="#7a2a1e" stroke="#3a1208"/><path d="M256 104H282" stroke="#e2b23c" stroke-width="2"/>`;
+  const mortarSVG = n => `<g id="sk-mort"><path d="M296 120Q296 100 302 98H334Q340 100 340 120Z" fill="#9a9a92" stroke="#4a4a44" stroke-width="1.4"/><ellipse cx="318" cy="98" rx="16" ry="4" fill="#5a5a54"/>${n ? `<ellipse cx="318" cy="99" rx="${Math.min(14, 6 + n * 3)}" ry="2.6" fill="#6a8a3a"/>` : ''}<g class="sk-pestle" id="sk-pes"><path d="M322 98L340 70" stroke="#c9b48a" stroke-width="5" stroke-linecap="round"/></g></g>`;
+  mgAdd({ k: 'sick', i: '🩺', n: 'The sickroom', d: 'Three patients, from a carter’s wife to the great. Read the signs, find the remedy in your book, and mix it before they fade.', seal: 'mg_sick', who: () => mgIn('physician', 'wm_hospmistress', 'wm_royalmidwife', 'wm_royalnurse'),
     play() {
       const t = mgTier('sick'), great = t >= 2 || mgIn('wm_royalmidwife', 'wm_royalnurse');
       const ranks = [{ n: `${pick(NAMES.f)}, a carter’s wife`, r: 0 }, { n: `${pick(NAMES.m)} ${pick(SUR.low)}, a rich wool merchant`, r: 1 }, great ? { n: pick([`${KT() === 'Queen' ? 'Queen' : 'King'} ${S.king}`, 'the young prince', 'the queen mother']), r: 3 } : { n: `Lord ${pick(SUR.noble)}`, r: 2 }];
-      const pts = ranks.map(p => { const d = pick(DIS), other = pick(DIS.filter(x => x !== d)); return Object.assign(p, { d, opts: shuf([['best', d.best], ['ok', d.ok], ['bad', d.bad], ['other', other.best]]), out: null }); });
-      let i = 0, res = [];
-      const draw = () => {
+      const pts = ranks.map(p => { const d = pick(DIS), others = shuf(DIS.filter(x => x !== d)).slice(0, 2); return Object.assign(p, { d, book: shuf([d].concat(others)), out: null }); });
+      let i = -1, hp = 100, dx = null, got = 0, spoil = 0, grind = 0, phase = '', clock = null;
+      const say = h => mgSet('sk-say', h);
+      const next = () => {
+        i++; if (i >= 3) return finish();
+        const p = pts[i]; hp = 100; dx = null; got = 0; spoil = 0; grind = 0; phase = 'dx';
+        mgShow(`${mgHead(MG_BY.sick, `Patient ${i + 1} of 3`, i, 3)}<div class="sc sk" id="sk-stage"><svg class="sc-svg" viewBox="0 0 360 190" aria-hidden="true">${sickRoom()}<g transform="translate(-6 -18) scale(1.16)"><g id="sk-pat">${patientSVG(p.d, hp, false, p.r === 3)}</g></g>${mortarSVG(0)}</svg><div class="sk-hp"><span>❤</span><b><i id="sk-hp"></i></b></div></div><div class="sc-say" id="sk-say"></div><div class="sk-book" id="sk-book"></div><div class="sk-shelf" id="sk-shelf"></div><div id="sk-act"></div>`);
+        say(`<p class="sc-who">${p.r === 3 ? '👑 ' : ''}${esc(p.n)}</p><p class="sc-q">${esc(cap(p.d.sym.join(', ')))}.</p>`);
+        book(); shelf(false);
+        const ms = p.r === 3 ? 19000 : p.r === 2 ? 22000 : 25000;
+        clock = mgClock(ms, 'sk-stage', f => { hp = Math.round((1 - f) * 100); const e = document.getElementById('sk-hp'); if (e) { e.style.width = `${hp}%`; e.classList.toggle('low', hp < 30); } if (hp % 10 === 0) mgSet('sk-pat', patientSVG(p.d, hp, false, p.r === 3)); }, () => done(false, true));
+      };
+      const book = () => {
         const p = pts[i];
-        if (!p.out) return mgShow(`${mgHead(MG_BY.sick, `Patient ${i + 1} of 3`, i, 3)}<div class="mg-case"><b>${esc(p.n)}</b><small>${p.r === 3 ? '👑 A royal patient. Everything rides on this.' : 'is brought to you'}</small></div><ul class="mg-sym">${p.d.sym.map(s => `<li>${esc(s)}</li>`).join('')}</ul><p class="mg-tip">What will you do?</p><div class="mg-col">${p.opts.map(([k, l], j) => mgBtn('rx', j, esc(l))).join('')}</div>`);
-        mgShow(`${mgHead(MG_BY.sick, `Patient ${i + 1} of 3`, i + 1, 3)}<div class="mg-verdict ${p.out === 'cured' ? 'right' : p.out === 'died' ? 'wrong' : ''}"><b>${p.out === 'cured' ? '✔ Cured' : p.out === 'died' ? '✖ The patient died' : '… Lingering'}</b><p>It was ${esc(p.d.n)}. ${p.out === 'cured' ? `${p.r === 3 ? 'The whole court' : 'The family'} kisses your hands.` : p.out === 'died' ? 'The bell tolled before the week was out.' : 'Not better, not worse. They will live, and curse your bills.'}</p></div>${mgBtn('next', '', i < 2 ? 'The next patient' : 'Wash your hands', 'go')}`);
+        mgSet('sk-book', `<div class="sk-tabs">${p.book.map((d, j) => mgBtn('dx', j, esc(cap(d.n)), dx === j ? 'sel' : '', phase !== 'dx' && dx !== j)).join('')}</div>${dx != null ? `<div class="sk-rx"><span>Remedy:</span>${SK[p.book[dx].n].rx.map((k, q) => `<b class="${q < got ? 'got' : q === got ? 'now' : ''}">${JARS[k][0]}<small>${esc(JARS[k][1])}</small></b>`).join('<i>→</i>')}</div>` : '<p class="sk-hint">📖 Which sickness is it? Open the book at the right page.</p>'}`);
       };
-      mgOn = (act, v) => {
-        if (act === 'rx') { const p = pts[i], k = p.opts[+v][0]; const cure = { best: .85, ok: .5, other: .3, bad: .1 }[k], die = { best: .05, ok: .15, other: .25, bad: .5 }[k]; p.out = P(cure) ? 'cured' : P(die) ? 'died' : 'linger'; return draw(); }
-        if (act === 'next') {
-          i++; if (i < 3) return draw();
-          const sc = pts.reduce((a, p) => a + (p.out === 'cured' ? 1 : p.out === 'linger' ? .4 : 0), 0) / 3, top = pts[2];
-          mgFinish('sick', sc, `${pts.filter(p => p.out === 'cured').length} of 3 cured.`, (grade, mult, pay) => {
-            const ls = [];
-            if (top.out === 'cured') { const g = Math.round(pay * (top.r === 3 ? 2 : 1) * mult); coin(g); st('renown', top.r === 3 ? 6 : 2); if (top.r === 3) fac('crown', 10); ls.push(`${top.n} sent you ${g} silver${top.r === 3 ? ' and a gold chain' : ''}.`); }
-            if (top.out === 'died' && top.r >= 2) { jobPerf(-15); st('renown', -6); if (top.r === 3) { fac('crown', -12); if (P(.2)) { jail(1); ls.push('The court blamed you, and you spent a year in the Tower.'); } else ls.push('The court blames you, and you will not be called again soon.'); } }
-            return ls;
-          });
-        }
+      const shelf = on => mgSet('sk-shelf', Object.entries(JARS).map(([k, x]) => mgBtn('jar', k, `${x[0]}<small>${esc(x[1])}</small>`, 'sk-jar', !on)).join(''));
+      const pickDx = j => { if (phase !== 'dx') return; dx = +j; phase = 'mix'; book(); shelf(true); say(`<p class="sc-q">Now take the jars from the shelf, <b>in order</b>, into the mortar.</p>`); mgSnd('page'); };
+      const jar = k => {
+        if (phase !== 'mix') return; const rx = SK[pts[i].book[dx].n].rx;
+        if (k === rx[got]) { got++; mgPop('sk-stage', JARS[k][0], 'up', 88, 40); mgSnd('tick'); const mo = document.getElementById('sk-mort'); if (mo) mo.outerHTML = mortarSVG(got); }
+        else { spoil++; mgPop('sk-stage', '✖ wrong jar', 'bad', 80, 38); mgSnd('bad'); if (clock) clock.cut(1500); }
+        book();
+        if (got >= 3) { phase = 'grind'; shelf(false); mgSet('sk-act', mgBtn('grind', '', '🥣 Grind! 0 / 8', 'go sk-grind')); say('<p class="sc-q">Grind it fine: tap fast!</p>'); }
       };
-      draw();
+      const doGrind = () => {
+        if (phase !== 'grind') return; grind++;
+        const pe = document.getElementById('sk-pes'); if (pe) { pe.classList.remove('hit'); void pe.getBoundingClientRect(); pe.classList.add('hit'); }
+        const b = document.querySelector('#sk-act .mg-b'); if (b) b.innerHTML = `🥣 Grind! ${grind} / 8`;
+        if (grind >= 8) done(true);
+      };
+      const done = (gave, faded) => {
+        if (phase === 'end') return; phase = 'end'; if (clock) clock.stop();
+        const p = pts[i], right = dx != null && p.book[dx] === p.d;
+        let cure, die;
+        if (!gave) { cure = 0; die = .6; }
+        else if (right) { cure = spoil === 0 ? .95 : spoil === 1 ? .72 : .45; if (hp < 25) cure -= .2; die = .06; }
+        else { cure = .15; die = .35; }
+        p.out = P(cure) ? 'cured' : P(die) ? 'died' : 'linger';
+        mgSet('sk-pat', patientSVG(p.d, hp, p.out === 'cured', p.r === 3)); shelf(false); book();
+        const msg = p.out === 'cured' ? `${p.r === 3 ? 'The whole court' : 'The family'} kisses your hands.` : p.out === 'died' ? 'The bell tolled before nightfall.' : 'They linger, neither better nor worse.';
+        say(`<p class="sc-res ${p.out === 'cured' ? 'good' : p.out === 'died' ? 'bad' : ''}"><b>${p.out === 'cured' ? '✔ Cured!' : p.out === 'died' ? '✖ The patient died.' : '… Lingering.'}</b> It was ${esc(p.d.n)}${right ? '' : `, not ${dx != null ? esc(p.book[dx].n) : 'what you thought'}`}. ${faded ? 'You were too slow. ' : ''}${esc(msg)}</p>`);
+        mgSnd(p.out === 'cured' ? 'good' : p.out === 'died' ? 'knell' : 'card');
+        mgSet('sk-act', mgBtn('next', '', i < 2 ? 'The next patient' : 'Wash your hands', 'go'));
+      };
+      const finish = () => {
+        const sc = pts.reduce((a, p) => a + (p.out === 'cured' ? 1 : p.out === 'linger' ? .4 : 0), 0) / 3, top = pts[2];
+        mgFinish('sick', sc, `${pts.filter(p => p.out === 'cured').length} of 3 cured.`, (grade, mult, pay) => {
+          const ls = [];
+          if (top.out === 'cured') { const g = Math.round(pay * (top.r === 3 ? 2 : 1) * mult); coin(g); st('renown', top.r === 3 ? 6 : 2); if (top.r === 3) fac('crown', 10); ls.push(`${top.n} sent you ${g} silver${top.r === 3 ? ' and a gold chain' : ''}.`); }
+          if (top.out === 'died' && top.r >= 2) { jobPerf(-15); st('renown', -6); if (top.r === 3) { fac('crown', -12); if (P(.2)) { jail(1); ls.push('The court blamed you, and you spent a year in the Tower.'); } else ls.push('The court blames you, and you will not be called again soon.'); } }
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'dx') pickDx(v); else if (a === 'jar') jar(v); else if (a === 'grind') doGrind(); else if (a === 'next') next(); };
+      next();
     } });
 
-  /* ---------- 8. The Great Work: a building, stage by stage over the years ---------- */
+  /* ---------- 8. The Great Work: a building over the years; each year, lay the stones from the swinging crane ---------- */
   const WORKS = [['bridge', '🌉', 'a stone bridge at {t}', 4], ['hall', '🏛️', 'the new guildhall of {t}', 4], ['tower', '🏰', 'a great tower for Lord {s}', 5], ['cathedral', '⛪', 'the cathedral of Saint {x} at {t}', 8]];
   const CRISES = [
     ['A crack has opened in a pillar.', ['Pull it down and rebuild (slow)', 12], ['Brace it with iron and carry on', -6]],
@@ -26629,109 +27258,243 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     ['A mason has fallen from the scaffold.', ['Pay his widow and build stronger scaffolds', 8], ['Hire another man', -4]],
     ['The patron wants a taller spire than you think is safe.', ['Refuse, politely', 6], ['Build it taller', -12]],
   ];
-  mgAdd({ k: 'build', i: '🏗️', n: 'The great work', d: 'Build a great work stage by stage, a year at a time, and face whatever goes wrong.', seal: 'mg_build', payK: .5, who: () => mgIn('architect'),
+  // the finished building, faint, with the part built so far filled in
+  function workSVG(k, f) {
+    const shapes = {
+      bridge: '<path d="M10 70H230V58H10Z"/><path d="M20 70V100H50V88Q65 70 80 88V100H110V88Q125 70 140 88V100H170V88Q185 70 200 88V100H220V70Z"/>',
+      hall: '<path d="M40 100V50L120 18L200 50V100Z"/><path d="M104 100V74Q120 62 136 74V100Z" class="wk-hole"/>',
+      tower: '<path d="M84 100V24H92V16H100V24H112V16H120V24H132V16H140V24H156V100Z"/>',
+      cathedral: '<path d="M30 100V40H44V30H56V40H70V60L120 36L170 60V40H184V30H196V40H210V100Z"/><path d="M114 36L120 6L126 36Z"/>',
+    };
+    const sh = shapes[k] || shapes.hall, h = Math.round(f * 100);
+    return `<svg class="wk-pic" viewBox="0 0 240 104" aria-hidden="true"><defs><clipPath id="wk-cp"><rect x="0" y="${102 - h}" width="240" height="${h + 2}"/></clipPath></defs><rect x="0" y="100" width="240" height="4" fill="#6a5a3a"/><g fill="none" stroke="#8a7a5a" stroke-width="1.2" stroke-dasharray="3 3">${sh}</g><g fill="#c9b48a" stroke="#5a4a2a" stroke-width="1" clip-path="url(#wk-cp)">${sh}</g></svg>`;
+  }
+  mgAdd({ k: 'build', i: '🏗️', n: 'The great work', d: 'Build a great work over the years. Each year, choose your crew and lay the courses of stone from the swinging crane.', seal: 'mg_build', payK: .5, who: () => mgIn('architect'),
     play() {
-      const m = mgS();
+      const m = mgS(), pay = mgPay();
       const pickWork = () => {
         const offers = shuf(WORKS).slice(0, 3).map(w => ({ k: w[0], i: w[1], n: fill(w[2], { t: pick(TOWNS), s: pick(SUR.noble), x: pick(SAINTS) }), st: w[3] }));
-        mgOn = (act, v) => { if (act !== 'choose') return; const w = offers[+v]; m.bld = { k: w.k, i: w.i, n: w.n, done: 0, of: w.st, q: [], y0: S.year }; stage(); };
+        mgOn = (a, v) => { if (a !== 'choose') return; const w = offers[+v]; m.bld = { k: w.k, i: w.i, n: w.n, done: 0, of: w.st, q: [], y0: S.year }; plan(); };
         mgShow(`${mgHead(MG_BY.build, 'Choose your commission')}<p class="mg-tip">Bigger works take more years, and pay far more when they are finished.</p><div class="mg-col">${offers.map((w, j) => mgBtn('choose', j, `${w.i} ${esc(cap(w.n))}<small>${w.st} years of work</small>`)).join('')}</div>`);
       };
-      const stage = () => {
-        const b = m.bld; let crew = null, pace = null; const cr = pick(CRISES); let crisis = null;
-        const draw = () => mgShow(`${mgHead(MG_BY.build, `${cap(b.n)} · stage ${b.done + 1} of ${b.of}`, b.done, b.of)}<div class="mg-prog"><i style="width:${b.done / b.of * 100}%"></i></div><p class="mg-tip"><b>Your crew this year</b></p><div class="mg-three">${[['m', 'Master masons'], ['j', 'Journeymen'], ['c', 'Cheap labour']].map(([k, l]) => mgBtn('crew', k, l, crew === k ? 'sel' : '')).join('')}</div><p class="mg-tip"><b>The pace</b></p><div class="mg-three">${[['c', 'Careful'], ['s', 'Steady'], ['p', 'Push hard']].map(([k, l]) => mgBtn('pace', k, l, pace === k ? 'sel' : '')).join('')}</div><p class="mg-tip"><b>Trouble on site:</b> ${esc(cr[0])}</p><div class="mg-col">${[1, 2].map(j => mgBtn('cri', j, esc(cr[j][0]), crisis === j ? 'sel' : '')).join('')}</div>${mgBtn('go', '', crew && pace && crisis ? 'Build' : 'Choose a crew, a pace and an answer', 'go', !(crew && pace && crisis))}`);
-        mgOn = (act, v) => {
-          if (act === 'crew') { crew = v; return draw(); }
-          if (act === 'pace') { pace = v; return draw(); }
-          if (act === 'cri') { crisis = +v; return draw(); }
-          if (act === 'go') {
-            const q = clamp(50 + { m: 25, j: 10, c: -8 }[crew] + { c: 15, s: 5, p: -10 }[pace] + cr[crisis][1] + R(-10, 10));
-            let adv = 1; if (pace === 'p' && q >= 55 && P(.5)) adv = 2;
-            let fell = false; if (q < 25 && P(.5)) { fell = true; adv = b.done > 0 ? -1 : 0; }
-            b.done = Math.max(0, Math.min(b.of, b.done + adv)); b.q.push(q);
-            const fin = b.done >= b.of, avg = Math.round(b.q.reduce((a, x) => a + x, 0) / b.q.length);
-            const score = fell ? 0 : q >= 75 ? 1 : q >= 50 ? .6 : .3;
-            const story = fell ? 'Part of the work came crashing down. A year lost, and your name on everyone’s lips.' : fin ? `${cap(b.n)} is finished!` : `A good year’s building: ${b.done} of ${b.of} stages done.${adv === 2 ? ' You pushed hard and did two stages in one.' : ''}`;
-            mgFinish('build', score, story, (grade, mult, pay) => {
-              const ls = [];
-              if (fell) { jobPerf(-10); st('renown', -4); }
-              if (fin) { const g = Math.round(pay * b.of * (avg / 60) * mult); coin(g); st('renown', b.of * 2); feat('mg_build'); ls.push(`The patron paid you ${g} silver, and your name is carved over the door.`); try { wNews(`${cap(b.n)} is finished, built by ${seenName()} ${S.last}. Folk come from miles away to stare.`, b.i, true); } catch (e) { } m.done = (m.done || []).concat([b.n]); m.bld = null; }
-              else if (!fell) ls.push(`Next year: stage ${b.done + 1} of ${b.of}.`);
-              return ls;
-            });
-          }
+      const plan = () => {
+        const b = m.bld, cr = pick(CRISES); let crew = null, crisis = null;
+        const draw = () => mgShow(`${mgHead(MG_BY.build, `${cap(b.n)} · year ${b.done + 1} of ${b.of}`, b.done, b.of)}${workSVG(b.k, b.done / b.of)}<p class="sc-rum">⚠️ ${esc(cr[0])}</p><div class="mg-two">${[0, 1].map(j => mgBtn('cri', j + 1, esc(cr[j + 1][0]), crisis === j + 1 ? 'sel' : '')).join('')}</div><p class="mg-tip"><b>Your crew this year.</b> Better masons cut wider stones, which are easier to lay.</p><div class="mg-three">${[['m', 'Master masons', `wide stones · costs ${Math.round(pay * .15)}`], ['j', 'Journeymen', 'middling stones'], ['c', 'Cheap labour', `narrow stones · you keep ${Math.round(pay * .1)}`]].map(([k, l, d]) => mgBtn('crew', k, `${l}<small>${d}</small>`, crew === k ? 'sel' : '')).join('')}</div>${mgBtn('go', '', crew && crisis ? '🏗️ To the building site' : 'Choose your crew and what to do', 'go', !(crew && crisis))}`);
+        mgOn = (a, v) => {
+          if (a === 'crew') { crew = v; return draw(); }
+          if (a === 'cri') { crisis = +v; return draw(); }
+          if (a === 'go' && crew && crisis) site(crew, cr[crisis][1]);
         };
         draw();
       };
-      if (m.bld) stage(); else pickWork();
+      const site = (crew, cri) => {
+        const b = m.bld, W0 = { m: 100, j: 84, c: 70 }[crew], N = 8, base = 210, H = 15, wind = cri < 0;
+        let courses = [{ x: 180, w: W0 + 16 }], per = wind ? 2200 : 2700, t0 = performance.now(), stone = { x: 180, w: W0 }, falling = false, miss = 0, perfect = 0, shift = 0, over = false;
+        mgShow(`${mgHead(MG_BY.build, `${cap(b.n)} · year ${b.done + 1}`, b.done, b.of)}<div class="sc bd" id="bd-stage"><svg class="sc-svg" viewBox="0 0 360 240" aria-hidden="true"><defs><linearGradient id="sc-bsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fb8dc"/><stop offset="1" stop-color="#dfe9ec"/></linearGradient><pattern id="sc-bst" width="20" height="15" patternUnits="userSpaceOnUse"><rect width="20" height="15" fill="#cdb98e"/><path d="M0 .5H20M.5 0V15" stroke="#9a8660" stroke-width="1"/></pattern></defs><rect width="360" height="240" fill="url(#sc-bsky)"/>${wind ? '<g class="bd-wind"><path d="M20 60q20 -6 40 0M70 90q20 -6 40 0M260 70q20 -6 40 0" stroke="#fff" stroke-width="2" fill="none" opacity=".7"/></g>' : ''}<path d="M0 214Q90 204 180 212Q270 204 360 214V240H0Z" fill="#7a9a4a"/><path d="M14 12H346" stroke="#5a3a1e" stroke-width="5"/><path d="M30 12V214M330 12V214" stroke="#6b4a2e" stroke-width="4"/><circle cx="330" cy="190" r="20" fill="none" stroke="#6b4a2e" stroke-width="4"/><path d="M330 170V210M310 190H350M316 176L344 204M344 176L316 204" stroke="#6b4a2e" stroke-width="1.6"/><g id="bd-stack"></g><g id="bd-bits"></g><line id="bd-rope" x1="180" y1="12" x2="180" y2="40" stroke="#4a3a2a" stroke-width="1.4"/><g id="bd-stone"></g></svg><div class="bd-hud" id="bd-hud"></div></div><div class="sc-say" id="bd-say"><p class="sc-q">Tap to drop each stone squarely on the course below. Whatever hangs over the edge is cut away.</p></div>${mgBtn('drop', '', '⬇️ Drop the stone', 'go bd-drop')}`);
+        const rect = (x, y, w, cls) => `<rect class="${cls || ''}" x="${(x - w / 2).toFixed(1)}" y="${y}" width="${w.toFixed(1)}" height="${H}" fill="url(#sc-bst)" stroke="#6a5a3a" stroke-width="1"/>`;
+        const drawStack = () => mgSet('bd-stack', `<g style="transform:translateY(${shift}px)" class="bd-shift">${courses.map((c, j) => rect(c.x, base - (j + 1) * H, c.w)).join('')}</g>`);
+        const hud = () => mgSet('bd-hud', `<span>Course <b>${Math.min(N, courses.length)} / ${N}</b></span><span>⭐ ${perfect}</span>${miss ? `<span class="bad">✖ ${miss}</span>` : ''}`);
+        drawStack(); hud();
+        const topY = () => base - courses.length * H + shift - H;
+        mgLoop('bd-stage', now => {
+          if (over) return false;
+          if (falling) return true;
+          const ph = ((now - t0) / per) % 1, tri = ph < .5 ? ph * 4 - 1 : 3 - ph * 4; stone.x = 180 + 100 * tri;
+          const sr = document.querySelector('#bd-stone rect'); if (!sr) mgSet('bd-stone', rect(stone.x, 40, stone.w)); else { sr.setAttribute('x', (stone.x - stone.w / 2).toFixed(1)); sr.setAttribute('width', stone.w.toFixed(1)); }
+          const r = document.getElementById('bd-rope'); if (r) { r.setAttribute('x1', stone.x.toFixed(1)); r.setAttribute('x2', stone.x.toFixed(1)); }
+          return true;
+        });
+        const drop = () => {
+          if (falling || over) return; falling = true;
+          const x = stone.x, w = stone.w, ty = topY(), top = courses[courses.length - 1];
+          const g = document.getElementById('bd-stone'); if (g) { g.style.transition = 'transform .32s cubic-bezier(.5,0,1,1)'; g.style.transform = `translateY(${ty - 40}px)`; }
+          const r = document.getElementById('bd-rope'); if (r) r.setAttribute('y2', '14');
+          setTimeout(() => {
+            if (!document.getElementById('bd-stage')) return;
+            const l = Math.max(x - w / 2, top.x - top.w / 2), rr = Math.min(x + w / 2, top.x + top.w / 2), ov = rr - l;
+            if (ov <= 2) {
+              miss++; mgSet('bd-bits', `<g class="bd-fall">${rect(x, ty, w)}</g>`); mgPop('bd-stage', 'It falls!', 'bad', x / 3.6, (ty + shift) / 2.4); mgSnd('bad');
+              if (miss >= 2) return finish(true);
+            } else {
+              let nx = (l + rr) / 2, nw = ov;
+              if (Math.abs(x - top.x) < 5) { nx = top.x; nw = Math.min(W0, top.w === W0 + 16 ? W0 : top.w + 3); perfect++; mgPop('bd-stage', 'Perfect!', 'gold', nx / 3.6, 50); mgSnd('good'); }
+              else { mgSnd('tick'); const cut = w - ov, cx = x < top.x ? x - w / 2 + cut / 2 : x + w / 2 - cut / 2; if (cut > 1) mgSet('bd-bits', `<g class="bd-fall">${rect(cx, ty, cut)}</g>`); }
+              courses.push({ x: nx, w: nw });
+              if (nw < 10) return finish(true);
+            }
+            if (courses.length - 1 >= 5) shift = (courses.length - 5) * H;
+            drawStack(); hud();
+            if (g) { g.style.transition = 'none'; g.style.transform = ''; }
+            if (r) r.setAttribute('y2', '40');
+            if (courses.length - 1 >= N) return finish(false);
+            stone = { x: 180, w: Math.min(W0, courses[courses.length - 1].w + (crew === 'm' ? 10 : crew === 'j' ? 6 : 3)) }; per = Math.max(1500, per * .96); t0 = performance.now() - R(0, per); falling = false;
+          }, 340);
+        };
+        const finish = fellDown => {
+          over = true;
+          const laid = courses.slice(1), avg = laid.length ? laid.reduce((a, c) => a + c.w, 0) / laid.length / W0 : 0;
+          const fell = fellDown && laid.length < 4;
+          const q = clamp(Math.round(avg * 82 + perfect * 4 + cri * .6 - miss * 12 + ({ m: 6, j: 0, c: -6 }[crew])));
+          let adv = fell ? (b.done > 0 ? -1 : 0) : 1; if (!fell && q >= 85 && laid.length >= N) adv = 2;
+          b.done = Math.max(0, Math.min(b.of, b.done + adv)); b.q.push(q);
+          const fin = b.done >= b.of, avgQ = Math.round(b.q.reduce((a, x) => a + x, 0) / b.q.length);
+          if (fell) { const st0 = document.getElementById('bd-stage'); if (st0) st0.classList.add('crash'); mgSnd('clash'); }
+          mgSet('bd-say', `<p class="sc-res ${fell ? 'bad' : q >= 60 ? 'good' : ''}">${fell ? 'The courses crack and slide, and part of the work comes crashing down.' : `${laid.length} courses laid, ${perfect} of them perfect. The master of works rates this year’s building <b>${q}</b> out of 100.`}</p>`);
+          const btn = document.querySelector('#card .bd-drop'); if (btn) btn.outerHTML = mgBtn('end', '', 'Down tools for the year', 'go');
+          mgOn = a => {
+            if (a !== 'end') return;
+            const score = fell ? 0 : q >= 75 ? 1 : q >= 50 ? .6 : .3;
+            const story = fell ? 'Part of the work came crashing down. A year lost, and your name on everyone’s lips.' : fin ? `${cap(b.n)} is finished!` : `A good year’s building: ${b.done} of ${b.of} stages done.${adv === 2 ? ' Your crew worked so well that you finished two stages in one.' : ''}`;
+            mgFinish('build', score, story, (grade, mult) => {
+              const ls = [];
+              if (crew === 'm') { coin(-Math.round(pay * .15)); ls.push('You paid the master masons out of your own purse.'); }
+              if (crew === 'c') { coin(Math.round(pay * .1)); ls.push('The cheap labour left some of the patron’s money in your purse.'); }
+              if (fell) { jobPerf(-10); st('renown', -4); }
+              if (fin) { const gg = Math.round(pay * b.of * (avgQ / 60) * mult); coin(gg); st('renown', b.of * 2); feat('mg_build'); ls.push(`The patron paid you ${gg} silver, and your name is carved over the door.`); try { wNews(`${cap(b.n)} is finished, built by ${seenName()} ${S.last}. Folk come from miles away to stare.`, b.i, true); } catch (e) { } m.done = (m.done || []).concat([b.n]); m.bld = null; }
+              else if (!fell) ls.push(`Next year: stage ${b.done + 1} of ${b.of}.`);
+              return ls;
+            });
+          };
+        };
+        mgOn = a => { if (a === 'drop') drop(); };
+      };
+      if (m.bld) plan(); else pickWork();
     } });
 
-  /* ---------- 9. The Envoy's game: find what the foreign king wants ---------- */
+  /* ---------- 9. The Envoy's game: across the feast table, watch for what is on the king's mind, and play it at that moment ---------- */
   const WANTS = { gold: 'His treasury is empty, and his soldiers have not been paid.', honour: 'He is proud, and once hanged a man for laughing at his hat.', safety: 'He fears his northern neighbour far more than he fears you.', marriage: 'He has five unmarried daughters and talks of little else.', land: 'He has always wanted the river towns on your border.' };
   const ECARDS = [['gold', '💰', 'Offer gold'], ['honour', '🎖️', 'Praise his glory'], ['safety', '🕊️', 'Promise lasting peace'], ['marriage', '💍', 'Offer a royal match'], ['land', '🗺️', 'Give up a border village'], ['threat', '⚔️', 'Threaten war'], ['bluff', '🎭', 'Hint at a mighty ally']];
-  mgAdd({ k: 'envoy', i: '🕊️', n: 'The envoy’s game', d: 'Sit across from a foreign king, find out what he wants, and win a treaty without giving away too much.', seal: 'mg_envoy', who: () => mgIn('diplomat', 'adviser', 'jb_legate', 'chancellor'),
+  const WANT_I = { gold: '💰', honour: '🎖️', safety: '🕊️', marriage: '💍', land: '🗺️' };
+  const feastSVG = (mine, his) => `<defs>${glowDef}<pattern id="sc-tap" width="22" height="22" patternUnits="userSpaceOnUse"><rect width="22" height="22" fill="#5a2a2a"/><path d="M11 2L20 11L11 20L2 11Z" fill="none" stroke="#c9952e" stroke-width="1" opacity=".55"/><circle cx="11" cy="11" r="1.6" fill="#c9952e" opacity=".6"/></pattern></defs>
+    <rect width="360" height="200" fill="#6b5640"/><rect x="70" y="10" width="220" height="96" fill="url(#sc-tap)" stroke="#3a2010" stroke-width="3"/><path d="M70 106L80 116M100 106L104 118M140 106L140 116M220 106L220 116M260 106L256 118M290 106L280 116" stroke="#c9952e" stroke-width="2"/>
+    <path d="M14 6H54V70L34 60L14 70Z" fill="${mine}" stroke="rgba(0,0,0,.4)"/><path d="M306 6H346V70L326 60L306 70Z" fill="${his}" stroke="rgba(0,0,0,.4)"/>
+    ${torchSVG(64, 72)}${torchSVG(296, 72)}`;
+  const tableSVG = () => `<rect x="0" y="156" width="360" height="44" fill="#4a3220"/><path d="M0 148H360V170H0Z" fill="#f1e8d2" stroke="#b8a888"/><path d="M0 170Q30 180 60 170Q90 180 120 170Q150 180 180 170Q210 180 240 170Q270 180 300 170Q330 180 360 170" fill="#f1e8d2" stroke="#b8a888"/>
+    <text x="112" y="152" font-size="18">🍗</text><text x="150" y="151" font-size="15">🍞</text><text x="180" y="150" font-size="14">🧀</text><text x="206" y="151" font-size="15">🍷</text><text x="232" y="151" font-size="15">🍎</text>`;
+  mgAdd({ k: 'envoy', i: '🕊️', n: 'The envoy’s game', d: 'A feast with a foreign king. Watch for what is on his mind, play the right offer at the right moment, and get his seal on the treaty.', seal: 'mg_envoy', who: () => mgIn('diplomat', 'adviser', 'jb_legate', 'chancellor'),
     play() {
       const realm = pick((S.world ? Object.keys(S.world.k) : REALMS).filter(r => r !== S.realm)) || 'Morvaine', kn = S.world && S.world.k[realm] ? S.world.k[realm] : pick(NAMES.m);
-      const wants = shuf(Object.keys(WANTS)).slice(0, 2);
-      let mood = clamp(30 + (S.stats.wits - 50) / 4 + (S.stats.looks - 50) / 6), used = new Set(), cost = 0, round = 0, log = '';
-      const draw = (over) => mgShow(`${mgHead(MG_BY.envoy, `King ${kn} of ${realm}`, round, 4)}<p class="mg-tip">${wants.map(w => esc(WANTS[w])).join(' ')}</p><div class="mg-mood" role="img" aria-label="His mood ${mood} of 100"><span>😠</span><b style="--v:${mood}%"></b><span>😊</span></div><p class="mg-tip">A treaty needs his mood at 80. Every gift of gold, land or a princess costs your own crown something.</p>${log ? `<p class="mg-last">${esc(log)}</p>` : ''}${over ? mgBtn('end', '', 'Seal what you have', 'go') : `<div class="mg-cards2">${ECARDS.map(([k, ic, l]) => mgBtn('card', k, `${ic} ${l}`, '', used.has(k))).join('')}</div>${mgBtn('end', '', 'End the talks now', 'dim')}`}`);
-      mgOn = (act, v) => {
-        if (act === 'card' && !used.has(v)) {
-          used.add(v); round++;
-          let d = 0, why = '';
-          if (v === 'threat') { d = wants.includes('honour') ? -26 : wants.includes('safety') ? 12 : -16; why = d > 0 ? 'He goes pale. He does not want a war.' : 'He stands up and shouts. Nobody threatens him.'; }
-          else if (v === 'bluff') { const ok = P(.3 + S.stats.wits / 200); d = ok ? 18 : -22; why = ok ? 'He believes you, and grows thoughtful.' : 'He laughs: his spies know you have no such ally.'; }
-          else if (wants.includes(v)) { d = 24; why = 'His eyes light up. That is what he wanted.'; }
-          else { d = 4; why = 'He nods politely. It is not what he cares about.'; }
-          if (['gold', 'land', 'marriage'].includes(v)) cost++;
-          mood = clamp(mood + d); log = `${ECARDS.find(x => x[0] === v)[2]}: ${why}`;
-          return draw(mood >= 80 || round >= 4);
-        }
-        if (act === 'end') {
-          const great = mood >= 80 && cost <= 1, good = mood >= 80 || mood >= 60;
-          const score = great ? 1 : mood >= 80 ? .7 : mood >= 60 ? .5 : .2;
-          mgFinish('envoy', score, mood >= 80 ? `King ${kn} signs. ${cost ? `It cost the crown ${cost === 1 ? 'one concession' : `${cost} concessions`}.` : 'And it cost the crown nothing at all.'}` : mood >= 60 ? 'Not a treaty, but a truce, and a promise to talk again.' : `The talks broke down. King ${kn} sent you home with an insult for your ${KT() === 'Queen' ? 'queen' : 'king'}.`, (grade, mult, pay) => {
-            const ls = [];
-            S.flags.truce = S.flags.truce || {};
-            if (good) { const yrs = mood >= 80 ? 10 : 5; S.flags.truce[realm] = Math.max(S.flags.truce[realm] || 0, S.year + yrs); ls.push(`${S.realm} and ${realm} are at peace for ${yrs} years.`); fac('crown', mood >= 80 ? 8 : 3); }
-            else { fac('crown', -6); st('renown', -2); }
-            if (used.has('land')) { fac('lords', -6); ls.push('The border lords are furious about the village.'); }
-            if (used.has('gold')) fac('crown', -3);
-            if (great) { const g = Math.round(pay * .6 * mult); coin(g); ls.push(`King ${kn} sent you a gift of ${g} silver for your trouble.`); }
-            return ls;
-          });
-        }
+      const wants = shuf(Object.keys(WANTS)).slice(0, 2), me = meLook(), kcol = REALM_COL[realm] || '#5a2a6a';
+      let mood = clamp(30 + (S.stats.wits - 50) / 4 + (S.stats.looks - 50) / 6), used = new Set(), cost = 0, flash = null, over = false, clock = null, seen = new Set();
+      const kingLook = () => ({ robe: kcol, hat: 'crown', beard: 1, hair: '#4a2e1a', arms: 'hold', mood: mood < 35 ? 'angry' : mood < 65 ? 'calm' : 'happy' });
+      let face = '';
+      const moodUI = () => {
+        const b = document.getElementById('ev-mood'); if (b) b.style.setProperty('--v', `${mood}%`);
+        const tr = document.getElementById('ev-tr'); if (tr) tr.style.transform = `translateX(${(mood / 100 * 160).toFixed(1)}px)`;
+        const f = kingLook().mood; if (f !== face) { face = f; actLook('ev-k', kingLook()); }
       };
-      draw(false);
-    } });
-
-  /* ---------- 10. Corner the market: real silver, four fairs ---------- */
-  const GOODS = [['wool', '🐑', 'wool'], ['pepper', '🌶️', 'pepper'], ['wine', '🍷', 'Gascon wine'], ['alum', '🧪', 'alum for the dyers']];
-  const NEWS = [[.28, 'A ship full of it sank off the coast.'], [.18, 'A royal wedding: every lord wants it.'], [.08, 'Trade is brisk.'], [0, 'A quiet fair.'], [-.1, 'A rival dumped a whole cargo on the market.'], [-.2, 'A huge new supply arrived from abroad.'], [-.3, 'Rumours of plague emptied the fair.']];
-  mgAdd({ k: 'market', i: '📈', n: 'Corner the market', d: 'Venture your own silver over four fairs. Buy low, sell high, and try to corner the market.', seal: 'mg_market', payK: .3, who: () => mgIn('wealthymerch', 'guildmaster', 'jb_banker', 'jb_royalbanker', 'wm_royalsilk'),
-    can: () => S.coin >= 60 || 'You need at least 60 silver to venture',
-    play() {
-      const g = pick(GOODS); let stake = 0, cash = 0, bales = 0, price = R(8, 14), fair = 0, held = 0, hist = [], news = '';
-      const fairs = shuf(TOWNS).slice(0, 4).map(t => `the fair at ${t}`);
-      const spark = () => { const mx = Math.max(...hist), mn = Math.min(...hist), w = 220, h = 50; const pts = hist.map((p, j) => `${(j * (w / Math.max(1, 3))).toFixed(0)},${(h - 4 - (p - mn) / Math.max(1, mx - mn) * (h - 8)).toFixed(0)}`).join(' '); return `<svg class="mg-spark" viewBox="-4 0 ${w + 8} ${h}" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="#c9952e" stroke-width="2.5"/>${hist.map((p, j) => `<circle cx="${(j * (w / 3)).toFixed(0)}" cy="${(h - 4 - (p - mn) / Math.max(1, mx - mn) * (h - 8)).toFixed(0)}" r="3" fill="#7a520c"/>`).join('')}</svg>`; };
-      const stakeScreen = () => {
-        const opts = [[.1, 'Careful'], [.25, 'Bold'], [.5, 'All in']].map(([f, l]) => [Math.max(30, Math.round(S.coin * f)), l]).filter(([a]) => a <= S.coin);
-        mgShow(`${mgHead(MG_BY.market, `${g[1]} ${cap(g[2])}`)}<p class="story plain">This is your own silver. Buy ${esc(g[2])} when it is cheap, sell when it is dear. Hold it from one fair to the next and you start to corner the market, which pushes the price up, if nobody notices.</p><p class="mg-tip">How much will you venture? You have ${S.coin} silver.</p><div class="mg-col">${opts.map(([a, l]) => mgBtn('stake', a, `${l}: ${a} silver`)).join('')}</div>`);
+      const intro = () => mgShow(`${mgHead(MG_BY.envoy, `King ${kn} of ${realm}`)}<div class="cu-desk"><p class="cu-say">The king wants two things, and he will not say what. But watch him: when something is on his mind, it shows in a <b>thought above his head</b>.</p><p class="cu-say">Play the offer he is thinking of <b>while he is thinking it</b> for the biggest effect. The treaty slides toward him as his mood rises: get it to his side of the table and he will seal it. He grows bored as the feast goes on.</p><p class="cu-say">Gold, land and a royal match all cost your own crown something.</p></div>${mgBtn('start', '', '🍷 Sit down to the feast', 'go')}`);
+      const table = () => {
+        mgShow(`${mgHead(MG_BY.envoy, `King ${kn} of ${realm}`)}<div class="sc ev" id="ev-stage"><svg class="sc-svg" viewBox="0 0 360 200" aria-hidden="true">${feastSVG(REALM_COL[S.realm] || '#9b1f12', kcol)}<g transform="translate(60 198) scale(2)">${fig(Object.assign({}, me, { arms: 'hold' }))}</g>${actor('ev-k', 300, 198, 2.1, kingLook())}${tableSVG()}<g id="ev-tr" class="ev-tr" style="transform:translateX(${(mood / 100 * 160).toFixed(1)}px)"><g transform="translate(84 152)"><path d="M0 0H30V20H0Z" fill="#f4e8c8" stroke="#8a7a5a"/><path d="M4 5H26M4 9H26M4 13H20" stroke="#8a7a5a" stroke-width=".8"/><g id="ev-seal" class="ev-seal"><path d="${waxEdge(24, 17, 5)}" fill="#b3202c"/></g></g></g></svg><div class="ev-think" id="ev-think" aria-live="polite"></div></div><div class="mg-mood"><span>😠</span><b id="ev-mood" style="--v:${mood}%"></b><span>😊</span></div>${timeBar('ev-t')}<div class="sc-say" id="ev-say"><p>The king raises his cup. Watch his thoughts…</p></div><div class="ev-cards" id="ev-cards">${ECARDS.map(([k, ic, l]) => mgBtn('card', k, `<span>${ic}</span>${esc(l)}`, 'ev-c')).join('')}</div>`);
+        face = kingLook().mood;
+        clock = mgClock(32000, 'ev-stage', f => { setBar('ev-t', f); if (!over) { mood = Math.max(0, mood - .06); moodUI(); } }, () => end('time'));
+        const think = () => {
+          if (over || !document.getElementById('ev-stage')) return;
+          flash = pick(wants); seen.add(flash);
+          const th = document.getElementById('ev-think'); if (th) { th.innerHTML = `<span>${WANT_I[flash]}</span>`; th.className = 'ev-think on'; th.setAttribute('aria-label', `He is thinking of ${flash}`); }
+          mgAfter(1500, 'ev-stage', () => { flash = null; const t2 = document.getElementById('ev-think'); if (t2) t2.className = 'ev-think'; });
+          mgAfter(R(2700, 3900), 'ev-stage', think);
+        };
+        mgAfter(1400, 'ev-stage', think);
       };
-      const draw = () => {
-        const val = cash + bales * price, last = fair === 3;
-        mgShow(`${mgHead(MG_BY.market, cap(fairs[fair]), fair, 4)}${news ? `<p class="mg-last">📰 ${esc(news)}</p>` : ''}${spark()}<div class="mg-tally2"><span>${g[1]} Price <b>${price}</b></span><span>📦 Bales <b>${bales}</b></span><span>🪙 Cash <b>${cash}</b></span></div><p class="mg-tip">Your venture is worth <b>${val}</b> silver (you put in ${stake}).${last ? ' This is the last fair: everything left is sold here.' : ''}</p><div class="mg-three">${mgBtn('buy', '', 'Buy all you can', '', cash < price)}${mgBtn('hold', '', last ? 'Sell everything' : 'Hold')}${mgBtn('sell', '', 'Sell everything', '', !bales)}</div>`);
+      const play = v => {
+        if (over || used.has(v)) return; used.add(v);
+        const el = document.querySelector(`#ev-cards [data-v="${v}"]`); if (el) el.disabled = true;
+        let d = 0, why = '';
+        if (v === 'threat') { d = wants.includes('honour') ? -26 : wants.includes('safety') ? 12 : -16; why = d > 0 ? 'He goes pale. He does not want a war.' : 'He stands up and shouts. Nobody threatens him.'; }
+        else if (v === 'bluff') { const ok = P(.3 + S.stats.wits / 200); d = ok ? 18 : -22; why = ok ? 'He believes you, and grows thoughtful.' : 'He laughs: his spies know you have no such ally.'; }
+        else if (v === flash) { d = 32; why = 'Just as he was thinking of it! His eyes light up.'; }
+        else if (wants.includes(v)) { d = 16; why = 'He likes that. It is something he wants.'; }
+        else { d = 3; why = 'He nods politely. It is not what he cares about.'; }
+        if (['gold', 'land', 'marriage'].includes(v)) cost++;
+        mood = clamp(mood + d); moodUI();
+        mgPop('ev-stage', d >= 30 ? '★ Perfect!' : d > 0 ? `+${d}` : `${d}`, d >= 30 ? 'gold' : d > 0 ? 'up' : 'bad', 80, 30);
+        actDo('ev-k', d > 10 ? 'hop' : d < 0 ? 'shake' : 'nod', 800); mgSnd(d > 10 ? 'good' : d < 0 ? 'bad' : 'card');
+        mgSet('ev-say', `<p><b>${esc(ECARDS.find(x => x[0] === v)[2])}:</b> ${esc(why)}</p>`);
+        if (mood >= 80) return end('seal');
+        if (used.size >= ECARDS.length) end('cards');
       };
-      const nextFair = () => {
-        fair++;
-        if (fair > 3) return finish();
-        const n = pick(NEWS); let d = n[0] + R(-5, 5) / 100;
-        if (held >= 2) { d += .15; news = `${n[1]} And your buying has made it scarce: the price climbs.`; } else news = n[1];
-        price = Math.max(3, Math.round(price * (1 + d))); hist.push(price);
-        draw();
+      const end = why => {
+        if (over) return; over = true; if (clock) clock.stop();
+        const th = document.getElementById('ev-think'); if (th) th.className = 'ev-think';
+        document.querySelectorAll('#ev-cards .mg-b').forEach(b => { b.disabled = true; });
+        if (why === 'seal') { const s = document.getElementById('ev-seal'); if (s) s.classList.add('on'); actLook('ev-k', Object.assign(kingLook(), { arms: 'up', mood: 'happy' })); mgSnd('fanfare'); }
+        mgSet('ev-say', `<p class="sc-res ${mood >= 80 ? 'good' : mood >= 60 ? '' : 'bad'}">${mood >= 80 ? `King ${esc(kn)} presses his seal into the wax.` : why === 'time' ? 'The feast is over. The king rises from the table.' : 'You have nothing left to offer.'} He wanted ${wants.map(w => `${WANT_I[w]} ${w}`).join(' and ')}.</p>${mgBtn('end', '', 'Leave the feast', 'go')}`);
       };
       const finish = () => {
-        cash += bales * price; bales = 0;
+        const great = mood >= 80 && cost <= 1, good = mood >= 80 || mood >= 60;
+        const score = great ? 1 : mood >= 80 ? .7 : mood >= 60 ? .5 : .2;
+        mgFinish('envoy', score, mood >= 80 ? `King ${kn} signs. ${cost ? `It cost the crown ${cost === 1 ? 'one concession' : `${cost} concessions`}.` : 'And it cost the crown nothing at all.'}` : mood >= 60 ? 'Not a treaty, but a truce, and a promise to talk again.' : `The talks broke down. King ${kn} sent you home with an insult for your ${KT() === 'Queen' ? 'queen' : 'king'}.`, (grade, mult, pay) => {
+          const ls = [];
+          S.flags.truce = S.flags.truce || {};
+          if (good) { const yrs = mood >= 80 ? 10 : 5; S.flags.truce[realm] = Math.max(S.flags.truce[realm] || 0, S.year + yrs); ls.push(`${S.realm} and ${realm} are at peace for ${yrs} years.`); fac('crown', mood >= 80 ? 8 : 3); }
+          else { fac('crown', -6); st('renown', -2); }
+          if (used.has('land')) { fac('lords', -6); ls.push('The border lords are furious about the village.'); }
+          if (used.has('gold')) fac('crown', -3);
+          if (great) { const g = Math.round(pay * .6 * mult); coin(g); ls.push(`King ${kn} sent you a gift of ${g} silver for your trouble.`); }
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'start') table(); else if (a === 'card') play(v); else if (a === 'end') finish(); };
+      intro();
+    } });
+
+  /* ---------- 10. Corner the market: thirty seconds at the fair, prices leaping, buy low and sell high ---------- */
+  const GOODS = [['wool', '🐑', 'wool'], ['pepper', '🌶️', 'pepper'], ['wine', '🍷', 'Gascon wine'], ['alum', '🧪', 'alum for the dyers']];
+  const MK_EV = [[.3, '🚢', 'A ship full of {g} sank off the coast!'], [.2, '🔔', 'A royal wedding: every lord wants {g}!'], [.14, '👑', 'The king’s steward is buying {g}.'], [-.14, '📦', 'A rival dumps a whole cargo of {g}.'], [-.22, '🐎', 'A long train of carts brings {g} from abroad.'], [-.3, '💀', 'Rumours of plague empty the fair!']];
+  const fairSVG = () => `<rect width="360" height="150" fill="#9cc4e0"/><path d="M0 70Q60 52 120 66Q190 48 260 64Q320 52 360 62V150H0Z" fill="#8aa45a"/><rect y="104" width="360" height="46" fill="#b89a6a"/><path d="M0 104H360" stroke="#7a5a3a"/>
+    ${[[10, '#b3202c', '#f4efe2'], [130, '#2f5fa8', '#f4efe2'], [250, '#2f7a3a', '#e9c45a']].map(([x, a, b]) => `<rect x="${x + 8}" y="56" width="4" height="58" fill="#5a3a1e"/><rect x="${x + 92}" y="56" width="4" height="58" fill="#5a3a1e"/><path d="M${x} 58H${x + 104}L${x + 96} 40H${x + 8}Z" fill="${a}"/>${[0, 1, 2, 3, 4].map(q => `<path d="M${x + 4 + q * 20} 58H${x + 14 + q * 20}L${x + 15 + q * 18} 40H${x + 10 + q * 18}Z" fill="${b}"/>`).join('')}<path d="M${x} 58Q${x + 13} 66 ${x + 26} 58Q${x + 39} 66 ${x + 52} 58Q${x + 65} 66 ${x + 78} 58Q${x + 91} 66 ${x + 104} 58" fill="${a}"/><rect x="${x + 6}" y="86" width="92" height="26" fill="#7a5a3a" stroke="#3a2412"/>`).join('')}
+    ${[40, 90, 170, 215, 300, 335].map((x, q) => `<g transform="translate(${x} 150) scale(.9)">${fig({ robe: FIG_ROBE[q % FIG_ROBE.length], f: q % 2, hat: q % 2 ? 'coif' : 'cap', skin: FIG_SKIN[q % 5] })}</g>`).join('')}`;
+  mgAdd({ k: 'market', i: '📈', n: 'Corner the market', d: 'Your own silver at the great fair. Prices leap on every rumour: buy low, sell high, and get out before the bell.', seal: 'mg_market', payK: .3, who: () => mgIn('wealthymerch', 'guildmaster', 'jb_banker', 'jb_royalbanker', 'wm_royalsilk'),
+    can: () => S.coin >= 60 || 'You need at least 60 silver to venture',
+    play() {
+      const g = pick(GOODS); let stake = 0, cash = 0, bales = 0, p = R(9, 14), hist = [], over = false, push = [], tk = 0, clock = null;
+      const P0 = () => Math.max(2, Math.round(p));
+      const town = pick(TOWNS);
+      const stakeScreen = () => {
+        const opts = [[.1, 'Careful', '👛'], [.25, 'Bold', '💰'], [.5, 'All in', '🏦']].map(([f, l, ic]) => [Math.max(30, Math.round(S.coin * f)), l, ic]).filter(([a]) => a <= S.coin);
+        mgShow(`${mgHead(MG_BY.market, `${g[1]} ${cap(g[2])} at ${town} fair`)}<div class="cu-desk"><p class="cu-say">This is <b>your own silver</b>. For thirty seconds the fair is open and the price of ${esc(g[2])} jumps on every rumour.</p><p class="cu-say">Tap <b>Buy</b> when it is cheap and <b>Sell</b> when it is dear. Hold a great pile of it and you start to corner the market, which pushes the price up. When the bell rings, everything you still hold is sold at that moment’s price.</p></div><p class="mg-tip">How much will you venture? You have ${S.coin} silver.</p><div class="mg-col">${opts.map(([a, l, ic]) => mgBtn('stake', a, `${ic} ${l}<small>${a} silver</small>`)).join('')}</div>`);
+      };
+      const spark = () => { const n = hist.length, mx = Math.max(...hist, 1), mn = Math.min(...hist), w = 300, h = 56; const pts = hist.map((v, j) => `${(j / Math.max(1, 59) * w).toFixed(1)},${(h - 4 - (v - mn) / Math.max(1, mx - mn) * (h - 10)).toFixed(1)}`).join(' '); const l = document.getElementById('mk-line'); if (l) l.setAttribute('points', pts); const d = document.getElementById('mk-dot'); if (d && n) { const [x, y] = pts.split(' ').pop().split(','); d.setAttribute('cx', x); d.setAttribute('cy', y); } };
+      const hud = () => {
+        mgSet('mk-hud', `<span>🪙 Cash <b>${cash}</b></span><span>📦 Bales <b>${bales}</b></span><span>Worth <b class="${cash + bales * P0() >= stake ? 'up' : 'dn'}">${cash + bales * P0()}</b> <small>(put in ${stake})</small></span>`);
+        mgSet('mk-pile', bales ? `${'<i></i>'.repeat(Math.min(12, bales))}${bales > 12 ? `<b>+${bales - 12}</b>` : ''}` : '');
+        document.querySelectorAll('#mk-btns .mg-b').forEach(b => { const a = b.dataset.mg; b.disabled = over || (a.startsWith('buy') ? cash < P0() : bales < 1); });
+      };
+      const fair = () => {
+        mgShow(`${mgHead(MG_BY.market, `${cap(g[2])} at ${town} fair`)}<div class="sc mk" id="mk-stage"><svg class="sc-svg" viewBox="0 0 360 150" aria-hidden="true">${fairSVG()}</svg><div class="mk-board"><small>${g[1]} ${esc(cap(g[2]))}, a bale</small><b id="mk-p">${P0()}</b><i id="mk-dir"></i></div><div class="mk-pile" id="mk-pile"></div><div class="mk-news" id="mk-news"></div><svg class="mk-spark" viewBox="0 0 300 56" preserveAspectRatio="none" aria-hidden="true"><polyline id="mk-line" fill="none" stroke="#f3c955" stroke-width="2.4" vector-effect="non-scaling-stroke" points=""/><circle id="mk-dot" r="3.4" fill="#fff3d6"/></svg></div>${timeBar('mk-t')}<div class="mg-tally2 mk-hud" id="mk-hud"></div><div class="mg-four" id="mk-btns">${mgBtn('buy1', '', '🛒 Buy 1', 'mk-buy')}${mgBtn('sell1', '', '💰 Sell 1', 'mk-sell')}${mgBtn('buyall', '', 'Buy all you can', 'mk-buy')}${mgBtn('sellall', '', 'Sell everything', 'mk-sell')}</div>`);
+        hist = [p]; spark(); hud();
+        const evs = shuf(MK_EV.filter(e => e[0] > 0)).slice(0, 2).concat(shuf(MK_EV.filter(e => e[0] < 0)).slice(0, 2)), at = shuf([R(6, 12), R(18, 26), R(32, 40), R(46, 52)]);
+        clock = mgClock(30000, 'mk-stage', f => {
+          setBar('mk-t', f); tk++;
+          if (tk % 5) return;
+          const n = Math.round(tk / 5), q = at.indexOf(n);
+          if (q >= 0) { const e = evs[q]; push = [e[0] / 3, e[0] / 3, e[0] / 3]; const nw = document.getElementById('mk-news'); if (nw) { nw.innerHTML = `<span>${e[1]}</span>${esc(fill(e[2], { g: g[2] }))}`; nw.className = 'mk-news on'; mgAfter(2600, 'mk-stage', () => { nw.className = 'mk-news'; }); } mgSnd(e[0] > 0 ? 'chime' : 'bad'); }
+          const was = P0();
+          let d = (Math.random() - .5) * .07 + (push.length ? push.shift() : 0);
+          if (bales * P0() > cash && bales >= 6) d += .012;
+          p = Math.max(2, Math.min(80, p * (1 + d))); hist.push(p); spark();
+          const pe = document.getElementById('mk-p'); if (pe) { pe.textContent = P0(); pe.className = P0() > was ? 'up' : P0() < was ? 'dn' : ''; }
+          const di = document.getElementById('mk-dir'); if (di) di.textContent = P0() > was ? '▲' : P0() < was ? '▼' : '';
+          hud();
+        }, () => close());
+      };
+      const trade = a => {
+        if (over) return; const pr0 = P0();
+        if (a === 'buy1' && cash >= pr0) { bales++; cash -= pr0; mgSnd('coins'); }
+        else if (a === 'buyall') { const n = Math.floor(cash / pr0); if (n) { bales += n; cash -= n * pr0; mgSnd('coins'); } }
+        else if (a === 'sell1' && bales) { bales--; cash += pr0; mgSnd('coins'); }
+        else if (a === 'sellall' && bales) { cash += bales * pr0; bales = 0; mgSnd('coins'); }
+        hud();
+      };
+      const close = () => {
+        if (over) return; over = true; const pr0 = P0(), held = bales;
+        cash += bales * pr0; bales = 0; hud();
+        const net = cash - stake;
+        mgSet('mk-news', `<span>🔔</span>The bell! The fair is closed.${held ? ` Your last ${held} bale${held > 1 ? 's' : ''} sold at ${pr0}.` : ''}`).className = 'mk-news on';
+        mgSet('mk-btns', mgBtn('end', '', `Count your silver: ${net >= 0 ? 'up' : 'down'} ${Math.abs(net)}`, 'go')).className = 'mg-col';
+      };
+      const finish = () => {
         const roi = cash / stake - 1, net = cash - stake;
         const score = roi >= .4 ? 1 : roi >= .1 ? .6 : roi >= 0 ? .4 : 0;
         mgFinish('market', score, `You put in ${stake} silver and came out with ${cash}: ${net >= 0 ? 'a profit' : 'a loss'} of ${Math.abs(net)}.`, () => {
@@ -26740,59 +27503,116 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
           return ls;
         });
       };
-      mgOn = (act, v) => {
-        if (act === 'stake') { stake = +v; cash = stake; hist = [price]; news = `${cap(g[2])} sells for ${price} a bale.`; return draw(); }
-        if (act === 'buy') { const n = Math.floor(cash / price); bales += n; cash -= n * price; held = bales ? held + 1 : 0; return nextFair(); }
-        if (act === 'sell') { cash += bales * price; bales = 0; held = 0; return nextFair(); }
-        if (act === 'hold') { if (fair === 3) { cash += bales * price; bales = 0; } held = bales ? held + 1 : 0; return nextFair(); }
-      };
+      mgOn = (a, v) => { if (a === 'stake') { stake = +v; cash = stake; fair(); } else if (a === 'end') finish(); else trade(a); };
       stakeScreen();
     } });
 
-  /* ---------- 11. The spymaster's web: whispers, and one traitor ---------- */
+  /* ---------- 11. The spymaster's web: slip through the night streets for your informants' letters, then name the traitor ---------- */
   const COLS = { red: ['🔴', 'red'], blue: ['🔵', 'blue'], green: ['🟢', 'green'] };
   const PLACES = { chapel: ['⛪', 'the chapel'], stables: ['🐎', 'the stables'], kitchens: ['🍖', 'the kitchens'], garden: ['🌹', 'the garden'] };
   const ITEMS = { ring: ['💍', 'a signet ring'], dagger: ['🗡️', 'a dagger'], letter: ['✉️', 'a sealed letter'], key: ['🗝️', 'a key'] };
-  mgAdd({ k: 'spy', i: '🕸️', n: 'The spymaster’s web', d: 'Someone at court is a traitor. Read your informants’ whispers and find them before they strike.', seal: 'mg_spy', who: () => mgIn('spymaster', 'adviser', 'jb_chamberlain'),
+  const COL_HEX = { red: '#b3202c', blue: '#2f5fa8', green: '#2f7a3a' };
+  // the town at night: H a house, . a street. Two watchmen walk fixed rounds with their lanterns.
+  const SPY_MAP = ['H.HH.H.', '.......', 'H.HH.H.', '.......', 'H.HH.H.'];
+  const SPY_W = [[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1], [6, 2], [6, 3], [5, 3], [4, 3], [3, 3], [2, 3], [1, 3], [1, 2]], [[4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 3], [4, 2], [4, 1]]];
+  const SPY_HOME = [1, 4];
+  const spyTok = (kind) => kind === 'me' ? `<svg viewBox="-12 -50 24 52" aria-hidden="true">${fig({ robe: '#1e1e26', hat: 'hood', hood: '#26262e', skin: '#d9b48c', arms: 'hold' })}</svg>` : `<svg viewBox="-14 -50 28 52" aria-hidden="true">${fig({ robe: '#5a4a2a', hat: 'helm', beard: 1, arms: 'hold' })}<path d="M10 -18V-8" stroke="#3a2a1a" stroke-width="1.4"/><rect x="7" y="-8" width="6" height="7" rx="1.4" fill="#ffd36a" stroke="#6a4a10" stroke-width=".8"/></svg>`;
+  mgAdd({ k: 'spy', i: '🕸️', n: 'The spymaster’s web', d: 'Someone at court is a traitor. Slip through the night streets to your informants’ letters, past the watch, then name the traitor.', seal: 'mg_spy', who: () => mgIn('spymaster', 'adviser', 'jb_chamberlain'),
     play() {
       const titles = shuf(['Lord', 'Lady', 'Sir', 'Dame', 'Master', 'Mistress']);
-      const sus = Array.from({ length: 5 }, (_, j) => ({ n: `${titles[j]} ${pick(SUR.noble)}`, col: pick(Object.keys(COLS)), pl: pick(Object.keys(PLACES)), it: pick(Object.keys(ITEMS)), out: false }));
+      const susName = (t, f) => { const sur = pick(SUR.noble); return /^(Sir|Dame)$/.test(t) || /^of /.test(sur) ? `${t} ${pick(NAMES[f ? 'f' : 'm'])} ${sur}` : `${t} ${sur}`; };
+      const sus = Array.from({ length: 5 }, (_, j) => ({ n: susName(titles[j], /Lady|Dame|Mistress/.test(titles[j])), f: /Lady|Dame|Mistress/.test(titles[j]), col: pick(Object.keys(COLS)), pl: pick(Object.keys(PLACES)), it: pick(Object.keys(ITEMS)), out: false, skin: pick(FIG_SKIN), hair: pick(FIG_HAIR.slice(0, 7)) }));
       const T = R(0, 4), t = sus[T];
-      // whispers that are true of the traitor, chosen to rule out the others
       const facts = [];
       for (const k of Object.keys(COLS)) facts.push(t.col === k ? [`The traitor wears ${COLS[k][1]}.`, s => s.col === k] : [`The traitor does not wear ${COLS[k][1]}.`, s => s.col !== k]);
       for (const k of Object.keys(PLACES)) facts.push(t.pl === k ? [`The traitor was in ${PLACES[k][1]} last night.`, s => s.pl === k] : [`The traitor was not in ${PLACES[k][1]} last night.`, s => s.pl !== k]);
       for (const k of Object.keys(ITEMS)) facts.push(t.it === k ? [`The traitor carries ${ITEMS[k][1]}.`, s => s.it === k] : [`The traitor carries no ${ITEMS[k][1].replace(/^an? /, '')}.`, s => s.it !== k]);
       const left = fs => sus.filter(s => fs.every(f => f[1](s)));
+      // clues in the order the letters give them: each one narrows the field if it can
       const clues = []; let pool = shuf(facts);
-      while (clues.length < 3) { const best = pool.map(f => [f, left(clues.concat([f])).length]).filter(([f, n]) => n < left(clues).length).sort((a, b) => b[1] - a[1])[0]; if (!best) break; clues.push(best[0]); pool = pool.filter(f => f !== best[0]); }
-      let extra = null; { const e = pool.map(f => [f, left(clues.concat([f])).length]).sort((a, b) => a[1] - b[1])[0]; if (e) extra = e[0]; }
-      const cost = Math.round(mgPay() * .4); let bought = false, asked = -1, askRes = '', over = null, asking = false, lastAcc = -1;
-      const draw = () => {
-        const shown = bought && extra ? clues.concat([extra]) : clues;
-        mgShow(`${mgHead(MG_BY.spy, over ? (over === 'right' ? 'The plot is broken' : 'The wrong head') : 'Five suspects, one traitor')}<div class="mg-clues">${shown.map(c => `<p>🗣️ ${esc(c[0])}</p>`).join('')}</div>${askRes ? `<p class="mg-last">${esc(askRes)}</p>` : ''}<div class="mg-sus">${sus.map((s, j) => `<div class="mg-s${s.out ? ' out' : ''}${over && j === T ? ' traitor' : ''}"><b>${esc(s.n)}</b><span>${COLS[s.col][0]} ${PLACES[s.pl][0]} ${ITEMS[s.it][0]}</span><small>${COLS[s.col][1]}, ${PLACES[s.pl][1].replace('the ', '')}, ${ITEMS[s.it][1].replace(/^an? /, '')}</small>${over ? '' : `<div class="mg-two sm">${mgBtn('out', j, s.out ? '↺ Back in' : '✖ Rule out')}${mgBtn('acc', j, asking ? '❓ Question' : '⚔ Accuse', asking ? '' : 'red')}</div>`}</div>`).join('')}</div>${over ? mgBtn('end', '', 'Report to the king', 'go') : `<div class="mg-two">${mgBtn('buy', '', bought ? 'No more whispers' : `Buy one more whisper (${cost})`, '', bought || !extra || S.coin < cost)}${mgBtn('ask', '', asked >= 0 ? 'Already questioned' : 'Question a suspect…', '', asked >= 0)}</div>`}`);
+      while (clues.length < 5 && pool.length) {
+        const best = pool.map(f => [f, left(clues.concat([f])).length]).filter(([f, n]) => n < left(clues).length).sort((a, b) => b[1] - a[1])[0];
+        const f = best ? best[0] : pool[0]; clues.push(f); pool = pool.filter(x => x !== f);
+      }
+      const houses = []; SPY_MAP.forEach((row, r) => [...row].forEach((ch, c) => { if (ch === 'H') houses.push([c, r]); }));
+      const letters = new Set(shuf(houses).slice(0, 4).map(([c, r]) => `${c},${r}`));
+      let me = SPY_HOME.slice(), path = [], grab = null, wpos = [0, 3], got = 0, caught = 0, tk = 0, over = false, clock = null, hold = 0;
+      const isSt = (c, r) => r >= 0 && r < 5 && c >= 0 && c < 7 && SPY_MAP[r][c] === '.';
+      const nextOf = q => { const L = SPY_W[q]; return L[(wpos[q] + 1) % L.length]; };
+      const lit = () => { const s = new Set(); for (let q = 0; q < 2; q++) { const c = SPY_W[q][wpos[q]]; s.add(`${c[0]},${c[1]}`); const n = nextOf(q); s.add(`${n[0]},${n[1]}`); } return s; };
+      const bfs = (from, goals) => {
+        const key = p => `${p[0]},${p[1]}`, seen = new Map([[key(from), null]]), qq = [from];
+        while (qq.length) { const p = qq.shift(); if (goals.some(g => g[0] === p[0] && g[1] === p[1])) { const out = []; let k = key(p); while (k && k !== key(from)) { out.unshift(k.split(',').map(Number)); k = seen.get(k); } return out; } for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const n = [p[0] + dx, p[1] + dy]; if (isSt(n[0], n[1]) && !seen.has(key(n))) { seen.set(key(n), key(p)); qq.push(n); } } }
+        return null;
       };
-      mgOn = (act, v) => {
-        if (over && act === 'end') {
-          const right = over === 'right';
-          return mgFinish('spy', right ? (bought ? .8 : 1) : 0, right ? `${sus[T].n} confessed everything before the rack was even shown.` : `You arrested ${sus[lastAcc].n}. The real traitor was ${sus[T].n}, and the plot went ahead.`, (grade, mult, pay) => {
-            const ls = []; if (bought) coin(-cost);
-            if (right) { fac('crown', 12); const g = Math.round(pay * .8 * mult); coin(g); ls.push(`A grateful crown sends you ${g} silver.`); }
-            else { fac('lords', -10); fac('crown', -10); jobPerf(-8); ls.push('An innocent noble is ruined, and the realm is shaken.'); }
-            if (asked >= 0 && asked !== T) fac('lords', -4);
-            return ls;
-          });
-        }
-        if (act === 'out') { sus[+v].out = !sus[+v].out; return draw(); }
-        if (act === 'buy' && !bought && extra && S.coin >= cost) { bought = true; return draw(); }
-        if (act === 'ask' && asked < 0) { asking = true; askRes = 'Tap “Question” on the one you want to question. You only have time for one.'; return draw(); }
-        if (act === 'acc') {
-          const j = +v;
-          if (asking) { asking = false; asked = j; askRes = j === T ? `${sus[j].n} sweats and stammers, and will not meet your eye.` : `${sus[j].n} answers every question calmly, and is furious at being asked.`; return draw(); }
-          lastAcc = j; over = j === T ? 'right' : 'wrong'; return draw();
-        }
+      const tokAt = (id, c, r) => { const e = document.getElementById(id); if (e) { e.style.left = `${(c + .5) / 7 * 100}%`; e.style.top = `${(r + .5) / 5 * 100}%`; } };
+      const paintLit = () => { const L = lit(); document.querySelectorAll('#sp-map .sp-c').forEach(el => el.classList.toggle('lit', L.has(el.dataset.v))); };
+      const hud = () => mgSet('sp-hud', `<span>✉ Letters <b>${got} / 4</b></span><span>👁 Seen by the watch <b>${caught}</b></span>`);
+      const intro = () => mgShow(`${mgHead(MG_BY.spy, 'A traitor at court')}<div class="cu-desk"><p class="cu-say">Your informants have left <b>letters</b> in houses across the town: a candle burns in each window. Each letter tells you something about the traitor.</p><p class="cu-say">Tap a street to send your agent there, or tap a lit house to fetch its letter. Keep out of the <b>watchmen’s lanterns</b>: if they see your agent, you lose time and the court hears whispers. Get home before dawn.</p></div>${mgBtn('start', '', '🌙 Into the night', 'go')}`);
+      const night = () => {
+        mgShow(`${mgHead(MG_BY.spy, 'The streets at night')}<div class="sc sp" id="sp-stage"><div class="sp-map" id="sp-map">${SPY_MAP.map((row, r) => [...row].map((ch, c) => `<button type="button" class="sp-c ${ch === 'H' ? 'sp-h' : 'sp-s'}${letters.has(`${c},${r}`) ? ' let' : ''}${c === SPY_HOME[0] && r === SPY_HOME[1] ? ' home' : ''}" data-mg="go" data-v="${c},${r}" aria-label="${ch === 'H' ? (letters.has(`${c},${r}`) ? 'a house with a letter' : 'a house') : 'a street'}">${ch === 'H' ? '<i class="sp-roof"></i>' : ''}</button>`).join('')).join('')}</div><div class="sp-tok me" id="sp-me">${spyTok('me')}</div><div class="sp-tok w" id="sp-w0">${spyTok('w')}</div><div class="sp-tok w" id="sp-w1">${spyTok('w')}</div><div class="sp-moon" id="sp-moon" aria-hidden="true">🌙</div></div>${timeBar('sp-t')}<div class="mg-tally2" id="sp-hud"></div><div class="sc-say" id="sp-say"><p>Your agent waits at the safe house. Where to?</p></div>${mgBtn('home', '', '🏰 Back to the castle with what you have', 'dim')}`);
+        tokAt('sp-me', me[0], me[1]); for (let q = 0; q < 2; q++) { const c = SPY_W[q][wpos[q]]; tokAt(`sp-w${q}`, c[0], c[1]); }
+        paintLit(); hud();
+        clock = mgClock(42000, 'sp-stage', f => {
+          setBar('sp-t', f); tk++; const mo = document.getElementById('sp-moon'); if (mo) mo.style.left = `${4 + f * 88}%`;
+          if (hold > 0) { hold--; return; }
+          if (tk % 2 === 0 && path.length) { me = path.shift(); tokAt('sp-me', me[0], me[1]); if (check()) return; if (!path.length && grab) take(); }
+          if (tk % 6 === 0) { wpos[0] = (wpos[0] + 1) % SPY_W[0].length; const c = SPY_W[0][wpos[0]]; tokAt('sp-w0', c[0], c[1]); paintLit(); if (check()) return; }
+          if (tk % 8 === 0) { wpos[1] = (wpos[1] + 1) % SPY_W[1].length; const c = SPY_W[1][wpos[1]]; tokAt('sp-w1', c[0], c[1]); paintLit(); check(); }
+        }, () => { mgSet('sp-say', '<p class="sc-res">Dawn breaks. The night’s work is done.</p>'); mgAfter(900, 'sp-stage', deduce); });
       };
-      draw();
+      const check = () => {
+        if (!lit().has(`${me[0]},${me[1]}`) || (me[0] === SPY_HOME[0] && me[1] === SPY_HOME[1])) return false;
+        caught++; path = []; grab = null; hold = 8; if (clock) clock.cut(4000);
+        const e = document.getElementById('sp-me'); if (e) e.classList.add('seen');
+        mgPop('sp-stage', 'Seen by the watch!', 'bad', (me[0] + .5) / 7 * 100, (me[1] + .5) / 5 * 100 - 8); mgSnd('bad');
+        mgSet('sp-say', '<p class="sc-res bad">“Who goes there?” Your agent runs for the safe house.</p>');
+        setTimeout(() => { me = SPY_HOME.slice(); tokAt('sp-me', me[0], me[1]); const e2 = document.getElementById('sp-me'); if (e2) e2.classList.remove('seen'); }, 700);
+        hud(); return true;
+      };
+      const take = () => {
+        const k = grab; grab = null; if (!k || !letters.has(k)) return;
+        letters.delete(k); got++; const el = document.querySelector(`#sp-map [data-v="${k}"]`); if (el) { el.classList.remove('let'); el.classList.add('took'); }
+        mgPop('sp-stage', '✉ A letter!', 'gold', (+k.split(',')[0] + .5) / 7 * 100, (+k.split(',')[1] + .5) / 5 * 100 - 8); mgSnd('good');
+        mgSet('sp-say', `<p class="sc-q">✉ ${esc(clues[Math.min(clues.length - 1, got)][0])}</p>`); hud();
+        if (!letters.size) mgSet('sp-say', `<p class="sc-q">✉ ${esc(clues[Math.min(clues.length - 1, got)][0])}</p><p class="sc-res good">That is every letter. Back to the castle!</p>`);
+      };
+      const go = v => {
+        if (over || hold > 0) return; const [c, r] = v.split(',').map(Number);
+        if (SPY_MAP[r][c] === 'H') {
+          const k = `${c},${r}`; if (!letters.has(k)) return mgSet('sp-say', '<p>Nobody in that house works for you.</p>');
+          const goals = [[c + 1, r], [c - 1, r], [c, r + 1], [c, r - 1]].filter(([x, y]) => isSt(x, y));
+          if (goals.some(g => g[0] === me[0] && g[1] === me[1])) { path = []; grab = k; return take(); }
+          const p = bfs(me, goals); if (p) { path = p; grab = k; }
+        } else { const p = bfs(me, [[c, r]]); if (p) { path = p; grab = null; } }
+      };
+      const deduce = () => {
+        if (over) return; over = true; if (clock) clock.stop();
+        const shown = clues.slice(0, got + 1);
+        const card = (s, j) => `<div class="sp-sus${s.out ? ' out' : ''}${s.done ? (j === T ? ' traitor' : ' wrongly') : ''}"><svg viewBox="-16 -52 32 54" aria-hidden="true">${fig({ f: s.f, robe: COL_HEX[s.col], hat: s.f ? 'coif' : 'cap', capc: '#1a1a1a', skin: s.skin, hair: s.hair, mood: s.done && j === T ? 'angry' : 'calm' })}</svg><div><b>${esc(s.n)}</b><small>${COLS[s.col][0]} ${COLS[s.col][1]} · ${PLACES[s.pl][0]} ${PLACES[s.pl][1]} · ${ITEMS[s.it][0]} ${ITEMS[s.it][1]}</small></div>${sus.some(x => x.done) ? '' : `<span class="sp-b">${mgBtn('out', j, s.out ? '↺' : '✖', 'sm')}${mgBtn('acc', j, '⛓ Arrest', 'red sm')}</span>`}</div>`;
+        const draw = () => mgShow(`${mgHead(MG_BY.spy, 'Name the traitor')}<div class="sp-clues">${shown.map((c, q) => `<p>${q ? '✉' : '🗣️'} ${esc(c[0])}</p>`).join('')}<small>${got} of 4 letters found${caught ? `, seen by the watch ${caught} time${caught > 1 ? 's' : ''}` : ''}.</small></div><div class="sp-list">${sus.map(card).join('')}</div><div id="sp-end"></div>`);
+        mgOn = (a, v) => {
+          if (a === 'out' && !sus.some(x => x.done)) { sus[+v].out = !sus[+v].out; return draw(); }
+          if (a === 'acc' && !sus.some(x => x.done)) {
+            const j = +v, right = j === T; sus.forEach(x => { x.done = 1; }); sus[j].acc = 1; draw(); mgSnd(right ? 'good' : 'bad');
+            mgSet('sp-end', `<p class="sc-res ${right ? 'good' : 'bad'}">${right ? `${esc(sus[T].n)} confessed everything before the rack was even shown.` : `You arrested ${esc(sus[j].n)}. The real traitor was ${esc(sus[T].n)}.`}</p>${mgBtn('end', right ? 1 : 0, 'Report to the crown', 'go')}`);
+            return;
+          }
+          if (a === 'end') {
+            const right = v === '1', j = sus.findIndex(x => x.acc);
+            mgFinish('spy', right ? Math.max(.6, 1 - caught * .1) : 0, right ? `${sus[T].n} confessed everything before the rack was even shown.` : `You arrested ${sus[j].n}. The real traitor was ${sus[T].n}, and the plot went ahead.`, (grade, mult, pay) => {
+              const ls = [];
+              if (right) { fac('crown', 12); const g = Math.round(pay * .8 * mult); coin(g); ls.push(`A grateful crown sends you ${g} silver.`); }
+              else { fac('lords', -10); fac('crown', -10); jobPerf(-8); ls.push('An innocent noble is ruined, and the realm is shaken.'); }
+              if (caught >= 2) { fac('lords', -3 * caught); ls.push('Your agents were seen in the streets. The court whispers about your web.'); }
+              return ls;
+            });
+          }
+        };
+        draw();
+      };
+      mgOn = (a, v) => { if (a === 'start') night(); else if (a === 'go') go(v); else if (a === 'home') deduce(); };
+      intro();
     } });
 
   /* ---------- the turn of the year: the four powers drift back, and an ignored rival strikes ---------- */
@@ -26814,7 +27634,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     { k: 'mg_pet', i: '🙇', n: 'A Fair Hearing', d: 'Become Legendary at hearing petitions.' },
     { k: 'mg_exch', i: '🧮', n: 'Not a Penny Missing', d: 'Become Legendary at the Exchequer.' },
     { k: 'mg_assize', i: '⚖️', n: 'Solomon of the Shires', d: 'Become a Legendary judge at the assize.' },
-    { k: 'mg_war', i: '🎌', n: 'Master of the War Table', d: 'Become Legendary at the war table.' },
+    { k: 'mg_war', i: '🎌', n: 'Master of the Field', d: 'Become Legendary on the field of battle.' },
     { k: 'mg_visit', i: '⛪', n: 'Scourge of Simony', d: 'Become Legendary on your visitations.' },
     { k: 'mg_sick', i: '🩺', n: 'Healer of Kings', d: 'Become a Legendary physician.' },
     { k: 'mg_build', i: '🏗️', n: 'A Name in Stone', d: 'Finish a great work.' },

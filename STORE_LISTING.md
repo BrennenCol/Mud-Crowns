@@ -61,62 +61,28 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.19.0.txt`, ready to copy (it includes everything since 1.17 and ends with a line about the updates since 1.13).
+Also in `store/whats_new_1.20.0.txt`, ready to copy (it covers 1.20 and ends with a short list of what came in 1.19).
 
 ```
-THE FIELD OF BATTLE
-Generals, marshals and captains now fight real battles. Read the ground (woods, marsh, hills) and the weather, place your archers, pikes and horse, then watch the arrows fly and the lines clash. When a flank starts to break, you have three seconds to send your reserve knights to the right place. Win, and count the ransoms for every knight and lord you took.
+EVERY OFFICE, PLAYED
+All the work you play in high office has been rebuilt as real games, each in its own painted scene with people who walk, react and celebrate:
+- Hear the petitions: petitioners queue at the door of your great hall. Answer each before they lose patience, and watch the four powers' banners rise and fall on the wall.
+- The Exchequer: the sheriffs' silver rolls across the chequered cloth. Pull out the clipped and lead coins before they reach the king's chest.
+- The assize: watch each witness as they speak. Liars give themselves away with sweat, a red face, shifty eyes or crossed fingers. Catch them, then bang the gavel.
+- The visitation: search each priest's house for wine, dice or a hidden purse before the bell rings, then punish or protect him.
+- The conclave: whisper to the cardinals and speak at just the right moment. Watch the ballots fall into the chalice and the smoke rise, black or white.
+- The sickroom: read the patient, open your book at the right page, take the jars down in order and grind the remedy before they fade.
+- The great work: lay each course of stone from a swinging crane. Anything hanging over the edge is cut away, and a careless year can bring the wall down.
+- The envoy's game: at a feast with a foreign king, watch for what is on his mind and play that offer while he is thinking it.
+- Corner the market: thirty seconds at the fair with your own silver. Prices leap on every rumour: buy low, sell high.
+- The spymaster's web: slip your agent through the night streets to your informants' letters, past the watchmen's lanterns, then name the traitor.
 
-THE CURIA'S LETTERS
-Bishops and cardinals sit at the desk of the Church. Letters pour in from all Christendom, and forgers send their own: check the wax, the sign and the cord against today's true seal, then seal or burn before the candle burns down.
+The field of battle and the Curia's letters, new in the last update, complete the set. Every game still pays more silver, Renown and standing the better you play, and mistakes still cost you.
 
-YOUR CHILDREN LIVE THEIR OWN LIVES
-From fourteen, your children learn a trade and climb in it, marry, have children of their own and save. Play on as one of them and you take over the life they have been living.
-
-THE ROAD TO ROME
-Church posts now show every rank up to Pope, and what the next one needs. There is a real Pope, who grows old; when he dies, a cardinal can win the conclave.
-
-EASIER TO READ
-Headings and buttons use a clearer old English type.
-
-CHOICES THAT COME BACK
-Small choices at work are remembered. Lend your neighbour your ox, take a soldier's sword for his drinking debt, rush a rich customer's order, keep a purse you found on a dead knight, warn a kind steward of a plot. A year or three later the consequence turns up at your door, with a reminder of what you did, and another choice to make. There are 26 of these, across every kind of work, from the fields and the bakehouse to the Church, the army and the sea.
-
-FIXED: GREYING HAIR
-Portraits no longer flicker between grey and their old colour as people age. Hair now greys slowly, starting at a different age for everyone, and turns white in old age.
-
-BACK TO THE MAIN MENU
-The menu now has a Main menu button. Your life is saved; pick it up again with Continue.
-
-SAFER PROGRESS
-Everything you win in the Collection Hall is now kept for good: a finished wing's banner, the Golden Age and your relic rewards stay yours even when new relics are added in later updates.
-
-SHORTER, SHARPER
-The long storylines that came back chapter by chapter are gone. Your own work and your own choices tell the story now.
-
-YOUR OFFICE, PLAYED
-High posts now come with real work you play yourself, once a year, without spending a deed. The better you play, the more silver, Renown and standing it brings:
-- Hear the petitions: three petitioners, two choices each, and four great powers to keep in balance
-- The Exchequer: count the sheriffs' tally sticks and catch the cheats
-- The assize: weigh the evidence, spot the lie, and give your verdict (and maybe a bribe)
-- The visitation: find the rotten priests and protect the good ones
-- The sickroom: read the signs and choose the cure, from a carter's wife up to the king
-- The great work: raise a bridge, a tower or a cathedral over the years, and survive the floods and cracks
-- The envoy's game: find out what a foreign king wants, and win a treaty without giving too much away
-- Corner the market: venture your own silver over four fairs
-- The spymaster's web: read the whispers and unmask the traitor at court
-
-THE FOUR POWERS
-Crown, Church, Lords and Commons each watch what you do. Too low and they turn on you; too high and the others grow jealous.
-
-THE CONCLAVE
-As a cardinal, win the papal election yourself, one vote at a time.
-
-LAURELS
-Every win earns laurels. Rise from Untried to Able, Renowned and Legendary, with rewards up to two and a half times bigger, and a seal of fame at the top.
-
-ALSO NEW SINCE 1.13
-The Hall of Legends and the Collection Hall, land for sale, new music, workplaces you can see, and better pictures.
+ALSO NEW IN 1.19
+- Your children live their own lives: they learn a trade, climb in it, marry and have children. Play on as one of them and you take over that life.
+- The road to Rome: church posts show every rank up to Pope. A real Pope grows old, and when he dies a cardinal can win the conclave.
+- Easier-to-read headings, and choices at work that come back a year or three later.
 ```
 
 ## Category

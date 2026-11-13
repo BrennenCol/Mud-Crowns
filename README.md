@@ -379,6 +379,41 @@ fills in anything a newer version expects, and drops a job whose career no longe
   looks so it is the same as a child and as your heir), fades smoothly to grey over about
   twenty years, then to white, and never goes back.
 
+## Every office, played (v1.20)
+
+All ten of the older office games are rebuilt as action games in painted scenes, in the same
+style as the field of battle and the Curia's letters. People are drawn with `fig()` (robe, face,
+hair, hat of office, mood, arms) and move with `actor()` / `actMove()`; timers use `mgClock()`,
+which stops itself when its scene leaves the screen. Rewards, laurels, seals and the four powers
+work as before.
+
+- **Petitions:** five petitioners walk up the great hall; each waits about eleven seconds before
+  storming out (Commons and Crown fall). The four powers hang as banners whose length is their
+  standing, with low and high marks on the wall.
+- **The Exchequer:** four sheriffs (two or three of them cheats) roll coins across the chequered
+  cloth. Tap clipped or lead coins; tapping good silver insults an honest sheriff.
+- **The assize:** three witnesses per case: one true, one neutral, one liar who shows two tells
+  (sweat, blush, shifty eyes, crossed fingers). Honest witnesses may yawn or swat a fly. One
+  "Liar!" call per case; catching the liar makes the verdict plain. Bribes as before.
+- **The visitation:** nine things in each priest's house; a guilty priest hides two that match
+  his sin. Ten seconds, a wrong tap costs time, the bell judges for you if you run out.
+- **The conclave:** tap a cardinal (the sign above him shows what moves him), pick an approach,
+  then stop a swinging needle in the gold. The zone is wide for the right approach and narrow
+  for the wrong one. Ballots fly to the chalice; black or white smoke rises from the chimney.
+- **The sickroom:** a health bar runs down; pick the sickness in the book (three pages), take
+  three jars down in order (a wrong jar costs time), then grind eight times.
+- **The great work:** choose the year's crisis answer and crew (wider stones cost you silver,
+  narrow ones put silver in your purse), then drop eight courses from a crane that swings at a
+  steady speed. Overhang is cut away; two misses or a too-narrow wall brings it down.
+- **The envoy:** the king's two wants show in a thought bubble now and then. An offer played
+  while he is thinking of it is worth double. His mood drifts down over a 32-second feast; at 80
+  he seals the treaty.
+- **The market:** a 30-second fair with a live price, four news events (two up, two down), and
+  Buy 1 / Buy all / Sell 1 / Sell all. Holding a big pile pushes the price up.
+- **The spymaster:** a 7×5 night town with two watchmen on fixed rounds; their lanterns light
+  their square and the next. Four letters, each a clue; being seen costs time and standing with
+  the lords. Then rule out and arrest among five suspects.
+
 ## Battles you fight, letters you seal, children who live (v1.19)
 
 - **The field of battle** replaces the war table (same laurels): a painted field with three
