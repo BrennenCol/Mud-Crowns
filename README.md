@@ -379,6 +379,26 @@ fills in anything a newer version expects, and drops a job whose career no longe
   looks so it is the same as a child and as your heir), fades smoothly to grey over about
   twenty years, then to white, and never goes back.
 
+## The portrait gallery and the king's eye (v1.22)
+
+- **The portrait gallery** (`window.mtGallery(cs)`, in the mini-game block so it can use `fig()`)
+  replaces the one-paragraph list of matches from the council or family (`dk_match` event and the
+  "Ask for a list of matches" deed). Candidates hang on easels under velvet that drops one by one;
+  tapping one shows its name, age, origin and plain lines for what it brings (alliance, the lords,
+  dowry or, for a man, what he brings, scandal, trait, looks). Choosing carries the portrait to
+  the middle while petals fall, then `dkApi.wed()` runs and the result card shows. Portraits are
+  busts drawn with `fig()` in the candidate's own skin and hair, coloured by kind, with a coronet
+  for royals.
+- Monarchs' candidates: a royal, an earl's child, **a lady of the household** (one of the queen
+  mother's ladies-in-waiting, or a gentleman of the chamber; small dowry, no alliance, the
+  council grumbles), and a famous beauty. Other highborn keep the merchant's child. Ages follow
+  1.21: a man's brides 18 up to a little under his age; a woman's grooms by `suitorAge()`.
+- **The king's eye** (`pc_lady`): a woman of 18 to 30 in a court household post (lady-in-waiting,
+  chamberer, damsel, mistress of the chamber, first lady), unmarried, looks 50+, can be singled out
+  by the king (if he is unmarried) or a prince. She can only choose how to meet it, or beg leave
+  to go home (granted about a third of the time). Then the prince's-eye story runs as before,
+  with lady wording, and other suitors stay away while it lasts.
+
 ## Courting as it was (v1.21)
 
 - `suitorAge(kind)` sets every suitor's age. For a woman, men are older: 0 to 7 years among

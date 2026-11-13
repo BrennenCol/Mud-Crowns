@@ -1256,6 +1256,27 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .sp-sus.traitor{opacity:1;box-shadow:inset 0 0 0 2px var(--low)}
 .sp-sus.wrongly{opacity:.55}
 @media (prefers-reduced-motion:reduce){.sc-flick,.ex-coin svg,.tl-eyes,.tl-fly,.sk-shiver,.sk-throb,.bd-wind path,.cv-meter i{animation-duration:2s}.sc-act.walk .sc-bob{animation:none}}
+/* ---------- v1.22 the portrait gallery ---------- */
+.mt{background:#2f4a36}
+.mt-ez{position:absolute;top:5%;width:21%;max-width:96px;padding:0;border:0;background:none;cursor:pointer;transform:translateX(-50%);transform-origin:50% 0;transition:left 1.1s cubic-bezier(.4,0,.2,1),transform .5s,opacity .6s;-webkit-tap-highlight-color:transparent}
+.mt-frame{position:relative;display:block;overflow:hidden;border-radius:3px;box-shadow:0 0 0 3px #c9952e,0 0 0 5px #7a5a10,0 6px 10px rgba(0,0,0,.45)}
+.mt-frame svg{display:block;width:100%;height:auto}
+.mt-cloth{position:absolute;inset:-2px;background:repeating-linear-gradient(90deg,#7a1414 0 7px,#9b1f12 7px 13px,#6a1010 13px 18px);box-shadow:inset 0 -6px 8px rgba(0,0,0,.35);animation:mtDrop .8s ease-in forwards}
+@keyframes mtDrop{0%{transform:none}25%{transform:translateY(-4%)}100%{transform:translateY(120%) rotate(6deg);opacity:0}}
+.mt-plate{display:block;margin:7px auto 0;width:fit-content;max-width:100%;padding:1px 6px;border-radius:3px;background:linear-gradient(#e9c45a,#b8861b);color:#2a1a0c;font:600 11.5px/1.3 var(--serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 1px 2px rgba(0,0,0,.4)}
+.mt-ez.sel{transform:translateX(-50%) translateY(-4px) scale(1.07)}
+.mt-ez.sel .mt-frame{box-shadow:0 0 0 3px #ffe08a,0 0 0 5px #c9952e,0 0 18px 4px rgba(255,214,110,.75)}
+.mt-ez.chosen{z-index:3;transform:translateX(-50%) scale(1.22)}
+.mt-ez.gone{opacity:0;transform:translateX(-50%) translateY(30px) scale(.8)}
+.mt-petal{position:absolute;top:-12px;z-index:4;width:8px;height:6px;border-radius:60% 0 60% 0;opacity:0;animation:mtPetal 2.4s ease-in forwards;pointer-events:none}
+@keyframes mtPetal{0%{opacity:0;transform:translate(0,0) rotate(0)}10%{opacity:1}100%{opacity:.9;transform:translate(var(--dx),210px) rotate(320deg)}}
+.mt-info{min-height:120px}
+.mt-name{font:20px/1.2 var(--black)!important;color:var(--rubric)}
+.mt-job{font-style:italic;color:var(--ink-2)}
+.mt-lines{list-style:none;margin:6px 0 0;padding:0}
+.mt-lines li{display:flex;gap:8px;margin:3px 0;font-size:14.5px;line-height:1.3}
+.mt-lines li span{flex:none;width:20px;text-align:center}
+@media (prefers-reduced-motion:reduce){.mt-cloth{animation-duration:.01s}.mt-petal{display:none}}
 @media (prefers-reduced-motion:reduce){.bf.clash,.bf-rain,.cu-flame,.cu-brazier,.bf-me.danger .bf-mv,.bf-me.chance .bf-mv{animation:none}}
 </style>
 </head>
@@ -1295,7 +1316,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.21.0';
+const APP_VERSION = '1.22.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -6241,11 +6262,10 @@ function showWhatsNew() {
   store.set(NEWKEY, APP_VERSION);
   modalOpen = true;
   const items = [
-    ['💍', 'Courting as it was', 'men mostly married women younger than themselves; a wife older than her husband is now rare, and usually a well-off widow.'],
-    ['💰', 'What makes a good match', 'a man is sought for his land, trade, post and silver; a woman for her youth, family and dowry. Most marry within their own rank.'],
-    ['👪', 'Families arrange it', 'a family offers a man their daughter; a man asks a woman’s family for leave to court her. Nobody under eighteen courts.'],
-    ['🩺', 'The sickroom', 'patients lie properly in bed, face up, and look greenish with pocks when they are ill.'],
-    ['🎭', 'Every office, played', 'since 1.20, all the work of high office is a real game in its own painted scene.'],
+    ['🖼️', 'The portrait gallery', 'when a match is found for you, the candidates hang on easels under velvet. Tap a portrait to see who they are and what they would bring, then choose.'],
+    ['🌿', 'A lady of the household', 'kings and queens now find one of their own court among the candidates: small dowry, no alliance, and a grumbling council.'],
+    ['👑', 'The king’s eye', 'a lady-in-waiting may catch the eye of the king or a prince, and there is not much she can do about it.'],
+    ['💍', 'Courting as it was', 'since 1.21, men mostly marry younger women, a man is sought for his means and a woman for her youth and dowry, and nobody under eighteen courts.'],
   ];
   $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Open Work</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
@@ -6697,7 +6717,7 @@ const SPOUSE_PERK = {
 function yearBonds() {
   if (!S.alive) return;
   // suitors
-  const canWed = !spouse() && !S.vows && S.age >= 18 && S.age <= (S.sex === 'm' ? 60 : 50) && !S.jail && !disguised();
+  const canWed = !spouse() && !S.vows && S.age >= 18 && S.age <= (S.sex === 'm' ? 60 : 50) && !S.jail && !disguised() && !(S.flags.pc && S.flags.pc.at);
   for (const k of suitors()) { if (!canWed || S.year - k.since > 4 || k.bond < 20) { S.kin = S.kin.filter(x => x !== k); if (canWed) say(`Your suitor ${k.name} tired of waiting and married someone else.`, 'note'); else if (disguised()) say(`Your suitor ${k.name} could not find you anywhere, and in the end married someone else.`, 'note'); } }
   const ch = (S.ruling || S.cls === 'royal' ? .65 : S.cls === 'noble' ? .4 : S.cls === 'merchant' ? .28 : .18) * (atSea() ? .35 : 1) * (S.flags.outlaw && !S.ruling ? .5 : 1);
   // fewer new suitors while others are still waiting for an answer
@@ -18850,19 +18870,21 @@ PETITIONS.push(
   const dowryOf = c => ({ royal: R(150, 400), noble: R(60, 180), merchant: R(250, 600) }[c] || 0);
   function candidates() {
     const sx = S.sex === 'm' ? 'f' : 'm', out = [];
-    const mk = (cls, a, b, extra) => { const p = person(sx, R(a, b), cls, { sp: 1 }); p.sur = cls === 'royal' ? pick(SUR.royal) : cls === 'noble' ? pick(SUR.noble) : pick(SUR.low); p.looks = R(30, 90); p.trait = pick(TRAITS); p.dowry = dowryOf(cls); Object.assign(p, extra || {}); return p; };
+    const age = (a, b, kind) => sx === 'f' ? R(Math.max(18, a), Math.max(Math.max(18, a) + 1, Math.min(b + 4, S.age - 1))) : suitorAge(kind);
+    const mk = (cls, a, b, extra) => { const p = person(sx, age(a, b, (extra || {}).dk_k), cls, { sp: 1 }); p.sur = cls === 'royal' ? pick(SUR.royal) : cls === 'noble' ? pick(SUR.noble) : pick(SUR.low); p.looks = R(30, 90); p.trait = pick(TRAITS); p.dowry = dowryOf(cls); Object.assign(p, extra || {}); return p; };
     if (S.ruling || S.cls === 'royal') {
       const rs = S.world && S.world.k ? Object.keys(S.world.k).filter(r => r !== S.realm && liveR(r) && !(window.dpIsEnemy && window.dpIsEnemy(r))) : [];
       if (rs.length) { const r = pick(rs), x = wRuler(r); out.push(mk('royal', 18, 24, { sur: (x && x.house) || pick(SUR.royal), job: `${sx === 'f' ? 'Princess' : 'Prince'} of ${r}`, dk_r: r, dk_k: 'royal' })); }
     }
     out.push(mk('noble', 18, 26, { job: `${sx === 'f' ? 'Daughter' : 'Son'} of the Earl of ${pick(VILLAGES)}`, dk_k: 'noble' }));
-    out.push(mk('merchant', 18, 28, { job: `${sx === 'f' ? 'Daughter' : 'Son'} of the richest merchant in ${S.village}`, dk_k: 'merchant' }));
+    if (S.ruling || S.cls === 'royal') out.push(mk('noble', 18, 24, { job: sx === 'f' ? 'One of the queen mother’s ladies-in-waiting' : 'A gentleman of your chamber', dk_k: 'lady', dowry: R(10, 40) }));
+    else out.push(mk('merchant', 18, 28, { job: `${sx === 'f' ? 'Daughter' : 'Son'} of the richest merchant in ${S.village}`, dk_k: 'merchant' }));
     const b = mk(P(.5) ? 'craft' : 'peasant', 18, 22, { dk_k: 'beauty', dowry: 0, looks: R(88, 99) }); b.job = sx === 'f' ? 'The most talked-about beauty in the realm' : 'The handsomest man in the realm'; out.push(b);
     return out;
   }
-  const brings = p => p.dk_k === 'royal' ? `an alliance with ${p.dk_r} and ${p.dowry} silver` : p.dk_k === 'noble' ? `the loyalty of a great house and ${p.dowry} silver` : p.dk_k === 'merchant' ? `${p.dowry} silver, and a little scandal` : 'nothing but beauty, and a great deal of scandal';
-  function matchCard() {
-    const cs = candidates();
+  const brings = p => p.dk_k === 'royal' ? `an alliance with ${p.dk_r} and ${p.dowry} silver` : p.dk_k === 'noble' ? `the loyalty of a great house and ${p.dowry} silver` : p.dk_k === 'lady' ? `someone who already knows your court, and only ${p.dowry} silver` : p.dk_k === 'merchant' ? `${p.dowry} silver, and a little scandal` : 'nothing but beauty, and a great deal of scandal';
+  function matchCard(cs) {
+    cs = cs || candidates();
     return { id: 'dk_match', icon: '💍', init: () => ({ cs }),
       text: () => `${S.ruling ? 'Your council' : 'Your family'} has drawn up a list of matches, with portraits and accounts of every dowry. ${cs.map(p => `${fullName(p)}, ${p.age}, ${p.job.charAt(0).toLowerCase() + p.job.slice(1)}: known for ${p.trait}, looks ${stars(p.looks)}, brings ${brings(p)}.`).join(' ')}${S.age - Math.min(...cs.map(p => p.age)) >= 25 ? ` You are ${S.age}. At court, nobody finds the difference in years remarkable.` : ''}`,
       choices: cs.map(p => ({ t: `Marry ${p.name}`, fx: () => wed(p) })).concat([{ t: 'None of them', fx: () => { st('happy', -1); return 'You sent the portraits back. The council sighed.'; } }]),
@@ -18879,20 +18901,22 @@ PETITIONS.push(
       st('renown', 6); t += ` ${S.realm} and ${p.dk_r} are bound by marriage now.`;
     } else if (p.dk_k === 'noble') { if (S.ruling) unrest(-8); st('renown', 3); }
     else if (p.dk_k === 'merchant') st('renown', -3);
+    else if (p.dk_k === 'lady') { st('happy', 4); st('renown', -2); if (S.ruling) unrest(2); t += ' The council grumbled that a crown should marry a treaty, not the household.'; }
     else if (p.dk_k === 'beauty') { st('renown', -8); st('happy', 6); if (S.ruling) unrest(4); t += ' The great lords are scandalised, and you could not care less.'; }
     return t;
   }
   EVENTS.push({ id: 'dk_match', icon: '💍', min: 18, w: () => (S.ruling ? 6 : 2.5), cool: 4,
     cond: () => (S.ruling || highborn()) && !spouse() && !S.vows && !disguised() && !S.jail,
-    init: () => ({ e: matchCard() }),
+    init: () => ({ cs: candidates() }),
     text: () => `${S.ruling ? 'Your council' : 'Your family'} says it is time you married, and has drawn up a list of matches, with portraits and accounts of every dowry.`, choices: [
-      { t: 'Hear the council out', fx: c => { Q.push(() => showEvent(c.e)); return null; } },
+      { t: () => (S.ruling ? 'Hear the council out' : 'See the portraits'), fx: c => { Q.push(() => (window.mtGallery ? window.mtGallery(c.cs) : showEvent(matchCard(c.cs)))); return null; } },
       { t: 'Not yet: you will marry when you please', fx: () => 'You waved the council away. They will be back.' },
     ] });
   const famAt = () => { const i = DEEDS.map(d => d.g).lastIndexOf('Love and family'); return i < 0 ? DEEDS.length : i + 1; };
   DEEDS.splice(famAt(), 0, { k: 'dk_seek', g: 'Love and family', i: '💍', n: 'Ask for a list of matches', d: 'Your council or your family draws up candidates, with portraits and dowries.', min: 18,
     only: () => (S.ruling || highborn()) && !spouse() && !S.vows && !disguised(), can: cd('dk_seekY', 1),
-    run: () => { mark('dk_seekY'); const e = matchCard(); Q.push(() => showEvent(e)); return 'Envoys rode out to every great house. Within the month, a pile of portraits arrived.'; } });
+    run: () => { mark('dk_seekY'); const cs = candidates(); Q.push(() => (window.mtGallery ? window.mtGallery(cs) : showEvent(matchCard(cs)))); return 'Envoys rode out to every great house. Within the month, a pile of portraits arrived.'; } });
+  window.dkApi = { candidates, wed, brings };
 
   /* ---------- mistresses and favourites ---------- */
   const lovesOf = () => S.kin.filter(k => k.alive && k.mist);
@@ -20871,7 +20895,7 @@ PETITIONS.push(
   function winCard() {
     const x = pc();
     return { id: 'pc_wincard', icon: '👑',
-      text: () => `${capF(oppWho())} ${oppW(x.opp)}. A girl from ${x.from} has no friends at court but the ones she makes.`,
+      text: () => `${capF(oppWho())} ${oppW(x.opp)}. ${x.lady ? 'A lady-in-waiting of no great house' : `A girl from ${x.from}`} has no friends at court but the ones she makes.`,
       choices: [
         { t: 'Serve the queen better than any lady she has', fx: () => { opp(-(R(4, 9) + Math.round(S.stats.wits / 25))); if (S.job) jobPerf(8); return 'You were first up and last to bed, and you never once forgot how she likes her wine. The queen has started calling you “my good girl”, which from a queen is practically a knighthood.'; } },
         { t: 'Kneel beside the king’s mother at Mass, every day', fx: () => { st('piety', 3); opp(-(R(3, 8) + Math.round(S.stats.piety / 25))); return 'The old dowager queen noticed you on your knees beside her every morning. She asked your name. Then she asked about your mother. That is a beginning.'; } },
@@ -20887,7 +20911,7 @@ PETITIONS.push(
         { t: () => (pc().king ? 'Let him put it to his council' : `Let him ask the ${kingW()}, and wait`), fx: () => kingAnswer() },
         { t: 'Marry him in secret, tonight', ok: () => x.ard >= 85, why: 'He does not love you enough to risk his father’s fury (he must be wild for you)', fx: () => secretWed() },
         { t: 'Be his acknowledged mistress instead', fx: () => { x.st = 'mistress'; x.ask = S.year; st('piety', -4); st('renown', 3); coin(R(30, 80)); return 'You said you would not cost him a crown. He kissed you, and the next morning the whole court knew. You have rooms of your own now, a gown for every feast day, and a great many enemies. Keep courting him: a mistress who bores a prince is sent home just like a girl who bores him.'; } },
-        { t: 'Refuse him, and go home with your honour', fx: () => { st('piety', 5); st('renown', 4); st('happy', -6); return sendHome('You told him a village girl could not be a princess, and would not be anything less. He did not understand, and you did not explain.'); } },
+        { t: 'Refuse him, and go home with your honour', fx: () => { st('piety', 5); st('renown', 4); st('happy', -6); return sendHome(x.lady ? 'You told him a lady-in-waiting could not be a princess, and would not be anything less. He did not understand, and then he did. You were sent home within the week. ' + '' : 'You told him a village girl could not be a princess, and would not be anything less. He did not understand, and you did not explain.'); } },
       ] };
   }
   function kingAnswer() {
@@ -20995,7 +21019,7 @@ PETITIONS.push(
         { t: 'Refuse: not before a wedding', fx: () => { const x = pc(); x.hon = (x.hon || 0) + 1; if (P(.6)) { ard(R(6, 12)); return 'He stormed off. Then he came back with flowers. A girl who says no to a prince is a girl he cannot stop thinking about.'; } ard(-R(6, 10)); x.rival = x.rival || rivalName(); return `He went off in a temper, and found ${x.rival} more obliging.`; } },
         { t: 'Go, but only to talk', fx: () => { ard(R(1, 5)); return 'You talked until the candles burned out, about his father, your mother, and the sea, which neither of you had seen.'; } },
       ] }),
-    () => ({ id: 'pc_manners', icon: '🎭', text: () => 'The queen’s ladies laugh behind their fans at your village speech, your village walk and the way you hold your knife.',
+    () => ({ id: 'pc_manners', icon: '🎭', cond: () => !pc().lady, text: () => 'The queen’s ladies laugh behind their fans at your village speech, your village walk and the way you hold your knife.',
       choices: [
         { t: 'Pay a dancing master for lessons (6 silver)', ok: () => S.coin >= 6, why: 'You do not have 6 silver', fx: () => { coin(-6); st('wits', 2); st('looks', 2); opp(-4); return 'French, dancing, carving and how to curtsey to a bishop. By Lent you could pass for a knight’s daughter, nearly.'; } },
         { t: 'Laugh louder than they do', fx: () => { if (P(.5)) { st('renown', 3); return 'You did an impression of the chief lady-in-waiting that had the pages crying. The ladies have stopped laughing, at least at you.'; } st('renown', -3); return 'Laughing at yourself made it worse. Now they laugh at you twice.'; } },
@@ -21015,9 +21039,35 @@ PETITIONS.push(
       { t: 'Stay in the village', fx: () => { fl().pc = { st: 'no' }; st('happy', -2); st('piety', 2); return 'You sent the messenger away with a curtsey. Your mother called you a fool for a week. The miller’s son, for one, was very pleased.'; } },
     ] });
 
+  /* ---------- v1.22 a lady already at court: the king (or a prince) notices her, and she cannot do much about it ---------- */
+  // A lady-in-waiting served at the queen's pleasure and her family's ambition. When a king took a fancy to one (Anne
+  // Boleyn and Jane Seymour were both ladies-in-waiting), refusing him outright was hardly possible: she could only
+  // choose how to meet it, or beg leave to go home and hope it was granted. From here the prince's-eye story runs.
+  const ladyJob = () => jobIn('ladywait', 'wm_chamberer', 'wm_damsel', 'wm_mistresscham', 'wm_firstlady') || (typeof occOfJob === 'function' && (occOfJob() || {}).k === 'ladywait');
+  function kingOrPrince() {
+    const w = typeof wRuler === 'function' ? wRuler(S.realm) : null;
+    if (w && w.sex === 'm' && !w.wed && w.age >= 20 && w.age <= 58 && P(.7)) return { n: w.n, by: S.year - w.age, heir: 0, rel: 'king', look: randomLook(), king: 1 };
+    return makePrince();
+  }
+  function ladyStart(px, a, txt) {
+    const x = fl().pc = { n: px.n, by: px.by, look: px.look, heir: px.heir, rel: px.rel, king: px.king ? 1 : 0, ard: a, opp: 42, y0: S.year, st: 'court', at: 1, c: 1, from: S.village, home: S.home, job: null, lady: 1, ask: 0, kids: 0, hon: 0 };
+    if (x.heir) { const w = wRuler(S.realm); if (w && w.heir && w.heir.n === x.n) w.heir.pc = 1; }
+    st('happy', 2);
+    return `${txt} From now on ${x.king ? 'the king' : 'the prince'} is part of your life, whether you wish it or not. (See Kin, and your Love and family deeds.)`;
+  }
+  EVENTS.push({ id: 'pc_lady', min: 18, max: 30, once: true, w: 7, icon: '👑',
+    cond: () => S.sex === 'f' && ladyJob() && !S.ruling && S.cls !== 'royal' && !spouse() && !S.vows && !S.jail && S.stats.looks >= 50 && !disguised() && !fl().pc && !fl().outlaw,
+    init: () => ({ x: kingOrPrince(), feast: pick(['the Twelfth Night masque', 'the May Day dancing', 'the queen’s Easter feast', 'a hunt in the royal forest']) }),
+    text: c => `At ${c.feast}, ${c.x.king ? `${KT()} ${c.x.n} himself` : `Prince ${c.x.n}, ${relW(c.x)},`} singled you out: three dances, a cup from his own hand, and a long look the whole court saw. A lady-in-waiting does not say no to ${c.x.king ? 'a king' : `the ${kingW()}’s son`}. Your mistress the queen says nothing at all. Your family writes within the week, delighted. There is very little you can do, except choose how you meet it.`,
+    choices: [
+      { t: 'Curtsey low and say little', fx: c => ladyStart(c.x, R(54, 62), 'You kept your eyes down and your answers short. He seemed to like that even more.') },
+      { t: 'Smile, and let him see you are pleased', fx: c => { st('renown', 2); return ladyStart(c.x, R(64, 72), 'You smiled at him over the rim of the cup. By morning the whole palace was talking.'); } },
+      { t: 'Beg the queen to send you home to your family', fx: c => { if (P(.35)) { fl().pc = { st: 'no' }; if (S.job) quitJob(); st('piety', 3); st('happy', -3); return `The queen looked at you for a long moment, and let you go. You rode home to ${S.village} with your gowns in a chest, and your place at court went to someone else.`; } st('happy', -4); return ladyStart(c.x, R(50, 58), `The queen laughed. “Go home? ${c.x.king ? 'The king' : 'The prince'} has asked for you to stay, and so you will stay.”`); } },
+    ] });
+
   /* ---------- deeds: keeping his heart ---------- */
   const PC_DEEDS = [
-    { k: 'pc_court', g: 'Love and family', i: '🤴', get n() { const x = pc(); return x && x.n ? `Court Prince ${x.n}` : 'Court the prince'; }, d: 'Walk with him, dance with him, write to him, ride out with him. A prince’s heart wanders if it is not held, and then you go home. Once a year.', min: 16, once: 1, only: () => active(), run: () => ({ event: courtCard() }) },
+    { k: 'pc_court', g: 'Love and family', i: '🤴', get n() { const x = pc(); return x && x.n ? `Court ${PN()}` : 'Court the prince'; }, d: 'Walk with him, dance with him, write to him, ride out with him. A prince’s heart wanders if it is not held, and then you go home. Once a year.', min: 16, once: 1, only: () => active(), run: () => ({ event: courtCard() }) },
     { k: 'pc_win', g: 'Love and family', i: '👑', n: 'Win over the royal family', d: 'The king and the court think you a scandal. Change their minds, or at least their tempers. Once a year.', min: 16, once: 1, only: () => active(), run: () => ({ event: winCard() }) },
   ];
   {
@@ -27783,6 +27833,68 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       intro();
     } });
   FEATS.push({ k: 'mg_curia', i: '📜', n: 'The Pope’s Right Hand', d: 'Become Legendary at the Curia’s letters.' });
+
+  /* ---------- v1.22 the portrait gallery: a crown or a great house chooses a match ---------- */
+  // The council's candidates hang on easels under velvet. The cloths fall, you tap a portrait to hear who they are and
+  // what they bring, and the one you choose is carried to the middle of the gallery while petals fall.
+  const MT_COL = { royal: ['#2e2346', '#6a4f96', '#5a2a6a'], noble: ['#1f2d46', '#46648e', '#23427a'], lady: ['#24382c', '#567456', '#2f6a4c'], merchant: ['#3e1d16', '#86483a', '#8a2a1e'], beauty: ['#3c3022', '#86704a', '#9a7a4a'] };
+  function bustSVG(p, j) {
+    const L = p.look || {}, f = p.sex === 'f', c = MT_COL[p.dk_k] || MT_COL.noble;
+    const skin = typeof L.skin === 'number' && typeof SKINS !== 'undefined' ? SKINS[L.skin] || FIG_SKIN[1] : FIG_SKIN[1];
+    const hair = typeof L.hair === 'number' && typeof HAIRS !== 'undefined' ? HAIRS[L.hair] || FIG_HAIR[2] : FIG_HAIR[2];
+    let extra = '';
+    if (p.dk_k === 'royal') extra += '<path d="M-6.2 -42.4L-6.8 -48L-3.3 -45.2L0 -49.6L3.3 -45.2L6.8 -48L6.2 -42.4Z" fill="#e2b23c" stroke="#7a5a10" stroke-width=".5"/><circle cx="0" cy="-44.6" r=".9" fill="#b3202c"/>';
+    if (f && (p.dk_k === 'noble' || p.dk_k === 'lady' || p.dk_k === 'royal')) extra += '<path d="M-5 -28.4Q0 -24.6 5 -28.4" stroke="#e2b23c" stroke-width=".8" fill="none"/><circle cx="0" cy="-25.6" r="1.3" fill="#e2b23c"/>';
+    if (p.dk_k === 'beauty' && f) extra += '<circle cx="5.4" cy="-41.4" r="2.1" fill="#e8607a"/><circle cx="7.4" cy="-40" r="1.5" fill="#f4a0b0"/><circle cx="3.6" cy="-40.4" r="1.2" fill="#f4c0c8"/>';
+    const look = { f, robe: c[2], skin, hair, mood: 'calm', belt: '#e2b23c', beard: !f && L.beard > 2, extra, hat: !f && p.dk_k === 'merchant' ? 'brim' : !f && p.dk_k === 'noble' ? 'cap' : undefined, capc: '#2a1a0c' };
+    return `<svg viewBox="0 0 60 74" aria-hidden="true"><defs><radialGradient id="mtg${j}" cx="50%" cy="34%" r="72%"><stop offset="0" stop-color="${c[1]}"/><stop offset="1" stop-color="${c[0]}"/></radialGradient></defs><rect width="60" height="74" fill="url(#mtg${j})"/><g transform="translate(30 116) scale(2.15)">${fig(look)}</g></svg>`;
+  }
+  // what a match brings, said plainly
+  function mtLines(p) {
+    const m = p.sex === 'f', who = m ? 'princess' : 'prince', L = [];
+    if (p.dk_k === 'royal') { L.push(['🏳️', `Peace and an alliance with ${p.dk_r}`]); L.push(['👑', `A ${who} of the blood: the realm will cheer`]); }
+    if (p.dk_k === 'noble') L.push(['🛡️', 'The great lords will stand behind you']);
+    if (p.dk_k === 'lady') { L.push(['🌿', 'Already knows your court, and you']); L.push(['⚠️', 'No alliance: the council will grumble']); }
+    if (p.dk_k === 'merchant') L.push(['⚠️', 'The great lords will sneer at trade money']);
+    if (p.dk_k === 'beauty') { L.push(['✨', `The most talked-about ${m ? 'beauty' : 'man'} in the realm`]); L.push(['⚠️', 'A great scandal: the lords will be furious']); }
+    L.push(['💰', m ? (p.dowry ? `Dowry: ${p.dowry} silver` : 'No dowry at all') : p.dowry ? `Brings ${p.dowry} silver and his lands` : 'Brings nothing but himself']);
+    L.push(['❤️', `Known for ${p.trait}`]);
+    return L;
+  }
+  window.mtGallery = function (cs) {
+    if (!S || !S.alive || !cs || !cs.length) return nextModal();
+    const N = cs.length, X = j => (j + .5) / N * 100;
+    let sel = -1, busy = false;
+    const legs = cs.map((p, j) => { const x = X(j) * 3.6; return `<path d="M${x - 22} 182L${x - 8} 60M${x + 22} 182L${x + 8} 60M${x} 60V188M${x - 18} 158H${x + 18}" stroke="#6b4a2e" stroke-width="3" stroke-linecap="round"/>`; }).join('');
+    const bg = `<defs><pattern id="mt-dam" width="24" height="24" patternUnits="userSpaceOnUse"><rect width="24" height="24" fill="#2f4a36"/><path d="M12 3Q17 8 12 12Q7 8 12 3ZM12 12Q17 16 12 21Q7 16 12 12Z" fill="#3c5c44"/></pattern></defs>
+      <rect width="360" height="200" fill="url(#mt-dam)"/><rect y="120" width="360" height="80" fill="#5a3a22"/>${Array.from({ length: 12 }, (_, q) => `<rect x="${q * 30 + 3}" y="126" width="24" height="44" rx="2" fill="none" stroke="rgba(0,0,0,.3)" stroke-width="1.4"/>`).join('')}<path d="M0 120H360" stroke="#c9952e" stroke-width="2.4"/><rect y="176" width="360" height="24" fill="#6b5236"/><path d="M0 176H360" stroke="#3a2412" stroke-width="2"/>
+      ${legs}
+      <g transform="translate(16 196) scale(1.1)">${fig({ robe: '#2a2a2a', hat: 'cap', capc: '#1a1a1a', beard: 1, hair: '#a9a297', arms: 'hold' })}</g><g transform="translate(344 196) scale(1.1)">${fig({ robe: '#5a2a3a', hat: 'brim', capc: '#2a1a0c', beard: 1, hair: '#7a4e2a', arms: 'hold' })}</g>`;
+    const easels = cs.map((p, j) => `<button type="button" class="mt-ez" id="mt-e${j}" data-mg="pick" data-v="${j}" style="left:${X(j)}%" aria-label="Portrait of ${esc(p.name)} ${esc(p.sur)}"><span class="mt-frame">${bustSVG(p, j)}<i class="mt-cloth" style="animation-delay:${.5 + j * .38}s"></i></span><b class="mt-plate">${esc(p.name)}</b></button>`).join('');
+    const info = () => {
+      if (sel < 0) return mgSet('mt-info', `<p class="sc-q">Tap a portrait to hear who they are and what they would bring.</p>`);
+      const p = cs[sel];
+      mgSet('mt-info', `<p class="mt-name">${esc(fullName(p))}, ${p.age}</p><p class="mt-job">${esc(p.job)}</p><ul class="mt-lines">${mtLines(p).map(([i, t]) => `<li><span aria-hidden="true">${i}</span>${esc(t)}</li>`).join('')}<li><span aria-hidden="true">🪞</span>Looks ${stars(p.looks)}</li></ul>`);
+    };
+    const act = () => mgSet('mt-act', `${sel >= 0 ? mgBtn('wed', sel, `💍 Marry ${esc(cs[sel].name)}`, 'go') : ''}${mgBtn('none', '', 'None of them', 'dim')}`);
+    mgShow(`${mgHead({ i: '🖼️', n: 'The portrait gallery' }, `${S.ruling ? 'Your council' : 'Your family'} presents ${N} matches`)}<div class="sc mt" id="mt-stage"><svg class="sc-svg" viewBox="0 0 360 200" aria-hidden="true">${bg}</svg>${easels}</div><div class="sc-say mt-info" id="mt-info"></div><div id="mt-act"></div>`);
+    info(); act(); openModal(); mgSnd('page');
+    const finish = (icon, title, fn) => { mgOn = null; FX = []; let t = ''; try { t = fn(); } catch (e) { console.error(e); } const fx = FX; FX = null; mgCard().classList.remove('mgc'); say(t, 'note'); showResult(icon, t, fx, title); save(); };
+    mgOn = (a, v) => {
+      if (busy) return;
+      if (a === 'pick') { sel = +v; document.querySelectorAll('#mt-stage .mt-ez').forEach((e, q) => e.classList.toggle('sel', q === sel)); info(); act(); mgSnd('tick'); return; }
+      if (a === 'none') return finish('🖼️', 'The portrait gallery', () => { st('happy', -1); return S.ruling ? 'You sent the portraits back. The council sighed, and began writing to more courts.' : 'You sent the portraits back. Your family sighed.'; });
+      if (a === 'wed') {
+        const j = +v, p = cs[j]; if (!p) return; busy = true;
+        const st0 = document.getElementById('mt-stage'); st0.classList.add('wedding');
+        document.querySelectorAll('#mt-stage .mt-ez').forEach((e, q) => { if (q === j) { e.classList.add('chosen'); e.style.left = '50%'; } else e.classList.add('gone'); });
+        for (let q = 0; q < 22; q++) { const e = document.createElement('i'); e.className = 'mt-petal'; e.style.left = `${R(2, 98)}%`; e.style.animationDelay = `${(q * .09).toFixed(2)}s`; e.style.setProperty('--dx', `${R(-30, 30)}px`); e.style.background = pick(['#f4a0b0', '#fff2f4', '#e8607a', '#f7d36a']); st0.appendChild(e); }
+        mgSet('mt-info', `<p class="mt-name">${esc(fullName(p))}</p><p class="sc-q">The bells of the chapel royal ring out…</p>`); mgSet('mt-act', '');
+        mgSnd('wedding');
+        mgAfter(2600, 'mt-stage', () => finish('💍', 'A wedding at court', () => window.dkApi.wed(p)));
+      }
+    };
+  };
   window.mgDebug = { MG, MG_BY, mgS, mgStart, mgElite, mgTier, mgK };
 }
 

@@ -61,21 +61,23 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.21.0.txt`, ready to copy (it covers 1.21 and ends with a short note on 1.20).
+Also in `store/whats_new_1.22.0.txt`, ready to copy (it covers 1.22 and ends with short notes on 1.21 and 1.20).
 
 ```
-COURTING AS IT WAS
-- Ages follow history: men mostly married women younger than themselves, a few years among ordinary folk and often ten or more among merchants and lords. A woman older than her husband is now rare, and usually a well-off widow.
-- What made a good match: a man was sought for his means (land, a trade, a post, silver), so a young man with no work and no money gets few offers until he makes something of himself. A woman was sought for her youth, her family and her dowry, so offers slow down as she gets older, unless she is a widow with property.
-- Most people married within their own rank. Families weigh your station against theirs before they say yes.
-- Matches come the way they did: a family offers a man their daughter, and a man asks a woman's family for leave to court her.
-- Nobody under eighteen courts or is courted.
+THE PORTRAIT GALLERY
+When your council or your family finds you a match, the candidates now hang on easels in a long gallery, under velvet cloths that fall away one by one. Tap a portrait to see who they are and, in plain words, what they would bring: an alliance, the great lords' support, a dowry, or a scandal. Choose one, and their portrait is carried to the middle of the gallery as the bells ring and petals fall.
 
-THE SICKROOM
-Patients now lie in bed properly: face up, with a neck, shoulders and a body under the blanket. Sickness shows as a greenish face, with pocks for the pestilence and scurvy, a bandaged foot for gout and a wrapped throat for quinsy.
+A LADY OF THE HOUSEHOLD
+Kings and queens now find one of their own court among the candidates: one of the queen mother's ladies-in-waiting, or a gentleman of the chamber. Someone who already knows you, with a small dowry and no alliance. The council will grumble.
+
+THE KING'S EYE
+A woman serving at court as a lady-in-waiting may catch the eye of the king, or a prince. As history shows, there is not much she can do about it: curtsey and say little, let him see she is pleased, or beg the queen to send her home, and hope she is allowed to go. From there it can end in a crown, a manor and a knight for a husband, or being sent home in disgrace.
+
+COURTING AS IT WAS (1.21)
+Men mostly married women younger than themselves. A man is sought for his land, trade and silver; a woman for her youth, family and dowry. Most marry within their own rank, and nobody under eighteen courts.
 
 EVERY OFFICE, PLAYED (1.20)
-All the work you play in high office is now a real game in its own painted scene: hear petitions before the queue loses patience, pull bad coins off the Exchequer cloth, catch lying witnesses at the assize, search priests' houses, win a conclave, mix remedies, lay stones from a crane, read a king's mind at a feast, trade at a fair, and slip past the watch as spymaster.
+All the work of high office is a real game in its own painted scene.
 ```
 
 ## Category
