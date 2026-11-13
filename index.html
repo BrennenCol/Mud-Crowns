@@ -27290,7 +27290,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       const site = (crew, cri) => {
         const b = m.bld, W0 = { m: 100, j: 84, c: 70 }[crew], N = 8, base = 210, H = 15, wind = cri < 0;
         let courses = [{ x: 180, w: W0 + 16 }], per = wind ? 2200 : 2700, t0 = performance.now(), stone = { x: 180, w: W0 }, falling = false, miss = 0, perfect = 0, shift = 0, over = false;
-        mgShow(`${mgHead(MG_BY.build, `${cap(b.n)} · year ${b.done + 1}`, b.done, b.of)}<div class="sc bd" id="bd-stage"><svg class="sc-svg" viewBox="0 0 360 240" aria-hidden="true"><defs><linearGradient id="sc-bsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fb8dc"/><stop offset="1" stop-color="#dfe9ec"/></linearGradient><pattern id="sc-bst" width="20" height="15" patternUnits="userSpaceOnUse"><rect width="20" height="15" fill="#cdb98e"/><path d="M0 .5H20M.5 0V15" stroke="#9a8660" stroke-width="1"/></pattern></defs><rect width="360" height="240" fill="url(#sc-bsky)"/>${wind ? '<g class="bd-wind"><path d="M20 60q20 -6 40 0M70 90q20 -6 40 0M260 70q20 -6 40 0" stroke="#fff" stroke-width="2" fill="none" opacity=".7"/></g>' : ''}<path d="M0 214Q90 204 180 212Q270 204 360 214V240H0Z" fill="#7a9a4a"/><path d="M14 12H346" stroke="#5a3a1e" stroke-width="5"/><path d="M30 12V214M330 12V214" stroke="#6b4a2e" stroke-width="4"/><circle cx="330" cy="190" r="20" fill="none" stroke="#6b4a2e" stroke-width="4"/><path d="M330 170V210M310 190H350M316 176L344 204M344 176L316 204" stroke="#6b4a2e" stroke-width="1.6"/><g id="bd-stack"></g><g id="bd-bits"></g><line id="bd-rope" x1="180" y1="12" x2="180" y2="40" stroke="#4a3a2a" stroke-width="1.4"/><g id="bd-stone"></g></svg><div class="bd-hud" id="bd-hud"></div></div><div class="sc-say" id="bd-say"><p class="sc-q">Tap to drop each stone squarely on the course below. Whatever hangs over the edge is cut away.</p></div>${mgBtn('drop', '', '⬇️ Drop the stone', 'go bd-drop')}`);
+        mgShow(`${mgHead(MG_BY.build, `${cap(b.n)} · year ${b.done + 1}`, b.done, b.of)}<div class="sc bd" id="bd-stage"><svg class="sc-svg" viewBox="0 0 360 240" aria-hidden="true"><defs><linearGradient id="sc-bsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fb8dc"/><stop offset="1" stop-color="#dfe9ec"/></linearGradient><pattern id="sc-bst" width="20" height="15" patternUnits="userSpaceOnUse"><rect width="20" height="15" fill="#cdb98e"/><path d="M0 .5H20M.5 0V15" stroke="#9a8660" stroke-width="1"/></pattern></defs><rect width="360" height="240" fill="url(#sc-bsky)"/>${wind ? '<g class="bd-wind"><path d="M20 60q20 -6 40 0M70 90q20 -6 40 0M260 70q20 -6 40 0" stroke="#fff" stroke-width="2" fill="none" opacity=".7"/></g>' : ''}<path d="M0 214Q90 204 180 212Q270 204 360 214V240H0Z" fill="#7a9a4a"/><path d="M14 12H346" stroke="#5a3a1e" stroke-width="5"/><path d="M30 12V214M330 12V214" stroke="#6b4a2e" stroke-width="4"/><circle cx="330" cy="190" r="20" fill="none" stroke="#6b4a2e" stroke-width="4"/><path d="M330 170V210M310 190H350M316 176L344 204M344 176L316 204" stroke="#6b4a2e" stroke-width="1.6"/><g id="bd-stack"></g><g id="bd-bits"></g><g id="bd-hang" transform="translate(180 0)"><rect x="-9" y="6" width="18" height="10" rx="2" fill="#3a2a1a"/><circle cx="-4.5" cy="16" r="2.2" fill="#6b4a2e"/><circle cx="4.5" cy="16" r="2.2" fill="#6b4a2e"/><line id="bd-rope" x1="0" y1="17" x2="0" y2="40" stroke="#4a3a2a" stroke-width="1.6"/><path id="bd-hook" d="M-5 40L0 35L5 40" stroke="#4a3a2a" stroke-width="1.4" fill="none"/><g id="bd-stone"></g></g></svg><div class="bd-hud" id="bd-hud"></div></div><div class="sc-say" id="bd-say"><p class="sc-q">Tap to drop each stone squarely on the course below. Whatever hangs over the edge is cut away.</p></div>${mgBtn('drop', '', '⬇️ Drop the stone', 'go bd-drop')}`);
         const rect = (x, y, w, cls) => `<rect class="${cls || ''}" x="${(x - w / 2).toFixed(1)}" y="${y}" width="${w.toFixed(1)}" height="${H}" fill="url(#sc-bst)" stroke="#6a5a3a" stroke-width="1"/>`;
         const drawStack = () => mgSet('bd-stack', `<g style="transform:translateY(${shift}px)" class="bd-shift">${courses.map((c, j) => rect(c.x, base - (j + 1) * H, c.w)).join('')}</g>`);
         const hud = () => mgSet('bd-hud', `<span>Course <b>${Math.min(N, courses.length)} / ${N}</b></span><span>⭐ ${perfect}</span>${miss ? `<span class="bad">✖ ${miss}</span>` : ''}`);
@@ -27300,15 +27300,15 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
           if (over) return false;
           if (falling) return true;
           const ph = ((now - t0) / per) % 1, tri = ph < .5 ? ph * 4 - 1 : 3 - ph * 4; stone.x = 180 + 100 * tri;
-          const sr = document.querySelector('#bd-stone rect'); if (!sr) mgSet('bd-stone', rect(stone.x, 40, stone.w)); else { sr.setAttribute('x', (stone.x - stone.w / 2).toFixed(1)); sr.setAttribute('width', stone.w.toFixed(1)); }
-          const r = document.getElementById('bd-rope'); if (r) { r.setAttribute('x1', stone.x.toFixed(1)); r.setAttribute('x2', stone.x.toFixed(1)); }
+          const sr = document.querySelector('#bd-stone rect'); if (!sr) mgSet('bd-stone', rect(0, 40, stone.w)); else { sr.setAttribute('x', (-stone.w / 2).toFixed(1)); sr.setAttribute('width', stone.w.toFixed(1)); }
+          const hg = document.getElementById('bd-hang'); if (hg) hg.setAttribute('transform', `translate(${stone.x.toFixed(1)} 0)`);
           return true;
         });
         const drop = () => {
           if (falling || over) return; falling = true;
           const x = stone.x, w = stone.w, ty = topY(), top = courses[courses.length - 1];
           const g = document.getElementById('bd-stone'); if (g) { g.style.transition = 'transform .32s cubic-bezier(.5,0,1,1)'; g.style.transform = `translateY(${ty - 40}px)`; }
-          const r = document.getElementById('bd-rope'); if (r) r.setAttribute('y2', '14');
+          const r = document.getElementById('bd-rope'); if (r) r.setAttribute('y2', '24'); const hk = document.getElementById('bd-hook'); if (hk) hk.setAttribute('transform', 'translate(0 -16)');
           setTimeout(() => {
             if (!document.getElementById('bd-stage')) return;
             const l = Math.max(x - w / 2, top.x - top.w / 2), rr = Math.min(x + w / 2, top.x + top.w / 2), ov = rr - l;
@@ -27325,7 +27325,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
             if (courses.length - 1 >= 5) shift = (courses.length - 5) * H;
             drawStack(); hud();
             if (g) { g.style.transition = 'none'; g.style.transform = ''; }
-            if (r) r.setAttribute('y2', '40');
+            if (r) r.setAttribute('y2', '40'); const hk2 = document.getElementById('bd-hook'); if (hk2) hk2.removeAttribute('transform');
             if (courses.length - 1 >= N) return finish(false);
             stone = { x: 180, w: Math.min(W0, courses[courses.length - 1].w + (crew === 'm' ? 10 : crew === 'j' ? 6 : 3)) }; per = Math.max(1500, per * .96); t0 = performance.now() - R(0, per); falling = false;
           }, 340);
