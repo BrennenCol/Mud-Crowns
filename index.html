@@ -991,7 +991,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.18.1';
+const APP_VERSION = '1.18.2';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -25230,8 +25230,8 @@ function hideScreen() { $('screen').hidden = true; }
 function showStart() {
   closeSheet();
   const saved = loadSave(), got = relicsGot(), nRel = RELICS.filter(x => got[x.k]).length, L = legends(), gild = gildOn();
-  const isNew = nRel > (jget(MKEY, {}).seen || 0), next = GLORY.find(g => nRel < g[0]);
-  const crest = gild ? `<svg class="gd-crown" viewBox="0 0 100 100">${RELIC_ART.crown()}</svg>` : nRel >= 12 ? crestSVG('jewel') : nRel >= 4 ? crestSVG('bronze') : '⚜️';
+  const isNew = nRel > (jget(MKEY, {}).seen || 0), next = GLORY.find(g => relicCount() < g[0]);
+  const best = relicCount(), crest = gild ? `<svg class="gd-crown" viewBox="0 0 100 100">${RELIC_ART.crown()}</svg>` : best >= 12 ? crestSVG('jewel') : best >= 4 ? crestSVG('bronze') : '⚜️';
   showScreen(`<div class="start${gild ? ' gilded' : ''}">${gild ? gildDeco() : ''}${menuBanners(got)}<div class="crest" aria-hidden="true">${crest}</div><h1 class="title">Mud &amp; Crowns</h1><p class="tag">${gild ? 'The Golden Age. Every crown you ever won, in gold.' : 'One life. Many years. Rather a lot of plague.'}</p><div class="stack">${saved && saved.alive ? `<button class="btn" data-s="continue">Continue as ${esc(saved.first)}, age ${saved.age}</button>` : ''}<button class="btn${saved && saved.alive ? ' ghost' : ''}" data-s="random">Begin a random life</button><button class="btn ghost" data-s="custom">Choose your birth</button><button class="btn ghost hall-btn" data-s="hall"><span>🏛️ The Hall of Legends${isNew ? '<em class="new-b">NEW</em>' : ''}</span><span class="hb-gems" aria-hidden="true">${RELICS.map(x => `<i class="${got[x.k] ? 'on' : ''}" style="--rc:${rarOf(x).c}"></i>`).join('')}</span><small>${L.length ? `Best Rise ${nfmt(L[0].sc)} · ` : ''}Relics ${nRel} of ${RELICS.length}${next ? ` · next reward at ${next[0]}` : ''}</small></button></div><p class="fine">${gild ? 'You filled the Collection Hall. Every serf who ever dreamed of a crown salutes you.' : 'Born a serf or a princess, you will have to make your own way. The lower you start, the greater the legend. Fill the Collection Hall, and something here will change.'}</p></div>`);
 }
 function showCustom() {
@@ -25561,8 +25561,20 @@ const RELICS = [
 const fromText = x => x.from.length === 1 ? 'Born a serf' : x.from.length === 2 ? 'Born a serf or free peasant' : 'Born a commoner';
 const relicArt = (x, big) => `<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"${big ? ' class="big"' : ''}><circle class="rl-halo" cx="50" cy="56" r="46" fill="url(#rl-glow)"/>${RELIC_ART[x.k]()}</svg>`;
 const relicsGot = () => jget(CKEY, {});
-const wingDone = (got, w) => RELICS.filter(x => x.w === w).every(x => got[x.k]);
-const prizeWon = got => RELICS.every(x => (got || relicsGot())[x.k]);
+// What is won stays won. A finished wing, the Golden Age and the highest relic count are written
+// down for good the moment they happen, so adding or changing relics in a later update never takes them away.
+const wonRec = () => (jget(MKEY, {}).won || {});
+const wingNow = (got, w) => RELICS.filter(x => x.w === w).every(x => got[x.k]);
+const allNow = got => RELICS.every(x => got[x.k]);
+const wingDone = (got, w) => wingNow(got, w) || !!(wonRec().wings || {})[w];
+const prizeWon = got => allNow(got || relicsGot()) || !!wonRec().prize;
+function lockWins(got) {
+  const m = jget(MKEY, {}), w = m.won = m.won || {}; w.wings = w.wings || {}; let ch = false;
+  for (const W of WINGS) if (wingNow(got, W.k) && !w.wings[W.k]) { w.wings[W.k] = 1; ch = true; }
+  if (allNow(got) && !w.prize) { w.prize = 1; ch = true; }
+  const n = RELICS.filter(x => got[x.k]).length; if (n > (w.glory || 0)) { w.glory = n; ch = true; }
+  if (ch) jset(MKEY, m);
+}
 const gildOn = () => prizeWon() && jget(MKEY, { gild: 1 }).gild !== 0;
 
 function relicCheck() {
@@ -25578,11 +25590,15 @@ function relicCheck() {
     fresh.push(x);
   }
   if (!fresh.length) return 0;
-  jset(CKEY, got); applyRewards();
+  const was = wonRec(), wasW = Object.assign({}, was.wings || {}); let prizeShown = !!was.prize;
+  jset(CKEY, got); lockWins(got); applyRewards();
   for (const x of fresh) {
     say(`🏛️ A new relic for the Collection Hall: ${x.n}.`, 'gold');
-    const W = WINGS.find(w => w.k === x.w), wingNow = wingDone(got, x.w), prize = prizeWon(got);
-    relicShow(x.k, true, prize ? 'prize' : wingNow ? W.k : '');
+    const W = WINGS.find(w => w.k === x.w);
+    let extra = '';
+    if (allNow(got) && !prizeShown) { extra = 'prize'; prizeShown = true; }
+    else if (wingNow(got, x.w) && !wasW[x.w]) { extra = W.k; wasW[x.w] = 1; }
+    relicShow(x.k, true, extra);
   }
   return fresh.length;
 }
@@ -25668,7 +25684,7 @@ const GLORY = [
   [12, '💎', 'A jewelled crest', 'A silver crest set with gems crowns your main menu.'],
   [16, '👑', 'The Golden Age', 'Your main menu turns to gold.'],
 ];
-const relicCount = () => { const g = relicsGot(); return RELICS.filter(x => g[x.k]).length; };
+const relicCount = () => { const g = relicsGot(); return Math.max(RELICS.filter(x => g[x.k]).length, wonRec().glory || 0); };
 function gloryPct(n) {
   const m = GLORY.map(x => x[0]);
   if (n <= m[0]) return 0; if (n >= m[m.length - 1]) return 1;
@@ -25777,10 +25793,10 @@ function wingWinSVG(W, done) {
   return `<svg class="wing-win${done ? ' lit' : ''}" viewBox="0 0 40 64" aria-hidden="true" focusable="false"><path d="M3 62V24Q3 8 20 2Q37 8 37 24V62Z" fill="url(#rl-au2)" stroke="${OL}"/><path d="M7 59V25Q7 12 20 6.5Q33 12 33 25V59Z" fill="${glass}"/>${done ? `<path d="M7 59V25Q7 12 20 6.5Q33 12 33 25V59Z" fill="url(#rl-glow)" opacity=".75"/><path d="M11 50l9 -9l9 9l-9 7z" fill="#fff" opacity=".22"/>` : ''}<path d="M20 6.5V59M7 31H33M7 45H33M10.5 18H29.5" stroke="#2a1a05" stroke-width="1.3" fill="none"/><text x="20" y="${done ? 42 : 41}" text-anchor="middle" font-size="12" opacity="${done ? 1 : .35}">${W.e}</text></svg>`;
 }
 function hallRelics() {
-  const got = relicsGot(), n = RELICS.filter(x => got[x.k]).length, won = n === RELICS.length;
+  const got = relicsGot(), n = RELICS.filter(x => got[x.k]).length, won = prizeWon(got);
   let h = `<div class="ch-head"><h2 class="ch-t">The Collection Hall</h2><p class="ch-sub">Sixteen relics, and the only way to win them is to climb. Each one needs a humble birth and a great rise.</p></div>`;
   h += `<div class="relq${won ? ' open' : ''}">${reliquarySVG(got, won)}<div class="relq-n"><b>${n}</b><span>of ${RELICS.length} relics</span></div>${won ? `<p class="relq-t"><b>The Golden Age</b>The reliquary stands open. Your main menu now shines with the gold of every crown you won.</p><button class="btn ghost relq-b" data-s="gild">${gildOn() ? '✨ Golden menu: on' : 'Golden menu: off'}</button>` : `<p class="relq-t"><b>The Sealed Reliquary</b>Fill every case in the Hall and it will open. No one alive knows what it holds.</p>`}</div>`;
-  h += gloryHTML(n);
+  h += gloryHTML(relicCount());
   for (const W of WINGS) {
     const xs = RELICS.filter(x => x.w === W.k), wn = xs.filter(x => got[x.k]).length, done = wn === xs.length;
     h += `<section class="wing${done ? ' done' : ''}" style="--wc:${W.c};--wc2:${W.c2}"><div class="wing-h">${wingWinSVG(W, done)}<div class="wing-t"><b>${esc(W.n)}</b><small>${esc(W.m)}</small><span class="wing-pips" aria-hidden="true">${xs.map(x => `<i class="${got[x.k] ? 'on' : ''}" style="--rc:${rarOf(x).c}"></i>`).join('')}</span></div><span class="wc">${wn}<small>/${xs.length}</small></span></div>`;
@@ -27091,6 +27107,29 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     } });
 }
 
+/* ================= v1.18.2 Safeguards for progress: changing challenges never costs a player what they won ================= */
+// RULES FOR UPDATES (see README, "Changing challenges safely"):
+//  - Never reuse an old key for something new, and never delete a key's data.
+//  - To rename a relic, seal or trial, keep the new key and add  old: 'new'  below.
+{
+  const RELIC_RENAMED = {}, SEAL_RENAMED = {}, TRIAL_RENAMED = {};
+  const moveKeys = (key, map) => {
+    if (!Object.keys(map).length) return;
+    const g = jget(key, {}); let ch = false;
+    for (const [o, n] of Object.entries(map)) if (g[o]) { if (!g[n]) g[n] = g[o]; delete g[o]; ch = true; }
+    if (ch) jset(key, g);
+  };
+  try { moveKeys(CKEY, RELIC_RENAMED); moveKeys(FKEY, SEAL_RENAMED); moveKeys(TRIALKEY, TRIAL_RENAMED); } catch (e) { console.error(e); }
+  // seals and relics earned in the life you are playing are carried over too
+  { const _bg = begin; begin = function (state) { try { if (state && state.feats) state.feats = [...new Set(state.feats.map(k => SEAL_RENAMED[k] || k))]; if (state && state.rise && state.rise.rel) state.rise.rel = [...new Set(state.rise.rel.map(k => RELIC_RENAMED[k] || k))]; if (state && state.trial && TRIAL_RENAMED[state.trial]) state.trial = TRIAL_RENAMED[state.trial]; } catch (e) { console.error(e); } return _bg.apply(this, arguments); }; }
+  // two challenges with the same key would share (and muddle) their progress: shout about it while building
+  const dupes = (list, what) => { const seen = new Set(); for (const x of list) { if (seen.has(x.k)) console.error(`Two ${what} share the key "${x.k}"`); seen.add(x.k); } };
+  try { dupes(RELICS, 'relics'); dupes(FEATS, 'seals'); dupes(TRIALS, 'trials'); for (const x of RELICS) if (!RARITY[x.k] || !RELIC_ART[x.k] || !WINGS.some(w => w.k === x.w)) console.error(`Relic "${x.k}" is missing its rarity, art or wing`); } catch (e) { console.error(e); }
+  // whatever a player has already won is written down for good, before anything else can change it
+  try { lockWins(relicsGot()); } catch (e) { console.error(e); }
+  window.mcGuard = { RELIC_RENAMED, SEAL_RENAMED, TRIAL_RENAMED };
+}
+
 /* ---------- first-time tour ---------- */
 const TOUR = [
   [null, '📖', 'Welcome to Mud & Crowns', 'You will live one whole medieval life, year by year: work, love, scheme, pray, fight, and found a dynasty. Every choice is written in your chronicle. This quick tour shows you around.'],
@@ -27116,13 +27155,13 @@ function showTour(i = 0) {
 }
 
 /* ---------- moving your game to another device ---------- */
-function exportCode() { try { return btoa(unescape(encodeURIComponent(JSON.stringify({ app: 'mudcrowns', v: APP_VERSION, s: store.get(KEY), g: store.get(GKEY), f: store.get(FKEY), l: store.get(LKEY), h: store.get(HKEY), c: store.get(CKEY), m: store.get(MKEY) })))); } catch (e) { return ''; } }
+function exportCode() { try { return btoa(unescape(encodeURIComponent(JSON.stringify({ app: 'mudcrowns', v: APP_VERSION, s: store.get(KEY), g: store.get(GKEY), f: store.get(FKEY), l: store.get(LKEY), h: store.get(HKEY), c: store.get(CKEY), m: store.get(MKEY), t: store.get(TRIALKEY) })))); } catch (e) { return ''; } }
 function importCode(code) {
   try {
     const d = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
     if (!d || d.app !== 'mudcrowns') return 'That is not a Mud & Crowns backup code.';
     if (d.s && !parseSave(d.s)) return 'The saved life in that code is damaged.';
-    if (d.s) store.set(KEY, d.s); if (d.g) store.set(GKEY, d.g); if (d.f) store.set(FKEY, d.f); if (d.l) store.set(LKEY, d.l); if (d.h) store.set(HKEY, d.h); if (d.c) store.set(CKEY, d.c); if (d.m) store.set(MKEY, d.m);
+    if (d.s) store.set(KEY, d.s); if (d.g) store.set(GKEY, d.g); if (d.f) store.set(FKEY, d.f); if (d.l) store.set(LKEY, d.l); if (d.h) store.set(HKEY, d.h); if (d.c) store.set(CKEY, d.c); if (d.m) store.set(MKEY, d.m); if (d.t) store.set(TRIALKEY, d.t);
     return true;
   } catch (e) { return 'That code could not be read. Copy the whole thing and try again.'; }
 }

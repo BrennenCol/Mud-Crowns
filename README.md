@@ -332,6 +332,37 @@ still be reached from a first job.
 - **The main menu** shows a row of sixteen gems for your relics, a NEW badge when you have
   won one you have not yet seen, and how many relics to the next reward.
 
+### Safeguards for progress (v1.18.2)
+
+- Rewards in the Collection Hall are written down for good the moment they are won: each
+  finished wing's banner, the Golden Age, and the highest relic count reached (which decides
+  the Path of Glory rewards: candles, crests, gilded arms). Adding relics to a wing, or new
+  relics overall, no longer takes any of these away. Existing players' wins are locked the
+  first time 1.18.2 starts.
+- Renamed relics, seals and trials can carry their progress over (see below).
+- On every start the game checks for two relics, seals or trials with the same key, and for
+  relics missing their rarity, art or wing, and reports it in the console.
+- Backup codes now include Trials as well as the save, graveyard, seals, the Hall of Legends,
+  houses, relics and the menu.
+
+## Changing challenges safely
+
+Progress is stored by each challenge's key (`k`), never by its name or its place in a list.
+Following these rules, no player loses anything when relics, seals (`FEATS`) or trials change:
+
+| You want to… | Safe? | What to do |
+|---|---|---|
+| Add a new relic, seal or trial | Yes | Give it a new key that has never been used. Players keep everything they had; counts become "16 of 17", and banners, the Golden Age and crests already won stay won. |
+| Change a requirement, name, text or picture | Yes | Edit it. What was won stays won; only new wins use the new rule. |
+| Rename a key | Only with an alias | Add `old: 'new'` to `RELIC_RENAMED`, `SEAL_RENAMED` or `TRIAL_RENAMED` in the Safeguards block. Progress moves over on the next start, including the life in progress. |
+| Remove a challenge | Yes | Delete it from the list. Its stored data is kept but ignored, so it comes back if you ever restore it. |
+| Reuse an old key for something else | **Never** | Players who won the old one would wrongly own the new one. |
+| Change how the Rise score is counted | Yes | Old lives keep the score they were given; only new lives use the new rule. |
+
+Saves: the current life is saved under `mudcrowns.save.v1`, with a copy taken every year in
+`mudcrowns.save.bak`; if the main save is ever damaged the game loads the copy. `migrate()`
+fills in anything a newer version expects, and drops a job whose career no longer exists.
+
 ### Greying hair fixed (v1.18.1)
 
 - A player noticed that portraits' hair kept changing colour as they aged. Between 46 and 57,

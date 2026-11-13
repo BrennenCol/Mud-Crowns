@@ -61,7 +61,7 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.18.1.txt`, ready to copy (it includes 1.17 and ends with a line about the updates since 1.13).
+Also in `store/whats_new_1.18.2.txt`, ready to copy (it includes 1.17 and ends with a line about the updates since 1.13).
 
 ```
 CHOICES THAT COME BACK
@@ -69,6 +69,9 @@ Small choices at work are remembered. Lend your neighbour your ox, take a soldie
 
 FIXED: GREYING HAIR
 Portraits no longer flicker between grey and their old colour as people age. Hair now greys slowly, starting at a different age for everyone, and turns white in old age.
+
+SAFER PROGRESS
+Everything you win in the Collection Hall is now kept for good: a finished wing's banner, the Golden Age and your relic rewards stay yours even when new relics are added in later updates. Backup codes now carry your Trials too.
 
 SHORTER, SHARPER
 The long storylines that came back chapter by chapter are gone. Your own work and your own choices tell the story now.
