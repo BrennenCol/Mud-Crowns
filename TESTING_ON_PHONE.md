@@ -101,6 +101,6 @@ for TestFlight and the App Store.
 - Light and dark mode both look right (change it in the phone's settings).
 - Close the app completely in the middle of a life, reopen it, and check that
   you carry on where you left off.
-- Menu → **Back up or move your game**: copy the code, then restore it.
+- Menu → **Main menu**: back to the title screen, then **Continue** picks the life up again.
 - Play a few whole lives: try different jobs, marriage, war, and death and
   continuing as an heir.

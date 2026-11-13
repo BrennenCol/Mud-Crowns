@@ -332,6 +332,16 @@ still be reached from a first job.
 - **The main menu** shows a row of sixteen gems for your relics, a NEW badge when you have
   won one you have not yet seen, and how many relics to the next reward.
 
+### Main menu button; backup codes removed (v1.18.3)
+
+- Menu → **Main menu** (first item) saves the life and returns to the title screen, where
+  **Continue** picks it up again.
+- Backup codes are gone (Menu → Back up or move your game). A code was only the game's data in
+  base64, so anyone could decode it, mark every relic, seal and trial as won, and paste it back.
+  The store description, support page, privacy page and testing notes no longer mention them.
+  Saves still live on the device, with a yearly backup copy restored automatically if a save
+  is damaged.
+
 ### Safeguards for progress (v1.18.2)
 
 - Rewards in the Collection Hall are written down for good the moment they are won: each
@@ -342,8 +352,6 @@ still be reached from a first job.
 - Renamed relics, seals and trials can carry their progress over (see below).
 - On every start the game checks for two relics, seals or trials with the same key, and for
   relics missing their rarity, art or wing, and reports it in the console.
-- Backup codes now include Trials as well as the save, graveyard, seals, the Hall of Legends,
-  houses, relics and the menu.
 
 ## Changing challenges safely
 

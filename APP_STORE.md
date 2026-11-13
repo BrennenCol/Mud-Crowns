@@ -135,7 +135,7 @@ Already done in this repo:
 - [x] Crash guard: if something breaks, the game saves and offers to carry on
 - [x] Save backup: the previous year is kept and restored automatically if a
       save is damaged
-- [x] Backup codes (Menu → Back up or move your game) so players can move to
+- [x] (Removed in 1.18.3) Backup codes (Menu → Back up or move your game) so players can move to
       a new phone
 - [x] Exploits closed: reloading the app can't dodge a trial, debt, invasion,
       capture or other event; farmable actions (tribute, truces, rousing the
@@ -152,7 +152,7 @@ You still need to:
       `support.html` load (GitHub Pages must be on: Settings → Pages)
 - [ ] Search the name in the USPTO database and both stores
 - [ ] Test on a real iPhone and Android phone: notch, dark mode, closing and
-      reopening, and a backup code round trip
+      reopening, and Menu → Main menu → Continue
 - [ ] For every update: raise `APP_VERSION`, the `version` in `package.json`,
       and the build number in Xcode / Android Studio, and change `CACHE` in
       `sw.js` so web players get the new version

@@ -5,7 +5,7 @@ FIXED: GREYING HAIR
 Portraits no longer flicker between grey and their old colour as people age. Hair now greys slowly, starting at a different age for everyone, and turns white in old age.
 
 SAFER PROGRESS
-Everything you win in the Collection Hall is now kept for good: a finished wing's banner, the Golden Age and your relic rewards stay yours even when new relics are added in later updates. Backup codes now carry your Trials too.
+Everything you win in the Collection Hall is now kept for good: a finished wing's banner, the Golden Age and your relic rewards stay yours even when new relics are added in later updates.
 
 SHORTER, SHARPER
 The long storylines that came back chapter by chapter are gone. Your own work and your own choices tell the story now.

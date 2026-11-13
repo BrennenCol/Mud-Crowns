@@ -1,0 +1,42 @@
+CHOICES THAT COME BACK
+Small choices at work are remembered. Lend your neighbour your ox, take a soldier's sword for his drinking debt, rush a rich customer's order, keep a purse you found on a dead knight, warn a kind steward of a plot. A year or three later the consequence turns up at your door, with a reminder of what you did, and another choice to make. There are 26 of these, across every kind of work, from the fields and the bakehouse to the Church, the army and the sea.
+
+FIXED: GREYING HAIR
+Portraits no longer flicker between grey and their old colour as people age. Hair now greys slowly, starting at a different age for everyone, and turns white in old age.
+
+BACK TO THE MAIN MENU
+The menu now has a Main menu button. Your life is saved; pick it up again with Continue.
+
+SAFER PROGRESS
+Everything you win in the Collection Hall is now kept for good: a finished wing's banner, the Golden Age and your relic rewards stay yours even when new relics are added in later updates.
+
+SHORTER, SHARPER
+The long storylines that came back chapter by chapter are gone. Your own work and your own choices tell the story now.
+
+YOUR OFFICE, PLAYED
+High posts now come with real work you play yourself, once a year, without spending a deed. The better you play, the more silver, Renown and standing it brings:
+- Hear the petitions: three petitioners, two choices each, and four great powers to keep in balance
+- The Exchequer: count the sheriffs' tally sticks and catch the cheats
+- The assize: weigh the evidence, spot the lie, and give your verdict (and maybe a bribe)
+- The war table: set your archers, pikes and horse against the enemy, read the ground and the weather, and take knights and lords for ransom
+- The visitation: find the rotten priests and protect the good ones
+- The sickroom: read the signs and choose the cure, from a carter's wife up to the king
+- The great work: raise a bridge, a tower or a cathedral over the years, and survive the floods and cracks
+- The envoy's game: find out what a foreign king wants, and win a treaty without giving too much away
+- Corner the market: venture your own silver over four fairs
+- The spymaster's web: read the whispers and unmask the traitor at court
+
+THE FOUR POWERS
+Crown, Church, Lords and Commons each watch what you do. Too low and they turn on you; too high and the others grow jealous.
+
+A RIVAL AT COURT
+Someone wants your post. Beat them in a battle of wits each year; break them three times and they are ruined.
+
+THE CONCLAVE
+As a cardinal, win the papal election yourself, one vote at a time.
+
+LAURELS
+Every win earns laurels. Rise from Untried to Able, Renowned and Legendary, with rewards up to two and a half times bigger, and a seal of fame at the top.
+
+ALSO NEW SINCE 1.13
+The Hall of Legends and the Collection Hall, land for sale, new music, workplaces you can see, and better pictures.

@@ -991,7 +991,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.18.2';
+const APP_VERSION = '1.18.3';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -24855,7 +24855,6 @@ const ACT = {
   ambition: () => { if (!S.alive || S.age < 16) return; closeSheet(); if (S.amb && S.amb.k) st('happy', -5); Q.push(() => showEvent(ambitionEvent())); if (!modalOpen) nextModal(); },
   realism: () => { S.realism = hist() ? 'relaxed' : 'hist'; toast(hist() ? 'Historical rules on' : 'Relaxed rules: anyone may do anything'); renderSheet(); render(); save(); },
   tour: () => { closeSheet(); showTour(0); },
-  transfer: () => transferModal(),
   tips: () => { store.set(TIPKEY, tipsOn() ? 'off' : 'on'); renderSheet(); render(); },
   wfilter: f => { workFilter = f; renderSheet(); },
   job: k => { jobId = k; openSheet('job'); $('sheetBody').scrollTop = 0; },
@@ -25058,6 +25057,7 @@ function menuHTML() {
   const o = occOfJob();
   let h = '<h3 class="sec">Right now</h3>';
   h += `<div class="sumbox"><b style="font-size:17px;color:var(--ink)">${esc(displayName())}</b>, age ${S.age}<br>${esc(roleLabel())}${S.job ? ` (${esc(TRACKS[S.job.track].n)})` : ''}. ${S.coin} silver. ${S.alive ? `${S.deeds} of ${DEEDS_PER_YEAR} deeds left this year.` : 'Deceased.'}<br><span class="warn" style="color:var(--ink-2)">${esc(coachText() || 'Your story is over. Begin a new life below, or continue as an heir.')}</span></div>`;
+  h += btnItem('mainMenu', '', '🏰', 'Main menu', S.alive ? 'Your life is saved. Pick it up again with Continue.' : 'Back to the title screen.', true, '›');
   h += btnItem('confirmNew', '', '🌱', 'Begin a new life', S.alive ? 'Start over with a new character, or make your own. This life ends here.' : 'Start over from birth.', true);
   const am = ambDef();
   h += '<h3 class="sec">Your ambition</h3>';
@@ -25079,7 +25079,6 @@ function menuHTML() {
   h += btnItem('tips', '', tipsOn() ? '☑️' : '⬜', 'Show the hint line', 'A short line above the buttons telling you what to do next.', true);
   [['auto', '🌗', 'Match my device'], ['light', '📜', 'Vellum (light)'], ['dark', '🕯️', 'Candlelight (dark)']].forEach(([v, i, n]) => { h += btnItem('theme', v, i, n, '', true, curTheme() === v ? '✓' : ''); });
   h += btnItem('tour', '', '🧭', 'Show the welcome tour', 'A quick look at how the game works.', true);
-  h += btnItem('transfer', '', '📦', 'Back up or move your game', 'Get a code to restore your lives here or on another device.', true);
   h += '<h3 class="sec">About</h3>';
   h += btnItem('noop', '', '📜', 'Mud & Crowns', `Version ${APP_VERSION}. An original medieval life game. © 2026 the Mud & Crowns authors. Fonts: EB Garamond and UnifrakturMaguntia (SIL Open Font License).`, true);
   h += btnItem('noop', '', '🔒', 'Privacy', 'Your lives are saved only on this device. The game collects no personal data and shows no ads.', true);
@@ -26033,6 +26032,7 @@ HCAT.estate.keys.push('estate');
 }
 { const _au = ageUp; ageUp = function () { const a = S && S.alive && !modalOpen ? S.age : null; const r = _au.apply(this, arguments); try { if (a != null && S && S.age > a) landYear(); } catch (e) { console.error(e); } return r; }; }
 XACT.land = id => landAsk(id);
+XACT.mainMenu = () => { if (modalOpen) return; if (S && S.alive) save(); closeSheet(); showStart(); };
 XACT.hall = () => { closeSheet(); showHall('app'); };
 ACT.grave = () => { closeSheet(); showHall('app', 'graves'); };
 ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
@@ -27152,27 +27152,6 @@ function showTour(i = 0) {
   $('modal').classList.toggle('low', target === 'ribbons' || target === 'ageBtn');
   $('modal').classList.toggle('below', target === 'sc_scene');
   openModal(); $('tourNext').focus({ preventScroll: true });
-}
-
-/* ---------- moving your game to another device ---------- */
-function exportCode() { try { return btoa(unescape(encodeURIComponent(JSON.stringify({ app: 'mudcrowns', v: APP_VERSION, s: store.get(KEY), g: store.get(GKEY), f: store.get(FKEY), l: store.get(LKEY), h: store.get(HKEY), c: store.get(CKEY), m: store.get(MKEY), t: store.get(TRIALKEY) })))); } catch (e) { return ''; } }
-function importCode(code) {
-  try {
-    const d = JSON.parse(decodeURIComponent(escape(atob(code.trim()))));
-    if (!d || d.app !== 'mudcrowns') return 'That is not a Mud & Crowns backup code.';
-    if (d.s && !parseSave(d.s)) return 'The saved life in that code is damaged.';
-    if (d.s) store.set(KEY, d.s); if (d.g) store.set(GKEY, d.g); if (d.f) store.set(FKEY, d.f); if (d.l) store.set(LKEY, d.l); if (d.h) store.set(HKEY, d.h); if (d.c) store.set(CKEY, d.c); if (d.m) store.set(MKEY, d.m); if (d.t) store.set(TRIALKEY, d.t);
-    return true;
-  } catch (e) { return 'That code could not be read. Copy the whole thing and try again.'; }
-}
-function transferModal() {
-  closeSheet(); modalOpen = true;
-  const card = $('card');
-  card.innerHTML = `<div class="ev-icon" aria-hidden="true">📦</div><h2 class="card-h">Back up your game</h2><p class="story plain">Copy this code and keep it somewhere safe, or paste it into Mud & Crowns on another device to carry on there. It holds your current life, your graveyard and your seals of fame.</p><textarea class="inp code" id="expCode" readonly rows="4">${esc(exportCode())}</textarea><div class="row"><button class="btn ghost" id="expCopy">Copy code</button><button class="btn" id="expDone">Done</button></div><h3 class="sec" style="margin:16px 0 4px">Restore from a code</h3><textarea class="inp code" id="impCode" rows="3" placeholder="Paste a backup code here"></textarea><div class="row"><button class="btn ghost" id="impGo">Restore</button></div>`;
-  $('expCopy').addEventListener('click', () => { const t = $('expCode'); t.select(); try { navigator.clipboard.writeText(t.value).then(() => toast('Copied')).catch(() => { document.execCommand('copy'); toast('Copied'); }); } catch (e) { document.execCommand('copy'); toast('Copied'); } });
-  $('expDone').addEventListener('click', () => { modalOpen = false; nextModal(); });
-  $('impGo').addEventListener('click', () => { const r = importCode($('impCode').value); if (r !== true) return toast(r); toast('Restored. Welcome back.'); modalOpen = false; hideModal(); const sv = loadSave(); if (sv) { S = sv; lastLines = -1; render(); } showStart(); });
-  openModal();
 }
 
 /* ---------- if something breaks, don't lose the player ---------- */
