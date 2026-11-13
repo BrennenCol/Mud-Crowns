@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=IM+Fell+English+SC&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
 <style>
 :root{
   --desk:#c7b086; --desk-2:#d8c49c;
@@ -25,7 +25,8 @@
   --sea:#a7bcbb; --sea-line:#8ea6a6; --stone-1:#d3cec4; --stone-2:#aaa398; --stone-ink:#2b2824; --grass:#6c7f3c;
   --overlay:rgba(42,26,10,.46); --lift:0 14px 36px rgba(60,34,8,.28);
   --serif:'EB Garamond', Garamond, 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
-  --black:'UnifrakturMaguntia', 'Old English Text MT', 'EB Garamond', Georgia, serif;
+  --black:'IM Fell English SC', 'EB Garamond', Georgia, serif;
+  --title:'UnifrakturMaguntia', 'Old English Text MT', 'EB Garamond', Georgia, serif;
   color-scheme:light;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
@@ -240,7 +241,7 @@ button{font:inherit;color:inherit}
 .screen>.start{margin:auto}
 .start{max-width:460px;margin:0 auto;padding:28px 22px 26px;background:var(--vellum);border:1px solid var(--rule-2);border-radius:6px;outline:3px double var(--gold);outline-offset:-10px;box-shadow:var(--lift)}
 .crest{text-align:center;font-size:44px;line-height:1;margin-top:6px}
-.title{margin:6px 0 4px;text-align:center;font:clamp(48px,14vw,72px)/1 var(--black);color:var(--rubric);letter-spacing:.01em}
+.title{margin:6px 0 4px;text-align:center;font:clamp(48px,14vw,72px)/1 var(--title);color:var(--rubric);letter-spacing:.01em}
 .tag{margin:0 0 22px;text-align:center;font-style:italic;color:var(--ink-2);font-size:18px}
 .stack{display:flex;flex-direction:column;gap:10px;margin-top:18px}
 .fine{margin:18px 0 0;text-align:center;font-size:14.5px;color:var(--ink-3);font-style:italic}
@@ -953,6 +954,11 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .mg-lau small{color:var(--ink-3);font-style:italic}
 @media (max-width:360px){.mg-three{grid-template-columns:1fr}.mg-cards2,.mg-four{grid-template-columns:1fr}}
 .cq-recall{margin:-2px 0 10px;text-align:center;font:italic 14.5px/1.35 var(--serif);color:var(--ink-3)}
+.pp-steps{display:flex;flex-wrap:wrap;gap:4px;list-style:none;margin:2px 0 8px;padding:0}
+.pp-steps li{padding:2px 8px;border-radius:99px;background:var(--vellum);border:1px solid var(--rule-2);color:var(--ink-3);font-size:13px}
+.pp-steps li.done{color:var(--good);border-color:var(--good)}
+.pp-steps li.now{background:var(--rubric);color:var(--rubric-ink);border-color:var(--seal-lo)}
+.pp-road p{margin:6px 0 0;font-size:15px;line-height:1.4}
 </style>
 </head>
 <body>
@@ -25080,7 +25086,7 @@ function menuHTML() {
   [['auto', '🌗', 'Match my device'], ['light', '📜', 'Vellum (light)'], ['dark', '🕯️', 'Candlelight (dark)']].forEach(([v, i, n]) => { h += btnItem('theme', v, i, n, '', true, curTheme() === v ? '✓' : ''); });
   h += btnItem('tour', '', '🧭', 'Show the welcome tour', 'A quick look at how the game works.', true);
   h += '<h3 class="sec">About</h3>';
-  h += btnItem('noop', '', '📜', 'Mud & Crowns', `Version ${APP_VERSION}. An original medieval life game. © 2026 the Mud & Crowns authors. Fonts: EB Garamond and UnifrakturMaguntia (SIL Open Font License).`, true);
+  h += btnItem('noop', '', '📜', 'Mud & Crowns', `Version ${APP_VERSION}. An original medieval life game. © 2026 the Mud & Crowns authors. Fonts: EB Garamond, IM Fell English SC and UnifrakturMaguntia (SIL Open Font License).`, true);
   h += btnItem('noop', '', '🔒', 'Privacy', 'Your lives are saved only on this device. The game collects no personal data and shows no ads.', true);
   h += `<h3 class="sec">How a year works</h3><div class="howto"><p><b>1.</b> Spend your deeds (🎲 Deeds, or special work in ⚒️ Work).</p><p><b>2.</b> Turn the page. A year passes and something usually happens: answer the card that pops up.</p><p><b>3.</b> Watch your six qualities at the bottom. Health keeps you alive, Wits and Renown open better jobs, Piety helps in the Church, Looks helps in love.</p><p>From 12 you can work. At 16 you come of age, get your family’s portion of silver, and may marry, buy land, and raise an army. When you die, carry on as one of your children.</p></div>`;
   return h;
@@ -26616,42 +26622,6 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       draw();
     } });
 
-  /* ---------- 12. Your rival at court: a battle of wits, once a year ---------- */
-  const MOVES = { flatter: ['🗣️', 'Flatter the king', 'buying gifts for the king'], rumour: ['🐍', 'Spread a rumour', 'whispering in corners with the gossips'], proof: ['📜', 'Produce proof', 'hunting through old letters and ledgers'], ally: ['🤝', 'Win an ally', 'dining with the great lords'] };
-  const WINS = { flatter: 'ally', ally: 'proof', proof: 'rumour', rumour: 'flatter' };
-  const rivalOf = () => { const m = mgS(); if (!m.rv) return null; const p = S.kin.find(k => k.id === m.rv.id && k.alive); if (!p) { m.rv = null; return null; } return p; };
-  const newRival = () => { const p = makePeer({ rv: 1, bond: R(4, 12) }); p.age = Math.max(p.age, 22); p.job = `a rival at ${S.job ? 'your place of work' : 'court'}`; S.kin.push(p); mgS().rv = { id: p.id, pw: 3, w: 0 }; return p; };
-  mgAdd({ k: 'rival', i: '🐍', n: 'Your rival’s move', d: 'Someone wants your post. Out-think them: break them three times and they are ruined.', seal: 'mg_rival', payK: .4, who: () => mgElite(),
-    play() {
-      const p = rivalOf() || newRival(), rv = mgS().rv, P3x = pr(p.sex);
-      let me = 0, them = 0, round = 0, log = `${fullName(p)} wants your post, and has been working at it all year.`;
-      const tell = () => pick(Object.keys(MOVES));
-      let t = tell();
-      const draw = (over) => mgShow(`${mgHead(MG_BY.rival, `${fullName(p)} · strength ${'♟'.repeat(rv.pw)}`, round, 3)}<div class="mg-tally2"><span>You <b>${me}</b></span><span>${esc(p.name)} <b>${them}</b></span></div><p class="mg-last">${esc(log)}</p>${over ? mgBtn('end', '', 'See how it ends', 'go') : `<p class="mg-tip">🕵️ Your spies say ${esc(p.name)} has been ${MOVES[t][2]}. Flattery beats alliances, allies beat proof, proof beats rumour, and rumour beats flattery.</p><div class="mg-cards2">${Object.entries(MOVES).map(([k, x]) => mgBtn('mv', k, `${x[0]} ${x[1]}`)).join('')}</div>`}`);
-      mgOn = (act, v) => {
-        if (act === 'mv') {
-          const theirs = P(.65) ? t : pick(Object.keys(MOVES)); round++;
-          if (WINS[v] === theirs) { me++; log = `You: ${MOVES[v][1].toLowerCase()}. ${P3x.He}: ${MOVES[theirs][1].toLowerCase()}. You win the round.`; }
-          else if (WINS[theirs] === v) { them++; log = `You: ${MOVES[v][1].toLowerCase()}. ${P3x.He}: ${MOVES[theirs][1].toLowerCase()}. ${P3x.He} wins the round.`; }
-          else log = `You: ${MOVES[v][1].toLowerCase()}. ${P3x.He}: ${MOVES[theirs][1].toLowerCase()}. Neither of you gains.`;
-          t = tell();
-          return draw(me >= 2 || them >= 2 || round >= 5);
-        }
-        if (act === 'end') {
-          const won = me > them;
-          if (won) rv.pw--; else if (them > me) rv.w++;
-          const ruined = won && rv.pw <= 0;
-          mgFinish('rival', won ? 1 : me === them ? .45 : 0, ruined ? `${fullName(p)} is ruined, and leaves court in disgrace.` : won ? `You came out on top this year. ${fullName(p)} is weaker for it.` : me === them ? 'Neither of you gave an inch this year.' : `${fullName(p)} got the better of you this year.`, (grade, mult, pay) => {
-            const ls = [];
-            if (ruined) { p.rv = 0; p.job = 'disgraced, and gone from court'; mgS().rv = null; feat('mg_rival'); const g = Math.round(pay * 1.5 * mult); coin(g); st('renown', 6); ls.push(`Everyone who backed ${p.name} now backs you, and their gifts come to ${g} silver.`); }
-            else if (them > me) { jobPerf(-6); st('renown', -2); if (rv.w >= 3) { jobPerf(-10); ls.push(`${p.name} has beaten you three years running. Your superiors are losing faith in you.`); } }
-            return ls;
-          });
-        }
-      };
-      draw(false);
-    } });
-
   /* ---------- the turn of the year: the four powers drift back, and an ignored rival strikes ---------- */
   {
     const _au = ageUp;
@@ -26662,9 +26632,6 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
         if (a != null && S && S.age > a && S.mg) {
           const f = S.mg.fac; for (const k in f) f[k] = clamp(f[k] + (f[k] < 50 ? 4 : f[k] > 50 ? -4 : 0));
           if (mgElite()) { const k = pick(FACS)[0]; f[k] = clamp(f[k] + (P(.5) ? 1 : -1) * R(8, 16)); }
-          let p = rivalOf();
-          if (!p && mgElite() && P(.3)) { p = newRival(); say(`${fullName(p)} has an eye on your post. Expect trouble (Work, Your office).`, 'note'); }
-          else if (p && S.mg.y.rival !== y0 && mgElite() && P(.5)) { const fx0 = FX; FX = null; jobPerf(-6); FX = fx0; say(`${fullName(p)} whispered against you all last year, and you did nothing about it. Your standing slips.`, 'bad'); }
         }
       } catch (e) { console.error(e); }
       return r;
@@ -26681,7 +26648,6 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     { k: 'mg_envoy', i: '🕊️', n: 'Silver Tongue', d: 'Become a Legendary envoy.' },
     { k: 'mg_market', i: '📈', n: 'Lord of the Market', d: 'Become Legendary at cornering the market.' },
     { k: 'mg_spy', i: '🕸️', n: 'The Web Holds', d: 'Become a Legendary spymaster.' },
-    { k: 'mg_rival', i: '🐍', n: 'Rival Ruined', d: 'Break a rival at court three times and ruin them.' },
   );
   window.mgDebug = { MG, MG_BY, mgS, mgStart, mgElite, mgTier, mgK };
 }
@@ -27105,6 +27071,178 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
         { t: 'Tell the steward first', fx: () => { if (P(.5)) { st('renown', 2); return 'You got there first. He was fined; you were thanked.'; } coin(-15); jobPerf(-10); return 'The steward fined you both.'; } },
         { t: 'Let it lie', fx: () => { st('happy', -2); return 'You both know. Neither of you says anything.'; } }] },
     } });
+}
+
+/* ================= v1.19 Your children live their own lives (prefix hl_) ================= */
+// From fourteen, each of your children has a life of their own while you live yours: a trade they
+// climb in, savings, a marriage and children. When you play on as one of them, you take over that life.
+{
+  const FAMS = { serf: ['land', 'beasts', 'labor', 'serve'], peasant: ['land', 'beasts', 'labor', 'serve', 'food', 'wood', 'sea', 'cloth'], craft: ['metal', 'woodw', 'leather', 'goods', 'cloth', 'stone', 'food', 'fine', 'arms'], merchant: ['trade', 'letters', 'fine', 'cloth', 'guild'], noble: ['court', 'estate', 'war'] };
+  const famOf = o => (o.link ? TRACKS[o.link[0]].fam : o.fam);
+  const okFor = (o, sex) => !!o && (o.tier === 'low' || o.tier === 'mid' || o.tier === 'mil') && !o.title && !o.land && !(o.link && o.link[1] > 0) && (sex === 'm' || !hist() || !MEN_ONLY.has(o.k)) && !(sex === 'm' && WOMEN_ONLY.has(o.k)) && famOf(o) !== 'crime' && famOf(o) !== 'occult';
+  function firstPost(k, parentTrack) {
+    if (k.cls === 'royal') return null;
+    if (k.cls === 'noble') { const o = OCC_BY[k.sex === 'm' ? 'squire' : 'ladywait']; if (o) return o; }
+    if (P(.07)) return OCC_BY.novice;
+    // many children follow a parent into the same trade
+    if (parentTrack && P(.4)) { const o = OCC.find(x => okFor(x, k.sex) && occPos(x)[0] === parentTrack && occPos(x)[1] === 0); if (o) return o; }
+    const fams = FAMS[k.cls] || FAMS.peasant;
+    const pool = OCC.filter(o => okFor(o, k.sex) && fams.includes(famOf(o)));
+    return pool.length ? pick(pool) : null;
+  }
+  const title = (tr, lv, sex) => { try { return lvlTitle(tr, lv, sex); } catch (e) { return ''; } };
+  // one year of a grown child's life; quiet = no lines in your chronicle
+  function hlYear(k, quiet) {
+    const L = k.lf;
+    k.age >= 14 && L.tr && !L.ext && (() => {
+      const T = TRACKS[L.tr]; if (!T) { L.tr = null; return; }
+      if (k.job && L.title && k.job !== L.title) { L.ext = 1; return; }
+      L.yrs++; L.lvYrs = (L.lvYrs || 0) + 1;
+      const nx = T.levels[L.lv + 1];
+      const hiNext = (() => { const o = OCC.find(x => x.link && x.link[0] === L.tr && x.link[1] === L.lv + 1); return !!o && o.tier === 'high'; })();
+      if (nx && !nx.elect && L.lvYrs >= 3 && !(k.sex === 'f' && hist() && ladderMenOnly(L.tr, L.lv + 1)) && P(hiNext ? .05 : .16)) {
+        L.lv++; L.lvYrs = 0; L.title = title(L.tr, L.lv, k.sex); k.job = L.title;
+        if (!quiet && k.ch) say(`Your ${relOf(k).toLowerCase()} ${k.name} has risen to ${L.title}.`, 'note');
+      }
+      const pay = (T.levels[L.lv] || {}).pay || 4;
+      L.coin = (L.coin || 0) + Math.round(pay * R(15, 35) / 100);
+    })();
+    // marriage
+    const vows = L.tr && TRACKS[L.tr] && TRACKS[L.tr].vows;
+    if (!L.wed && !vows && !k.sp && k.age >= (k.sex === 'f' ? 17 : 19) && k.age <= 38 && P(.15)) {
+      const sx = k.sex === 'm' ? 'f' : 'm';
+      L.wed = { name: pick(NAMES[sx]), sur: pick(k.cls === 'noble' ? SUR.noble : SUR.low), sex: sx, by: S.year - Math.max(16, k.age + R(-5, 4)), job: '' };
+      if (!quiet && k.ch) say(`Your ${relOf(k).toLowerCase()} ${k.name} married ${L.wed.name} ${L.wed.sur}.`, 'good');
+    }
+    // children
+    L.kids = L.kids || [];
+    const wifeAge = k.sex === 'f' ? k.age : L.wed ? S.year - L.wed.by : 99;
+    if (L.wed && wifeAge >= 17 && wifeAge <= 42 && L.kids.filter(x => x.alive !== false).length < 6 && P(.22)) {
+      const sx = pick(['m', 'f']), kid = { name: pick(NAMES[sx]), sex: sx, by: S.year };
+      L.kids.push(kid);
+      if (!quiet && k.ch) say(`Your ${relOf(k).toLowerCase()} ${k.name} had a ${sx === 'm' ? 'son' : 'daughter'}, ${kid.name}. You are a grandparent${L.kids.length > 1 ? ' again' : ''}.`, 'good');
+    }
+    for (const c of L.kids) if (c.alive !== false && S.year - c.by < 10 && P(.02)) c.alive = false;
+  }
+  function hlStart(k, parentTrack) {
+    if (k.lf) return;
+    const o = firstPost(k, parentTrack);
+    const L = k.lf = { tr: null, lv: 0, yrs: 0, lvYrs: 0, coin: 0, kids: [] };
+    if (o) { const [tr, lv] = occPos(o); L.tr = tr; L.lv = lv; L.title = title(tr, lv, k.sex); k.job = L.title; }
+  }
+  // grown children from before this update catch up on the years they have already lived
+  function hlCatchUp(k) {
+    hlStart(k, S.job && S.job.track);
+    const yrs = Math.max(0, Math.min(40, k.age - 14));
+    const y0 = S.year; S.year -= yrs;
+    try { for (let i = 0; i < yrs; i++) { S.year++; hlYear(k, true); } } finally { S.year = y0; }
+  }
+  {
+    const _yk = yearKin;
+    yearKin = function () {
+      const fresh = [];
+      try { for (const k of S.kin) if (k.alive && (k.ch || k.sib) && k.age === 13 && !k.job && !k.lf && k.cls !== 'royal' && !k.ruler) { hlStart(k, S.job && S.job.track); if (k.lf.title) fresh.push(k); } } catch (e) { console.error(e); }
+      const r = _yk.apply(this, arguments);
+      try {
+        for (const k of fresh) if (k.alive && k.ch) say(`Your ${relOf(k).toLowerCase()} ${k.name} has gone to work as ${jobPhrase(k.lf.title)}.`, 'note');
+        for (const k of S.kin) {
+          if (!k.alive || !(k.ch || k.sib) || k.age < 14 || k.cls === 'royal' || k.ruler || fresh.includes(k)) continue;
+          if (!k.lf) { hlCatchUp(k); continue; }
+          hlYear(k, !k.ch);
+        }
+      } catch (e) { console.error(e); }
+      return r;
+    };
+  }
+  // playing on as a grown child: take over the life they have been living
+  {
+    const _ca = continueAs;
+    continueAs = function (id) {
+      const old = S, k0 = old && old.kin.find(x => x.id === id && x.alive && x.ch);
+      if (k0 && k0.age >= 15 && !k0.lf && k0.cls !== 'royal' && !k0.ruler) { try { hlCatchUp(k0); } catch (e) { console.error(e); } }
+      const L = k0 && k0.lf ? JSON.parse(JSON.stringify(k0.lf)) : null;
+      const r = _ca.apply(this, arguments);
+      if (!L || S === old || !S.alive) return r;
+      try {
+        const lines = [];
+        if (L.tr && TRACKS[L.tr] && !L.ext && !S.job && !S.ruling && S.age >= 14) {
+          const T = TRACKS[L.tr];
+          S.job = { track: L.tr, level: L.lv, perf: 58, years: L.yrs, lvlYears: L.lvYrs || 0, since: S.year - L.yrs };
+          S.skills = S.skills || {}; if (T.fam) S.skills[T.fam] = Math.max(S.skills[T.fam] || 0, L.yrs);
+          if (T.vows) S.vows = true;
+          if (['letters', 'learn', 'court', 'law', 'faith', 'trade'].includes(T.fam)) S.flags.letters = 1;
+          S.stats.renown = clamp(Math.max(S.stats.renown, 6 + L.lv * 7 + Math.min(10, L.yrs / 2)));
+          lines.push(`You have worked as ${jobPhrase(jobTitle())} for ${L.yrs} year${L.yrs === 1 ? '' : 's'}.`);
+        } else if (L.ext && k0.job) lines.push(`You are ${k0.job}.`);
+        if (L.coin > 0) { S.coin += L.coin; lines.push(`Your own savings: ${L.coin} silver.`); }
+        if (L.wed && !S.kin.some(x => x.sp && x.alive)) {
+          const sp = person(L.wed.sex, Math.max(16, S.year - L.wed.by), S.cls === 'royal' ? 'noble' : S.cls, { sp: 1, name: L.wed.name, sur: L.wed.sur, bond: R(60, 85), job: '' });
+          S.kin.push(sp); lines.push(`You are married to ${sp.name} ${sp.sur}.`);
+        }
+        const kids = (L.kids || []).filter(c => c.alive !== false);
+        const sp = S.kin.find(x => x.sp && x.alive);
+        for (const c of kids) { const ch = person(c.sex, S.year - c.by, S.cls === 'royal' ? 'noble' : S.cls, { ch: 1, name: c.name, sur: S.last, bond: R(65, 90), job: '' }); try { ch.look = childLook(S.look, sp && sp.look); } catch (e) { } S.kin.push(ch); }
+        if (kids.length) lines.push(`You have ${kids.length === 1 ? 'a child' : `${kids.length} children`}: ${joinList(kids.map(c => c.name))}.`);
+        if (lines.length) say(lines.join(' '), 'note');
+        save(); render();
+      } catch (e) { console.error(e); }
+      return r;
+    };
+  }
+  window.hlDebug = { hlCatchUp, hlYear, hlStart };
+}
+
+/* ================= v1.19 The road to Rome: a Pope who ages and dies, and a conclave you can win (prefix pp_) ================= */
+{
+  const PNAMES = ['Gregory', 'Innocent', 'Clement', 'Urban', 'Boniface', 'Benedict', 'Celestine', 'Honorius', 'Alexander', 'Nicholas', 'Martin', 'Leo'];
+  const newPope = () => ({ n: pick(PNAMES), num: R(2, 10), age: R(64, 78) });
+  const pope = () => { if (!S.flags.pope || !S.flags.pope.n) S.flags.pope = newPope(); return S.flags.pope; };
+  const popeName = p => `Pope ${p.n} ${roman(p.num)}`;
+  const isPope = () => inTrack('church') && S.job.level >= 7;
+  const health = a => a >= 82 ? 'very frail' : a >= 76 ? 'in failing health' : a >= 70 ? 'old, but hale' : 'strong for his years';
+  const cv = EVENTS.find(e => e.id === 'conclave');
+  if (cv) { cv.w = 0; cv.cond = () => inTrack('church') && S.job.level === 6; }
+  YEARLY.push(() => {
+    if (!S || !S.alive) return;
+    const p = pope(); p.age++;
+    if (isPope()) return;
+    // popes were old men when chosen; once you wear the red hat, the old man on the throne is seldom long for this world
+    if (inTrack('church') && S.job.level === 6 && p.age < 74) p.age = 74 + R(0, 4);
+    const die = Math.min(.42, Math.max(.04, .08 + (p.age - 68) * .025 + (inTrack('church') && S.job.level === 6 && S.job.lvlYears >= 2 ? .06 : 0)));
+    if (!P(die)) return;
+    const old = popeName(p);
+    S.flags.pope = newPope();
+    if (inTrack('church') && S.job.level === 6 && !S.jail && cv) {
+      say(`🔔 ${old} is dead, aged ${p.age}. The cardinals are summoned to Rome, and you are one of them.`, 'gold');
+      S.flags.pope.pending = 1;
+      Q.push(() => showEvent(cv));
+    } else say(`🔔 ${old} died, aged ${p.age}. The cardinals chose ${popeName(S.flags.pope)}.`, 'note');
+  });
+  // a conclave that does not end with you on the throne still gives the Church a pope
+  { const _se = showEvent; showEvent = function (e) { if (e && e.id === 'conclave' && S.flags.pope) delete S.flags.pope.pending; return _se.apply(this, arguments); }; }
+  function roadHTML() {
+    const t = TRACKS.church, lv = S.job.level, p = pope();
+    const yrsIn = (S.skills && S.skills.faith) || 0;
+    const needFor = i => {
+      const L = t.levels[i] || {}, o = OCC.find(x => x.link && x.link[0] === 'church' && x.link[1] === i);
+      const bits = Object.entries(L.need || {}).map(([s, n]) => `${STAT_N[s] || s} ${n}`);
+      if (o && o.skill && o.skill.faith) bits.push(`${o.skill.faith} years in the Church (you have ${yrsIn})`);
+      return bits.join(', ');
+    };
+    let h = '<h3 class="sec">The road to Rome</h3><div class="sumbox pp-road">';
+    h += `<ol class="pp-steps">${t.levels.map((L, i) => `<li class="${i < lv ? 'done' : i === lv ? 'now' : ''}"><span>${esc(lvlTitle('church', i))}</span></li>`).join('')}</ol>`;
+    if (lv < 6) {
+      const nx = lv + 1, menOnly = S.sex === 'f' && hist() && ladderMenOnly('church', nx);
+      h += menOnly ? '<p><b>Under Historical rules, women cannot rise above Abbess.</b> Switch on Relaxed rules in the menu to go on to Bishop, Cardinal and Pope.</p>'
+        : `<p><b>Next: ${esc(lvlTitle('church', nx))}.</b> Needs ${esc(needFor(nx))}. Promotion comes with good standing after two years at your rank: do your yearly duty well, and keep your Piety up.</p>`;
+      h += '<p>To become Pope: rise to Cardinal, then win the conclave when the Pope dies.</p>';
+    }
+    if (lv === 6) h += `<p><b>${esc(popeName(p))}</b> is ${p.age}, ${health(p.age)}. When he dies, the cardinals meet in conclave and you can win their votes, one by one. Keep your Piety and Renown high, and some silver ready.</p>`;
+    if (lv >= 7) h += '<p><b>You are the Pope.</b> There is nowhere higher to climb.</p>';
+    return h + '</div>';
+  }
+  JOBPANELS.push({ k: 'pp_road', when: () => S && S.alive && inTrack('church'), html: roadHTML });
+  window.ppDebug = { pope, newPope };
 }
 
 /* ================= v1.18.2 Safeguards for progress: changing challenges never costs a player what they won ================= */
