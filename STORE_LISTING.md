@@ -61,9 +61,12 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.20.0.txt`, ready to copy (it covers 1.20 and ends with a short list of what came in 1.19).
+Also in `store/whats_new_1.20.1.txt`, ready to copy (it covers 1.20 and its fix, and ends with a short list of what came in 1.19).
 
 ```
+FIXED IN 1.20.1
+In the sickroom, your patient now lies properly under the blanket, with shoulders, a turned-down sheet and an arm resting on top.
+
 EVERY OFFICE, PLAYED
 All the work you play in high office has been rebuilt as real games, each in its own painted scene with people who walk, react and celebrate:
 - Hear the petitions: petitioners queue at the door of your great hall. Answer each before they lose patience, and watch the four powers' banners rise and fall on the wall.

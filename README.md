@@ -400,7 +400,7 @@ work as before.
 - **The conclave:** tap a cardinal (the sign above him shows what moves him), pick an approach,
   then stop a swinging needle in the gold. The zone is wide for the right approach and narrow
   for the wrong one. Ballots fly to the chalice; black or white smoke rises from the chimney.
-- **The sickroom:** a health bar runs down; pick the sickness in the book (three pages), take
+- **The sickroom** (patient redrawn in 1.20.1 so a body lies under the blanket): a health bar runs down; pick the sickness in the book (three pages), take
   three jars down in order (a wrong jar costs time), then grind eight times.
 - **The great work:** choose the year's crisis answer and crew (wider stones cost you silver,
   narrow ones put silver in your purse), then drop eight courses from a crane that swings at a

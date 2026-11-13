@@ -1295,7 +1295,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.20.0';
+const APP_VERSION = '1.20.1';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -27164,22 +27164,33 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
   const mixHex = (a, b, t) => { const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); const A = p(a), B = p(b); return '#' + A.map((x, i) => Math.round(x + (B[i] - x) * t).toString(16).padStart(2, '0')).join(''); };
   // the patient in bed: their face shows how they are, and the sickness shows on them
   function patientSVG(d, health, cured, royal) {
-    const k = SK[d.n] || SK['a tertian fever'], t = cured ? 1 : Math.max(0, Math.min(1, health / 100)) * .45, face = mixHex(k.tint, '#f1c8a8', t), m = k.mark;
-    let s = `<rect x="18" y="112" width="190" height="10" fill="#5a3a1e"/><path d="M20 112V86M206 112V100" stroke="#4a2e16" stroke-width="6"/><rect x="22" y="94" width="184" height="20" rx="5" fill="#ece2c8"/>`;
-    s += `<path d="M72 92Q74 80 120 82Q170 80 202 92V114H72Z" fill="${royal ? '#5a2a6a' : '#8a3a2a'}" stroke="rgba(0,0,0,.35)"/><path d="M72 96H202" stroke="${royal ? '#e2b23c' : '#c9a060'}" stroke-width="2"/>`;
-    s += `<rect x="28" y="84" width="38" height="16" rx="7" fill="#f6efdc"/>`;
-    if (m === 'gout' && !cured) s += `<g class="sk-throb"><ellipse cx="212" cy="98" rx="9" ry="7" fill="#e0605a" stroke="#8a2a2a"/><path d="M219 94q4 -2 5 2" stroke="#8a2a2a" fill="none"/></g>`;
-    if (m === 'wound' && !cured) s += `<path d="M92 88Q100 76 112 80" stroke="${face}" stroke-width="7" stroke-linecap="round"/><rect x="96" y="76" width="12" height="9" rx="2" fill="#f4efe2" transform="rotate(-25 102 80)"/><circle cx="103" cy="80" r="2.6" fill="#b3202c"/>`;
-    if (m === 'flux' && !cured) s += `<path d="M110 84q4 -5 8 0q4 -5 8 0" stroke="#5a4a2a" stroke-width="1.4" fill="none"/>`;
-    s += `<g class="${m === 'fever' && !cured ? 'sk-shiver' : ''}"><circle cx="50" cy="80" r="12" fill="${face}" stroke="rgba(0,0,0,.5)" stroke-width=".9"/><path d="M38 78Q38 64 50 64Q62 64 62 78Q58 70 50 70Q42 70 38 78Z" fill="#5a3a22"/>`;
-    s += cured ? '<path d="M44 78q2 -2 4 0M52 78q2 -2 4 0" stroke="#1a1208" stroke-width="1" fill="none"/><path d="M45 85Q50 89 55 85" stroke="#5a2a1a" stroke-width="1.2" fill="none"/>' : '<path d="M43.6 79H47.6M52.4 79H56.4" stroke="#1a1208" stroke-width="1.2"/><path d="M46 87Q50 84.4 54 87" stroke="#5a2a1a" stroke-width="1.1" fill="none"/>';
-    if (!cured) {
-      if (m === 'fever') s += '<circle cx="43" cy="83" r="2.6" fill="#e0504a" opacity=".6"/><circle cx="57" cy="83" r="2.6" fill="#e0504a" opacity=".6"/><g class="sk-drip"><path d="M62 70q2 4 0 6q-2 -2 0 -6z" fill="#6fb8ee"/></g>';
-      if (m === 'plague') s += '<circle cx="40" cy="91" r="2.4" fill="#2a2420"/><circle cx="60" cy="92" r="2" fill="#2a2420"/><circle cx="55" cy="71" r="1.4" fill="#4a3a3a"/>';
-      if (m === 'sad') s += '<g class="sk-drip"><path d="M45 81q1.6 3 0 4.6q-1.6 -1.6 0 -4.6z" fill="#6fb8ee"/></g>';
-      if (m === 'scurvy') s += '<ellipse cx="50" cy="86.6" rx="3.6" ry="2" fill="#b3202c"/>';
-      if (m === 'quinsy') s += '<ellipse cx="50" cy="93" rx="8" ry="4" fill="#e0806a" stroke="#8a3a2a" stroke-width=".7"/>';
-    } else s += '<g class="sk-glow"><circle cx="50" cy="78" r="18" fill="none" stroke="#f3d983" stroke-width="2" opacity=".7"/></g>';
+    const k = SK[d.n] || SK['a tertian fever'], t = cured ? 1 : Math.max(0, Math.min(1, health / 100)) * .45, face = mixHex(k.tint, '#f1c8a8', t), m = k.mark, sick = !cured;
+    const hx = 46, hy = 84, cl = royal ? '#5a2a6a' : '#8a3a2a', st = royal ? '#e2b23c' : '#c9a060', shirt = '#efe6d4';
+    // the bed, the pillow, then the body: shoulders in a nightshirt, a blanket shaped over chest, hips, knees and feet
+    let s = `<rect x="18" y="112" width="190" height="10" fill="#5a3a1e"/><path d="M20 112V82M206 112V100" stroke="#4a2e16" stroke-width="6"/><rect x="22" y="96" width="184" height="18" rx="5" fill="#ece2c8"/>`;
+    s += `<rect x="24" y="78" width="40" height="22" rx="9" fill="#f6efdc" stroke="rgba(0,0,0,.12)"/>`;
+    s += `<ellipse cx="66" cy="99" rx="15" ry="10" fill="${shirt}" stroke="rgba(0,0,0,.25)" stroke-width=".8"/>`;
+    s += `<path d="M58 113V100Q60 89 72 88Q96 84 118 89Q132 92 146 88Q168 83 184 89Q194 85 200 92Q207 99 206 113Z" fill="${cl}" stroke="rgba(0,0,0,.35)"/>`;
+    s += `<path d="M58 113V100Q60 89 72 88Q80 87 88 86.7V113Z" fill="#f6efdc" stroke="rgba(0,0,0,.22)" stroke-width=".7"/><path d="M88 86.7V113" stroke="rgba(0,0,0,.25)" stroke-width="1.2"/><path d="M90 92.6Q120 89 146 91.6Q168 88 184 92.6Q194 90 200 95" stroke="${st}" stroke-width="1.8" fill="none"/>`;
+    s += '<path d="M120 100Q140 98 160 100" stroke="rgba(0,0,0,.14)" stroke-width="1.2" fill="none"/>';
+    // the arm that rests on top of the blanket: on the belly with the flux, bandaged with a wound
+    if (m === 'flux' && sick) s += `<path d="M70 94Q86 100 104 94Q112 91 116 92" stroke="rgba(60,40,20,.45)" stroke-width="8.2" stroke-linecap="round" fill="none"/><path d="M70 94Q86 100 104 94Q112 91 116 92" stroke="${shirt}" stroke-width="6.5" stroke-linecap="round" fill="none"/><circle cx="118" cy="92" r="3.4" fill="${face}" stroke="rgba(0,0,0,.4)" stroke-width=".6"/><path d="M110 84q4 -5 8 0q4 -5 8 0" stroke="#5a4a2a" stroke-width="1.4" fill="none"/>`;
+    else s += `<path d="M70 94Q84 102 100 98" stroke="rgba(60,40,20,.45)" stroke-width="8.2" stroke-linecap="round" fill="none"/><path d="M70 94Q84 102 100 98" stroke="${shirt}" stroke-width="6.5" stroke-linecap="round" fill="none"/><circle cx="103" cy="97.6" r="3.4" fill="${face}" stroke="rgba(0,0,0,.4)" stroke-width=".6"/>`;
+    if (m === 'wound' && sick) s += '<rect x="82" y="94" width="11" height="8" rx="2" fill="#f4efe2" stroke="#9a8a6a" stroke-width=".6" transform="rotate(14 87 98)"/><circle cx="87.6" cy="98" r="2.4" fill="#b3202c"/>';
+    if (m === 'gout' && sick) s += '<g class="sk-throb"><ellipse cx="211" cy="100" rx="9" ry="7" fill="#e0605a" stroke="#8a2a2a"/><path d="M218 96q4 -2 5 2" stroke="#8a2a2a" fill="none"/></g>';
+    if (m === 'quinsy' && sick) s += `<ellipse cx="${hx + 9}" cy="${hy + 9}" rx="7" ry="5" fill="#e0806a" stroke="#8a3a2a" stroke-width=".7"/>`;
+    if (m === 'plague' && sick) s += `<circle cx="${hx + 12}" cy="${hy + 10}" r="2.4" fill="#2a2420"/><circle cx="${hx + 17}" cy="${hy + 13}" r="2" fill="#2a2420"/>`;
+    // the head on the pillow
+    s += `<g class="${m === 'fever' && sick ? 'sk-shiver' : ''}"><circle cx="${hx}" cy="${hy}" r="12" fill="${face}" stroke="rgba(0,0,0,.5)" stroke-width=".9"/><path d="M${hx - 12} ${hy - 2}Q${hx - 12} ${hy - 16} ${hx} ${hy - 16}Q${hx + 12} ${hy - 16} ${hx + 12} ${hy - 2}Q${hx + 8} ${hy - 10} ${hx} ${hy - 10}Q${hx - 8} ${hy - 10} ${hx - 12} ${hy - 2}Z" fill="#5a3a22"/>`;
+    if (royal) s += `<path d="M${hx - 8} ${hy - 12}L${hx - 9} ${hy - 19}L${hx - 4} ${hy - 15}L${hx} ${hy - 21}L${hx + 4} ${hy - 15}L${hx + 9} ${hy - 19}L${hx + 8} ${hy - 12}Z" fill="#e2b23c" stroke="#7a5a10" stroke-width=".6"/>`;
+    s += cured ? `<path d="M${hx - 6} ${hy - 2}q2 -2 4 0M${hx + 2} ${hy - 2}q2 -2 4 0" stroke="#1a1208" stroke-width="1" fill="none"/><path d="M${hx - 5} ${hy + 5}Q${hx} ${hy + 9} ${hx + 5} ${hy + 5}" stroke="#5a2a1a" stroke-width="1.2" fill="none"/>`
+      : `<path d="M${hx - 6.4} ${hy - 1}H${hx - 2.4}M${hx + 2.4} ${hy - 1}H${hx + 6.4}" stroke="#1a1208" stroke-width="1.2"/><path d="M${hx - 4} ${hy + 7}Q${hx} ${hy + 4.4} ${hx + 4} ${hy + 7}" stroke="#5a2a1a" stroke-width="1.1" fill="none"/>`;
+    if (sick) {
+      if (m === 'fever') s += `<circle cx="${hx - 7}" cy="${hy + 3}" r="2.6" fill="#e0504a" opacity=".6"/><circle cx="${hx + 7}" cy="${hy + 3}" r="2.6" fill="#e0504a" opacity=".6"/><g class="sk-drip"><path d="M${hx + 11} ${hy - 9}q2 4 0 6q-2 -2 0 -6z" fill="#6fb8ee"/></g>`;
+      if (m === 'plague') s += `<circle cx="${hx + 5}" cy="${hy - 9}" r="1.4" fill="#4a3a3a"/>`;
+      if (m === 'sad') s += `<g class="sk-drip"><path d="M${hx - 5} ${hy + 1}q1.6 3 0 4.6q-1.6 -1.6 0 -4.6z" fill="#6fb8ee"/></g>`;
+      if (m === 'scurvy') s += `<ellipse cx="${hx}" cy="${hy + 6.6}" rx="3.6" ry="2" fill="#b3202c"/>`;
+    } else s += `<g class="sk-glow"><circle cx="${hx}" cy="${hy - 2}" r="18" fill="none" stroke="#f3d983" stroke-width="2" opacity=".7"/></g>`;
     return s + '</g>';
   }
   const sickRoom = () => `<rect width="360" height="190" fill="#d9c9a6"/><path d="M0 140H360" stroke="#7a5a3a" stroke-width="2"/><rect y="140" width="360" height="50" fill="#8a6a4a"/><path d="M290 20V80Q300 64 310 80V20Z" fill="#9cc0dc"/><path d="M286 84V16H314V84" fill="none" stroke="#4a2e16" stroke-width="4"/><path d="M300 16V84M286 50H314" stroke="#4a2e16" stroke-width="1.6"/>
