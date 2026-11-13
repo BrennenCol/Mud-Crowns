@@ -332,6 +332,21 @@ still be reached from a first job.
 - **The main menu** shows a row of sixteen gems for your relics, a NEW badge when you have
   won one you have not yet seen, and how many relics to the next reward.
 
+## Choices that come back (v1.18)
+
+- **Storylines removed.** The Storylines module (26 multi-chapter tales, about 4,000 lines)
+  is gone, with its Deeds list and death-screen summary. Old saves keep working: a storyline
+  card that was open is simply dropped, and the old storyline data is cleared.
+- **Two-part work events.** 26 everyday situations tied to the kind of work you do (the land,
+  the beasts, food and drink, the crafts, trade and the street, the household and the court,
+  the Church, war, the sea, the law, healing, letters, the arts, hard labour, and any job).
+  Each choice in part one decides which part two comes back one to three years later, or
+  ends it there. The part two opens with a reminder ("Two years ago: you lent Hugh Brook your
+  ox") and a second choice. People from these events can become friends, rivals or patrons.
+- **Pacing.** About one year in five brings one of these if your job allows it; a year with
+  a part two has no other random event; at most two are waiting at once; each happens once a
+  life. Over a 25-year career that is usually three to six, most with a part two.
+
 ## Your office, played (v1.17)
 
 High posts now come with mini-games, in Work, at the top of the job page ("Your office: the

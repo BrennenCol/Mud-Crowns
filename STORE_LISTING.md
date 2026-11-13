@@ -61,9 +61,15 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.17.0.txt`, ready to copy (it ends with a line about the updates since 1.13).
+Also in `store/whats_new_1.18.0.txt`, ready to copy (it includes 1.17 and ends with a line about the updates since 1.13).
 
 ```
+CHOICES THAT COME BACK
+Small choices at work are remembered. Lend your neighbour your ox, take a soldier's sword for his drinking debt, rush a rich customer's order, keep a purse you found on a dead knight, warn a kind steward of a plot. A year or three later the consequence turns up at your door, with a reminder of what you did, and another choice to make. There are 26 of these, across every kind of work, from the fields and the bakehouse to the Church, the army and the sea.
+
+SHORTER, SHARPER
+The long storylines that came back chapter by chapter are gone. Your own work and your own choices tell the story now.
+
 YOUR OFFICE, PLAYED
 High posts now come with real work you play yourself, once a year, without spending a deed. The better you play, the more silver, Renown and standing it brings:
 - Hear the petitions: three petitioners, two choices each, and four great powers to keep in balance
