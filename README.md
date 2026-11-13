@@ -297,6 +297,19 @@ still be reached from a first job.
   in the great hall. Outdoor scenes show you close up with a companion, and the people who
   walk across them are drawn in the new style.
 
+### Smooth Hall, steady relic card (v1.16.2)
+
+- The Hall no longer animates every niche at once: the cases, the header, the reliquary
+  and the podium are drawn once and stay still, the case shadows are plain gradients instead
+  of filters, and each wing is skipped by the browser while off screen. On a slowed-down test
+  browser the Hall went from about 35 to about 58 frames a second while scrolling. The
+  glints, floating and sparkles now play in the relic card, one relic at a time.
+- The relic card no longer pans or scrolls: its light rays sit in their own fixed layer, the
+  card shrinks to fit short screens, touches behind it do nothing, and text cannot be dragged
+  into a selection.
+- The Bishop's Mitre and the Keys of Heaven now say that under Historical rules only men may
+  rise past Abbot (women can in Relaxed rules).
+
 ### The Hall, gilded (v1.16.1)
 
 - **Rarity.** Every relic is Rare, Epic, Legendary or Mythic, shown on its plate, its apex

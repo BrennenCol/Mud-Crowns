@@ -808,6 +808,34 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 @keyframes rqFlash{0%{opacity:0}15%{opacity:1}100%{opacity:0}}
 @keyframes rqRise{0%{opacity:0;transform:translateY(60px) scale(.5)}60%{opacity:1}100%{opacity:1;transform:none}}
 @keyframes rqRaysIn{0%{opacity:0;transform:scale(.2)}100%{opacity:1;transform:none}}
+/* ---------- v1.16.2: a still Hall, smooth on phones; the reveal holds still ---------- */
+.hall{background:radial-gradient(120% 30% at 50% 0%,rgba(255,190,90,.18),transparent 62%),repeating-linear-gradient(0deg,rgba(0,0,0,.2) 0 1px,transparent 1px 36px),linear-gradient(180deg,#2a2018 0%,#16100b 60%,#0f0b08 100%)}
+.rl-btn{filter:none}
+.rl-btn::after{content:"";display:block;height:14px;margin:-7px 10% 0;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.65),transparent)}
+.rl-niche.got .rl-art{animation:none;filter:none}
+.rl-niche.got::before,.rl-niche.rar-mythic.got::before{animation:none}
+.rl-niche.got::after{content:none}
+.tw{display:none}
+.rl-cone,.hall-glow,.hall-flame,.hall-shaft,.hall-smoke,.rq-lit,.rq-key,.rq-q,.rq-rays,.rq-crown,.pod-crown,.gl-track li.next .gl-m,.hall-prog i,.crest-svg.jewel,.gilt-arms .arms{animation:none}
+.wing-win,.wing-win.lit,.pod-crown,.pod-laurel{filter:none}
+.wing{content-visibility:auto;contain-intrinsic-size:auto 760px}
+.relq.opening .rq-crown{animation:rqRise 2.4s .3s cubic-bezier(.2,.8,.3,1) both}
+.relq.opening .rq-rays{animation:rqRaysIn 2.4s ease-out both}
+.rv{overflow:hidden;overscroll-behavior:none;align-items:center;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.rv-bg{touch-action:none}
+.rv-in{max-height:100%;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.rv-in::-webkit-scrollbar{display:none}
+.rv-fx{position:fixed;inset:0;overflow:hidden;pointer-events:none;touch-action:none}
+.rv-fx>*{position:absolute;left:var(--cx,50%);top:var(--cy,40%)}
+.rv-fx .rv-rays{z-index:auto;width:760px;height:760px;margin:-380px 0 0 -380px;will-change:transform}
+.rv-relic{width:min(54vw,29vh,230px)}
+.rv .rl-niche.got .rl-art{animation:rlFloat 4.5s ease-in-out infinite;will-change:transform}
+.rv .rl-niche.rar-mythic.got::before{animation:mythHue 7s linear infinite}
+.rv .rl-niche.got::after{content:"";position:absolute;top:-20%;bottom:-20%;left:-10%;width:55%;z-index:4;background:linear-gradient(100deg,transparent,rgba(255,246,214,.5),transparent);animation:rlSheen2 6s ease-in-out infinite;pointer-events:none}
+@keyframes rlSheen2{0%,55%{transform:translateX(-140%) skewX(-16deg)}100%{transform:translateX(260%) skewX(-16deg)}}
+.rv .tw{display:block}
+@media (max-height:700px){.rv-lore{font-size:15px;line-height:1.35;margin-bottom:6px}.rv-n{font-size:clamp(26px,8vw,34px)}.rv-rar{margin-bottom:6px}.rv-extra{padding:8px 10px;font-size:14px}.rv-ok{margin-top:8px}}
+@media (prefers-reduced-motion:reduce){.rv .rl-niche.got .rl-art,.rv .rl-niche.got::after,.rv .tw{animation:none}}
 </style>
 </head>
 <body>
@@ -846,7 +874,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.16.1';
+const APP_VERSION = '1.16.2';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -29376,9 +29404,9 @@ const RELICS = [
   { k: 'baton', w: 'sword', n: 'The Captain’s Baton', from: COMMONS, d: 'Command armies as General or Lord High Constable.', ok: () => jobIn('general', 'constable'), lore: 'The staff of command. Ten thousand men moved when it moved, and every one of them knew where its holder had come from.' },
   { k: 'helm', w: 'sword', n: 'The Conqueror’s Helm', from: LOW2, d: 'Hold five counties at once.', ok: () => heldTs().length >= 5, lore: 'A great helm crowned in gold, battered by a dozen sieges. Five counties bent the knee to the one beneath it.' },
   { k: 'crozier', w: 'cross', n: 'The Abbot’s Crozier', from: LOW2, d: 'Become Abbot or Abbess, or rise higher in the Church.', ok: () => inTrack('church') && S.job.level >= 3, lore: 'The shepherd’s crook of an abbey. Its holder once herded real sheep, and found the new flock far harder to keep.' },
-  { k: 'mitre', w: 'cross', n: 'The Bishop’s Mitre', from: LOW2, d: 'Become a Bishop, or rise higher.', ok: () => inTrack('church') && S.job.level >= 4, lore: 'White silk and gold thread. Lords knelt to kiss the ring of a peasant’s child, and some of them even meant it.' },
+  { k: 'mitre', w: 'cross', n: 'The Bishop’s Mitre', from: LOW2, d: 'Become a Bishop, or rise higher. Under Historical rules, only men may be bishops.', ok: () => inTrack('church') && S.job.level >= 4, lore: 'White silk and gold thread. Lords knelt to kiss the ring of a peasant’s child, and some of them even meant it.' },
   { k: 'seal', w: 'cross', n: 'The Great Seal', from: COMMONS, d: 'Become Chancellor of the realm.', ok: () => inTrack('chancellor'), lore: 'Whatever this seal touches becomes the law of the land. It was pressed into the wax by a hand that once could not write its own name.' },
-  { k: 'heaven', w: 'cross', n: 'The Keys of Heaven', from: ['serf'], d: 'Be elected Pope.', ok: () => inTrack('church') && S.job.level >= 7, lore: 'The keys of Saint Peter, and the triple crown. A serf’s child sat on the throne of the Fisherman, which was, after all, how it began.' },
+  { k: 'heaven', w: 'cross', n: 'The Keys of Heaven', from: ['serf'], d: 'Be elected Pope. Under Historical rules, only men may rise past Abbot.', ok: () => inTrack('church') && S.job.level >= 7, lore: 'The keys of Saint Peter, and the triple crown. A serf’s child sat on the throne of the Fisherman, which was, after all, how it began.' },
   { k: 'coronet', w: 'crown', n: 'The Baron’s Coronet', from: LOW2, d: 'Be created a Baron or Baroness.', ok: () => isBaron(), lore: 'A plain gold circlet set with pearls, and a summons to sit among the lords of the realm.' },
   { k: 'ducal', w: 'crown', n: 'The Ducal Coronet', from: COMMONS, d: 'Become a Duke or Duchess.', ok: () => S.titles.some(t => /^(Duke|Duchess) of /.test(t)), lore: 'Strawberry leaves in gold. Only the king stands higher, and on a bad day for the king, not even he.' },
   { k: 'crown', w: 'crown', n: 'The Ploughman’s Crown', from: LOW2, d: 'Rule a kingdom.', ok: () => !!S.ruling, lore: 'They say it was forged from the iron of a plough and gilded afterwards. Kings who were born to their crowns have never liked this one.' },
@@ -29458,11 +29486,19 @@ function relicReveal(k, mode, extra) {
     el.className = `rv ${fresh ? 'new' : 'view'}${g ? '' : ' locked'}`;
     el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', x.n);
     el.style.cssText = `--rc:${R.c};--wc:${W.c};--wc2:${W.c2}`;
-    el.innerHTML = `<div class="rv-bg"></div><div class="rv-in"><p class="rv-kick">${fresh ? 'A new relic for the Hall' : esc(W.n)}</p><div class="rv-rar">✦ ${esc(R.n)} relic ✦</div><div class="rv-relic"><div class="rv-rays"></div>${fresh ? '<div class="rv-burst"></div><div class="rv-burst b2"></div>' : ''}<div class="rv-sparks" aria-hidden="true">${sparks}</div>${caseHTML(x, !!g, true)}</div><h2 class="rv-n">${esc(x.n)}</h2>${body}${extraH}<button class="btn rv-ok" type="button">${fresh ? (extra === 'prize' ? 'Go and see' : 'Place it in the Hall') : 'Close'}</button></div>`;
+    el.innerHTML = `<div class="rv-bg"></div><div class="rv-fx" aria-hidden="true"><div class="rv-rays"></div>${fresh ? '<div class="rv-burst"></div><div class="rv-burst b2"></div>' : ''}<div class="rv-sparks">${sparks}</div></div><div class="rv-in"><p class="rv-kick">${fresh ? 'A new relic for the Hall' : esc(W.n)}</p><div class="rv-rar">✦ ${esc(R.n)} relic ✦</div><div class="rv-relic">${caseHTML(x, !!g, true)}</div><h2 class="rv-n">${esc(x.n)}</h2>${body}${extraH}<button class="btn rv-ok" type="button">${fresh ? (extra === 'prize' ? 'Go and see' : 'Place it in the Hall') : 'Close'}</button></div>`;
     document.body.appendChild(el);
+    const inner = el.querySelector('.rv-in');
+    const aim = () => { const r = el.querySelector('.rv-relic').getBoundingClientRect(); el.style.setProperty('--cx', `${Math.round(r.left + r.width / 2)}px`); el.style.setProperty('--cy', `${Math.round(r.top + r.height / 2)}px`); };
+    // shrink the card to fit short screens, so it never has to scroll
+    const fit = () => { inner.style.zoom = ''; const cs = getComputedStyle(el), avail = el.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom), need = inner.scrollHeight; if (need > avail) inner.style.zoom = Math.max(.68, avail / need - .01).toFixed(3); inner.style.overflowY = inner.scrollHeight - inner.clientHeight <= 6 ? 'hidden' : ''; aim(); };
+    const refit = () => fit();
+    fit(); window.addEventListener('resize', refit); inner.addEventListener('scroll', aim, { passive: true });
+    // keep the card still: nothing behind it moves, and it only scrolls if it is taller than the screen
+    el.addEventListener('touchmove', e => { if (!inner.contains(e.target) || inner.scrollHeight <= inner.clientHeight + 6) e.preventDefault(); }, { passive: false });
     requestAnimationFrame(() => el.classList.add('on'));
     const close = () => {
-      document.removeEventListener('keydown', onKey); el.classList.remove('on'); el.classList.add('off'); setTimeout(() => el.remove(), 260);
+      document.removeEventListener('keydown', onKey); window.removeEventListener('resize', refit); el.classList.remove('on'); el.classList.add('off'); setTimeout(() => el.remove(), 260);
       if (!fresh) return;
       if (extra === 'prize') { Q.length = 0; modalOpen = false; hideModal(); if (S) save(); showHall(S && S.alive ? 'app' : 'start', 'relics'); const q = document.querySelector('#screen .relq'); if (q) { q.classList.add('opening'); const sc = $('screen'); sc.scrollTop = Math.max(0, q.offsetTop - 40); } try { if (window.auSfx) window.auSfx('fanfare'); } catch (e) { } return; }
       nextModal();

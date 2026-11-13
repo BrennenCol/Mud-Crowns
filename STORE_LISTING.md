@@ -61,7 +61,7 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.16.1.txt`, ready to copy (it ends with a line about the updates since 1.13).
+Also in `store/whats_new_1.16.2.txt`, ready to copy (it ends with a line about the updates since 1.13).
 
 ```
 THE HALL OF LEGENDS
@@ -75,6 +75,9 @@ Rewards on the way: at 1 relic the Hall's candles are lit, at 4 a bronze crest c
 
 LAND FOR SALE
 Rich at last, but no land? Land was almost never sold, so wait for a ruined knight, a widow or a king who needs money. A manor costs about twenty years of its rents, plus the king's licence and the lawyers, and makes you Lord or Lady of it. Lend silver against a manor and take it if the debt goes bad. When the crown is short of money for a war, buy a whole county.
+
+SMOOTH AND STEADY
+The Hall scrolls smoothly on every phone, and when you win a relic its card holds still and fits your screen.
 
 FORTUNE'S LADDER
 See where you stand, how far you have climbed and what the next rung is worth, in the Menu and in Find Work.
