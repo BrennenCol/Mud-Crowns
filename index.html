@@ -1295,7 +1295,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.20.1';
+const APP_VERSION = '1.21.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -2263,14 +2263,57 @@ function joust() {
   return 'You were unhorsed on the first pass and landed in a heap of mud and pride.';
 }
 function stars(n) { const s = Math.max(1, Math.min(5, Math.round(n / 20))); return '★'.repeat(s) + '☆'.repeat(5 - s); }
+/* Courting as it was. Men mostly married women younger than themselves: a few years among ordinary folk, often ten
+   or more among merchants and lords. A wife older than her husband was unusual, and most often a well-off widow.
+   A man was sought as a match for his means (land, a trade, a post, silver); a woman for her youth, her family and
+   her portion. Most married within their own rank. Nobody under eighteen courts or is courted in this game. */
+function suitorAge(kind) {
+  const me = S.age, rich = ['merchant', 'noble', 'royal'].includes(S.cls) || !!S.ruling;
+  let a;
+  if (S.sex === 'f') {
+    a = me + (rich ? R(2, 14) : R(0, 7));
+    if (kind === 'wealth' && P(.5)) a = me + R(10, 24);
+    else if (P(.07)) a = me - R(1, 3);
+  } else {
+    a = me - (rich ? R(2, 14) : R(0, 6));
+    if (me >= 36 && P(.6)) a = me - R(6, 18);
+    if (kind === 'wealth' && P(.3)) a = me + R(1, 8);
+    else if (P(.05)) a = me + R(1, 2);
+    if (a > 46 && kind !== 'wealth') a = R(36, 46);
+  }
+  if (a < 18) a = S.sex === 'm' ? R(18, Math.max(18, me)) : R(18, Math.max(18, Math.min(me + 2, 21)));
+  return Math.min(75, a);
+}
+// how sought-after you are as a match, by the reckoning of the time
+function mateValue() {
+  const C = CLASSES[S.cls] || CLASSES.peasant, purse = Math.min(1.6, .5 + S.coin / Math.max(10, C.inh[1] * 1.5));
+  let v;
+  if (S.sex === 'm') {
+    const born = { serf: .4, peasant: .45, craft: .6, merchant: .9, noble: 1.2, royal: 1.5 }[S.cls] || .45;
+    const work = S.ruling ? 1.6 : Math.max(born, S.job && TRACKS[S.job.track] ? .8 + Math.min(.6, (S.job.level || 0) * .1) : 0);
+    const age = S.age < 21 ? .6 : S.age <= 45 ? 1 : S.age <= 55 ? .8 : .55;
+    v = work * purse * age;
+  } else {
+    const age = S.age <= 24 ? 1.2 : S.age <= 29 ? 1 : S.age <= 34 ? .7 : S.age <= 39 ? .45 : .25;
+    const widow = S.kin.some(k => k.sp && !k.alive) && S.coin >= C.inh[1] ? 1.8 : 1;
+    v = Math.min(1.3, age * widow) * (.7 + purse * .4) * (.75 + S.stats.looks / 200) * (S.ruling ? 1.5 : 1);
+  }
+  return Math.max(.3, Math.min(2, v));
+}
+// what the other family makes of you: your rank, your prospects, and whether the ages sit the usual way round
+function courtFit(k) {
+  let f = (CLS_ORDER.indexOf(S.cls) - CLS_ORDER.indexOf(k.cls)) * .08 + (mateValue() - 1) * .15;
+  const wifeOlder = S.sex === 'f' ? S.age - k.age : k.age - S.age;
+  if (wifeOlder > 2) f -= Math.min(.25, (wifeOlder - 2) * .03);
+  return f;
+}
 function makeSuitor() {
   const sx = S.sex === 'm' ? 'f' : 'm';
   const i = CLS_ORDER.indexOf(S.cls); let ci = i; const r = Math.random();
   if (r < .18) ci = Math.max(0, i - 1); else if (r < .3) ci = Math.min(5, i + 1);
   if (S.cls !== 'royal' && ci === 5) ci = 4;
   const cls = CLS_ORDER[ci];
-  const lo = Math.max(16, S.age - 8), hi = Math.max(lo, Math.min(70, S.age + 10));
-  const p = person(sx, R(lo, hi), cls, { sp: 1 });
+  const p = person(sx, suitorAge('love'), cls, { sp: 1 });
   p.sur = cls === 'royal' ? pick(SUR.royal) : cls === 'noble' ? pick(SUR.noble) : pick(SUR.low);
   if (cls === 'noble' || cls === 'royal') p.job = '';
   p.looks = R(15, 95); p.trait = pick(TRAITS);
@@ -2287,7 +2330,7 @@ function marry(p) {
   }
 }
 function propose(p, cost, elope) {
-  const odds = .45 + (S.stats.looks - p.looks) / 220 + S.stats.renown / 400 + (CLS_ORDER.indexOf(S.cls) - CLS_ORDER.indexOf(p.cls)) * .08;
+  const odds = .45 + (S.stats.looks - p.looks) / (S.sex === 'f' ? 220 : 400) + S.stats.renown / 400 + courtFit(p);
   if (!P(Math.max(.12, Math.min(.92, odds)))) { st('happy', -6); return `${p.name} politely declined. Your heart aches.`; }
   if (cost) coin(-cost);
   marry(p);
@@ -2354,7 +2397,7 @@ const DEEDS = [
   { k: 'joust', g: 'Leisure', i: '🐎', n: 'Ride in a tourney', d: 'Glory, gold, or a lance to the face.', min: 16, can: () => hasAsset('horse') || hasAsset('warhorse') || inTrack('knight') || 'You need a horse (see Holdings)', run: () => joust() },
   { k: 'duel', g: 'Leisure', i: '🤺', n: 'Challenge a rival to a duel', d: 'Honour, or a hole in the gut.', min: 16, run: () => duel() },
   { k: 'hunt', g: 'Leisure', i: '🦌', n: 'Ride to the hunt', d: 'Hounds, horns, and the odd boar.', min: 14, can: () => hasAsset('horse') || hasAsset('warhorse') || 'You need a horse (see Realm, Holdings)', run: () => { if (P(.12)) { st('health', -R(8, 16)); return 'A boar charged your horse. You went one way, the horse another.'; } st('happy', R(3, 6)); st('health', 2); if (P(.4)) st('renown', 2); return pick(['Your hounds ran down a stag in the morning mist. A glorious day.', 'You flew your falcon at herons until sunset.', 'You chased a fox for six miles and lost it in a churchyard.']); } },
-  { k: 'match', g: 'Love and family', i: '💌', n: 'Seek a match', d: 'The matchmaker knows everyone.', min: 16, can: () => spouse() ? 'You are already wed' : S.vows ? 'You have taken holy vows' : true, run: () => ({ event: suitorEvent() }) },
+  { k: 'match', g: 'Love and family', i: '💌', n: 'Seek a match', d: 'The matchmaker knows everyone.', min: 18, can: () => spouse() ? 'You are already wed' : S.vows ? 'You have taken holy vows' : true, run: () => ({ event: suitorEvent() }) },
   { k: 'child', g: 'Love and family', i: '👶', n: 'Try for a child', d: 'Heirs, helpers, and sleepless nights.', min: 16, can: canChild, run: () => tryChild() },
   { k: 'poach', g: 'Mischief', i: '🦌', n: "Poach in the lord's forest", d: 'Venison, or the stocks.', min: 12, run: () => { if (P(.6)) { coin(R(3, 10)); st('health', 2); st('happy', 3); return 'You brought down a fat deer and sold the venison quietly.'; } return 'The forester caught you with a deer over your shoulder. ' + caught(1); } },
   { k: 'purse', g: 'Mischief', i: '👛', n: 'Cut purses at market', d: 'Quick fingers, quick coin.', min: 10, run: () => { if (P(.55)) { coin(R(2, 15)); st('happy', 2); return 'Snip, snip, and a fat purse slipped into your sleeve.'; } return 'A burly drover grabbed your wrist. ' + caught(1); } },
@@ -2590,7 +2633,7 @@ const EVENTS = [
       { t: 'Decline', fx: () => { st('happy', 2); return 'You told him you had other plans. You do not, in fact, have other plans.'; } },
     ] },
   { id: 'betroth', min: 14, max: 22, once: true, w: 8, icon: '💍', cond: () => (S.cls === 'noble' || S.cls === 'royal') && !spouse() && !S.vows && !S.ruling && S.kin.some(k => k.par && k.alive),
-    init: () => { const p = makeSuitor(); p.age = R(Math.max(14, S.age - 3), S.age + 12); p.cls = S.cls; p.sur = S.cls === 'royal' ? pick(SUR.royal) : pick(SUR.noble); p.job = ''; p.dowry = Math.round(R(CLASSES[S.cls].portion[0], CLASSES[S.cls].portion[1]) * .8); return { p }; },
+    init: () => { const p = makeSuitor(); p.cls = S.cls; p.sur = S.cls === 'royal' ? pick(SUR.royal) : pick(SUR.noble); p.job = ''; p.dowry = Math.round(R(CLASSES[S.cls].portion[0], CLASSES[S.cls].portion[1]) * .8); return { p }; },
     text: c => `Your family has arranged your marriage to ${fullName(c.p)}, aged ${c.p.age}, who brings a dowry of ${c.p.dowry} silver and a reputation for ${c.p.trait}.`,
     choices: [
       { t: 'Accept the match', fx: c => { marry(c.p); return `You were wed before the altar of ${S.village} chapel. The feast lasted three days.`; } },
@@ -3145,7 +3188,7 @@ function questEvent() {
       { t: 'Dig a pit and wait', fx: () => { if (P(.4 + S.stats.wits / 250)) { st('renown', 6); jobPerf(8); return 'Cunning beats tusks. The boar fell in and you were declared a genius.'; } st('happy', -3); return 'You caught a badger, a peddler, and nothing else.'; } },
     ] }),
     () => ({ id: 'qtower', icon: '🗼', init: () => ({ n: pick(NAMES[S.sex === 'm' ? 'f' : 'm']), s: S.sex === 'm' ? 'f' : 'm' }), text: c => `An heir named ${c.n} is held for ransom in a robber baron's tower. ${c.s === 'm' ? 'His' : 'Her'} family offers a rich reward.`, choices: [
-      { t: 'Scale the tower by night', fx: c => { if (P(.45 + S.stats.health / 300)) { const g = R(40, 120); coin(g); st('renown', 10); jobPerf(12); if (!spouse() && !S.vows && P(.4)) { const p = makeSuitor(); p.name = c.n; p.sex = c.s; p.cls = 'noble'; p.sur = pick(SUR.noble); p.job = ''; p.age = R(Math.max(16, S.age - 6), S.age + 6); p.dowry = R(60, 160); marry(p); return `You carried ${c.n} down the ivy and collected ${g} silver. ${c.n} insisted on marrying you. You did not object.`; } return `You carried ${c.n} down the ivy and collected ${g} silver.`; } st('health', -R(10, 20)); return 'The ivy gave way. You landed in the moat, and the robber baron raised the ransom.'; } },
+      { t: 'Scale the tower by night', fx: c => { if (P(.45 + S.stats.health / 300)) { const g = R(40, 120); coin(g); st('renown', 10); jobPerf(12); if (!spouse() && !S.vows && P(.4)) { const p = makeSuitor(); p.name = c.n; p.sex = c.s; p.cls = 'noble'; p.sur = pick(SUR.noble); p.job = ''; p.age = suitorAge('fame'); p.dowry = R(60, 160); marry(p); return `You carried ${c.n} down the ivy and collected ${g} silver. ${c.n} insisted on marrying you. You did not object.`; } return `You carried ${c.n} down the ivy and collected ${g} silver.`; } st('health', -R(10, 20)); return 'The ivy gave way. You landed in the moat, and the robber baron raised the ransom.'; } },
       { t: 'Negotiate with the baron', fx: () => { if (P(.4 + S.stats.wits / 250)) { coin(R(20, 50)); st('renown', 5); return 'You talked the baron down to a sensible ransom and pocketed a finder’s fee.'; } st('renown', -3); return 'The baron added you to the ransom list. You escaped, embarrassingly.'; } },
     ] }),
     () => ({ id: 'qwyrm', icon: '🐊', text: () => 'A "wyrm" haunts the river crossing: a monstrous scaly beast that eats sheep. It may be a crocodile escaped from a duke’s menagerie.', choices: [
@@ -4028,7 +4071,7 @@ EVENTS.push(
       { t: 'Ask for a knighthood instead', fx: () => { if (S.flags.knight) { st('renown', 3); return 'You are already a knight. The king laughed and gave you a gold cup instead.'; } S.flags.knight = 1; st('renown', 8); checkFeats(); return `You knelt, the king touched your shoulders with his sword, and you rose as ${ws('Sir', 'Dame')} ${S.first}.`; } },
       { t: 'Decline with thanks', fx: () => { st('piety', 3); st('renown', 2); return 'You said you were content as you are. The court was astonished.'; } },
     ] },
-  { id: 'royalSuitor', min: 16, max: 40, once: true, w: 4, icon: '👑', cond: () => !spouse() && !S.vows && !S.ruling && S.cls !== 'royal' && !S.jail && S.stats.renown >= 55 && S.stats.looks >= 60,
+  { id: 'royalSuitor', min: 18, max: 40, once: true, w: 4, icon: '👑', cond: () => !spouse() && !S.vows && !S.ruling && S.cls !== 'royal' && !S.jail && S.stats.renown >= 55 && S.stats.looks >= 60,
     text: () => S.sex === 'f' ? `${KT()} ${S.king} of ${S.realm}, a widower, saw you at the Michaelmas feast and cannot stop speaking of you. His chamberlain brings a ring.` : `The old king has died, and his daughter rules as Queen of ${S.realm}. She saw you at the tourney and has sent her chamberlain with a ring.`,
     choices: [
       { t: 'Accept and marry the monarch', fx: () => {
@@ -4266,7 +4309,7 @@ EVENTS.push(
   { id: 'secretAdmirer', min: 15, max: 40, w: 1.6, cool: 6, icon: '💌', cond: () => !spouse() && !S.vows,
     text: () => 'Someone has been leaving wildflowers and badly spelled love poems on your doorstep.',
     choices: [
-      { t: 'Hide and catch them in the act', fx: () => { const p = makeSuitor(); p.age = R(Math.max(16, S.age - 4), S.age + 6); if (P(.65)) { Q.unshift(() => showEvent({ id: 'admirerMet', icon: '💘', text: () => `It was ${fullName(p)}, blushing to the ears, known for ${p.trait}. Looks: ${stars(p.looks)}.`, choices: [{ t: 'Ask for their hand', fx: () => propose(p, 0, false) }, { t: 'Be friends instead', fx: () => { p.sp = 0; p.fr = 1; p.bond = R(60, 75); S.kin.push(p); return `You and ${p.name} laughed about it, and became fast friends.`; } }, { t: 'Send them away', fx: () => 'You handed back the last poem. It rhymed "love" with "glove" four times.' }] })); return 'At dawn, a figure crept up to your door with a fistful of daisies...'; } return 'You waited all night in the cold. The poems stopped. Perhaps you were seen.'; } },
+      { t: 'Hide and catch them in the act', fx: () => { const p = makeSuitor(); if (P(.65)) { Q.unshift(() => showEvent({ id: 'admirerMet', icon: '💘', text: () => `It was ${fullName(p)}, blushing to the ears, known for ${p.trait}. Looks: ${stars(p.looks)}.`, choices: [{ t: 'Ask for their hand', fx: () => propose(p, 0, false) }, { t: 'Be friends instead', fx: () => { p.sp = 0; p.fr = 1; p.bond = R(60, 75); S.kin.push(p); return `You and ${p.name} laughed about it, and became fast friends.`; } }, { t: 'Send them away', fx: () => 'You handed back the last poem. It rhymed "love" with "glove" four times.' }] })); return 'At dawn, a figure crept up to your door with a fistful of daisies...'; } return 'You waited all night in the cold. The poems stopped. Perhaps you were seen.'; } },
       { t: 'Write a poem back', fx: () => { st('wits', 1); st('happy', 4); return 'You left a poem under a stone. The next morning, it was gone, and there were twice as many flowers.'; } },
       { t: 'Feed the flowers to the goat', fx: () => 'The goat was delighted. The poems stopped.' },
     ] },
@@ -4854,7 +4897,7 @@ EVENTS.push(
       { t: 'Politely refuse: you learn your own way', fx: () => { st('happy', 1); return 'The old one shrugged. "Your loss."'; } },
     ] },
   { id: 'temptation', min: 20, max: 60, w: 1.5, cool: 8, icon: '💋', cond: () => !!spouse() && spouse().bond < 55 && lovers().length === 0 && !S.vows,
-    init: () => { const p = makeSuitor(); p.sp = 0; p.lv = 1; p.age = R(Math.max(18, S.age - 8), S.age + 6); return { p }; },
+    init: () => { const p = makeSuitor(); p.sp = 0; p.lv = 1; return { p }; },
     text: c => `${fullName(c.p)} keeps finding reasons to be near you. Your marriage has grown cold, and the way ${pr(c.p).he} looks at you is not.`,
     choices: [
       { t: 'Begin a secret affair', fx: c => { S.kin.push(c.p); st('happy', 10); st('piety', -5); return `You meet ${c.p.name} in secret (see Kin). Joy, danger, and a great deal of lying.`; } },
@@ -6198,11 +6241,11 @@ function showWhatsNew() {
   store.set(NEWKEY, APP_VERSION);
   modalOpen = true;
   const items = [
-    ['🎭', 'Every office, played', 'all the work you play in high office is now a real game in its own painted scene, with people who walk, react and celebrate.'],
-    ['⚖️', 'Catch the liar', 'at the assize, watch each witness: sweat, a red face, shifty eyes or crossed fingers give a liar away. Petitioners queue at your door and storm out if you keep them waiting.'],
-    ['🧮', 'Quick hands', 'pull clipped and lead coins off the Exchequer cloth, search a priest’s house before the bell, mix a remedy before your patient fades, and lay stones from a swinging crane.'],
-    ['🕊️', 'Timing is everything', 'speak to a cardinal at just the right moment and watch the smoke turn white. At a king’s feast, play the offer he is thinking of. Buy and sell as prices leap at the fair.'],
-    ['🕸️', 'The night streets', 'as spymaster, slip past the watchmen’s lanterns to your informants’ letters, then name the traitor.'],
+    ['💍', 'Courting as it was', 'men mostly married women younger than themselves; a wife older than her husband is now rare, and usually a well-off widow.'],
+    ['💰', 'What makes a good match', 'a man is sought for his land, trade, post and silver; a woman for her youth, family and dowry. Most marry within their own rank.'],
+    ['👪', 'Families arrange it', 'a family offers a man their daughter; a man asks a woman’s family for leave to court her. Nobody under eighteen courts.'],
+    ['🩺', 'The sickroom', 'patients lie properly in bed, face up, and look greenish with pocks when they are ill.'],
+    ['🎭', 'Every office, played', 'since 1.20, all the work of high office is a real game in its own painted scene.'],
   ];
   $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Open Work</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
@@ -6549,27 +6592,27 @@ function newSuitor() {
   let p;
   if (kind === 'alliance') {
     const realm = Object.keys(S.world.k).length ? pick(Object.keys(S.world.k)) : otherRealm();
-    p = person(sex, R(Math.max(16, S.age - 6), Math.max(17, S.age + 6)), 'royal', { su: 1, sur: pick(SUR.royal.filter(x => x !== S.last)) });
+    p = person(sex, suitorAge('alliance'), 'royal', { su: 1, sur: pick(SUR.royal.filter(x => x !== S.last)) });
     p.job = `${PP(sex)} of ${realm}`; p.from = realm; p.dowry = R(300, 700);
     // the real royal house of that kingdom, and its heir when the heir is of an age to marry
     const ru = typeof wRuler === 'function' ? wRuler(realm) : null;
     if (ru) {
       if (ru.house !== S.last) p.sur = ru.house;
       const h = ru.heir;
-      if (h && h.sex === sex && h.age >= 16 && Math.abs(h.age - S.age) <= 12 && !suitors().some(k => k.heirOf === realm)) { p.name = h.n; p.age = h.age; p.heirOf = realm; p.job = `${PP(sex)} of ${realm}, heir to ${wRulerName(realm)}`; p.dowry = R(500, 900); }
+      if (h && h.sex === sex && h.age >= 18 && (sex === 'm' ? h.age >= S.age - 3 && h.age <= S.age + 16 : h.age >= S.age - 16 && h.age <= S.age + 3) && !suitors().some(k => k.heirOf === realm)) { p.name = h.n; p.age = h.age; p.heirOf = realm; p.job = `${PP(sex)} of ${realm}, heir to ${wRulerName(realm)}`; p.dowry = R(500, 900); }
       else p.job = `${PP(sex)} of ${realm}, child of ${wRulerName(realm)}`;
     }
   } else if (kind === 'barons') {
-    p = person(sex, R(Math.max(16, S.age - 6), Math.max(17, S.age + 8)), 'noble', { su: 1, sur: pick(SUR.noble.filter(x => x !== S.last)) });
+    p = person(sex, suitorAge('barons'), 'noble', { su: 1, sur: pick(SUR.noble.filter(x => x !== S.last)) });
     const x = pick(S.world.t.filter(y => y.realm === S.realm && !y.you && !y.cap)) || pick(S.world.t);
     p.job = `Heir of ${x.n}`; p.county = x.id; p.dowry = R(80, 200);
   } else if (kind === 'wealth') {
-    p = person(sex, R(Math.max(16, S.age - 8), Math.max(17, S.age + 12)), poor ? (S.cls === 'serf' ? 'peasant' : S.cls) : 'merchant', { su: 1, sur: pick(SUR.low) });
-    p.job = poor ? (sex === 'm' ? pick(['A well-off widowed miller', 'The rich farmer’s son from the next village', 'A prosperous innkeeper']) : pick(['The rich farmer’s daughter from the next village', 'A well-off widow with a mill', 'The innkeeper’s only daughter']))
+    p = person(sex, suitorAge('wealth'), poor ? (S.cls === 'serf' ? 'peasant' : S.cls) : 'merchant', { su: 1, sur: pick(SUR.low) });
+    p.job = poor ? (sex === 'm' ? (p.age >= S.age + 10 ? pick(['A well-off widowed miller', 'A prosperous widowed innkeeper']) : pick(['The rich farmer’s son from the next village', 'A prosperous innkeeper'])) : (p.age > S.age ? 'A well-off widow with a mill' : pick(['The rich farmer’s daughter from the next village', 'The innkeeper’s only daughter'])))
       : `Heir to a ${pick(['wool', 'wine', 'spice', 'banking'])} fortune`;
     p.dowry = royalish ? R(800, 1500) : nobleish ? R(400, 900) : poor ? R(30, 120) : R(80, 300);
   } else if (kind === 'fame') {
-    p = person(sex, R(Math.max(16, S.age - 6), Math.max(17, S.age + 10)), royalish || nobleish ? 'noble' : S.cls, { su: 1, sur: royalish || nobleish ? pick(SUR.noble.filter(x => x !== S.last)) : pick(SUR.low) });
+    p = person(sex, suitorAge('fame'), royalish || nobleish ? 'noble' : S.cls, { su: 1, sur: royalish || nobleish ? pick(SUR.noble.filter(x => x !== S.last)) : pick(SUR.low) });
     p.job = poor ? (sex === 'm' ? pick(['The best archer in the shire', 'A famous fiddler', 'The champion wrestler of the fair']) : pick(['The finest singer in the shire', 'The famous beauty of the market town', 'The best spinner in three parishes']))
       : sex === 'm' ? pick(['Champion of the tourney', 'Famous troubadour', 'Hero of the last war']) : pick(['Famous beauty of the court', 'Celebrated poet', 'Lady of the tourney']);
     p.dowry = poor ? R(5, 40) : R(20, 120);
@@ -6584,7 +6627,7 @@ function newSuitor() {
 }
 function suitorArrives() {
   const p = newSuitor(), K = SUIT_KIND[p.kind];
-  return { id: 'suitorArrives', icon: portraitOf(p), text: () => `${S.ruling ? 'A suitor has come to court to seek your hand' : atSea() ? 'In port between voyages, someone has taken a shine to you' : S.flags.outlaw ? 'Someone in the greenwood has taken a shine to you' : 'Someone has come courting'}: ${p.name} ${p.sur}, ${p.age}, ${p.job ? p.job.charAt(0).toLowerCase() + p.job.slice(1) : 'of good family'}, known for ${p.trait}. Looks: ${stars(p.looks)}. They would bring ${K[1]}: ${K[2]}`,
+  return { id: 'suitorArrives', icon: portraitOf(p), text: () => `${S.ruling ? (S.sex === 'm' ? 'An embassy has come to offer you a bride' : 'A suitor has come to court to seek your hand') : atSea() ? 'In port between voyages, someone has taken a shine to you' : S.flags.outlaw ? 'Someone in the greenwood has taken a shine to you' : S.sex === 'm' ? 'A family has come to offer you a match' : 'A man has asked your family for leave to court you'}: ${p.name} ${p.sur}, ${p.age}, ${p.job ? p.job.charAt(0).toLowerCase() + p.job.slice(1) : 'of good family'}, known for ${p.trait}. Looks: ${stars(p.looks)}. They would bring ${K[1]}: ${K[2]}`,
     choices: [
       { t: 'Welcome their courtship', fx: () => { S.kin.push(p); return `${p.name} bowed and kissed your hand. They will stay a while. Court them from Kin (Suitors): letters, gifts, feasts, and in the end, a proposal.`; } },
       { t: 'Ask for a richer dowry first', ok: () => S.ruling || S.cls === 'royal' || S.cls === 'noble', why: 'Only the great can haggle', fx: () => { if (P(.5)) { p.dowry = Math.round(p.dowry * 1.5); p.bond -= 8; S.kin.push(p); return `${p.name}’s family grumbled, and raised the dowry to ${p.dowry} silver.`; } return `${p.name}’s family took offence and went home.`; } },
@@ -6592,7 +6635,7 @@ function suitorArrives() {
     ] };
 }
 const giftCost = () => S.ruling || S.cls === 'royal' ? 40 : S.cls === 'noble' ? 20 : S.cls === 'merchant' ? 10 : 3;
-function proposeOdds(k) { return Math.max(.05, Math.min(.95, .05 + k.bond / 100 + (S.stats.looks - (k.looks || 50)) / 400 + S.stats.renown / 500 + (S.ruling ? .1 : 0))); }
+function proposeOdds(k) { return Math.max(.05, Math.min(.95, .05 + k.bond / 100 + (S.stats.looks - (k.looks || 50)) / 400 + S.stats.renown / 500 + (S.ruling ? .1 : 0) + courtFit(k))); }
 function suitorActsHTML(k, ok) {
   let h = `<p class="hint">${esc(SUIT_KIND[k.kind] ? `Marrying ${k.name} would bring ${SUIT_KIND[k.kind][1]}: ${SUIT_KIND[k.kind][2]}` : '')}${k.dowry ? ` Dowry: ${k.dowry} silver.` : ''} Affection grows with courting; at about 70 they will very likely say yes. Suitors do not wait forever.</p>`;
   const used = k.lastYear === S.year ? `You have already courted ${k.name} this year` : true;
@@ -6601,7 +6644,7 @@ function suitorActsHTML(k, ok) {
   h += btnItem('woo', `${k.id}:gift`, '🎁', `Send a gift (${giftCost()} silver)`, 'Rings, gloves, a hawk, a book of hours.', can !== true ? can : S.coin < giftCost() ? `Costs ${giftCost()} silver` : true);
   h += btnItem('woo', `${k.id}:walk`, '🌹', 'Walk together', 'In the garden, at the fair, along the river. Looks help.', can);
   if (S.ruling || S.cls === 'royal' || S.cls === 'noble') h += btnItem('woo', `${k.id}:feast`, '🏇', 'Hold a feast or tourney in their honour (60 silver)', 'Grand gestures win grand hearts. Renown too.', can !== true ? can : S.coin < 60 ? 'Costs 60 silver' : true);
-  h += btnItem('woo', `${k.id}:propose`, '💍', 'Ask for their hand', `About ${Math.round(proposeOdds(k) * 100)}% chance today.`, ok !== true ? ok : spouse() ? 'You are already married' : S.vows ? 'You are under holy vows' : S.age < 16 ? 'From age 16' : true);
+  h += btnItem('woo', `${k.id}:propose`, '💍', S.sex === 'f' ? 'Let him know you would say yes' : 'Ask for her hand', `About ${Math.round(proposeOdds(k) * 100)}% chance today.`, ok !== true ? ok : spouse() ? 'You are already married' : S.vows ? 'You are under holy vows' : S.age < 16 ? 'From age 16' : true);
   h += btnItem('woo', `${k.id}:away`, '🚪', 'Send them away', 'End the courtship.', ok);
   return h;
 }
@@ -6654,12 +6697,12 @@ const SPOUSE_PERK = {
 function yearBonds() {
   if (!S.alive) return;
   // suitors
-  const canWed = !spouse() && !S.vows && S.age >= 16 && S.age <= 45 && !S.jail && !disguised();
+  const canWed = !spouse() && !S.vows && S.age >= 18 && S.age <= (S.sex === 'm' ? 60 : 50) && !S.jail && !disguised();
   for (const k of suitors()) { if (!canWed || S.year - k.since > 4 || k.bond < 20) { S.kin = S.kin.filter(x => x !== k); if (canWed) say(`Your suitor ${k.name} tired of waiting and married someone else.`, 'note'); else if (disguised()) say(`Your suitor ${k.name} could not find you anywhere, and in the end married someone else.`, 'note'); } }
   const ch = (S.ruling || S.cls === 'royal' ? .65 : S.cls === 'noble' ? .4 : S.cls === 'merchant' ? .28 : .18) * (atSea() ? .35 : 1) * (S.flags.outlaw && !S.ruling ? .5 : 1);
   // fewer new suitors while others are still waiting for an answer
   const n = suitors().length;
-  if (canWed && n < 3 && P((ch + S.stats.looks / 500 + S.stats.renown / 600) * [1, .45, .2][n])) Q.push(() => showEvent(suitorArrives()));
+  if (canWed && n < 3 && P((ch + S.stats.looks / (S.sex === 'f' ? 500 : 1200) + S.stats.renown / 600) * mateValue() * [1, .45, .2][n])) Q.push(() => showEvent(suitorArrives()));
   // spouse
   const sp = spouse();
   if (sp) {
@@ -7222,6 +7265,7 @@ function lifeW(e) {
   if (atSea()) { if (t.home && !t.sea) m *= .12; if (t.romance && !t.sea) m *= .15; if (t.sea) m *= 1.6; }
   if (S.vows && t.romance && !t.vowsOK) m = 0;
   if (disguised() && t.romance && !t.disg) m = 0;
+  if (t.romance && S.age < 18) m = 0;
   if ((S.flags.outlaw || S.flags.wolfshead) && !S.ruling && t.home) m *= .4;
   return m;
 }
@@ -9378,8 +9422,8 @@ const WP_RANK_N = ['the lowest of the low', 'a common hand', 'a skilled hand', '
         { t: 'Hide behind the woodpile', fx: c => ea_sweetEnd(c, 'hide') },
       ] },
 
-    { id: 'ea_matchmaker', min: 17, max: 40, w: 2, cool: 5, icon: '🧕', cond: () => !spouse() && !S.vows && !S.ruling && S.cls !== 'royal',
-      init: () => { const a = makeSuitor(); a.age = Math.min(70, S.age + R(12, 25)); a.looks = R(10, 45); a.dowry = (a.dowry || 0) + R(15, 40); const b = makeSuitor(); b.age = R(Math.max(16, S.age - 3), S.age + 3); b.looks = R(65, 95); b.dowry = 0; return { a, b, mm: pick(NAMES.f) }; },
+    { id: 'ea_matchmaker', min: 18, max: 40, w: 2, cool: 5, icon: '🧕', cond: () => !spouse() && !S.vows && !S.ruling && S.cls !== 'royal',
+      init: () => { const a = makeSuitor(); a.age = S.sex === 'f' ? Math.min(70, S.age + R(12, 25)) : Math.min(48, Math.max(S.age + 1, S.age + R(1, 6))); a.looks = R(10, 45); a.dowry = (a.dowry || 0) + R(15, 40); const b = makeSuitor(); b.looks = R(65, 95); b.dowry = 0; return { a, b, mm: pick(NAMES.f) }; },
       text: c => `Mother ${c.mm}, the matchmaker, has two "very suitable" prospects for you. ${fullName(c.a)}, aged ${c.a.age}, ${c.a.sex === 'm' ? 'a widower' : 'a widow'} with forty sheep, a bad knee and ${c.a.dowry} silver. Or ${fullName(c.b)}, aged ${c.b.age}, who has lovely teeth and nothing else whatsoever.`,
       choices: [
         { t: c => `${c.a.name}, and the sheep`, fx: c => { const f = ea_pay(1); return `${f ? `Mother ${c.mm} took her penny. ` : ''}${propose(c.a, 0, false)}`; } },
@@ -9387,7 +9431,7 @@ const WP_RANK_N = ['the lowest of the low', 'a common hand', 'a skilled hand', '
         { t: '"Neither, thank you"', fx: c => { st('happy', 1); return `Mother ${c.mm} sniffed and said you would die alone and be eaten by your own cats. You do not even have cats.`; } },
       ] },
 
-    { id: 'ea_loveRival', min: 16, max: 35, w: 2, cool: 6, icon: '🥀', cond: () => !spouse() && !S.vows && !S.ruling,
+    { id: 'ea_loveRival', min: 18, max: 35, w: 2, cool: 6, icon: '🥀', cond: () => !spouse() && !S.vows && !S.ruling,
       init: () => { const sx = ea_opp(); const r = ea_peer(S.sex, { rv: 1, bond: R(10, 20) }, Math.max(16, S.age + R(-2, 3))); return { sx, n: pick(NAMES[sx]), sur: ea_high() ? pick(SUR.noble) : pick(SUR.low), r, gift: pick(['eels', 'posies', 'honey cakes', 'very bad poems']) }; },
       text: c => `You are not the only one courting ${c.n} ${c.sur}. ${c.r.name} ${c.r.sur} has been leaving ${c.gift} on ${ea_p(c.sx).his} doorstep too, and has told the whole alehouse that you have the manners of a goat.`,
       choices: [
@@ -9425,7 +9469,7 @@ const WP_RANK_N = ['the lowest of the low', 'a common hand', 'a skilled hand', '
       ] },
 
     { id: 'ea_dowry', min: 15, max: 28, once: true, w: 2, icon: '🐄', cond: () => !spouse() && !S.vows && ea_common() && ea_pars().length > 0,
-      init: () => { const p = makeSuitor(); p.age = R(Math.max(16, S.age - 2), S.age + 6); p.cls = S.cls; p.sur = pick(SUR.low); p.dowry = 0; return { p, pa: pick(ea_pars()), ask: R(5, 15) }; },
+      init: () => { const p = makeSuitor(); p.cls = S.cls; p.sur = pick(SUR.low); p.dowry = 0; return { p, pa: pick(ea_pars()), ask: R(5, 15) }; },
       text: c => S.sex === 'f'
         ? `Your ${ea_rel(c.pa)} is haggling with the ${c.p.sur} family over your match with their son ${c.p.name}. They want ${c.ask} silver, two pots and the brindled cow. Your family will part with the pots.`
         : `Your ${ea_rel(c.pa)} is haggling with the ${c.p.sur} family over your match with their daughter ${c.p.name}. They offer ${c.ask} silver and two pots, but your ${ea_rel(c.pa)} is holding out for the brindled cow.`,
@@ -9443,7 +9487,7 @@ const WP_RANK_N = ['the lowest of the low', 'a common hand', 'a skilled hand', '
       ] },
 
     { id: 'ea_widowed', min: 24, max: 75, w: 2, cool: 8, icon: '🐟', cond: () => !spouse() && !S.vows && !S.ruling && S.kin.some(k => k.sp && !k.alive),
-      init: () => { const d = S.kin.filter(k => k.sp && !k.alive).pop(); const p = makeSuitor(); p.age = R(Math.max(20, S.age - 6), Math.max(21, Math.min(80, S.age + 6))); return { d, p, gift: pick(['a brace of eels', 'a pair of pigeons', 'a jar of honey', 'a good cheese']) }; },
+      init: () => { const d = S.kin.filter(k => k.sp && !k.alive).pop(); const p = makeSuitor(); return { d, p, gift: pick(['a brace of eels', 'a pair of pigeons', 'a jar of honey', 'a good cheese']) }; },
       text: c => `${fullName(c.p)}, ${c.p.sex === 'm' ? 'a widower' : 'a widow'} too, has been bringing you ${c.gift} every Friday and lingering by the gate, talking about the weather in a way that is clearly not about the weather.`,
       choices: [
         { t: c => `Invite ${pr(c.p).him} in`, fx: c => { const pre = `You sat by the fire and talked of ${c.d.name}, and of ${c.p.name}’s own lost love, and found that it did not hurt to speak of them together.`; if (!spouse() && P(.55 + S.stats.looks / 400)) { marry(c.p); S.flags.ea_feast = S.flags.ea_wed; return `${pre} By Lammas you were wed, quietly, with ${c.d.name} remembered in the prayers.`; } c.p.sp = 0; c.p.fr = 1; c.p.bond = R(62, 75); S.kin.push(c.p); return `${pre} Neither of you was ready for more, in the end. But you are fast friends now (see Kin).`; } },
@@ -11076,7 +11120,7 @@ const DX_DEEDS = [
     } },
 
   // Love and family
-  { k: 'dx_court', g: 'Love and family', i: '💐', n: 'Court someone special', d: 'Flowers, a ribbon, and your best smile. If you are wed, woo your own spouse all over again.', min: 14,
+  { k: 'dx_court', g: 'Love and family', i: '💐', n: 'Court someone special', d: 'Flowers, a ribbon, and your best smile. If you are wed, woo your own spouse all over again.', min: 18,
     can: () => !S.vows || 'Your vows forbid courting',
     run: () => {
       const sp = spouse();
@@ -19430,7 +19474,7 @@ PETITIONS.push(
         if (P(.12)) { heat(10); return 'The wise woman was arrested the following week, and the bishop’s men have a list of her customers. Your name is on it, spelled wrong.'; }
         if (P(.18)) { st('health', -R(4, 10)); return 'You drank it yourself by mistake, as one does. Three days on the privy, and you are still not in love with anyone.'; }
         if (su.length && P(.55)) { const k = pick(su); bond(k, 15); return `You slipped it into ${k.name}’s ale at the fair. Whether it was the potion or your new hat, ${pr(k).he} has not looked at anyone else since.`; }
-        if (P(.35)) { const p = adult(other(), Math.max(18, S.age - 8), S.age + 8, S.cls === 'royal' ? 'noble' : S.cls === 'serf' ? 'peasant' : S.cls, ''); p.su = 1; p.job = pick(CLASSES[p.cls].par[p.sex]) || ''; S.kin.push(p); return `You poured it into the wrong cup entirely. ${p.name}, who drank it, has followed you round the market ever since with cow’s eyes. (See Kin, Suitors.)`; }
+        if (P(.35)) { const a0 = suitorAge('love'), p = adult(other(), a0, a0, S.cls === 'royal' ? 'noble' : S.cls === 'serf' ? 'peasant' : S.cls, ''); p.su = 1; p.job = pick(CLASSES[p.cls].par[p.sex]) || ''; S.kin.push(p); return `You poured it into the wrong cup entirely. ${p.name}, who drank it, has followed you round the market ever since with cow’s eyes. (See Kin, Suitors.)`; }
         return 'It tasted of mouse and did nothing at all. Love remains a mystery, and so does the recipe.'; } },
     { k: 'ps_courtly', g: 'Passions and scandals', i: '🎼',
       get n() { return S.sex === 'm' ? 'Pay court to a married lady, in the courtly fashion' : 'Take a knight as your devoted admirer'; },
@@ -27164,7 +27208,8 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
   const mixHex = (a, b, t) => { const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); const A = p(a), B = p(b); return '#' + A.map((x, i) => Math.round(x + (B[i] - x) * t).toString(16).padStart(2, '0')).join(''); };
   // the patient in bed: their face shows how they are, and the sickness shows on them
   function patientSVG(d, health, cured, royal) {
-    const k = SK[d.n] || SK['a tertian fever'], t = cured ? 1 : Math.max(0, Math.min(1, health / 100)) * .45, face = mixHex(k.tint, '#f1c8a8', t), m = k.mark, sick = !cured;
+    const k = SK[d.n] || SK['a tertian fever'], t = cured ? 1 : Math.max(0, Math.min(1, health / 100)) * .45, face = mixHex(k.mark === 'sad' ? '#b7c2b6' : '#b3c184', '#f1c8a8', t), m = k.mark, sick = !cured;
+    const pock = (x, y, r, c) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${c}" opacity=".85"/>`;
     const hx = 38, hy = 87, cl = royal ? '#5a2a6a' : '#8a3a2a', st = royal ? '#e2b23c' : '#c9a060', shirt = '#efe6d4', ln = 'rgba(0,0,0,.45)';
     // the bed and the pillow
     let s = `<rect x="18" y="112" width="190" height="10" fill="#5a3a1e"/><path d="M20 112V82M206 112V100" stroke="#4a2e16" stroke-width="6"/><rect x="22" y="96" width="184" height="18" rx="5" fill="#ece2c8"/>`;
@@ -27180,9 +27225,9 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     const arm = d2 => `<path d="${d2}" stroke="rgba(60,40,20,.45)" stroke-width="8.2" stroke-linecap="round" fill="none"/><path d="${d2}" stroke="${shirt}" stroke-width="6.5" stroke-linecap="round" fill="none"/>`;
     if (m === 'flux' && sick) s += `${arm('M70 94Q86 100 104 94Q112 91 116 92')}<circle cx="118" cy="92" r="3.4" fill="${face}" stroke="rgba(0,0,0,.4)" stroke-width=".6"/><path d="M110 84q4 -5 8 0q4 -5 8 0" stroke="#5a4a2a" stroke-width="1.4" fill="none"/>`;
     else s += `${arm('M70 94Q84 102 100 98')}<circle cx="103" cy="97.6" r="3.4" fill="${face}" stroke="rgba(0,0,0,.4)" stroke-width=".6"/>`;
-    if (m === 'wound' && sick) s += '<rect x="82" y="94" width="11" height="8" rx="2" fill="#f4efe2" stroke="#9a8a6a" stroke-width=".6" transform="rotate(14 87 98)"/><circle cx="87.6" cy="98" r="2.4" fill="#b3202c"/>';
-    if (m === 'gout' && sick) s += '<g class="sk-throb"><ellipse cx="211" cy="100" rx="9" ry="7" fill="#e0605a" stroke="#8a2a2a"/><path d="M218 96q4 -2 5 2" stroke="#8a2a2a" fill="none"/></g>';
-    if (m === 'quinsy' && sick) s += `<path d="M${hx + 8} ${hy - 2.4}Q${hx + 14} ${hy - 6.4} ${hx + 19} ${hy - .6}Q${hx + 14} ${hy + 1} ${hx + 8} ${hy + 1}Z" fill="${mixHex(face, '#d8604a', .45)}" stroke="#9a4a3a" stroke-width=".7"/>`;
+    if (m === 'wound' && sick) s += '<rect x="82" y="94" width="11" height="8" rx="2" fill="#f4efe2" stroke="#9a8a6a" stroke-width=".6" transform="rotate(14 87 98)"/><circle cx="87.6" cy="98" r="1.8" fill="#8a4a3a" opacity=".8"/>';
+    if (m === 'gout' && sick) s += `<g class="sk-throb"><path d="M203 106Q202 94 208 89Q214 86 217 91Q219 95 218 100Q216 106 210 107Z" fill="${face}" stroke="${ln}" stroke-width=".8"/><path d="M204 96.5H217.4M203.6 100.5H218M204.4 104.4H216" stroke="#f4efe2" stroke-width="2.4"/></g>`;
+    if (m === 'quinsy' && sick) s += `<path d="M${hx + 8} ${hy - 4.2}Q${hx + 12} ${hy - 4.8} ${hx + 15.6} ${hy - 2.2}L${hx + 15.6} ${hy + 9.6}Q${hx + 11.6} ${hy + 9} ${hx + 6.6} ${hy + 8}Z" fill="#f4efe2" stroke="#9a8a6a" stroke-width=".7"/><path d="M${hx + 11.6} ${hy - 3.4}V${hy + 8.8}" stroke="#d6c9a6" stroke-width="1"/>`;
     if (m === 'plague' && sick) s += `<circle cx="${hx + 12}" cy="${hy + 5}" r="2.2" fill="#2a2420"/><circle cx="${hx + 17}" cy="${hy + 7}" r="1.8" fill="#2a2420"/>`;
     // the head, lying on its back: the crown toward the headboard, the face turned up to the ceiling
     s += `<g class="${m === 'fever' && sick ? 'sk-shiver' : ''}">`;
@@ -27193,10 +27238,11 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     s += `<path d="M${hx - 5.4} ${hy + .6}q2.8 -.8 2.8 2.2q0 2.6 -2.8 2.3" fill="${face}" stroke="${ln}" stroke-width=".7"/>`;
     if (royal) s += `<g transform="translate(${hx - 9} ${hy - 1}) rotate(-90)"><path d="M-7 0L-8 -7L-3.6 -3.4L0 -9L3.6 -3.4L8 -7L7 0Z" fill="#e2b23c" stroke="#7a5a10" stroke-width=".6"/></g>`;
     s += cured ? `<circle cx="${hx - .6}" cy="${hy - 6.4}" r="1.1" fill="#1a1208"/><path d="M${hx - 3.4} ${hy - 9}q2.4 -1 4.6 .2" stroke="#3a2412" stroke-width=".8" fill="none"/><path d="M${hx + 5.6} ${hy - 6.8}q1.8 1.8 3.4 -.4" stroke="#5a2a1a" stroke-width="1" fill="none"/>`
-      : `<path d="M${hx - 3} ${hy - 6.6}q2.2 1.6 4.4 0" stroke="#1a1208" stroke-width="1" fill="none"/><path d="M${hx - 3.4} ${hy - 9.2}q2.4 -.6 4.6 .4" stroke="#3a2412" stroke-width=".8" fill="none"/>${m === 'scurvy' ? `<ellipse cx="${hx + 7.2}" cy="${hy - 7.4}" rx="1.9" ry="1.3" fill="#b3202c"/>` : `<path d="M${hx + 5.8} ${hy - 7.2}l3 1" stroke="#5a2a1a" stroke-width="1" fill="none"/>`}`;
+      : `<path d="M${hx - 3} ${hy - 6.6}q2.2 1.6 4.4 0" stroke="#1a1208" stroke-width="1" fill="none"/><path d="M${hx - 3.4} ${hy - 9.2}q2.4 -.6 4.6 .4" stroke="#3a2412" stroke-width=".8" fill="none"/>${m === 'scurvy' ? `<ellipse cx="${hx + 7.2}" cy="${hy - 7.6}" rx="1.4" ry="1" fill="#3a1a10"/>` : `<path d="M${hx + 5.8} ${hy - 7.2}l3 1" stroke="#5a2a1a" stroke-width="1" fill="none"/>`}`;
     if (sick) {
-      if (m === 'fever') s += `<circle cx="${hx + 3}" cy="${hy - 3.6}" r="2.6" fill="#e0504a" opacity=".55"/><g class="sk-drip"><path d="M${hx - 6} ${hy - 15}q2 4 0 6q-2 -2 0 -6z" fill="#6fb8ee"/></g>`;
-      if (m === 'plague') s += `<circle cx="${hx + 3}" cy="${hy - 1.6}" r="1.5" fill="#4a3a3a"/>`;
+      if (m === 'fever') s += `<g class="sk-drip"><path d="M${hx - 6} ${hy - 15}q2 4 0 6q-2 -2 0 -6z" fill="#6fb8ee"/><path d="M${hx + 4} ${hy - 4}q1.6 3 0 4.6q-1.6 -1.6 0 -4.6z" fill="#6fb8ee"/></g>`;
+      if (m === 'plague') s += pock(hx + 3, hy - 1.6, 1.5, '#3a2e2a') + pock(hx - 2, hy + 2.6, 1.2, '#3a2e2a') + pock(hx + 6.6, hy - 3.6, 1, '#3a2e2a') + pock(hx - 3.6, hy - 3.4, .9, '#4a3a34');
+      if (m === 'scurvy') s += pock(hx + 2.6, hy - 2.4, 1.1, '#6a4a5a') + pock(hx - 2.4, hy + 2, 1, '#6a4a5a') + pock(hx + 6, hy - .6, .9, '#6a4a5a') + pock(hx + 13, hy + 5, 1.2, '#6a4a5a');
       if (m === 'sad') s += `<g class="sk-drip"><path d="M${hx - 1.4} ${hy - 4.6}q1.6 3 0 4.6q-1.6 -1.6 0 -4.6z" fill="#6fb8ee"/></g>`;
     } else s += `<g class="sk-glow"><circle cx="${hx}" cy="${hy - 3}" r="18" fill="none" stroke="#f3d983" stroke-width="2" opacity=".7"/></g>`;
     return s + '</g>';

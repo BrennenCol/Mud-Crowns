@@ -61,31 +61,21 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.20.1.txt`, ready to copy (it covers 1.20 and its fix, and ends with a short list of what came in 1.19).
+Also in `store/whats_new_1.21.0.txt`, ready to copy (it covers 1.21 and ends with a short note on 1.20).
 
 ```
-FIXED IN 1.20.1
-In the sickroom, your patient now lies properly in bed: face turned up to the ceiling, a neck and shoulders, a turned-down sheet, and an arm resting on the blanket.
+COURTING AS IT WAS
+- Ages follow history: men mostly married women younger than themselves, a few years among ordinary folk and often ten or more among merchants and lords. A woman older than her husband is now rare, and usually a well-off widow.
+- What made a good match: a man was sought for his means (land, a trade, a post, silver), so a young man with no work and no money gets few offers until he makes something of himself. A woman was sought for her youth, her family and her dowry, so offers slow down as she gets older, unless she is a widow with property.
+- Most people married within their own rank. Families weigh your station against theirs before they say yes.
+- Matches come the way they did: a family offers a man their daughter, and a man asks a woman's family for leave to court her.
+- Nobody under eighteen courts or is courted.
 
-EVERY OFFICE, PLAYED
-All the work you play in high office has been rebuilt as real games, each in its own painted scene with people who walk, react and celebrate:
-- Hear the petitions: petitioners queue at the door of your great hall. Answer each before they lose patience, and watch the four powers' banners rise and fall on the wall.
-- The Exchequer: the sheriffs' silver rolls across the chequered cloth. Pull out the clipped and lead coins before they reach the king's chest.
-- The assize: watch each witness as they speak. Liars give themselves away with sweat, a red face, shifty eyes or crossed fingers. Catch them, then bang the gavel.
-- The visitation: search each priest's house for wine, dice or a hidden purse before the bell rings, then punish or protect him.
-- The conclave: whisper to the cardinals and speak at just the right moment. Watch the ballots fall into the chalice and the smoke rise, black or white.
-- The sickroom: read the patient, open your book at the right page, take the jars down in order and grind the remedy before they fade.
-- The great work: lay each course of stone from a swinging crane. Anything hanging over the edge is cut away, and a careless year can bring the wall down.
-- The envoy's game: at a feast with a foreign king, watch for what is on his mind and play that offer while he is thinking it.
-- Corner the market: thirty seconds at the fair with your own silver. Prices leap on every rumour: buy low, sell high.
-- The spymaster's web: slip your agent through the night streets to your informants' letters, past the watchmen's lanterns, then name the traitor.
+THE SICKROOM
+Patients now lie in bed properly: face up, with a neck, shoulders and a body under the blanket. Sickness shows as a greenish face, with pocks for the pestilence and scurvy, a bandaged foot for gout and a wrapped throat for quinsy.
 
-The field of battle and the Curia's letters, new in the last update, complete the set. Every game still pays more silver, Renown and standing the better you play, and mistakes still cost you.
-
-ALSO NEW IN 1.19
-- Your children live their own lives: they learn a trade, climb in it, marry and have children. Play on as one of them and you take over that life.
-- The road to Rome: church posts show every rank up to Pope. A real Pope grows old, and when he dies a cardinal can win the conclave.
-- Easier-to-read headings, and choices at work that come back a year or three later.
+EVERY OFFICE, PLAYED (1.20)
+All the work you play in high office is now a real game in its own painted scene: hear petitions before the queue loses patience, pull bad coins off the Exchequer cloth, catch lying witnesses at the assize, search priests' houses, win a conclave, mix remedies, lay stones from a crane, read a king's mind at a feast, trade at a fair, and slip past the watch as spymaster.
 ```
 
 ## Category

@@ -379,6 +379,27 @@ fills in anything a newer version expects, and drops a job whose career no longe
   looks so it is the same as a child and as your heir), fades smoothly to grey over about
   twenty years, then to white, and never goes back.
 
+## Courting as it was (v1.21)
+
+- `suitorAge(kind)` sets every suitor's age. For a woman, men are older: 0 to 7 years among
+  ordinary folk, 2 to 14 among merchants, nobles and royals, and a rich widower ("wealth" suitors)
+  half the time 10 to 24 years older; a younger man is rare (7%). For a man, women are younger
+  by the same gaps, a man of 36 or more usually courts a woman 6 to 18 years younger, and an
+  older woman is rare (5%) or a well-off widow ("wealth" suitors, 30%). Nobody under 18.
+- `mateValue()` is how sought-after you are. A man: what his birth gives him (a noble's land, a
+  merchant's house) or his post, times his silver for his station, times age (under 21 counts
+  less). A woman: youth (falls after 30), her silver, her looks; a widow with property counts
+  high at any age. It scales how often suitors arrive (looks count far less for men).
+- `courtFit(k)` goes into every proposal: rank (marrying up is hard), prospects, and a penalty
+  when the wife would be more than two years older than the husband.
+- Wording: a family offers a man a match; a man asks a woman's family for leave to court her;
+  a woman "lets him know she would say yes" rather than asking for his hand.
+- Courting starts at 18 everywhere: romance events are blocked before 18, and the matchmaker,
+  "Court someone special", the royal suitor and the matchmaker and love-rival events start at 18.
+  Men can be courted to 60, women to 50.
+- The sickroom patient lies face up with a neck and a body under the blanket; sickness is a
+  greenish face with pocks (pestilence, scurvy), a bandaged foot (gout), a wrapped throat (quinsy).
+
 ## Every office, played (v1.20)
 
 All ten of the older office games are rebuilt as action games in painted scenes, in the same
