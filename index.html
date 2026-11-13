@@ -836,6 +836,122 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .rv .tw{display:block}
 @media (max-height:700px){.rv-lore{font-size:15px;line-height:1.35;margin-bottom:6px}.rv-n{font-size:clamp(26px,8vw,34px)}.rv-rar{margin-bottom:6px}.rv-extra{padding:8px 10px;font-size:14px}.rv-ok{margin-top:8px}}
 @media (prefers-reduced-motion:reduce){.rv .rl-niche.got .rl-art,.rv .rl-niche.got::after,.rv .tw{animation:none}}
+/* ---------- v1.17: the work you play ---------- */
+.card.mgc{max-width:480px;padding:18px 16px 16px}
+.mg-h{display:flex;align-items:center;gap:10px;margin:0 0 10px;padding-bottom:10px;border-bottom:1px solid var(--rule)}
+.mg-i{font-size:30px;line-height:1}
+.mg-ht{flex:1;min-width:0}
+.mg-ht b{display:block;font:22px/1.1 var(--black);color:var(--rubric)}
+.mg-ht small{display:block;font-style:italic;color:var(--ink-3);font-size:14px;line-height:1.25}
+.mg-step{display:flex;gap:4px}
+.mg-step i{width:9px;height:9px;border-radius:50%;background:var(--rule);box-shadow:inset 0 0 0 1px var(--rule-2)}
+.mg-step i.on{background:var(--gold)}
+.mg-lk{display:flex;justify-content:space-between;gap:6px;margin:4px 0 0;font-size:12px;font-style:italic;color:var(--ink-3)}
+.mg-tip{margin:8px 0;font-size:14.5px;line-height:1.35;color:var(--ink-2)}
+.mg-last{margin:8px 0;padding:8px 10px;border-radius:8px;background:var(--vellum-2);border-left:3px solid var(--gold);font-size:14.5px;line-height:1.35}
+.mg-line{margin:6px 0;font-size:15px;line-height:1.38;color:var(--ink)}
+.mg-b{display:block;width:100%;padding:10px 10px;border-radius:10px;border:1px solid var(--rule-2);background:var(--vellum);color:var(--ink);font:600 15.5px/1.2 var(--serif);text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .12s,transform .12s}
+.mg-b small{display:block;margin-top:3px;font-weight:400;font-size:13px;color:var(--ink-3)}
+.mg-b:active{transform:scale(.97)}
+.mg-b.sel{background:var(--rubric);color:var(--rubric-ink);border-color:var(--seal-lo)}
+.mg-b.sel small{color:inherit;opacity:.8}
+.mg-b.go{margin-top:12px;background:var(--rubric);color:var(--rubric-ink);border-color:var(--seal-lo);font-size:17px;padding:12px}
+.mg-b.red{color:var(--low);border-color:var(--low)}
+.mg-b.dim{margin-top:8px;font-weight:400;font-size:14px;color:var(--ink-3)}
+.mg-b:disabled{opacity:.45;cursor:default;transform:none}
+.mg-two,.mg-three,.mg-four,.mg-cards2{display:grid;gap:8px;margin:8px 0}
+.mg-two{grid-template-columns:1fr 1fr}
+.mg-three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.mg-four{grid-template-columns:1fr 1fr}
+.mg-cards2{grid-template-columns:1fr 1fr}
+.mg-two.sm .mg-b,.mg-three .mg-b{padding:8px 4px;font-size:14px}
+.mg-col{display:grid;gap:8px;margin:8px 0}
+/* the four powers */
+.mg-fac{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:8px 0 4px}
+.mgf{display:flex;flex-direction:column;align-items:center;gap:3px}
+.mgf i{font-style:normal;font-size:20px;line-height:1}
+.mgf b{position:relative;display:block;width:100%;height:8px;border-radius:4px;background:var(--rule);overflow:hidden}
+.mgf b::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--v);background:linear-gradient(90deg,#b8861b,#e8c45a);border-radius:4px}
+.mgf b::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,transparent 14%,rgba(163,37,26,.6) 14% 16%,transparent 16% 84%,rgba(163,37,26,.6) 84% 86%,transparent 86%)}
+.mgf.warn b::after{background:linear-gradient(90deg,#a3251a,#d65a42)}
+.mgf small{font-size:12px;color:var(--ink-3);text-align:center}
+.mg-fac.big .mgf b{height:12px}
+.mg-facbox .mg-fac{margin-top:8px}
+.mg-pet{margin:10px 0;padding:14px 12px;text-align:center;border-radius:12px;background:var(--vellum-2);box-shadow:inset 0 0 0 1px var(--rule)}
+.mg-pi{display:block;font-size:40px;line-height:1.1}
+.mg-pet b{display:block;margin-top:4px;font-weight:600}
+.mg-pet p{margin:6px 0 0;font-style:italic;font-size:16px;line-height:1.4}
+/* rows: tallies, parishes */
+.mg-row{margin:8px 0;padding:10px;border-radius:10px;background:var(--vellum-2);box-shadow:inset 0 0 0 1px var(--rule)}
+.mg-row.right{box-shadow:inset 0 0 0 2px var(--good)}
+.mg-row.wrong{box-shadow:inset 0 0 0 2px var(--low)}
+.mg-rt b{display:block;font-weight:600}
+.mg-rt small{display:block;font-size:14px;color:var(--ink-2);line-height:1.3}
+.mg-rv,.mg-look{margin:6px 0 0;font-size:14px;line-height:1.35}
+.mg-look{font-style:italic;color:var(--ink)}
+.mg-tally{display:block;width:100%;max-width:300px;height:auto;margin:6px 0 2px}
+/* the court */
+.mg-case{margin:6px 0 10px;text-align:center}
+.mg-case b{display:block;font-size:19px;font-weight:600}
+.mg-case small{display:block;font-style:italic;color:var(--ink-2);font-size:15px}
+.mg-ev{margin:8px 0;padding:8px 10px;border-radius:8px;background:var(--vellum-2);border-left:4px solid var(--low)}
+.mg-ev.i{border-left-color:var(--good)}
+.mg-ev span{font:600 12px/1 var(--serif);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.mg-ev p{margin:4px 0 0;font-size:15px;line-height:1.38}
+.mg-bribe{margin:8px 0;padding:8px 10px;border-radius:8px;background:rgba(168,119,26,.14);font-size:14.5px}
+.mg-verdict{margin:8px 0 4px;padding:12px;border-radius:10px;background:var(--vellum-2)}
+.mg-verdict.right{box-shadow:inset 0 0 0 2px var(--good)}
+.mg-verdict.wrong{box-shadow:inset 0 0 0 2px var(--low)}
+.mg-verdict b{display:block;font-size:18px}
+.mg-verdict p{margin:6px 0 0;line-height:1.4}
+.mg-sym{margin:6px 0;padding-left:20px;font-size:15.5px;line-height:1.5}
+/* the war table */
+.mg-lanes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}
+.mg-lane{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 4px;border-radius:10px;background:linear-gradient(var(--vellum-2),var(--vellum-3));box-shadow:inset 0 0 0 1px var(--rule)}
+.mg-lane.won{box-shadow:inset 0 0 0 2px var(--good)}
+.mg-lane.lost{box-shadow:inset 0 0 0 2px var(--low)}
+.mg-en,.mg-ter,.mg-me{display:flex;flex-direction:column;align-items:center;font-size:28px;line-height:1.1}
+.mg-en small,.mg-ter small,.mg-me small{font-size:12px;color:var(--ink-2);font-family:var(--serif)}
+.mg-ter{font-size:22px;opacity:.9}
+.mg-lane .mg-b.mg-me{font-size:28px;padding:6px 2px}
+/* the conclave */
+.mg-tally2{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;margin:8px 0;font-size:14.5px}
+.mg-tally2 b{font-size:18px}
+.mg-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.mg-cd{padding:8px;border-radius:10px;border:1px solid var(--rule-2);background:var(--vellum);text-align:left;font-family:var(--serif);color:var(--ink);cursor:pointer}
+.mg-cd b{display:block;font-size:14px;line-height:1.2}
+.mg-cd small{display:block;font-size:12px;color:var(--ink-3);line-height:1.25}
+.mg-cd .mg-cw{margin-top:3px;font-style:italic;color:var(--ink-2)}
+.mg-cd.you{background:rgba(163,37,26,.12);border-color:var(--low)}
+.mg-cd.rival{background:rgba(40,40,40,.12)}
+.mg-cd.sel{box-shadow:0 0 0 2px var(--gold)}
+.mg-cd:disabled{cursor:default}
+/* the envoy */
+.mg-mood{display:flex;align-items:center;gap:8px;margin:8px 0}
+.mg-mood b{position:relative;flex:1;height:12px;border-radius:6px;background:var(--rule);overflow:hidden}
+.mg-mood b::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--v);background:linear-gradient(90deg,#a3251a,#d1a93a 50%,#3f8a52);border-radius:6px}
+.mg-mood b::before{content:"";position:absolute;left:80%;top:0;bottom:0;width:2px;background:var(--ink);z-index:1;opacity:.6}
+/* the market, the building */
+.mg-spark{display:block;width:100%;max-width:300px;height:auto;margin:6px auto}
+.mg-prog{height:10px;margin:6px 0 10px;border-radius:6px;background:var(--rule);overflow:hidden}
+.mg-prog i{display:block;height:100%;background:linear-gradient(90deg,#b8861b,#e8c45a)}
+/* the spymaster */
+.mg-clues{margin:6px 0;padding:8px 10px;border-radius:10px;background:var(--vellum-2)}
+.mg-clues p{margin:4px 0;font-size:14.5px;line-height:1.35}
+.mg-sus{display:grid;gap:8px;margin:8px 0}
+.mg-s{padding:8px 10px;border-radius:10px;background:var(--vellum);box-shadow:inset 0 0 0 1px var(--rule-2)}
+.mg-s b{font-weight:600}
+.mg-s span{margin-left:6px;font-size:16px}
+.mg-s small{display:block;font-size:12.5px;color:var(--ink-3)}
+.mg-s.out{opacity:.45}
+.mg-s.traitor{box-shadow:inset 0 0 0 2px var(--low);opacity:1}
+/* the result */
+.mg-grade{margin:4px 0 8px;text-align:center;font:26px/1.1 var(--black);color:var(--gold)}
+.mg-res.poor .mg-grade{color:var(--low)}
+.mg-lau{margin:10px 0 4px;text-align:center}
+.mg-lau span{display:block;font-size:16px;letter-spacing:1px;line-height:1.3;word-break:break-all}
+.mg-lau small{color:var(--ink-3);font-style:italic}
+@media (max-width:360px){.mg-three{grid-template-columns:1fr}.mg-cards2,.mg-four{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -874,7 +990,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.16.2';
+const APP_VERSION = '1.17.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -5777,14 +5893,15 @@ function showWhatsNew() {
   store.set(NEWKEY, APP_VERSION);
   modalOpen = true;
   const items = [
-    ['🏛️', 'The Hall of Legends', 'every life is now weighed by its Rise: how far you climbed from the rung you were born on. A serf who wins a crown outshines any prince. Your best lives stand on a podium, and your family houses add up their glory generation after generation.'],
-    ['🏺', 'The Collection Hall', 'sixteen relics, Rare, Epic, Legendary and Mythic, each in its own gilded niche, and the only way to win them is to climb from a humble birth. Locked ones wait behind iron bars. Win one and it rises in a burst of light. The Path of Glory pays you on the way: candles in the Hall, a bronze crest, gilded arms, a jewelled crest. Finish a wing and its banner hangs over your main menu. Fill every case, and the sealed reliquary opens…'],
-    ['🗺️', 'Land for sale', 'rich at last? Buy a manor when a ruined knight or a widow sells one, at about twenty years of rent plus the king’s licence. You become Lord or Lady of it. Lend against land and take it if the debt goes bad. When the crown needs money for a war, buy a whole county.'],
-    ['🪜', 'Fortune’s ladder', 'see where you stand, and what the next rung is worth, in the Menu and in Find work, Elite.'],
+    ['🎲', 'Your office, played', 'high posts now come with real work you play yourself, once a year and without spending a deed: hear petitions, count the Exchequer’s tally sticks, judge the assize, set out a battle at the war table, inspect parishes, treat patients, raise a great building, bargain with foreign kings, corner a market, and unmask a traitor. Find it in Work, at the top of your job.'],
+    ['👑', 'The four powers', 'Crown, Church, Lords and Commons each watch what you do. Keep them all in balance: too low and they turn on you, too high and the others grow jealous.'],
+    ['🐍', 'A rival at court', 'someone wants your post. Out-think them in a battle of wits each year; break them three times and they are ruined. Ignore them and they whisper against you.'],
+    ['🕊️', 'The conclave', 'as a cardinal, when the Pope dies, win the votes yourself, one cardinal at a time.'],
+    ['🌿', 'Laurels', 'every win earns laurels. Your name in each kind of work rises from Untried to Able, Renowned and Legendary, and its rewards grow up to two and a half times, with a seal of fame at the top.'],
   ];
-  $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">See the Hall</button></div>`;
+  $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Open Work</button></div>`;
   $('wnOk').addEventListener('click', () => { modalOpen = false; nextModal(); });
-  $('wnCourt').addEventListener('click', () => { modalOpen = false; hideModal(); showHall('app', 'relics'); });
+  $('wnCourt').addEventListener('click', () => { modalOpen = false; hideModal(); workPane = null; openSheet('work'); });
   openModal(); $('wnOk').focus({ preventScroll: true });
 }
 // Only a new feature release (1.4, 1.5...) shows the card; small fixes (1.4.1) do not.
@@ -29874,6 +29991,655 @@ XACT.land = id => landAsk(id);
 XACT.hall = () => { closeSheet(); showHall('app'); };
 ACT.grave = () => { closeSheet(); showHall('app', 'graves'); };
 ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
+
+/* ================= v1.17 Mastery of office: a game you play for every high post (prefix mg_) ================= */
+{
+  const mgS = () => { const m = S.mg = S.mg || {}; m.y = m.y || {}; m.l = m.l || {}; m.n = m.n || {}; m.fac = m.fac || { crown: 50, church: 50, lords: 50, commons: 50 }; return m; };
+  const mgOcc = () => {
+    if (!S || !S.job || S.job.track === 'crown' || !TRACKS[S.job.track]) return null;
+    const o = occOfJob(); if (o) return o;
+    return OCC.filter(x => x.link && x.link[0] === S.job.track && x.link[1] <= S.job.level).sort((a, b) => b.link[1] - a.link[1])[0] || null;
+  };
+  const mgK = () => { const o = mgOcc(); return o ? o.k : ''; };
+  const mgIn = (...ks) => ks.includes(mgK());
+  const MG_LOW = new Set(['novice', 'monk', 'prior', 'priest', 'jb_chantry', 'landowner', 'jb_knighterrant']);
+  const mgElite = () => { const o = mgOcc(); return !!o && (o.tier === 'high' || (o.tier === 'mil' && o.grp === 'High')) && !MG_LOW.has(o.k); };
+  const mgPay = () => { if (!S.job || !TRACKS[S.job.track]) return 30; return Math.max(30, (TRACKS[S.job.track].levels[S.job.level] || {}).pay || 0); };
+  const MG_TIER = [[0, 'Untried', 1], [3, 'Able', 1.4], [8, 'Renowned', 1.8], [15, 'Legendary', 2.5]];
+  const mgTier = k => { const l = mgS().l[k] || 0; let t = 0; MG_TIER.forEach((x, i) => { if (l >= x[0]) t = i; }); return t; };
+  const MG_GRADE = { great: 'A triumph', good: 'Well done', poor: 'It went badly' };
+  const MG = [], MG_BY = {};
+  const mgAdd = g => { MG.push(g); MG_BY[g.k] = g; };
+  const shuf = a => { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; };
+  const pr = sx => sx === 'f' ? { he: 'she', He: 'She', him: 'her', his: 'her', His: 'Her' } : { he: 'he', He: 'He', him: 'him', his: 'his', His: 'His' };
+  const fill = (t, o) => t.replace(/\{(\w+)\}/g, (_, k) => o[k] != null ? o[k] : `{${k}}`);
+  const FACS = [['crown', '👑', 'Crown'], ['church', '⛪', 'Church'], ['lords', '🛡️', 'Lords'], ['commons', '🌾', 'Commons']];
+  const fac = (k, d) => { const f = mgS().fac; f[k] = clamp((f[k] == null ? 50 : f[k]) + d); };
+
+  // the card the games are drawn in, and the one tap handler for the running game
+  let mgOn = null;
+  const mgCard = () => $('card');
+  function mgShow(html) { const c = mgCard(); c.classList.add('mgc'); c.innerHTML = html; c.scrollTop = 0; }
+  mgCard().addEventListener('click', e => { if (!mgOn || !mgCard().classList.contains('mgc')) return; const b = e.target.closest('[data-mg]'); if (!b || b.disabled || b.getAttribute('aria-disabled') === 'true') return; mgOn(b.dataset.mg, b.dataset.v, b); });
+  const mgHead = (g, sub, step, of) => `<div class="mg-h"><span class="mg-i" aria-hidden="true">${g.i}</span><div class="mg-ht"><b>${esc(g.n)}</b><small>${esc(sub || MG_TIER[mgTier(g.k)][1])}</small></div>${of ? `<span class="mg-step" aria-label="${step} of ${of}">${Array.from({ length: of }, (_, i) => `<i class="${i < step ? 'on' : ''}"></i>`).join('')}</span>` : ''}</div>`;
+  const mgBtn = (act, v, label, cls, dis) => `<button type="button" class="mg-b${cls ? ' ' + cls : ''}" data-mg="${act}" data-v="${esc(String(v))}"${dis ? ' disabled' : ''}>${label}</button>`;
+
+  // the end of every game: grade, rewards that grow with your name, and the result card
+  function mgFinish(k, score, story, extra) {
+    const g = MG_BY[k], m = mgS(), t0 = mgTier(k), mult = MG_TIER[t0][2], pay = mgPay();
+    const grade = score >= .8 ? 'great' : score >= .5 ? 'good' : 'poor';
+    FX = []; const lines = [];
+    try { if (extra) { const x = extra(grade, mult, pay); if (x) lines.push(...[].concat(x).filter(Boolean)); } } catch (e) { console.error(e); }
+    const silver = Math.round(pay * (g.payK == null ? 1 : g.payK) * (grade === 'great' ? .6 : grade === 'good' ? .3 : 0) * mult);
+    if (silver > 0) coin(silver);
+    st('renown', grade === 'great' ? R(3, 5) : grade === 'good' ? R(1, 2) : -1);
+    jobPerf(grade === 'great' ? 8 : grade === 'good' ? 4 : -5);
+    m.l[k] = (m.l[k] || 0) + (grade === 'great' ? 2 : grade === 'good' ? 1 : 0); m.n[k] = (m.n[k] || 0) + 1;
+    const t1 = mgTier(k);
+    if (t1 > t0) {
+      lines.push(`Your name in this work rises to ${MG_TIER[t1][1]}. Its rewards are now ×${MG_TIER[t1][2]}.`);
+      if (t1 === 3) { coin(pay * 4); st('renown', 8); if (g.seal) feat(g.seal); lines.push('You are a legend of your office. The crown sends a purse, and the whole realm knows your name.'); }
+    }
+    say(`${g.i} ${g.n}: ${MG_GRADE[grade].toLowerCase()}.`, grade === 'great' ? 'gold' : 'note');
+    const chips = chipsHTML(FX); FX = null;
+    try { checkFeats(); } catch (e) { console.error(e); }
+    const l = m.l[k] || 0, nx = MG_TIER[t1 + 1];
+    mgOn = null;
+    mgShow(`<div class="mg-res ${grade}">${mgHead(g, MG_TIER[t1][1])}<div class="mg-grade">${grade === 'great' ? '🏆' : grade === 'good' ? '✔️' : '✖️'} ${MG_GRADE[grade]}</div>${story ? `<p class="story plain">${esc(story)}</p>` : ''}${lines.map(x => `<p class="mg-line">${esc(x)}</p>`).join('')}${chips}<div class="mg-lau"><span>${'🌿'.repeat(Math.min(l, 15)) || '·'}</span><small>${l} laurel${l === 1 ? '' : 's'}${nx ? `, ${nx[0] - l} more to ${nx[1]}` : ', Legendary'}</small></div><button class="btn wide" id="mgOk">Continue</button></div>`);
+    $('mgOk').addEventListener('click', () => { mgCard().classList.remove('mgc'); nextModal(); });
+    save();
+  }
+  // walking away part-way through is not possible: games are short and always finish
+  function mgWhy(g) {
+    if (!S.alive) return 'You are dead';
+    if (S.jail) return 'You are imprisoned';
+    if (mgS().y[g.k] === S.year) return 'Done this year. Again next year';
+    if (g.can) { const r = g.can(); if (r !== true) return r; }
+    return true;
+  }
+  function mgStart(k) {
+    const g = MG_BY[k]; if (!g) return;
+    mgS().y[k] = S.year; save();
+    modalOpen = true;
+    try { g.play(); } catch (e) { console.error(e); mgOn = null; mgCard().classList.remove('mgc'); modalOpen = false; hideModal(); toast('Something went wrong. Try again next year.'); return; }
+    openModal();
+  }
+  XACT.mg_play = k => {
+    if (!S || modalOpen) return;
+    const g = MG_BY[k]; if (!g || !g.who()) return;
+    const why = mgWhy(g); if (why !== true) return toast(why);
+    closeSheet(); mgStart(k);
+  };
+  function mgHTML() {
+    const list = MG.filter(g => !g.event && g.who()); if (!list.length) return '';
+    let h = '<h3 class="sec">Your office: the work you play</h3><p class="hint">Once a year each, without spending a deed. Play well for more silver, Renown and standing. Each win earns laurels, and your name in that work rises from Untried to Able, Renowned and Legendary, and every reward grows with it.</p>';
+    for (const g of list) {
+      const t = mgTier(g.k), T = MG_TIER[t], l = mgS().l[g.k] || 0, nx = MG_TIER[t + 1];
+      h += btnItem('mg_play', g.k, g.i, g.n, `${g.d} ${T[1]}${t ? `, rewards ×${T[2]}` : ''} · ${l} laurel${l === 1 ? '' : 's'}${nx ? ` (${nx[0] - l} to ${nx[1]})` : ''}.`, mgWhy(g), '▶');
+    }
+    if (mgElite()) h += factionHTML();
+    return h;
+  }
+  const factionHTML = () => { const f = mgS().fac; return `<div class="sumbox mg-facbox"><span class="climb-h">The four powers</span>How the realm’s great powers feel about you. Keep them all between the warning marks: too low and they turn on you, too high and the others grow jealous.<div class="mg-fac">${FACS.map(([k, i, n]) => `<span class="mgf ${f[k] <= 15 || f[k] >= 85 ? 'warn' : ''}"><i aria-hidden="true">${i}</i><b style="--v:${f[k]}%"></b><small>${n} ${f[k]}</small></span>`).join('')}</div></div>`; };
+  JOBPANELS.unshift({ k: 'mg_panel', when: () => S && S.alive && mgElite() && S.age >= 14, html: mgHTML });
+
+  /* ---------- 1. Hear the petitions: four powers to keep in balance ---------- */
+  const PET = [
+    { i: '👵', w: 'A widow in black', t: 'My husband died in the king’s war. Now the bailiff wants our only cow as a death-duty.', a: ['Let her keep the cow', { commons: 10, crown: -6 }], b: ['The law is the law', { crown: 6, commons: -10 }] },
+    { i: '🧑‍🌾', w: 'Villagers with muddy boots', t: 'The lord has fenced the common where our pigs have always fed. We will starve.', a: ['Tear down the fences', { commons: 12, lords: -12 }], b: ['A lord may do as he likes with his land', { lords: 10, commons: -10 }] },
+    { i: '🧔', w: 'A grey friar', t: 'Give us the old tithe barn, and we will make it a hospital for the poor.', a: ['Give them the barn', { church: 10, commons: 4, crown: -8 }], b: ['The crown needs that barn', { crown: 6, church: -8 }] },
+    { i: '🛡️', w: 'A baron in fur', t: 'Spare my lands from the new tax, and I will not forget your kindness.', a: ['Spare him (he pays you well)', { lords: 12, crown: -10 }, .35], b: ['Everyone pays', { crown: 8, lords: -10 }] },
+    { i: '🎓', w: 'Scholars with black eyes', t: 'The townsmen beat our students in a tavern brawl. Punish the town!', a: ['Punish the town', { church: 8, commons: -8 }], b: ['Students must keep the peace too', { commons: 8, church: -6 }] },
+    { i: '⚓', w: 'Foreign merchants', t: 'Let us trade in your markets free of tolls, and we will pay a fine fee for the privilege.', a: ['Grant it, for the fee', { crown: 8, commons: -8 }, .25], b: ['Protect our own traders', { commons: 8, crown: -5 }] },
+    { i: '🏹', w: 'Two foresters', t: 'Starving peasants are poaching the king’s deer. The forest law says hang them.', a: ['Pardon the poachers', { commons: 10, crown: -8 }], b: ['Forest law: hang them', { crown: 8, commons: -12 }] },
+    { i: '👑', w: 'A royal messenger', t: 'The king needs a loan from your office’s chest. At once, if you please.', a: ['Pay at once', { crown: 12, commons: -4 }], b: ['Plead an empty chest', { crown: -10, commons: 2 }] },
+    { i: '⚔️', w: 'Old soldiers on crutches', t: 'We fought for the king in the last war and were never paid a penny.', a: ['Pay them from the treasury', { commons: 10, crown: -6 }], b: ['Send them away', { crown: 4, commons: -9 }] },
+    { i: '💍', w: 'A noble lady', t: 'My daughter was married off in secret without my consent. Undo it!', a: ['Ask the bishop to annul it', { lords: 8, church: -8 }], b: ['A marriage is a sacrament', { church: 8, lords: -6 }] },
+    { i: '📢', w: 'A wild-eyed preacher', t: 'The Last Days are coming! Let me preach in the market square.', a: ['Silence him', { church: 8, commons: -8 }], b: ['Let him preach', { commons: 7, church: -9 }] },
+    { i: '🏰', w: 'A knight with plans', t: 'Grant me a licence to put battlements on my manor house.', a: ['Grant the licence', { lords: 10, crown: -8 }], b: ['No private castles', { crown: 10, lords: -10 }] },
+    { i: '🧍', w: 'A runaway serf', t: 'I have lived a year and a day in the town. My old lord wants me back in chains.', a: ['A year and a day makes you free', { commons: 12, lords: -10 }], b: ['Send him back', { lords: 10, commons: -12 }] },
+    { i: '🍞', w: 'Hungry townsfolk', t: 'The bakers have raised the price of a loaf again. Fix the price of bread!', a: ['Fix the price low', { commons: 10, lords: -5 }], b: ['Let the market decide', { lords: 6, commons: -8 }] },
+    { i: '🕯️', w: 'Pilgrims with staffs', t: 'Outlaws rob pilgrims on the forest road. Give us an escort of soldiers.', a: ['Send soldiers', { church: 9, crown: -5 }], b: ['They travel at their own risk', { crown: 4, church: -7 }] },
+    { i: '💰', w: 'A moneylender', t: 'The earl owes me five hundred and laughs at me. Make him pay.', a: ['Make the earl pay', { commons: 6, lords: -10 }], b: ['Dismiss the case', { lords: 8, commons: -6 }] },
+    { i: '🎭', w: 'A troupe of players', t: 'May we perform our plays in the cathedral yard on the feast day?', a: ['Let them play', { commons: 9, church: -6 }], b: ['Not on holy ground', { church: 7, commons: -6 }] },
+    { i: '⛪', w: 'An abbot', t: 'A thief stole our relic. We want him hanged; the town wants a fine.', a: ['Hang him', { church: 10, commons: -7 }], b: ['A fine and the stocks', { commons: 7, church: -8 }] },
+    { i: '🐑', w: 'Wool merchants', t: 'Tax the foreign weavers, so our own cloth sells first.', a: ['Tax the foreigners', { commons: 8, crown: 4, lords: -6 }], b: ['Free trade fills the treasury', { crown: 6, commons: -6 }] },
+    { i: '🔔', w: 'The bakers’ guild', t: 'Grant our guild the only right to sell bread in the town. We will pay you for it.', a: ['Grant it (they pay you)', { crown: 4, commons: -9 }, .3], b: ['Anyone may bake', { commons: 8, crown: -3 }] },
+  ];
+  mgAdd({ k: 'pet', i: '🙇', n: 'Hear the petitions', d: 'Three petitioners, three choices, four great powers to keep happy.', seal: 'mg_pet', payK: .6, who: () => mgElite(),
+    play() {
+      const list = shuf(PET).slice(0, 3); let i = 0, last = '';
+      const draw = () => {
+        const p = list[i], f = mgS().fac;
+        const dots = d => Object.keys(d).map(k => FACS.find(x => x[0] === k)[1]).join('');
+        mgShow(`${mgHead(MG_BY.pet, 'Your door is open', i, 3)}<div class="mg-fac big">${FACS.map(([k, ic, n]) => `<span class="mgf ${f[k] <= 15 || f[k] >= 85 ? 'warn' : ''}"><i aria-hidden="true">${ic}</i><b style="--v:${f[k]}%"></b><small>${n}</small></span>`).join('')}</div>${last ? `<p class="mg-last">${esc(last)}</p>` : ''}<div class="mg-pet"><span class="mg-pi" aria-hidden="true">${p.i}</span><b>${esc(p.w)}</b><p>“${esc(p.t)}”</p></div><div class="mg-two">${mgBtn('pa', 'a', `${esc(p.a[0])}<small aria-label="moves ${p.a[1] ? Object.keys(p.a[1]).join(', ') : ''}">${dots(p.a[1])}</small>`)}${mgBtn('pa', 'b', `${esc(p.b[0])}<small>${dots(p.b[1])}</small>`)}</div><p class="mg-tip">The little icons show which powers a choice will move, but not which way.</p>`);
+      };
+      let bribe = 0;
+      mgOn = (act, v) => {
+        if (act !== 'pa') return;
+        const c = list[i][v]; for (const [k, d] of Object.entries(c[1])) fac(k, Math.round(d * 1.6));
+        if (c[2]) bribe += c[2];
+        last = `${list[i].w}: “${c[0]}.” ${Object.entries(c[1]).map(([k, d]) => `${FACS.find(x => x[0] === k)[1]}${d > 0 ? '▲' : '▼'}`).join(' ')}`;
+        i++;
+        if (i < 3) return draw();
+        const f = mgS().fac, out = FACS.filter(([k]) => f[k] < 25 || f[k] > 75).length, tight = FACS.every(([k]) => f[k] >= 32 && f[k] <= 68), extreme = FACS.some(([k]) => f[k] <= 10 || f[k] >= 90);
+        const score = extreme ? .3 : tight ? 1 : out === 0 ? .6 : out === 1 ? .45 : .3;
+        mgFinish('pet', score, out === 0 ? 'You sent them all away grumbling a little and satisfied a little, which is the art of it.' : 'Some went home cheering, some went home cursing your name.', (grade, mult, pay) => {
+          const ls = [];
+          if (bribe) { coin(Math.round(pay * bribe * mult)); ls.push('Some of them showed their gratitude in silver.'); }
+          const F = mgS().fac;
+          if (F.crown <= 10) { jobPerf(-12); ls.push('The king has heard you ignore his wishes. Your standing falls.'); F.crown = 30; }
+          if (F.crown >= 90) { fac('lords', -12); ls.push('The lords call you the king’s lapdog.'); F.crown = 70; }
+          if (F.church <= 10) { st('piety', -8); ls.push('The bishop preached against you by name on Sunday.'); F.church = 30; }
+          if (F.church >= 90) { coin(-Math.round(pay * .3)); ls.push('The friars sing your praises, and send you the bill for their new roof.'); F.church = 70; }
+          if (F.lords <= 10) { const r = makePeer({ rv: 1, bond: R(5, 12) }); r.cls = 'noble'; r.sur = pick(SUR.noble); r.job = 'a great lord'; S.kin.push(r); ls.push(`${fullName(r)}, a great lord, has sworn to bring you down.`); F.lords = 30; }
+          if (F.lords >= 90) { fac('commons', -12); ls.push('The commons say you are in the lords’ pocket.'); F.lords = 70; }
+          if (F.commons <= 10) { coin(-Math.round(pay * .5)); st('health', -5); ls.push('A mob stoned your windows and broke into your stores.'); F.commons = 30; }
+          if (F.commons >= 90) { st('renown', 5); fac('crown', -10); ls.push('They sing your name in the alehouses, and the king does not like it.'); F.commons = 70; }
+          return ls;
+        });
+      };
+      draw();
+    } });
+
+  /* ---------- 2. The Exchequer: count the tally sticks, catch the cheats ---------- */
+  const tallySVG = (big, small) => {
+    const n = big + small, w = Math.max(150, 28 + big * 15 + small * 8);
+    let s = `<rect x="2" y="12" width="${w - 4}" height="24" rx="5" fill="url(#rl-wd)" stroke="#3a2010" stroke-width="1.2"/><path d="M6 16H${w - 8}" stroke="#e8c690" stroke-opacity=".5"/>`;
+    let x = 14;
+    for (let j = 0; j < big; j++) { s += `<path d="M${x - 5} 12L${x} 27L${x + 5} 12Z" fill="#2a1608"/>`; x += 15; }
+    x += 2;
+    for (let j = 0; j < small; j++) { s += `<path d="M${x} 12V22" stroke="#2a1608" stroke-width="2"/>`; x += 8; }
+    return `<svg class="mg-tally" viewBox="0 0 ${w} 40" role="img" aria-label="${big} big notches and ${small} small notches">${s}</svg>`;
+  };
+  mgAdd({ k: 'exch', i: '🧮', n: 'The Exchequer', d: 'Count the sheriffs’ tally sticks and catch the ones who cheat the crown.', seal: 'mg_exch', who: () => mgIn('chancellor', 'treasurer', 'official', 'jb_mintmaster', 'jb_royalbanker', 'jb_seneschal', 'steward', 'castellan'),
+    play() {
+      const shires = S.world && S.world.t ? shuf(S.world.t.map(x => x.n)).slice(0, 5) : shuf(TOWNS.concat(VILLAGES)).slice(0, 5);
+      const nCheat = R(1, 3), cheats = new Set(shuf([0, 1, 2, 3, 4]).slice(0, nCheat));
+      const rows = shires.map((sh, j) => {
+        const big = R(3, 7), small = R(2, 9), owed = big * 20 + small;
+        let pb = big, ps = small;
+        if (cheats.has(j)) { if (P(.5)) pb = big - 1; else ps = small - R(2, Math.min(5, small)); }
+        return { who: `${pick(NAMES.m)} ${pick(SUR.low)}`, sh, owed, pb, ps, cheat: cheats.has(j), call: null };
+      });
+      let done = false;
+      const draw = () => {
+        const all = rows.every(r => r.call != null);
+        mgShow(`${mgHead(MG_BY.exch, 'Michaelmas at the chequered cloth', rows.filter(r => r.call != null).length, 5)}<p class="mg-tip">Each <b>big notch</b> is 20 silver, each <b>small notch</b> is 1. Does the stick match what the sheriff owes?</p>${rows.map((r, j) => `<div class="mg-row${done ? (r.call === r.cheat ? ' right' : ' wrong') : ''}"><div class="mg-rt"><b>${esc(r.who)}</b><small>Sheriff of ${esc(r.sh)} · owes <b>${r.owed}</b></small></div>${tallySVG(r.pb, r.ps)}${done ? `<p class="mg-rv">${r.cheat ? `Short: the stick shows ${r.pb * 20 + r.ps}.` : 'Honest: every penny there.'} ${r.call === r.cheat ? '✔' : '✖'}</p>` : `<div class="mg-two sm">${mgBtn('ex', `${j}:0`, '✔ Honest', r.call === false ? 'sel' : '')}${mgBtn('ex', `${j}:1`, '✖ Short', r.call === true ? 'sel' : '')}</div>`}</div>`).join('')}${done ? mgBtn('end', '', 'Seal the accounts', 'go') : mgBtn('close', '', all ? 'Close the accounts' : 'Judge every sheriff first', 'go', !all)}`);
+      };
+      mgOn = (act, v) => {
+        if (act === 'ex' && !done) { const [j, c] = v.split(':'); rows[+j].call = c === '1'; return draw(); }
+        if (act === 'close') { done = true; return draw(); }
+        if (act === 'end') {
+          const right = rows.filter(r => r.call === r.cheat).length, caught = rows.filter(r => r.cheat && r.call).length, wrongly = rows.filter(r => !r.cheat && r.call).length, missed = rows.filter(r => r.cheat && !r.call).length;
+          mgFinish('exch', right / 5, `${caught} cheat${caught === 1 ? '' : 's'} caught${missed ? `, ${missed} slipped through` : ''}${wrongly ? `, and ${wrongly} honest sheriff${wrongly === 1 ? '' : 's'} wrongly accused` : ''}.`, (grade, mult, pay) => {
+            const ls = [];
+            if (caught) { coin(Math.round(pay * .15 * caught * mult)); fac('crown', 3 * caught); ls.push('The fines went to the crown, and a share to you, as is the custom.'); }
+            if (wrongly) { fac('lords', -4 * wrongly); ls.push('The sheriffs you wrongly accused have powerful friends.'); }
+            if (missed) fac('crown', -3 * missed);
+            return ls;
+          });
+        }
+      };
+      draw();
+    } });
+
+  /* ---------- 3. The Assize: weigh the evidence, spot the lie, give a verdict ---------- */
+  const CRIMES = [
+    { c: 'stealing a silver cup from the inn', item: 'silver cup', place: 'the inn' }, { c: 'stealing the reeve’s prize ram', item: 'ram', place: 'the sheepfold' },
+    { c: 'setting fire to the tithe barn', item: 'tinderbox', place: 'the barn' }, { c: 'poaching the lord’s deer', item: 'venison', place: 'the forest' },
+    { c: 'cutting purses at the fair', item: 'purse', place: 'the fair' }, { c: 'forging a merchant’s seal', item: 'wax seal', place: 'the counting house' },
+  ];
+  const EV = {
+    GT: ['The constable found the {item} hidden under {his} bed.', 'Two honest neighbours saw {him} near {place} at midnight, carrying a sack.', '{He} paid off every debt the very next morning, in new silver.', 'A scrap of {his} cloak was caught on the gate at {place}.'],
+    GF: ['The accuser swears {he} did it, but the accuser has wanted {his} strip of land for years.', 'The miller says he saw {him}, though the miller was so drunk that night he slept in a ditch.', 'A woman swears {he} did it. She is the one {he} jilted at the church door last spring.'],
+    IT: ['The priest swears {he} was at vespers when it happened, along with forty others.', 'The real {item} turned up at the next fair, sold by a stranger in a red cap.', '{He} was in bed with a broken leg that whole week, and the barber who set it swears to it.', 'Five men drank with {him} at the alehouse until dawn, and the alewife agrees.'],
+    IF: ['{His} own brother swears {he} was home all night, and that brother would swear the sky is green for {him}.', '{He} swears on {his} mother’s grave. {His} mother is sitting in the front row.', 'A friend gives {him} an alibi, but that friend spent the same night in the stocks.'],
+  };
+  mgAdd({ k: 'assize', i: '⚖️', n: 'Ride the assize', d: 'Three cases. Weigh the evidence, spot the lie, and judge.', seal: 'mg_assize', who: () => mgIn('judge', 'magistrate', 'jb_serjeant', 'jb_sheriff', 'jb_highsheriff', 'jb_mayor', 'jb_lordmayor', 'jb_alderman', 'jb_inquisitor'),
+    play() {
+      const cases = shuf(CRIMES).slice(0, 3).map(cr => {
+        const sx = pick(['m', 'f']), T = P(.5) ? 'G' : 'I', o = Object.assign({ name: `${pick(NAMES[sx])} ${pick(SUR.low)}` }, cr, pr(sx));
+        const tr = shuf(EV[T + 'T']).slice(0, 2).map(t => ({ t: fill(t, o), side: T })), fa = { t: fill(pick(EV[(T === 'G' ? 'I' : 'G') + 'F']), o), side: T === 'G' ? 'I' : 'G' };
+        return { o, T, ev: shuf(tr.concat([fa])), bribe: P(.35) ? Math.round(mgPay() * R(6, 12) / 10) : 0, v: null };
+      });
+      let i = 0, shown = false, took = 0, corrupt = 0;
+      const draw = () => {
+        const c = cases[i], o = c.o;
+        if (!shown) return mgShow(`${mgHead(MG_BY.assize, `Case ${i + 1} of 3`, i, 3)}<div class="mg-case"><b>${esc(o.name)}</b><small>accused of ${esc(o.c)}</small></div>${c.ev.map(e => `<div class="mg-ev ${e.side === 'G' ? 'g' : 'i'}"><span>${e.side === 'G' ? '⚔️ Against' : '🛡️ For'}</span><p>${esc(e.t)}</p></div>`).join('')}<p class="mg-tip">One of these is a lie. Find it, and judge by the rest.</p>${c.bribe ? `<p class="mg-bribe">💰 ${esc(o.name)}’s family slips you a note: ${c.bribe} silver if the verdict is “not guilty”.</p>` : ''}<div class="mg-two">${mgBtn('vd', 'G', 'Guilty')}${mgBtn('vd', 'I', 'Not guilty')}</div>${c.bribe ? mgBtn('vd', 'B', `Take the ${c.bribe} silver: not guilty`, 'dim') : ''}`);
+        const right = c.v === c.T;
+        const why = c.T === 'G' ? `${o.He} did it. ${c.v === 'G' ? 'Justice was done.' : `${o.He} walked free, laughing, and did it again within the year.`}` : `${o.He} was innocent. ${c.v === 'I' ? 'You saw through the lie.' : `Years later the truth came out, and the whole county knows you condemned an innocent ${o.he === 'he' ? 'man' : 'woman'}.`}`;
+        mgShow(`${mgHead(MG_BY.assize, `Case ${i + 1} of 3`, i + 1, 3)}<div class="mg-verdict ${right ? 'right' : 'wrong'}"><b>${right ? '✔ A just verdict' : '✖ A wrong verdict'}</b><p>${esc(why)}</p></div>${mgBtn('next', '', i < 2 ? 'The next case' : 'Close the assize', 'go')}`);
+      };
+      mgOn = (act, v) => {
+        if (act === 'vd') { const c = cases[i]; if (v === 'B') { took += c.bribe; c.v = 'I'; if (c.T === 'G') corrupt++; } else c.v = v; shown = true; return draw(); }
+        if (act === 'next') {
+          i++; shown = false; if (i < 3) return draw();
+          const right = cases.filter(c => c.v === c.T).length;
+          mgFinish('assize', right / 3, `${right} of 3 verdicts were just.`, (grade, mult) => {
+            const ls = [];
+            if (took) { coin(took); ls.push('You pocketed the bribes.'); }
+            if (corrupt && P(.25 * corrupt)) { jobPerf(-15); st('renown', -8); fac('commons', -10); ls.push('Somebody talked. Everyone knows the judge can be bought.'); }
+            if (right === 3) { fac('commons', 6); fac('crown', 3); }
+            return ls;
+          });
+        }
+      };
+      draw();
+    } });
+
+  /* ---------- 4. The War Table: three lanes, terrain, weather, and ransoms ---------- */
+  const TER = { open: ['🌾', 'Open fields'], hill: ['⛰️', 'A hill'], marsh: ['🌿', 'Marsh'], wood: ['🌲', 'Woods'] };
+  const UNIT = { horse: ['🐎', 'Horse'], foot: ['🛡️', 'Pikes'], bow: ['🏹', 'Archers'] };
+  const BEATS = { horse: 'bow', bow: 'foot', foot: 'horse' };
+  const TMOD = { open: { horse: 1 }, hill: { bow: 1, horse: -1 }, marsh: { horse: -2, foot: -1 }, wood: { bow: -1, foot: 1 } };
+  const warFoe = () => { const ws = S.world ? wAtWar(S.realm).filter(r => r !== 'civil') : []; return ws.length ? { r: pick(ws), war: true } : { r: pick(REALMS.filter(r => r !== S.realm)), war: false }; };
+  mgAdd({ k: 'war', i: '🎌', n: 'The War Table', d: 'Place your archers, pikes and horse against the enemy, read the ground, and fight.', seal: 'mg_war', payK: .5, who: () => mgIn('general', 'constable', 'marshal', 'knightcmd', 'dukecmd', 'barcmd', 'jb_condottiero', 'jb_grandmaster', 'jb_preceptor', 'jb_guardcaptain', 'jb_gunner', 'knightmil'),
+    play() {
+      const foe = warFoe(), ter = shuf(Object.keys(TER)).slice(0, 3), enemy = shuf(Object.keys(UNIT)), weather = pick(['clear', 'clear', 'rain', 'fog']);
+      let mine = shuf(Object.keys(UNIT)), sel = -1, res = null;
+      const seeN = Math.max(1, Math.min(3, 1 + (mgTier('war') >= 1 ? 1 : 0) + (S.stats.wits >= 70 ? 1 : 0) - (weather === 'fog' ? 1 : 0)));
+      const seen = new Set(shuf([0, 1, 2]).slice(0, seeN));
+      const wx = { clear: '☀️ A clear day.', rain: '🌧️ Rain: wet bowstrings, archers are weaker.', fog: '🌫️ Fog: your scouts saw less.' }[weather];
+      const draw = () => {
+        mgShow(`${mgHead(MG_BY.war, foe.war ? `Against ${foe.r}` : `Against raiders from ${foe.r}`, res ? 3 : 0, 3)}<p class="mg-tip">${wx} Horse beat archers, archers beat pikes, pikes beat horse. The ground helps some and hinders others. ${res ? '' : 'Tap two of your companies to swap them.'}</p><p class="mg-lk"><span>Top: the enemy</span><span>Middle: the ground</span><span>Bottom: you</span></p><div class="mg-lanes">${[0, 1, 2].map(j => `<div class="mg-lane${res ? (res[j].win ? ' won' : ' lost') : ''}"><span class="mg-en">${seen.has(j) || res ? `${UNIT[enemy[j]][0]}<small>${UNIT[enemy[j]][1]}</small>` : '❓<small>Unseen</small>'}</span><span class="mg-ter">${TER[ter[j]][0]}<small>${TER[ter[j]][1]}</small></span>${res ? `<span class="mg-me">${UNIT[mine[j]][0]}<small>${res[j].win ? '✔ Won' : '✖ Lost'}</small></span>` : mgBtn('sw', j, `${UNIT[mine[j]][0]}<small>${UNIT[mine[j]][1]}</small>`, `mg-me${sel === j ? ' sel' : ''}`)}</div>`).join('')}</div>${res ? mgBtn('end', '', 'Count the field', 'go') : mgBtn('fight', '', '🎺 Sound the trumpets', 'go')}`);
+      };
+      const str = (u, o, t) => 3 + (BEATS[u] === o ? 2 : BEATS[o] === u ? -2 : 0) + ((TMOD[t] || {})[u] || 0) + (u === 'bow' && weather === 'rain' ? -1 : 0) + R(-1, 1);
+      mgOn = (act, v) => {
+        if (act === 'sw' && !res) { const j = +v; if (sel < 0) sel = j; else if (sel === j) sel = -1; else { [mine[sel], mine[j]] = [mine[j], mine[sel]]; sel = -1; } return draw(); }
+        if (act === 'fight' && !res) { res = [0, 1, 2].map(j => { const a = str(mine[j], enemy[j], ter[j]), b = str(enemy[j], mine[j], ter[j]); return { win: a > b || (a === b && P(.5)) }; }); return draw(); }
+        if (act === 'end') {
+          const w = res.filter(x => x.win).length, score = [0, .3, .7, 1][w];
+          const story = ['A rout. Your lines broke and ran.', 'A defeat. You held one flank, and lost the field.', 'A victory, hard won.', 'A crushing victory. The field was yours by noon.'][w];
+          mgFinish('war', score, story, (grade, mult, pay) => {
+            const ls = [];
+            const war = foe.war && S.world ? (S.world.wars || []).find(z => (z.a === S.realm && z.b === foe.r) || (z.b === S.realm && z.a === foe.r)) : null;
+            if (war) war.sc = (war.sc || 0) + (war.a === S.realm ? 1 : -1) * [-2, -1, 2, 3][w];
+            if (w >= 2) { const kn = w === 3 ? R(2, 4) : R(1, 3), rk = Math.round(kn * R(40, 70) * mult); coin(rk); ls.push(`You took ${kn} knight${kn > 1 ? 's' : ''} for ransom: ${rk} silver.`); }
+            if (w === 3) { const lord = `the Count of ${pick(S.world && S.world.t ? S.world.t.filter(x => x.realm === foe.r).map(x => x.n).concat(['Varn']) : ['Varn'])}`, rl = Math.round(R(250, 500) * mult); coin(rl); st('renown', 4); fac('crown', 6); ls.push(`Your men dragged ${lord} out of the mud. His ransom: ${rl} silver.`); }
+            if (w === 1) { st('health', -R(3, 8)); ls.push('You came home with a wound and a story.'); }
+            if (w === 0) { if (P(.35)) { const rn = Math.min(Math.max(0, S.coin), pay * 2); coin(-rn); st('renown', -5); ls.push(`You were taken prisoner, and ransomed for ${rn} silver.`); } else { st('health', -R(8, 15)); ls.push('You were carried off the field half dead.'); } fac('crown', -6); }
+            if (war) ls.push(w >= 2 ? `The war with ${foe.r} turns your way.` : `The war with ${foe.r} turns against ${S.realm}.`);
+            return ls;
+          });
+        }
+      };
+      draw();
+    } });
+
+  /* ---------- 5. The Visitation: rumours, two close looks, and judgement ---------- */
+  const SINS = [
+    { r: 'Folk say Father {n} drinks.', c: 'You find him snoring in the vestry at noon, beside an empty cask.', s: 'He is sober as a stone at dawn mass. The man who accused him owes three years of tithes.' },
+    { r: 'They say Father {n} sells the same grave twice.', c: 'The burial book has two names on half the plots, and fresh silver in his chest.', s: 'The book is in perfect order. The sexton who complained was dismissed for stealing candles.' },
+    { r: 'There is talk of a “housekeeper” at the priest’s house.', c: 'The housekeeper’s three children all have Father {n}’s nose.', s: 'The housekeeper is his widowed sister, aged seventy, and deaf as a post.' },
+    { r: 'The parish says their relic of Saint {s} has stopped working miracles.', c: 'The “finger of Saint {s}” is a chicken bone. Father {n} sold the real one.', s: 'The relic is real. The man who said otherwise wanted to sell them a better one.' },
+    { r: 'Folk say Father {n} skips the holy days to go hunting.', c: 'His hounds are fat, his altar is dusty, and nobody has heard mass since Easter.', s: 'He has said every mass, and his “hunting” is visiting the sick in the hills.' },
+  ];
+  const SOUND = ['No complaints. The roof leaks and the bell is cracked, nothing more.', 'All quiet. The priest is old and dull, and the parish loves him.'];
+  mgAdd({ k: 'visit', i: '⛪', n: 'The visitation', d: 'Ride round four parishes. Find the rotten priests and protect the good ones.', seal: 'mg_visit', who: () => mgIn('abbot', 'bishop', 'archbishop', 'cardinal', 'jb_legate', 'wm_princeabbess', 'wm_grandmistress'),
+    play() {
+      const ps = shuf(VILLAGES).slice(0, 4).map(v => {
+        const kind = wpick([['corrupt', 4], ['slander', 3], ['sound', 2]], x => x[1])[0];
+        const sin = pick(SINS), o = { n: pick(NAMES.m), s: pick(SAINTS) };
+        return { v, kind, o, rum: kind === 'sound' ? pick(SOUND) : fill(sin.r, o), look: kind === 'corrupt' ? fill(sin.c, o) : kind === 'slander' ? fill(sin.s, o) : 'All is as it seems: an honest parish.', seen: false, call: null };
+      });
+      if (!ps.some(p => p.kind === 'corrupt')) { const p = ps[0], sin = pick(SINS); p.kind = 'corrupt'; p.rum = fill(sin.r, p.o); p.look = fill(sin.c, p.o); }
+      let looks = 2, done = false;
+      const draw = () => {
+        const all = ps.every(p => p.call != null);
+        mgShow(`${mgHead(MG_BY.visit, `${looks} close look${looks === 1 ? '' : 's'} left`, ps.filter(p => p.call != null).length, 4)}<p class="mg-tip">Rumours can be true, or the work of an enemy. You have time for two close looks. Punish the guilty; protect the slandered.</p>${ps.map((p, j) => `<div class="mg-row${done ? ((p.call === 'pun') === (p.kind === 'corrupt') ? ' right' : ' wrong') : ''}"><div class="mg-rt"><b>${esc(p.v)}</b><small>${esc(p.rum)}</small></div>${p.seen || done ? `<p class="mg-look">🔍 ${esc(p.look)}</p>` : ''}${done ? '' : `<div class="mg-three">${p.seen ? '' : mgBtn('look', j, `🔍 Look closely`, '', looks <= 0)}${mgBtn('call', `${j}:pun`, '⚖️ Punish', p.call === 'pun' ? 'sel' : '')}${mgBtn('call', `${j}:ok`, '🙏 Praise', p.call === 'ok' ? 'sel' : '')}</div>`}</div>`).join('')}${done ? mgBtn('end', '', 'Ride home', 'go') : mgBtn('close', '', all ? 'Give your judgements' : 'Judge every parish first', 'go', !all)}`);
+      };
+      mgOn = (act, v) => {
+        if (act === 'look' && looks > 0 && !done) { ps[+v].seen = true; looks--; return draw(); }
+        if (act === 'call' && !done) { const [j, c] = v.split(':'); ps[+j].call = c; return draw(); }
+        if (act === 'close') { done = true; return draw(); }
+        if (act === 'end') {
+          const right = ps.filter(p => (p.call === 'pun') === (p.kind === 'corrupt')).length;
+          mgFinish('visit', right / 4, `${right} of 4 parishes judged rightly.`, () => {
+            const ls = [], wrongPun = ps.filter(p => p.call === 'pun' && p.kind !== 'corrupt').length, missed = ps.filter(p => p.kind === 'corrupt' && p.call !== 'pun').length;
+            if (right === 4) { st('piety', 4); fac('church', 8); ls.push('Your diocese is cleaner than it has been in a generation.'); }
+            if (wrongPun) { fac('commons', -5 * wrongPun); ls.push('You punished a good priest, and his parish will not forgive you.'); }
+            if (missed) { fac('church', -4 * missed); ls.push('A rotten priest you praised went on as before. People notice.'); }
+            return ls;
+          });
+        }
+      };
+      draw();
+    } });
+
+  /* ---------- 6. The Conclave: win the cardinals' votes, one by one ---------- */
+  const CARD_W = {
+    gold: ['💰', 'Offer gold', 'a Venetian with expensive tastes and a new palace to pay for'],
+    office: ['📜', 'Promise an office', 'a Roman with eleven nephews and no posts for any of them'],
+    faith: ['🙏', 'Speak of God', 'an old hermit who eats only bread and distrusts anyone who smiles'],
+    rival: ['🐍', 'Whisper against your rival', 'a fierce old man who hates your rival over a quarrel forty years old'],
+  };
+  mgAdd({ k: 'conclave', i: '🕊️', n: 'The conclave', d: 'Win the votes of the cardinals.', event: true, who: () => inTrack('church') && S.job.level === 6,
+    play() {
+      const rivalN = `Cardinal ${pick(SUR.noble)}`, nat = ['of Venice', 'of Rome', 'of Lyon', 'of Toledo', 'of Prague', 'of Naples', 'of Cologne', 'of Lisbon'];
+      const cards = shuf(nat).map((place, j) => { const want = pick(Object.keys(CARD_W)); return { n: `Cardinal ${pick(NAMES.m)} ${place}`, want, vote: j < 2 ? 'you' : j < 3 ? 'rival' : null }; });
+      let ballot = 1, acts = 2, msg = 'The doors are locked. Eight cardinals, and you need six votes. Each day you may speak to two of them.', sel = -1, over = null, spent = 0;
+      const votes = w => cards.filter(c => c.vote === w).length;
+      const draw = () => {
+        const c = sel >= 0 ? cards[sel] : null;
+        mgShow(`${mgHead(MG_BY.conclave, over ? (over === 'won' ? 'White smoke!' : 'Black smoke') : `Ballot ${ballot} of 3 · ${acts} talk${acts === 1 ? '' : 's'} left today`, ballot - 1, 3)}<div class="mg-tally2"><span>🟥 You <b>${votes('you')}</b></span><span>⬜ Undecided <b>${votes(null)}</b></span><span>⬛ ${esc(rivalN)} <b>${votes('rival')}</b></span></div><p class="mg-last">${esc(msg)}</p>${over ? mgBtn('end', '', over === 'won' ? 'Take the throne of Saint Peter' : 'Leave the chapel', 'go') : `<div class="mg-cards">${cards.map((k, j) => `<button type="button" class="mg-cd ${k.vote || 'open'}${sel === j ? ' sel' : ''}" data-mg="pick" data-v="${j}"${k.vote === 'you' ? ' disabled' : ''}><b>${esc(k.n)}</b><small>${k.vote === 'you' ? 'Votes for you' : k.vote === 'rival' ? 'Votes for your rival' : 'Undecided'}</small><small class="mg-cw">${esc(CARD_W[k.want][2])}</small></button>`).join('')}</div>${c ? `<div class="mg-four">${Object.entries(CARD_W).map(([w, x]) => mgBtn('offer', w, `${x[0]} ${x[1]}${w === 'gold' ? ` (${Math.round(mgPay() * 1.2)})` : ''}`, '', acts <= 0 || (w === 'gold' && S.coin < Math.round(mgPay() * 1.2)))).join('')}</div>` : '<p class="mg-tip">Tap a cardinal to speak to them. Read what kind of man each one is.</p>'}${mgBtn('ballot', '', acts > 0 ? 'Call the vote early' : 'Call the vote', 'go')}`}`);
+      };
+      const ballotNow = () => {
+        // your rival works the room too
+        const open = cards.filter(k => k.vote === null); if (open.length) pick(open).vote = 'rival';
+        if (votes('you') >= 6) { over = 'won'; msg = 'Six votes, then seven. The smoke over the chapel turns white, and the crowd in the square roars.'; return; }
+        if (votes('rival') >= 6) { over = 'lost'; msg = `${rivalN} has his six votes. You kneel and kiss his ring, and smile, and smile.`; return; }
+        ballot++; acts = 2; sel = -1;
+        if (ballot > 3) { over = 'lost'; msg = 'Three ballots and no pope. The cardinals settle on a harmless old man nobody fears, and it is not you.'; return; }
+        msg = `Black smoke. Ballot ${ballot - 1} gave you ${votes('you')} and ${rivalN} ${votes('rival')}. Another day of bread and water.`;
+      };
+      mgOn = (act, v) => {
+        if (over && act === 'end') {
+          const won = over === 'won';
+          return mgFinish('conclave', won ? 1 : 0, won ? 'Habemus papam. You are the Pope.' : 'Another man wears the triple crown.', () => {
+            if (spent) coin(-spent);
+            if (won) { S.job.level = 7; S.job.lvlYears = 0; feat('pope'); st('renown', 25); st('happy', 10); return 'The throne of Saint Peter is yours.'; }
+            st('happy', -6); return '';
+          });
+        }
+        if (act === 'pick') { sel = +v; return draw(); }
+        if (act === 'offer' && sel >= 0 && acts > 0) {
+          const c = cards[sel]; acts--;
+          if (v === 'gold') spent += Math.round(mgPay() * 1.2);
+          const base = v === c.want ? .85 : v === 'faith' ? .15 + S.stats.piety / 400 : .1, ok = P(c.vote === 'rival' ? base * .7 : base);
+          if (ok) { c.vote = 'you'; msg = `${c.n} takes your hand. “You have my vote.”`; } else { if (c.vote === null && P(.4)) c.vote = 'rival'; msg = `${c.n} looks at you coldly. ${c.vote === 'rival' ? 'He walks over to your rival.' : 'He says nothing.'}`; }
+          sel = -1; if (votes('you') >= 6) { over = 'won'; msg = 'Six votes before the ballot is even called. The smoke turns white.'; }
+          return draw();
+        }
+        if (act === 'ballot') { ballotNow(); return draw(); }
+      };
+      draw();
+    } });
+  { const cv = EVENTS.find(e => e.id === 'conclave'); if (cv) cv.choices.unshift({ t: 'Work the conclave yourself (a game)', fx: () => { Q.unshift(() => { if (S.alive) mgStart('conclave'); else nextModal(); }); return 'You count the cardinals on your fingers, and work out who wants what.'; } }); }
+
+  /* ---------- 7. The Sickroom: three patients, three remedies ---------- */
+  const DIS = [
+    { n: 'a tertian fever', sym: ['a fever that comes back every third day', 'shivering fits', 'aching bones'], best: 'Willow-bark tea and rest', ok: 'Bleed a little', bad: 'A scalding hot bath' },
+    { n: 'the gout', sym: ['a burning great toe', 'swollen feet', 'a love of meat and wine'], best: 'No meat or wine, and rest the foot', ok: 'Meadow saffron, carefully', bad: 'Bleed heavily' },
+    { n: 'a festering wound', sym: ['a red, hot swelling', 'yellow pus', 'a rising fever'], best: 'Clean it with wine and dress it with honey', ok: 'Burn it with a hot iron', bad: 'A poultice of dung' },
+    { n: 'the bloody flux', sym: ['cramps in the belly', 'a bloody flux', 'a terrible thirst'], best: 'Boiled water, broth and rest', ok: 'Mint and chalk', bad: 'A strong purge' },
+    { n: 'the pestilence', sym: ['black swellings in the armpits', 'a raging fever', 'spots like bruises'], best: 'Shut the house and keep everyone out', ok: 'Theriac, the cure-all', bad: 'Bleed the patient' },
+    { n: 'melancholy', sym: ['no appetite', 'weeping and sleeplessness', 'sitting in the dark'], best: 'Music, sunlight and good company', ok: 'Saint John’s wort', bad: 'Purge the black bile' },
+    { n: 'the sailors’ scurvy', sym: ['bleeding gums', 'old wounds opening again', 'a great weariness'], best: 'Fresh fruit and green herbs', ok: 'Hot broth', bad: 'Bleed the patient' },
+    { n: 'a quinsy of the throat', sym: ['a throat too sore to swallow', 'a muffled voice', 'a high fever'], best: 'Lance the swelling', ok: 'Gargle salt and vinegar', bad: 'A strong purge' },
+  ];
+  mgAdd({ k: 'sick', i: '🩺', n: 'The sickroom', d: 'Three patients, from a carter’s wife to the great. Read the signs and choose the cure.', seal: 'mg_sick', who: () => mgIn('physician', 'wm_hospmistress', 'wm_royalmidwife', 'wm_royalnurse'),
+    play() {
+      const t = mgTier('sick'), great = t >= 2 || mgIn('wm_royalmidwife', 'wm_royalnurse');
+      const ranks = [{ n: `${pick(NAMES.f)}, a carter’s wife`, r: 0 }, { n: `${pick(NAMES.m)} ${pick(SUR.low)}, a rich wool merchant`, r: 1 }, great ? { n: pick([`${KT() === 'Queen' ? 'Queen' : 'King'} ${S.king}`, 'the young prince', 'the queen mother']), r: 3 } : { n: `Lord ${pick(SUR.noble)}`, r: 2 }];
+      const pts = ranks.map(p => { const d = pick(DIS), other = pick(DIS.filter(x => x !== d)); return Object.assign(p, { d, opts: shuf([['best', d.best], ['ok', d.ok], ['bad', d.bad], ['other', other.best]]), out: null }); });
+      let i = 0, res = [];
+      const draw = () => {
+        const p = pts[i];
+        if (!p.out) return mgShow(`${mgHead(MG_BY.sick, `Patient ${i + 1} of 3`, i, 3)}<div class="mg-case"><b>${esc(p.n)}</b><small>${p.r === 3 ? '👑 A royal patient. Everything rides on this.' : 'is brought to you'}</small></div><ul class="mg-sym">${p.d.sym.map(s => `<li>${esc(s)}</li>`).join('')}</ul><p class="mg-tip">What will you do?</p><div class="mg-col">${p.opts.map(([k, l], j) => mgBtn('rx', j, esc(l))).join('')}</div>`);
+        mgShow(`${mgHead(MG_BY.sick, `Patient ${i + 1} of 3`, i + 1, 3)}<div class="mg-verdict ${p.out === 'cured' ? 'right' : p.out === 'died' ? 'wrong' : ''}"><b>${p.out === 'cured' ? '✔ Cured' : p.out === 'died' ? '✖ The patient died' : '… Lingering'}</b><p>It was ${esc(p.d.n)}. ${p.out === 'cured' ? `${p.r === 3 ? 'The whole court' : 'The family'} kisses your hands.` : p.out === 'died' ? 'The bell tolled before the week was out.' : 'Not better, not worse. They will live, and curse your bills.'}</p></div>${mgBtn('next', '', i < 2 ? 'The next patient' : 'Wash your hands', 'go')}`);
+      };
+      mgOn = (act, v) => {
+        if (act === 'rx') { const p = pts[i], k = p.opts[+v][0]; const cure = { best: .85, ok: .5, other: .3, bad: .1 }[k], die = { best: .05, ok: .15, other: .25, bad: .5 }[k]; p.out = P(cure) ? 'cured' : P(die) ? 'died' : 'linger'; return draw(); }
+        if (act === 'next') {
+          i++; if (i < 3) return draw();
+          const sc = pts.reduce((a, p) => a + (p.out === 'cured' ? 1 : p.out === 'linger' ? .4 : 0), 0) / 3, top = pts[2];
+          mgFinish('sick', sc, `${pts.filter(p => p.out === 'cured').length} of 3 cured.`, (grade, mult, pay) => {
+            const ls = [];
+            if (top.out === 'cured') { const g = Math.round(pay * (top.r === 3 ? 2 : 1) * mult); coin(g); st('renown', top.r === 3 ? 6 : 2); if (top.r === 3) fac('crown', 10); ls.push(`${top.n} sent you ${g} silver${top.r === 3 ? ' and a gold chain' : ''}.`); }
+            if (top.out === 'died' && top.r >= 2) { jobPerf(-15); st('renown', -6); if (top.r === 3) { fac('crown', -12); if (P(.2)) { jail(1); ls.push('The court blamed you, and you spent a year in the Tower.'); } else ls.push('The court blames you, and you will not be called again soon.'); } }
+            return ls;
+          });
+        }
+      };
+      draw();
+    } });
+
+  /* ---------- 8. The Great Work: a building, stage by stage over the years ---------- */
+  const WORKS = [['bridge', '🌉', 'a stone bridge at {t}', 4], ['hall', '🏛️', 'the new guildhall of {t}', 4], ['tower', '🏰', 'a great tower for Lord {s}', 5], ['cathedral', '⛪', 'the cathedral of Saint {x} at {t}', 8]];
+  const CRISES = [
+    ['A crack has opened in a pillar.', ['Pull it down and rebuild (slow)', 12], ['Brace it with iron and carry on', -6]],
+    ['Spring floods have washed into the foundations.', ['Pump it out and dig deeper', 10], ['Pour rubble in and hope', -10]],
+    ['The quarry sends soft, crumbling stone.', ['Send it back and wait', 8], ['Use it on the inside walls', -4]],
+    ['The masons strike for better pay.', ['Pay them', 6], ['Hire scabs from the next county', -8]],
+    ['A mason has fallen from the scaffold.', ['Pay his widow and build stronger scaffolds', 8], ['Hire another man', -4]],
+    ['The patron wants a taller spire than you think is safe.', ['Refuse, politely', 6], ['Build it taller', -12]],
+  ];
+  mgAdd({ k: 'build', i: '🏗️', n: 'The great work', d: 'Build a great work stage by stage, a year at a time, and face whatever goes wrong.', seal: 'mg_build', payK: .5, who: () => mgIn('architect'),
+    play() {
+      const m = mgS();
+      const pickWork = () => {
+        const offers = shuf(WORKS).slice(0, 3).map(w => ({ k: w[0], i: w[1], n: fill(w[2], { t: pick(TOWNS), s: pick(SUR.noble), x: pick(SAINTS) }), st: w[3] }));
+        mgOn = (act, v) => { if (act !== 'choose') return; const w = offers[+v]; m.bld = { k: w.k, i: w.i, n: w.n, done: 0, of: w.st, q: [], y0: S.year }; stage(); };
+        mgShow(`${mgHead(MG_BY.build, 'Choose your commission')}<p class="mg-tip">Bigger works take more years, and pay far more when they are finished.</p><div class="mg-col">${offers.map((w, j) => mgBtn('choose', j, `${w.i} ${esc(cap(w.n))}<small>${w.st} years of work</small>`)).join('')}</div>`);
+      };
+      const stage = () => {
+        const b = m.bld; let crew = null, pace = null; const cr = pick(CRISES); let crisis = null;
+        const draw = () => mgShow(`${mgHead(MG_BY.build, `${cap(b.n)} · stage ${b.done + 1} of ${b.of}`, b.done, b.of)}<div class="mg-prog"><i style="width:${b.done / b.of * 100}%"></i></div><p class="mg-tip"><b>Your crew this year</b></p><div class="mg-three">${[['m', 'Master masons'], ['j', 'Journeymen'], ['c', 'Cheap labour']].map(([k, l]) => mgBtn('crew', k, l, crew === k ? 'sel' : '')).join('')}</div><p class="mg-tip"><b>The pace</b></p><div class="mg-three">${[['c', 'Careful'], ['s', 'Steady'], ['p', 'Push hard']].map(([k, l]) => mgBtn('pace', k, l, pace === k ? 'sel' : '')).join('')}</div><p class="mg-tip"><b>Trouble on site:</b> ${esc(cr[0])}</p><div class="mg-col">${[1, 2].map(j => mgBtn('cri', j, esc(cr[j][0]), crisis === j ? 'sel' : '')).join('')}</div>${mgBtn('go', '', crew && pace && crisis ? 'Build' : 'Choose a crew, a pace and an answer', 'go', !(crew && pace && crisis))}`);
+        mgOn = (act, v) => {
+          if (act === 'crew') { crew = v; return draw(); }
+          if (act === 'pace') { pace = v; return draw(); }
+          if (act === 'cri') { crisis = +v; return draw(); }
+          if (act === 'go') {
+            const q = clamp(50 + { m: 25, j: 10, c: -8 }[crew] + { c: 15, s: 5, p: -10 }[pace] + cr[crisis][1] + R(-10, 10));
+            let adv = 1; if (pace === 'p' && q >= 55 && P(.5)) adv = 2;
+            let fell = false; if (q < 25 && P(.5)) { fell = true; adv = b.done > 0 ? -1 : 0; }
+            b.done = Math.max(0, Math.min(b.of, b.done + adv)); b.q.push(q);
+            const fin = b.done >= b.of, avg = Math.round(b.q.reduce((a, x) => a + x, 0) / b.q.length);
+            const score = fell ? 0 : q >= 75 ? 1 : q >= 50 ? .6 : .3;
+            const story = fell ? 'Part of the work came crashing down. A year lost, and your name on everyone’s lips.' : fin ? `${cap(b.n)} is finished!` : `A good year’s building: ${b.done} of ${b.of} stages done.${adv === 2 ? ' You pushed hard and did two stages in one.' : ''}`;
+            mgFinish('build', score, story, (grade, mult, pay) => {
+              const ls = [];
+              if (fell) { jobPerf(-10); st('renown', -4); }
+              if (fin) { const g = Math.round(pay * b.of * (avg / 60) * mult); coin(g); st('renown', b.of * 2); feat('mg_build'); ls.push(`The patron paid you ${g} silver, and your name is carved over the door.`); try { wNews(`${cap(b.n)} is finished, built by ${seenName()} ${S.last}. Folk come from miles away to stare.`, b.i, true); } catch (e) { } m.done = (m.done || []).concat([b.n]); m.bld = null; }
+              else if (!fell) ls.push(`Next year: stage ${b.done + 1} of ${b.of}.`);
+              return ls;
+            });
+          }
+        };
+        draw();
+      };
+      if (m.bld) stage(); else pickWork();
+    } });
+
+  /* ---------- 9. The Envoy's game: find what the foreign king wants ---------- */
+  const WANTS = { gold: 'His treasury is empty, and his soldiers have not been paid.', honour: 'He is proud, and once hanged a man for laughing at his hat.', safety: 'He fears his northern neighbour far more than he fears you.', marriage: 'He has five unmarried daughters and talks of little else.', land: 'He has always wanted the river towns on your border.' };
+  const ECARDS = [['gold', '💰', 'Offer gold'], ['honour', '🎖️', 'Praise his glory'], ['safety', '🕊️', 'Promise lasting peace'], ['marriage', '💍', 'Offer a royal match'], ['land', '🗺️', 'Give up a border village'], ['threat', '⚔️', 'Threaten war'], ['bluff', '🎭', 'Hint at a mighty ally']];
+  mgAdd({ k: 'envoy', i: '🕊️', n: 'The envoy’s game', d: 'Sit across from a foreign king, find out what he wants, and win a treaty without giving away too much.', seal: 'mg_envoy', who: () => mgIn('diplomat', 'adviser', 'jb_legate', 'chancellor'),
+    play() {
+      const realm = pick((S.world ? Object.keys(S.world.k) : REALMS).filter(r => r !== S.realm)) || 'Morvaine', kn = S.world && S.world.k[realm] ? S.world.k[realm] : pick(NAMES.m);
+      const wants = shuf(Object.keys(WANTS)).slice(0, 2);
+      let mood = clamp(30 + (S.stats.wits - 50) / 4 + (S.stats.looks - 50) / 6), used = new Set(), cost = 0, round = 0, log = '';
+      const draw = (over) => mgShow(`${mgHead(MG_BY.envoy, `King ${kn} of ${realm}`, round, 4)}<p class="mg-tip">${wants.map(w => esc(WANTS[w])).join(' ')}</p><div class="mg-mood" role="img" aria-label="His mood ${mood} of 100"><span>😠</span><b style="--v:${mood}%"></b><span>😊</span></div><p class="mg-tip">A treaty needs his mood at 80. Every gift of gold, land or a princess costs your own crown something.</p>${log ? `<p class="mg-last">${esc(log)}</p>` : ''}${over ? mgBtn('end', '', 'Seal what you have', 'go') : `<div class="mg-cards2">${ECARDS.map(([k, ic, l]) => mgBtn('card', k, `${ic} ${l}`, '', used.has(k))).join('')}</div>${mgBtn('end', '', 'End the talks now', 'dim')}`}`);
+      mgOn = (act, v) => {
+        if (act === 'card' && !used.has(v)) {
+          used.add(v); round++;
+          let d = 0, why = '';
+          if (v === 'threat') { d = wants.includes('honour') ? -26 : wants.includes('safety') ? 12 : -16; why = d > 0 ? 'He goes pale. He does not want a war.' : 'He stands up and shouts. Nobody threatens him.'; }
+          else if (v === 'bluff') { const ok = P(.3 + S.stats.wits / 200); d = ok ? 18 : -22; why = ok ? 'He believes you, and grows thoughtful.' : 'He laughs: his spies know you have no such ally.'; }
+          else if (wants.includes(v)) { d = 24; why = 'His eyes light up. That is what he wanted.'; }
+          else { d = 4; why = 'He nods politely. It is not what he cares about.'; }
+          if (['gold', 'land', 'marriage'].includes(v)) cost++;
+          mood = clamp(mood + d); log = `${ECARDS.find(x => x[0] === v)[2]}: ${why}`;
+          return draw(mood >= 80 || round >= 4);
+        }
+        if (act === 'end') {
+          const great = mood >= 80 && cost <= 1, good = mood >= 80 || mood >= 60;
+          const score = great ? 1 : mood >= 80 ? .7 : mood >= 60 ? .5 : .2;
+          mgFinish('envoy', score, mood >= 80 ? `King ${kn} signs. ${cost ? `It cost the crown ${cost === 1 ? 'one concession' : `${cost} concessions`}.` : 'And it cost the crown nothing at all.'}` : mood >= 60 ? 'Not a treaty, but a truce, and a promise to talk again.' : `The talks broke down. King ${kn} sent you home with an insult for your ${KT() === 'Queen' ? 'queen' : 'king'}.`, (grade, mult, pay) => {
+            const ls = [];
+            S.flags.truce = S.flags.truce || {};
+            if (good) { const yrs = mood >= 80 ? 10 : 5; S.flags.truce[realm] = Math.max(S.flags.truce[realm] || 0, S.year + yrs); ls.push(`${S.realm} and ${realm} are at peace for ${yrs} years.`); fac('crown', mood >= 80 ? 8 : 3); }
+            else { fac('crown', -6); st('renown', -2); }
+            if (used.has('land')) { fac('lords', -6); ls.push('The border lords are furious about the village.'); }
+            if (used.has('gold')) fac('crown', -3);
+            if (great) { const g = Math.round(pay * .6 * mult); coin(g); ls.push(`King ${kn} sent you a gift of ${g} silver for your trouble.`); }
+            return ls;
+          });
+        }
+      };
+      draw(false);
+    } });
+
+  /* ---------- 10. Corner the market: real silver, four fairs ---------- */
+  const GOODS = [['wool', '🐑', 'wool'], ['pepper', '🌶️', 'pepper'], ['wine', '🍷', 'Gascon wine'], ['alum', '🧪', 'alum for the dyers']];
+  const NEWS = [[.28, 'A ship full of it sank off the coast.'], [.18, 'A royal wedding: every lord wants it.'], [.08, 'Trade is brisk.'], [0, 'A quiet fair.'], [-.1, 'A rival dumped a whole cargo on the market.'], [-.2, 'A huge new supply arrived from abroad.'], [-.3, 'Rumours of plague emptied the fair.']];
+  mgAdd({ k: 'market', i: '📈', n: 'Corner the market', d: 'Venture your own silver over four fairs. Buy low, sell high, and try to corner the market.', seal: 'mg_market', payK: .3, who: () => mgIn('wealthymerch', 'guildmaster', 'jb_banker', 'jb_royalbanker', 'wm_royalsilk'),
+    can: () => S.coin >= 60 || 'You need at least 60 silver to venture',
+    play() {
+      const g = pick(GOODS); let stake = 0, cash = 0, bales = 0, price = R(8, 14), fair = 0, held = 0, hist = [], news = '';
+      const fairs = shuf(TOWNS).slice(0, 4).map(t => `the fair at ${t}`);
+      const spark = () => { const mx = Math.max(...hist), mn = Math.min(...hist), w = 220, h = 50; const pts = hist.map((p, j) => `${(j * (w / Math.max(1, 3))).toFixed(0)},${(h - 4 - (p - mn) / Math.max(1, mx - mn) * (h - 8)).toFixed(0)}`).join(' '); return `<svg class="mg-spark" viewBox="-4 0 ${w + 8} ${h}" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="#c9952e" stroke-width="2.5"/>${hist.map((p, j) => `<circle cx="${(j * (w / 3)).toFixed(0)}" cy="${(h - 4 - (p - mn) / Math.max(1, mx - mn) * (h - 8)).toFixed(0)}" r="3" fill="#7a520c"/>`).join('')}</svg>`; };
+      const stakeScreen = () => {
+        const opts = [[.1, 'Careful'], [.25, 'Bold'], [.5, 'All in']].map(([f, l]) => [Math.max(30, Math.round(S.coin * f)), l]).filter(([a]) => a <= S.coin);
+        mgShow(`${mgHead(MG_BY.market, `${g[1]} ${cap(g[2])}`)}<p class="story plain">This is your own silver. Buy ${esc(g[2])} when it is cheap, sell when it is dear. Hold it from one fair to the next and you start to corner the market, which pushes the price up, if nobody notices.</p><p class="mg-tip">How much will you venture? You have ${S.coin} silver.</p><div class="mg-col">${opts.map(([a, l]) => mgBtn('stake', a, `${l}: ${a} silver`)).join('')}</div>`);
+      };
+      const draw = () => {
+        const val = cash + bales * price, last = fair === 3;
+        mgShow(`${mgHead(MG_BY.market, cap(fairs[fair]), fair, 4)}${news ? `<p class="mg-last">📰 ${esc(news)}</p>` : ''}${spark()}<div class="mg-tally2"><span>${g[1]} Price <b>${price}</b></span><span>📦 Bales <b>${bales}</b></span><span>🪙 Cash <b>${cash}</b></span></div><p class="mg-tip">Your venture is worth <b>${val}</b> silver (you put in ${stake}).${last ? ' This is the last fair: everything left is sold here.' : ''}</p><div class="mg-three">${mgBtn('buy', '', 'Buy all you can', '', cash < price)}${mgBtn('hold', '', last ? 'Sell everything' : 'Hold')}${mgBtn('sell', '', 'Sell everything', '', !bales)}</div>`);
+      };
+      const nextFair = () => {
+        fair++;
+        if (fair > 3) return finish();
+        const n = pick(NEWS); let d = n[0] + R(-5, 5) / 100;
+        if (held >= 2) { d += .15; news = `${n[1]} And your buying has made it scarce: the price climbs.`; } else news = n[1];
+        price = Math.max(3, Math.round(price * (1 + d))); hist.push(price);
+        draw();
+      };
+      const finish = () => {
+        cash += bales * price; bales = 0;
+        const roi = cash / stake - 1, net = cash - stake;
+        const score = roi >= .4 ? 1 : roi >= .1 ? .6 : roi >= 0 ? .4 : 0;
+        mgFinish('market', score, `You put in ${stake} silver and came out with ${cash}: ${net >= 0 ? 'a profit' : 'a loss'} of ${Math.abs(net)}.`, () => {
+          const ls = []; coin(net);
+          if (roi >= .8) { st('renown', 4); ls.push(`They say you cornered the ${g[2]} trade. Every merchant in the realm knows your name.`); if (P(.25)) { const fine = Math.round(net * .2); coin(-fine); ls.push(`The guild fined you ${fine} silver for “forestalling the market”.`); } }
+          return ls;
+        });
+      };
+      mgOn = (act, v) => {
+        if (act === 'stake') { stake = +v; cash = stake; hist = [price]; news = `${cap(g[2])} sells for ${price} a bale.`; return draw(); }
+        if (act === 'buy') { const n = Math.floor(cash / price); bales += n; cash -= n * price; held = bales ? held + 1 : 0; return nextFair(); }
+        if (act === 'sell') { cash += bales * price; bales = 0; held = 0; return nextFair(); }
+        if (act === 'hold') { if (fair === 3) { cash += bales * price; bales = 0; } held = bales ? held + 1 : 0; return nextFair(); }
+      };
+      stakeScreen();
+    } });
+
+  /* ---------- 11. The spymaster's web: whispers, and one traitor ---------- */
+  const COLS = { red: ['🔴', 'red'], blue: ['🔵', 'blue'], green: ['🟢', 'green'] };
+  const PLACES = { chapel: ['⛪', 'the chapel'], stables: ['🐎', 'the stables'], kitchens: ['🍖', 'the kitchens'], garden: ['🌹', 'the garden'] };
+  const ITEMS = { ring: ['💍', 'a signet ring'], dagger: ['🗡️', 'a dagger'], letter: ['✉️', 'a sealed letter'], key: ['🗝️', 'a key'] };
+  mgAdd({ k: 'spy', i: '🕸️', n: 'The spymaster’s web', d: 'Someone at court is a traitor. Read your informants’ whispers and find them before they strike.', seal: 'mg_spy', who: () => mgIn('spymaster', 'adviser', 'jb_chamberlain'),
+    play() {
+      const titles = shuf(['Lord', 'Lady', 'Sir', 'Dame', 'Master', 'Mistress']);
+      const sus = Array.from({ length: 5 }, (_, j) => ({ n: `${titles[j]} ${pick(SUR.noble)}`, col: pick(Object.keys(COLS)), pl: pick(Object.keys(PLACES)), it: pick(Object.keys(ITEMS)), out: false }));
+      const T = R(0, 4), t = sus[T];
+      // whispers that are true of the traitor, chosen to rule out the others
+      const facts = [];
+      for (const k of Object.keys(COLS)) facts.push(t.col === k ? [`The traitor wears ${COLS[k][1]}.`, s => s.col === k] : [`The traitor does not wear ${COLS[k][1]}.`, s => s.col !== k]);
+      for (const k of Object.keys(PLACES)) facts.push(t.pl === k ? [`The traitor was in ${PLACES[k][1]} last night.`, s => s.pl === k] : [`The traitor was not in ${PLACES[k][1]} last night.`, s => s.pl !== k]);
+      for (const k of Object.keys(ITEMS)) facts.push(t.it === k ? [`The traitor carries ${ITEMS[k][1]}.`, s => s.it === k] : [`The traitor carries no ${ITEMS[k][1].replace(/^an? /, '')}.`, s => s.it !== k]);
+      const left = fs => sus.filter(s => fs.every(f => f[1](s)));
+      const clues = []; let pool = shuf(facts);
+      while (clues.length < 3) { const best = pool.map(f => [f, left(clues.concat([f])).length]).filter(([f, n]) => n < left(clues).length).sort((a, b) => b[1] - a[1])[0]; if (!best) break; clues.push(best[0]); pool = pool.filter(f => f !== best[0]); }
+      let extra = null; { const e = pool.map(f => [f, left(clues.concat([f])).length]).sort((a, b) => a[1] - b[1])[0]; if (e) extra = e[0]; }
+      const cost = Math.round(mgPay() * .4); let bought = false, asked = -1, askRes = '', over = null, asking = false, lastAcc = -1;
+      const draw = () => {
+        const shown = bought && extra ? clues.concat([extra]) : clues;
+        mgShow(`${mgHead(MG_BY.spy, over ? (over === 'right' ? 'The plot is broken' : 'The wrong head') : 'Five suspects, one traitor')}<div class="mg-clues">${shown.map(c => `<p>🗣️ ${esc(c[0])}</p>`).join('')}</div>${askRes ? `<p class="mg-last">${esc(askRes)}</p>` : ''}<div class="mg-sus">${sus.map((s, j) => `<div class="mg-s${s.out ? ' out' : ''}${over && j === T ? ' traitor' : ''}"><b>${esc(s.n)}</b><span>${COLS[s.col][0]} ${PLACES[s.pl][0]} ${ITEMS[s.it][0]}</span><small>${COLS[s.col][1]}, ${PLACES[s.pl][1].replace('the ', '')}, ${ITEMS[s.it][1].replace(/^an? /, '')}</small>${over ? '' : `<div class="mg-two sm">${mgBtn('out', j, s.out ? '↺ Back in' : '✖ Rule out')}${mgBtn('acc', j, asking ? '❓ Question' : '⚔ Accuse', asking ? '' : 'red')}</div>`}</div>`).join('')}</div>${over ? mgBtn('end', '', 'Report to the king', 'go') : `<div class="mg-two">${mgBtn('buy', '', bought ? 'No more whispers' : `Buy one more whisper (${cost})`, '', bought || !extra || S.coin < cost)}${mgBtn('ask', '', asked >= 0 ? 'Already questioned' : 'Question a suspect…', '', asked >= 0)}</div>`}`);
+      };
+      mgOn = (act, v) => {
+        if (over && act === 'end') {
+          const right = over === 'right';
+          return mgFinish('spy', right ? (bought ? .8 : 1) : 0, right ? `${sus[T].n} confessed everything before the rack was even shown.` : `You arrested ${sus[lastAcc].n}. The real traitor was ${sus[T].n}, and the plot went ahead.`, (grade, mult, pay) => {
+            const ls = []; if (bought) coin(-cost);
+            if (right) { fac('crown', 12); const g = Math.round(pay * .8 * mult); coin(g); ls.push(`A grateful crown sends you ${g} silver.`); }
+            else { fac('lords', -10); fac('crown', -10); jobPerf(-8); ls.push('An innocent noble is ruined, and the realm is shaken.'); }
+            if (asked >= 0 && asked !== T) fac('lords', -4);
+            return ls;
+          });
+        }
+        if (act === 'out') { sus[+v].out = !sus[+v].out; return draw(); }
+        if (act === 'buy' && !bought && extra && S.coin >= cost) { bought = true; return draw(); }
+        if (act === 'ask' && asked < 0) { asking = true; askRes = 'Tap “Question” on the one you want to question. You only have time for one.'; return draw(); }
+        if (act === 'acc') {
+          const j = +v;
+          if (asking) { asking = false; asked = j; askRes = j === T ? `${sus[j].n} sweats and stammers, and will not meet your eye.` : `${sus[j].n} answers every question calmly, and is furious at being asked.`; return draw(); }
+          lastAcc = j; over = j === T ? 'right' : 'wrong'; return draw();
+        }
+      };
+      draw();
+    } });
+
+  /* ---------- 12. Your rival at court: a battle of wits, once a year ---------- */
+  const MOVES = { flatter: ['🗣️', 'Flatter the king', 'buying gifts for the king'], rumour: ['🐍', 'Spread a rumour', 'whispering in corners with the gossips'], proof: ['📜', 'Produce proof', 'hunting through old letters and ledgers'], ally: ['🤝', 'Win an ally', 'dining with the great lords'] };
+  const WINS = { flatter: 'ally', ally: 'proof', proof: 'rumour', rumour: 'flatter' };
+  const rivalOf = () => { const m = mgS(); if (!m.rv) return null; const p = S.kin.find(k => k.id === m.rv.id && k.alive); if (!p) { m.rv = null; return null; } return p; };
+  const newRival = () => { const p = makePeer({ rv: 1, bond: R(4, 12) }); p.age = Math.max(p.age, 22); p.job = `a rival at ${S.job ? 'your place of work' : 'court'}`; S.kin.push(p); mgS().rv = { id: p.id, pw: 3, w: 0 }; return p; };
+  mgAdd({ k: 'rival', i: '🐍', n: 'Your rival’s move', d: 'Someone wants your post. Out-think them: break them three times and they are ruined.', seal: 'mg_rival', payK: .4, who: () => mgElite(),
+    play() {
+      const p = rivalOf() || newRival(), rv = mgS().rv, P3x = pr(p.sex);
+      let me = 0, them = 0, round = 0, log = `${fullName(p)} wants your post, and has been working at it all year.`;
+      const tell = () => pick(Object.keys(MOVES));
+      let t = tell();
+      const draw = (over) => mgShow(`${mgHead(MG_BY.rival, `${fullName(p)} · strength ${'♟'.repeat(rv.pw)}`, round, 3)}<div class="mg-tally2"><span>You <b>${me}</b></span><span>${esc(p.name)} <b>${them}</b></span></div><p class="mg-last">${esc(log)}</p>${over ? mgBtn('end', '', 'See how it ends', 'go') : `<p class="mg-tip">🕵️ Your spies say ${esc(p.name)} has been ${MOVES[t][2]}. Flattery beats alliances, allies beat proof, proof beats rumour, and rumour beats flattery.</p><div class="mg-cards2">${Object.entries(MOVES).map(([k, x]) => mgBtn('mv', k, `${x[0]} ${x[1]}`)).join('')}</div>`}`);
+      mgOn = (act, v) => {
+        if (act === 'mv') {
+          const theirs = P(.65) ? t : pick(Object.keys(MOVES)); round++;
+          if (WINS[v] === theirs) { me++; log = `You: ${MOVES[v][1].toLowerCase()}. ${P3x.He}: ${MOVES[theirs][1].toLowerCase()}. You win the round.`; }
+          else if (WINS[theirs] === v) { them++; log = `You: ${MOVES[v][1].toLowerCase()}. ${P3x.He}: ${MOVES[theirs][1].toLowerCase()}. ${P3x.He} wins the round.`; }
+          else log = `You: ${MOVES[v][1].toLowerCase()}. ${P3x.He}: ${MOVES[theirs][1].toLowerCase()}. Neither of you gains.`;
+          t = tell();
+          return draw(me >= 2 || them >= 2 || round >= 5);
+        }
+        if (act === 'end') {
+          const won = me > them;
+          if (won) rv.pw--; else if (them > me) rv.w++;
+          const ruined = won && rv.pw <= 0;
+          mgFinish('rival', won ? 1 : me === them ? .45 : 0, ruined ? `${fullName(p)} is ruined, and leaves court in disgrace.` : won ? `You came out on top this year. ${fullName(p)} is weaker for it.` : me === them ? 'Neither of you gave an inch this year.' : `${fullName(p)} got the better of you this year.`, (grade, mult, pay) => {
+            const ls = [];
+            if (ruined) { p.rv = 0; p.job = 'disgraced, and gone from court'; mgS().rv = null; feat('mg_rival'); const g = Math.round(pay * 1.5 * mult); coin(g); st('renown', 6); ls.push(`Everyone who backed ${p.name} now backs you, and their gifts come to ${g} silver.`); }
+            else if (them > me) { jobPerf(-6); st('renown', -2); if (rv.w >= 3) { jobPerf(-10); ls.push(`${p.name} has beaten you three years running. Your superiors are losing faith in you.`); } }
+            return ls;
+          });
+        }
+      };
+      draw(false);
+    } });
+
+  /* ---------- the turn of the year: the four powers drift back, and an ignored rival strikes ---------- */
+  {
+    const _au = ageUp;
+    ageUp = function () {
+      const a = S && S.alive && !modalOpen ? S.age : null, y0 = S ? S.year : 0;
+      const r = _au.apply(this, arguments);
+      try {
+        if (a != null && S && S.age > a && S.mg) {
+          const f = S.mg.fac; for (const k in f) f[k] = clamp(f[k] + (f[k] < 50 ? 4 : f[k] > 50 ? -4 : 0));
+          if (mgElite()) { const k = pick(FACS)[0]; f[k] = clamp(f[k] + (P(.5) ? 1 : -1) * R(8, 16)); }
+          let p = rivalOf();
+          if (!p && mgElite() && P(.3)) { p = newRival(); say(`${fullName(p)} has an eye on your post. Expect trouble (Work, Your office).`, 'note'); }
+          else if (p && S.mg.y.rival !== y0 && mgElite() && P(.5)) { const fx0 = FX; FX = null; jobPerf(-6); FX = fx0; say(`${fullName(p)} whispered against you all last year, and you did nothing about it. Your standing slips.`, 'bad'); }
+        }
+      } catch (e) { console.error(e); }
+      return r;
+    };
+  }
+  FEATS.push(
+    { k: 'mg_pet', i: '🙇', n: 'A Fair Hearing', d: 'Become Legendary at hearing petitions.' },
+    { k: 'mg_exch', i: '🧮', n: 'Not a Penny Missing', d: 'Become Legendary at the Exchequer.' },
+    { k: 'mg_assize', i: '⚖️', n: 'Solomon of the Shires', d: 'Become a Legendary judge at the assize.' },
+    { k: 'mg_war', i: '🎌', n: 'Master of the War Table', d: 'Become Legendary at the war table.' },
+    { k: 'mg_visit', i: '⛪', n: 'Scourge of Simony', d: 'Become Legendary on your visitations.' },
+    { k: 'mg_sick', i: '🩺', n: 'Healer of Kings', d: 'Become a Legendary physician.' },
+    { k: 'mg_build', i: '🏗️', n: 'A Name in Stone', d: 'Finish a great work.' },
+    { k: 'mg_envoy', i: '🕊️', n: 'Silver Tongue', d: 'Become a Legendary envoy.' },
+    { k: 'mg_market', i: '📈', n: 'Lord of the Market', d: 'Become Legendary at cornering the market.' },
+    { k: 'mg_spy', i: '🕸️', n: 'The Web Holds', d: 'Become a Legendary spymaster.' },
+    { k: 'mg_rival', i: '🐍', n: 'Rival Ruined', d: 'Break a rival at court three times and ruin them.' },
+  );
+  window.mgDebug = { MG, MG_BY, mgS, mgStart, mgElite, mgTier, mgK };
+}
 
 /* ---------- first-time tour ---------- */
 const TOUR = [

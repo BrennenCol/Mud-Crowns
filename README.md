@@ -332,6 +332,51 @@ still be reached from a first job.
 - **The main menu** shows a row of sixteen gems for your relics, a NEW badge when you have
   won one you have not yet seen, and how many relics to the next reward.
 
+## Your office, played (v1.17)
+
+High posts now come with mini-games, in Work, at the top of the job page ("Your office: the
+work you play"). Each can be played once a year and costs no deed. A result card gives the
+grade (a triumph, well done, it went badly), the story and the rewards.
+
+- **Rewards that grow.** Silver scales with the post's pay; Renown and standing (which leads to
+  promotion) rise with a good result and fall with a bad one. Each win earns laurels (two for
+  a triumph, one for well done). With 3, 8 and 15 laurels your name in that work rises to Able,
+  Renowned and Legendary, multiplying its rewards by 1.4, 1.8 and 2.5. Reaching Legendary pays
+  a purse and earns a seal of fame (eleven new seals).
+- **Hear the petitions** (every high post): three petitioners from a pool of twenty, two
+  choices each. Icons show which of the four powers (Crown, Church, Lords, Commons) a choice
+  moves, but not which way. The powers persist through the life, drift back toward the middle
+  each year, and one is shaken each year. Extremes have consequences: lost standing, a
+  sermon against you, a great lord turned rival, a mob at your door.
+- **The Exchequer** (Chancellor, Treasurer, the Mint, bankers, stewards): five sheriffs and
+  their tally sticks (big notch 20, small notch 1). Mark each honest or short.
+- **The assize** (judges, sheriffs, mayors): three cases, each with three pieces of evidence,
+  one of them a lie with a give-away. Sometimes a bribe is offered.
+- **The war table** (generals, marshals, knight commanders): three lanes with terrain, the
+  weather, and scouts who may not see every enemy company. Horse beat archers, archers beat
+  pikes, pikes beat horse. Victories bring ransoms (knights, and a count for a crushing win)
+  and move a real war's score; a rout can see you captured and ransomed.
+- **The visitation** (abbots to cardinals): four parishes, rumours that may be true or
+  slander, and two close looks.
+- **The conclave** (cardinals): the papal election event now offers "Work the conclave
+  yourself": eight cardinals, each wanting gold, an office, piety or a blow at your rival.
+  Six votes in three ballots makes you Pope.
+- **The sickroom** (physicians, midwives): three patients, symptoms and four remedies. The third
+  patient is a lord, or a royal once you are Renowned.
+- **The great work** (architects): pick a commission (a bridge, a guildhall, a tower, a
+  cathedral), then each year choose the crew, the pace and an answer to trouble on site.
+  Finishing pays by size and quality; a very bad year can bring part of it down.
+- **The envoy's game** (diplomats, advisers, legates, the Chancellor): a foreign king with two
+  hidden wants (hinted), seven cards, and a mood that must reach 80. A treaty gives a truce
+  with that kingdom.
+- **Corner the market** (merchants, guild masters, bankers): venture your own silver over four
+  fairs; holding stock pushes the price up.
+- **The spymaster's web** (Spymaster, adviser, chamberlain): five suspects, whispers about the
+  traitor, one extra whisper for silver, and one suspect you may question.
+- **A rival at court**: appears in time for any high post; a battle of wits each year
+  (flattery beats alliances, allies beat proof, proof beats rumour, rumour beats flattery).
+  Break them three times and they are ruined; ignore them and they whisper against you.
+
 ## The Hall of Legends, the Collection Hall and land for sale (v1.16)
 
 - **Fortune's ladder and the Rise.** Twelve rungs, from Serf to Emperor. The game keeps the

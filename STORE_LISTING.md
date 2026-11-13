@@ -61,29 +61,36 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.16.2.txt`, ready to copy (it ends with a line about the updates since 1.13).
+Also in `store/whats_new_1.17.0.txt`, ready to copy (it ends with a line about the updates since 1.13).
 
 ```
-THE HALL OF LEGENDS
-Every life is now weighed by its Rise: how far you climbed from the rung you were born on. Each step up Fortune's ladder is worth more than the last, and the humbler your birth, the more the whole climb counts. A serf who wins a crown outshines any prince born to one. Your greatest lives stand on a gold, silver and bronze podium, and your family houses add up their glory, generation after generation.
+YOUR OFFICE, PLAYED
+High posts now come with real work you play yourself, once a year, without spending a deed. The better you play, the more silver, Renown and standing it brings:
+- Hear the petitions: three petitioners, two choices each, and four great powers to keep in balance
+- The Exchequer: count the sheriffs' tally sticks and catch the cheats
+- The assize: weigh the evidence, spot the lie, and give your verdict (and maybe a bribe)
+- The war table: set your archers, pikes and horse against the enemy, read the ground and the weather, and take knights and lords for ransom
+- The visitation: find the rotten priests and protect the good ones
+- The sickroom: read the signs and choose the cure, from a carter's wife up to the king
+- The great work: raise a bridge, a tower or a cathedral over the years, and survive the floods and cracks
+- The envoy's game: find out what a foreign king wants, and win a treaty without giving too much away
+- Corner the market: venture your own silver over four fairs
+- The spymaster's web: read the whispers and unmask the traitor at court
 
-THE COLLECTION HALL
-Sixteen relics, Rare, Epic, Legendary and Mythic, and the only way to win them is to climb from a humble birth: the Broken Fetter, the Merchant's Scales, the Golden Spurs, the Count's Banner, the Great Seal, the Keys of Heaven, the Ploughman's Crown, the Orb of the World and more. Each one stands in its own gilded niche under a beam of light; the ones you have not won wait behind iron bars and a padlock. Win one and it rises out of the dark in a burst of light and sparks.
+THE FOUR POWERS
+Crown, Church, Lords and Commons each watch what you do. Too low and they turn on you; too high and the others grow jealous.
 
-THE PATH OF GLORY
-Rewards on the way: at 1 relic the Hall's candles are lit, at 4 a bronze crest crowns your main menu, at 8 your coat of arms is framed in gold in every life, at 12 a jewelled crest. Finish a wing and its banner hangs over your main menu, and its window in the Hall lights up. Fill every case, and the sealed reliquary opens...
+A RIVAL AT COURT
+Someone wants your post. Beat them in a battle of wits each year; break them three times and they are ruined.
 
-LAND FOR SALE
-Rich at last, but no land? Land was almost never sold, so wait for a ruined knight, a widow or a king who needs money. A manor costs about twenty years of its rents, plus the king's licence and the lawyers, and makes you Lord or Lady of it. Lend silver against a manor and take it if the debt goes bad. When the crown is short of money for a war, buy a whole county.
+THE CONCLAVE
+As a cardinal, win the papal election yourself, one vote at a time.
 
-SMOOTH AND STEADY
-The Hall scrolls smoothly on every phone, and when you win a relic its card holds still and fits your screen.
-
-FORTUNE'S LADDER
-See where you stand, how far you have climbed and what the next rung is worth, in the Menu and in Find Work.
+LAURELS
+Every win earns laurels. Rise from Untried to Able, Renowned and Legendary, with rewards up to two and a half times bigger, and a seal of fame at the top.
 
 ALSO NEW SINCE 1.13
-New music played by a little band, workplaces you can see, the people you work beside, better pictures, and a Prioress card in Find Work.
+The Hall of Legends and the Collection Hall, land for sale, new music, workplaces you can see, and better pictures.
 ```
 
 ## Category
