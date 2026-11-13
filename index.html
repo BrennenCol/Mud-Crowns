@@ -991,7 +991,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.18.0';
+const APP_VERSION = '1.18.1';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -24164,8 +24164,14 @@ function portraitSVG(p) {
   const L = Object.assign(randomLook(p.seed || p.name || 'x'), p.look || {});
   const age = p.age || 0, m = p.sex === 'm', baby = age < 3, child = age < 13, teen = age >= 13 && age < 18;
   const skin = SKINS[Math.min(SKINS.length - 1, L.skin)];
+  // Hair greys slowly and only one way: each person starts at their own age (about 40 to 54),
+  // turns steadily to grey over the next twenty years, and to white after that.
   let hair = HAIRS[L.hair % HAIRS.length];
-  if (age >= 70) hair = '#ece8e0'; else if (age >= 58) hair = '#b8b0a4'; else if (age >= 46 && (L.hair + age) % 3 === 0) hair = '#8f877c';
+  { const hh = (L.skin || 0) * 7 + (L.hair || 0) * 5 + (L.eyes || 0) * 3 + (L.face || 0) * 11 + (L.nose || 0) * 13 + (L.hs || 0) * 17 + (L.freck || 0) * 19 + (L.beard || 0) * 23;
+    const g0 = 40 + hh % 15, t = Math.max(0, Math.min(1, (age - g0) / 22)), t2 = Math.max(0, Math.min(1, (age - g0 - 18) / 14));
+    const mix = (a, b, k) => '#' + [1, 3, 5].map(i => Math.round(parseInt(a.substr(i, 2), 16) * (1 - k) + parseInt(b.substr(i, 2), 16) * k).toString(16).padStart(2, '0')).join('');
+    if (t > 0) hair = mix(hair, '#a9a297', t);
+    if (t2 > 0) hair = mix(hair, '#ece8e0', t2); }
   let role = p.role != null ? p.role : roleOf(p);
   if (!role && p.sex === 'f' && age >= 48 && p.cls !== 'royal' && p.cls !== 'noble') role = 'veil';
   const X = extrasOf(p);

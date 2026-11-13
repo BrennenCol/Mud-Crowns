@@ -332,6 +332,14 @@ still be reached from a first job.
 - **The main menu** shows a row of sixteen gems for your relics, a NEW badge when you have
   won one you have not yet seen, and how many relics to the next reward.
 
+### Greying hair fixed (v1.18.1)
+
+- A player noticed that portraits' hair kept changing colour as they aged. Between 46 and 57,
+  hair turned grey one year in three and back the other two, then jumped to grey at 58 and
+  white at 70. Now each person starts greying at their own age (40 to 54, fixed by their
+  looks so it is the same as a child and as your heir), fades smoothly to grey over about
+  twenty years, then to white, and never goes back.
+
 ## Choices that come back (v1.18)
 
 - **Storylines removed.** The Storylines module (26 multi-chapter tales, about 4,000 lines)
