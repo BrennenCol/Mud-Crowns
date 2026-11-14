@@ -379,6 +379,21 @@ fills in anything a newer version expects, and drops a job whose career no longe
   looks so it is the same as a child and as your heir), fades smoothly to grey over about
   twenty years, then to white, and never goes back.
 
+## Batch 4: trade, sea and money (v1.27)
+
+| Game | Post | How it plays |
+| --- | --- | --- |
+| The inspection | Guild master | Compare an apprentice's copy with the master's pattern (window, floor, brooch); tap every fault |
+| Load the hold | Ship's captain | Drop cargo into the hold's columns; fill it, keep the ship level and the heavy loads low before the storm |
+| The money changer | Banker | Add up foreign coins at the day's rates (clipped coins are worth nothing) and pay out exactly; the rates change halfway |
+| The king's loan | Royal banker | Hold to press for a higher rate while the king's temper rises; seal the deal before he storms out |
+| Strike the coin | Master of the mint | Strike each silver blank dead centre on the die; let the dull, debased blanks pass |
+| The silk loom | Silkwoman to the Crown | Pick each row's thread before the shuttle crosses; mend snapped threads |
+| The heraldic panel | Embroiderer | Read the herald's blazon and colour each part of the shield in its proper tincture |
+| Plunder | Pirate captain | Send three sailors for the best loot; cast off before the navy arrives |
+| Letters of marque | Privateer | Take only ships flying the enemy flags on your letter; beware lookalike flags and sudden peace |
+| Steer by the stars | Discoverer | Hold port or starboard to keep the bow on the guide star against current and gusts |
+
 ## Batch 3: the Church and learning (v1.26)
 
 | Game | Post | How it plays |
