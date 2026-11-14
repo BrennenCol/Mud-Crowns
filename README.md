@@ -401,6 +401,8 @@ With this batch every elite post has a game of its own: 82 in all.
 | The ward | Mistress of the hospital | Carry water, blankets, broth, a cool cloth or the priest to each bed in time |
 | The royal birth | Royal midwife | Breathe with the queen as each wave peaks; nothing graphic |
 
+Royal births follow the queen, not the calendar: she is with child only some years, never two years running, and at most six times a reign. Each baby is named and remembered: little ones play in the royal nursery, older ones stand by the throne in the great hall, and the royal nurse and tutor care for them by name.
+
 ## Batch 4: trade, sea and money (v1.27)
 
 | Game | Post | How it plays |

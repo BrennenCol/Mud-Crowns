@@ -2102,7 +2102,7 @@ button.in-t{cursor:pointer}
 .g-bi{padding:6px;background:linear-gradient(#5a3a4a,#3a2430)}
 .bi-room{position:relative}
 .bi-bed{display:block;width:100%;height:auto}
-.bi-breath{position:absolute;left:18.4%;top:67%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:3px solid rgba(255,248,230,.0);pointer-events:none}
+.bi-breath{position:absolute;left:21%;top:67%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:3px solid rgba(255,248,230,.0);pointer-events:none}
 .bi-breath.go{animation:biBreath .9s ease-out}
 @keyframes biBreath{from{transform:scale(.5);border-color:rgba(255,248,230,.9)}to{transform:scale(2.6);border-color:rgba(255,248,230,0)}}
 .bi-wave{display:block;width:100%;height:84px;margin-top:4px;border-radius:6px;background:#f6ecd2}
@@ -2151,7 +2151,7 @@ button.in-t{cursor:pointer}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.28.2';
+const APP_VERSION = '1.28.3';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -3872,6 +3872,23 @@ const capOf = r => S.world.t.find(x => x.realm === r && x.cap);
 function royalOf(r) {
   if (r === S.realm) return S.ruling ? `${S.flags.emperor ? ws('Emperor', 'Empress') : ws('King', 'Queen')} ${S.king}` : `${KT()} ${S.king}`;
   return S.world.k[r] ? `King ${S.world.k[r]}` : 'no one';
+}
+// the royal nursery: the babies born to the reigning king and queen, remembered by name
+function royalBirths() {
+  if (!S || !S.world) return null;
+  let rb = S.world.rb;
+  if (!rb || rb.king !== S.king) rb = S.world.rb = { king: S.king, last: S.year - 1 - Math.floor(Math.random() * 3), kids: [] };
+  return rb;
+}
+function royalKids() { const rb = S && S.world && S.world.rb; return rb && rb.king === S.king ? rb.kids.filter(k => S.year >= k.y) : []; }
+// is the queen with child this year? Never two years running, and six babies a reign at most
+function queenWithChild() {
+  const rb = royalBirths(); if (!rb) return 'There is no queen to deliver';
+  if (rb.last === S.year) return 'The royal baby was born this year';
+  if (rb.kids.length >= 6) return 'The queen will have no more children';
+  if (S.year - rb.last < 2) return 'The queen gave birth only last year';
+  const h = [...`${S.king}|${S.year}`].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7) % 100;
+  return h < 55 ? true : 'The queen is not with child this year';
 }
 function lordOf(x) {
   if (x.you) return 'you';
@@ -23413,6 +23430,8 @@ PETITIONS.push(
     X.mid.push(spr(X, cx - cw / 2 - 5, cy - 46, cw + 10, 51, c, 'sc_cradle'));
     X.land.push(man(X, cx - cw / 2 - 9, cy + 2, { h: 32, gown: true, hat: 'veil', hc: grand ? 'white' : 'daub', c: grand ? 'green' : 'blue' }));
     if (X.vr === 'royal' && X.wp === 'nursery') X.meAt = [cx - cw / 2 - 9, cy - 30];
+    // the royal children who are past the cradle play on the nursery floor
+    if (X.vr === 'royal') royalKids().filter(k => S.year - k.y >= 2 && S.year - k.y <= 11).slice(0, 4).forEach((k, i) => { const age = S.year - k.y; X.land.push(man(X, cx + cw / 2 + 14 + i * 13, cy + 4 + (i % 2) * 3, { h: Math.min(16, 8 + age), c: k.s === 'f' ? 'green' : 'blue', gown: k.s === 'f', hat: 'crown', dir: i % 2 ? -1 : 1 })); });
     // a stool and a spindle
     const tx = grand ? W * .22 : W * .28;
     L.push(pa(wr(X, tx - 7, 122, 14, 2.6, .2), 'wood', 'stroke-width=".5"') + ln(`M${n1(tx - 5)} 124.6l-1.6 11M${n1(tx + 5)} 124.6l1.6 11`, 'wood2', 1) + ln(`M${n1(tx + 2)} 122L${n1(tx + 7)} 98`, 'wood2', .7) + el(tx + 6.4, 101.5, 2.2, 3.6, 'white', 'stroke-width=".4"'));
@@ -23683,6 +23702,8 @@ PETITIONS.push(
       L.push(sitter(X, cx, fy - 11, fy + 1, { h: 32, c: me ? 'purple' : 'red', hat: 'crown', gown: true, front: true, fem: qf, beard: !qf && X.r() < .7, hold: (hx, hy, k) => ln(`M${n1(hx)} ${n1(hy)}L${n1(hx + 1)} ${n1(hy - 9 * k / 2.9)}`, 'gold', .9) + ci(hx + 1, hy - 9.6 * k / 2.9, 1.3, 'gold', 'stroke-width=".3"') }));
       // guards at the foot of the dais, and the court standing about in its finery
       for (const sd of [-1, 1]) L.push(man(X, cx + sd * 44, fy + 22, { h: 30, c: X.banner, hat: 'helm', tool: 'spear', dir: -sd }));
+      // the king's children stand on the dais beside the throne
+      if (!me) royalKids().filter(k => S.year - k.y >= 3).slice(0, 6).forEach((k, i) => { const age = S.year - k.y, sd = i % 2 ? 1 : -1; L.push(man(X, cx + sd * (20 + Math.floor(i / 2) * 8), fy + 5, { h: Math.min(16, 9 + age * .6), c: k.s === 'f' ? 'green' : 'blue', gown: k.s === 'f', hat: 'crown', dir: -sd })); });
       const finery = [['purple', 'cap', 'gold', 0], ['green', 'veil', 'white', 1], ['blue', 'hood', 'red', 0], ['red2', 'veil', 'gold', 1], ['gold', 'cap', 'blue', 0], ['wood', 'hood', 'green', 0]];
       for (let j = 0, n = 0; ; j++) { const d = 78 + j * 30; if (cx + d > W - 12) break; for (const sd of [-1, 1]) { if (j === 0 && sd < 0 && !me) continue; if (j === 1 && sd > 0) { addJuggler(X, cx + d, fy + 34, 27, -1); continue; } const [c, hat, hc, gown] = finery[n++ % finery.length]; L.push(man(X, cx + sd * d, fy + 30 + (j % 2) * 4, { h: 28, c, hat, hc, gown: !!gown, fem: !!gown, dir: -sd })); } }
       if (me) X.meAt = [cx, fy - 33]; else X.me = { x: cx - 78, y: fy + 30, h: 28, dir: 1 };
@@ -24416,7 +24437,7 @@ PETITIONS.push(
     const st = station(), vr = VR, wp = typeof wpNow === 'function' ? (wpNow() || '') : '', h = here(), sea = st === 'sea';
     const home = S.world && S.home != null && S.world.t ? TT(S.home) : null;
     const flags = ['war', 'front', 'plague', 'plagueNear', 'famine', 'murrain', 'crusade', 'comet', 'mourning'].map(k => (h[k] && !(sea && /plague|famine|murrain/.test(k))) ? 1 : 0).join('');
-    return { st, vr, wp, h, flags, ter: home ? home.ter : 'plains', key: [st, vr, wp, h.season, h.weather, flags, home ? home.ter : '-', SC.W, S.year, ['cradle', 'jail'].includes(st) ? S.cls : st === 'castle' ? (S.ruling ? 'r' : '') : '', S.job ? S.job.track + ':' + S.job.level : '-', S.age < 14 ? 'c' : '', typeof disguised === 'function' && disguised() ? 'd' : '', S.vows ? 'v' : '', S.last, S.realm, S.sex].join('|') };
+    return { st, vr, wp, h, flags, ter: home ? home.ter : 'plains', key: [st, vr, wp, h.season, h.weather, flags, home ? home.ter : '-', SC.W, S.year, typeof royalKids === 'function' ? royalKids().length : 0, ['cradle', 'jail'].includes(st) ? S.cls : st === 'castle' ? (S.ruling ? 'r' : '') : '', S.job ? S.job.track + ':' + S.job.level : '-', S.age < 14 ? 'c' : '', typeof disguised === 'function' && disguised() ? 'd' : '', S.vows ? 'v' : '', S.last, S.realm, S.sex].join('|') };
   }
   function armsOf(name) {
     let h = 0; for (const ch of String(name || '')) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
@@ -28098,15 +28119,15 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
   };
   const mixHex = (a, b, t) => { const p = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16)); const A = p(a), B = p(b); return '#' + A.map((x, i) => Math.round(x + (B[i] - x) * t).toString(16).padStart(2, '0')).join(''); };
   // the patient in bed: their face shows how they are, and the sickness shows on them
-  function patientSVG(d, health, cured, royal) {
+  function patientSVG(d, health, cured, royal, o = {}) {
     const k = SK[d.n] || SK['a tertian fever'], t = cured ? 1 : Math.max(0, Math.min(1, health / 100)) * .45, face = mixHex(k.mark === 'sad' ? '#b7c2b6' : '#b3c184', '#f1c8a8', t), m = k.mark, sick = !cured;
     const pock = (x, y, r, c) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${c}" opacity=".85"/>`;
-    const hx = 38, hy = 87, cl = royal ? '#5a2a6a' : '#8a3a2a', st = royal ? '#e2b23c' : '#c9a060', shirt = '#efe6d4', ln = 'rgba(0,0,0,.45)';
+    const hx = o.hx || 38, hy = 87, nk = o.neck || 21, cl = royal ? '#5a2a6a' : '#8a3a2a', st = royal ? '#e2b23c' : '#c9a060', shirt = '#efe6d4', ln = 'rgba(0,0,0,.45)';
     // the bed and the pillow
     let s = `<rect x="18" y="112" width="190" height="10" fill="#5a3a1e"/><path d="M20 112V82M206 112V100" stroke="#4a2e16" stroke-width="6"/><rect x="22" y="96" width="184" height="18" rx="5" fill="#ece2c8"/>`;
     s += `<rect x="22" y="80" width="40" height="22" rx="9" fill="#f6efdc" stroke="rgba(0,0,0,.12)"/>`;
     // the neck, running from under the jaw down to the collar
-    s += `<path d="M${hx + 6} ${hy - 4}Q${hx + 13} ${hy - 4} ${hx + 21} ${hy + 1}L${hx + 21} ${hy + 11}Q${hx + 13} ${hy + 10} ${hx + 4} ${hy + 8}Z" fill="${face}" stroke="${ln}" stroke-width=".7"/><path d="M${hx + 9} ${hy - 2}Q${hx + 13} ${hy - 1} ${hx + 15} ${hy + 1}" stroke="rgba(0,0,0,.18)" stroke-width=".8" fill="none"/>`;
+    s += `<path d="M${hx + 6} ${hy - 4}Q${hx + nk * .62} ${hy - 4} ${hx + nk} ${hy + 1}L${hx + nk} ${hy + 11}Q${hx + nk * .62} ${hy + 10} ${hx + 4} ${hy + 8}Z" fill="${face}" stroke="${ln}" stroke-width=".7"/><path d="M${hx + 9} ${hy - 2}Q${hx + 13} ${hy - 1} ${hx + 15} ${hy + 1}" stroke="rgba(0,0,0,.18)" stroke-width=".8" fill="none"/>`;
     // shoulders in a nightshirt, a blanket shaped over chest, hips, knees and feet, and the sheet turned down over it
     s += `<ellipse cx="66" cy="99" rx="15" ry="10" fill="${shirt}" stroke="rgba(0,0,0,.25)" stroke-width=".8"/>`;
     s += `<path d="M58 113V100Q60 89 72 88Q96 84 118 89Q132 92 146 88Q168 83 184 89Q194 85 200 92Q207 99 206 113Z" fill="${cl}" stroke="rgba(0,0,0,.35)"/>`;
@@ -28114,7 +28135,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     s += '<path d="M120 100Q140 98 160 100" stroke="rgba(0,0,0,.14)" stroke-width="1.2" fill="none"/>';
     // the arm that rests on top of the blanket: on the belly with the flux, bandaged with a wound
     const arm = d2 => `<path d="${d2}" stroke="rgba(60,40,20,.45)" stroke-width="8.2" stroke-linecap="round" fill="none"/><path d="${d2}" stroke="${shirt}" stroke-width="6.5" stroke-linecap="round" fill="none"/>`;
-    if (m === 'flux' && sick) s += `${arm('M70 94Q86 100 104 94Q112 91 116 92')}<circle cx="118" cy="92" r="3.4" fill="${face}" stroke="rgba(0,0,0,.4)" stroke-width=".6"/><path d="M110 84q4 -5 8 0q4 -5 8 0" stroke="#5a4a2a" stroke-width="1.4" fill="none"/>`;
+    if (o.noArm) { } else if (m === 'flux' && sick) s += `${arm('M70 94Q86 100 104 94Q112 91 116 92')}<circle cx="118" cy="92" r="3.4" fill="${face}" stroke="rgba(0,0,0,.4)" stroke-width=".6"/><path d="M110 84q4 -5 8 0q4 -5 8 0" stroke="#5a4a2a" stroke-width="1.4" fill="none"/>`;
     else s += `${arm('M70 94Q84 102 100 98')}<circle cx="103" cy="97.6" r="3.4" fill="${face}" stroke="rgba(0,0,0,.4)" stroke-width=".6"/>`;
     if (m === 'wound' && sick) s += '<rect x="82" y="94" width="11" height="8" rx="2" fill="#f4efe2" stroke="#9a8a6a" stroke-width=".6" transform="rotate(14 87 98)"/><circle cx="87.6" cy="98" r="1.8" fill="#8a4a3a" opacity=".8"/>';
     if (m === 'gout' && sick) s += `<g class="sk-throb"><path d="M203 106Q202 94 208 89Q214 86 217 91Q219 95 218 100Q216 106 210 107Z" fill="${face}" stroke="${ln}" stroke-width=".8"/><path d="M204 96.5H217.4M203.6 100.5H218M204.4 104.4H216" stroke="#f4efe2" stroke-width="2.4"/></g>`;
@@ -31435,7 +31456,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
   const LA_W = [['rex', 'king', 'regal'], ['regina', 'queen', 'regal'], ['equus', 'horse', 'equestrian'], ['aqua', 'water', 'aquarium'], ['panis', 'bread', 'pantry'], ['gladius', 'sword', 'gladiator'], ['liber', 'book', 'library'], ['canis', 'dog', 'canine'], ['ignis', 'fire', 'ignite'], ['terra', 'land', 'terrain'], ['mare', 'sea', 'marine'], ['lux', 'light', 'lucid'], ['pax', 'peace', 'pacify'], ['bellum', 'war', 'belligerent'], ['amicus', 'friend', 'amicable'], ['vinum', 'wine', 'vine'], ['mons', 'mountain', 'mount'], ['navis', 'ship', 'navy'], ['stella', 'star', 'stellar'], ['luna', 'moon', 'lunar'], ['sol', 'sun', 'solar'], ['domus', 'house', 'domestic']];
   mgAdd({ k: 'latin', i: '📖', n: 'The Latin lesson', d: 'Teach the prince his Latin. Match each word to its meaning quickly, before his mind wanders to the window.', seal: 'mg_latin', who: () => mgIn('jb_tutor'),
     play() {
-      const ROUNDS = 3, pupil = pick(['prince', 'princess']); let r = -1, set = [], sel = null, done = 0, right = 0, wrong = 0, att = 100, clock = null, over = false, busy = false, hinted = {};
+      const kid = royalKids().filter(k => S.year - k.y >= 5 && S.year - k.y <= 15)[0], ROUNDS = 3, pupil = kid ? (kid.s === 'm' ? 'prince' : 'princess') : pick(['prince', 'princess']), pname = kid ? `${kid.s === 'm' ? 'Prince' : 'Princess'} ${kid.n}` : ''; let r = -1, set = [], sel = null, done = 0, right = 0, wrong = 0, att = 100, clock = null, over = false, busy = false, hinted = {};
       const round = () => {
         r++; if (r >= ROUNDS) return end(); busy = false; sel = null; done = 0;
         set = shuf(LA_W).slice(0, 5 + r);
@@ -31465,7 +31486,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
         });
       };
       mgOn = (a, v, el) => { if (a === 'start') round(); else if (a === 'l') pickL(v, el); else if (a === 'e') pickE(v, el); };
-      mgIntro(MG_BY.latin, 'Royal tutor', [`Three lessons with the ${pupil}. Tap a <b>Latin word</b> on the left, then its <b>meaning</b> on the right.`, `Every right answer wins back the ${pupil}’s attention; a wrong one loses it, and earns a hint: an English word that comes from the Latin. <i>Aqua</i>? Think of an aquarium.`], '📖 Open the grammar');
+      mgIntro(MG_BY.latin, 'Royal tutor', [`Three lessons with ${pname || `the ${pupil}`}. Tap a <b>Latin word</b> on the left, then its <b>meaning</b> on the right.`, `Every right answer wins back the ${pupil}’s attention; a wrong one loses it, and earns a hint: an English word that comes from the Latin. <i>Aqua</i>? Think of an aquarium.`], '📖 Open the grammar');
     } });
 
   /* ---------- 76. The court poet: rhyme time ---------- */
@@ -31656,7 +31677,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
   mgAdd({ k: 'lullaby', i: '🍼', n: 'The lullaby', d: 'The royal baby will not settle. Sing the lullaby back, note for note, a little longer each verse, until the little one sleeps.', seal: 'mg_lullaby', who: () => mgIn('wm_royalnurse'),
     play() {
       const V = 6, tune = Array.from({ length: 9 }, () => R(0, 3)); let v = -1, len = 0, pos = 0, tries = 0, sung = 0, slips = 0, busy = true, over = false, cry = 60, clock = null;
-      const babe = pick(['prince', 'princess']);
+      const kid = royalKids().filter(k => S.year - k.y <= 2).sort((a, b) => b.y - a.y)[0], babe = kid ? (kid.s === 'm' ? 'prince' : 'princess') : pick(['prince', 'princess']), bname = kid ? `${kid.s === 'm' ? 'Prince' : 'Princess'} ${kid.n}` : '';
       const draw = () => { const b = document.getElementById('lu-cry'); if (b) b.style.width = `${cry}%`; const z = document.getElementById('lu-z'); if (z) z.textContent = cry < 25 ? '💤' : cry < 55 ? '😌' : '😭'; };
       const light = (k, ms) => { const e = document.getElementById(`lu${k}`); if (e) { e.classList.add('on'); setTimeout(() => e.classList.remove('on'), ms); } mgSnd(LU_B[k][1]); };
       const verse = () => {
@@ -31682,14 +31703,14 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       const end = () => {
         if (over) return; over = true;
         const score = clamp(Math.round((sung / V - slips * .04) * 100)) / 100;
-        mgFinish('lullaby', score, sung >= 5 ? `The little ${babe} is fast asleep, one fist curled under a rosy cheek.` : sung >= 3 ? `The ${babe} dozes at last, but wakes at every creak.` : `The ${babe} howls on, and the whole tower hears it.`, () => {
+        mgFinish('lullaby', score, sung >= 5 ? `${bname ? `Little ${bname}` : `The little ${babe}`} is fast asleep, one fist curled under a rosy cheek.` : sung >= 3 ? `The ${babe} dozes at last, but wakes at every creak.` : `The ${babe} howls on, and the whole tower hears it.`, () => {
           const ls = [];
           if (score >= .85) { fac('crown', 3); st('joy', 3); ls.push(`The queen says the ${babe} sleeps for nobody but you.`); }
           return ls;
         });
       };
       mgOn = (a, x) => { if (a === 'start') go(); else if (a === 'n') tap(x); };
-      mgIntro(MG_BY.lullaby, 'Royal nurse', [`The royal ${babe} is crying, and only the old lullaby will do. Each verse, the bells ring the tune: <b>listen</b>, then <b>ring it back</b> in the same order.`, 'Each verse is a note longer than the last. A wrong note sets the baby off again, and you must try that verse once more.'], '🍼 Lift the little one');
+      mgIntro(MG_BY.lullaby, 'Royal nurse', [`${bname ? `Little ${bname}` : `The royal ${babe}`} is crying, and only the old lullaby will do. Each verse, the bells ring the tune: <b>listen</b>, then <b>ring it back</b> in the same order.`, 'Each verse is a note longer than the last. A wrong note sets the baby off again, and you must try that verse once more.'], '🍼 Lift the little one');
     } });
 
   /* ---------- 81. The lady mistress: the chatelaine's keys ---------- */
@@ -31767,20 +31788,25 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     } });
 
   /* ---------- 83. The royal midwife: the royal birth ---------- */
-  mgAdd({ k: 'birth', i: '👶', n: 'The royal birth', d: 'The queen’s time has come. Steady her through every pain, breathing with her as each one rises, until the bells can ring for a royal baby.', seal: 'mg_birth', who: () => mgIn('wm_royalmidwife'),
+  mgAdd({ k: 'birth', i: '👶', n: 'The royal birth', d: 'The queen’s time has come. Steady her through every pain, breathing with her as each one rises, until the bells can ring for a royal baby.', seal: 'mg_birth', who: () => mgIn('wm_royalmidwife'), can: () => queenWithChild(),
     play() {
       const N = 14; let waves = [], sent = 0, good = 0, perfect = 0, missed = 0, fuss = 0, over = false, t0 = 0, nextAt = 1400, calm = 70;
       const LINE = 28;
       // the queen lying in the great bed, drawn like the sickroom patient: face up, neck and shoulders, the blanket over her body
-      const bedroom = () => {
-        let q = patientSVG({ n: 'a tertian fever' }, 100, true, true).replace(/<g class="sk-glow">[\s\S]*?<\/g>/, '');
-        const hair = '<path d="M28 81Q19 90 23 100Q31 107 45 102Q51 100 54 96Q41 98 34 92Q29 87 28 81Z" fill="#5a3a22"/><path d="M26 92Q30 100 40 101" stroke="#3a2412" stroke-width=".8" fill="none"/>';
+      const bedroom = (born, sex) => {
+        let q = patientSVG({ n: 'a tertian fever' }, 100, true, true, { hx: 44, neck: 14, noArm: true }).replace(/<g class="sk-glow">[\s\S]*?<\/g>/, '');
+        const hair = '<g transform="translate(6 0)"><path d="M28 81Q19 90 23 100Q31 107 45 102Q51 100 54 96Q41 98 34 92Q29 87 28 81Z" fill="#5a3a22"/><path d="M26 92Q30 100 40 101" stroke="#3a2412" stroke-width=".8" fill="none"/></g>';
         const at = q.lastIndexOf('<g class="'); if (at > 0) q = q.slice(0, at) + hair + q.slice(at);
-        const bump = '<path d="M108 91Q124 72 144 90" fill="#5a2a6a" stroke="rgba(0,0,0,.35)"/><path d="M112 88Q124 78 140 88" stroke="#e2b23c" stroke-width="1.4" fill="none" opacity=".8"/>';
-        return `<svg viewBox="0 0 240 132" class="bi-bed" aria-hidden="true"><rect width="240" height="132" fill="#6b3a4a"/><rect y="120" width="240" height="12" fill="#4a2a1e"/><path d="M196 18V64Q206 50 216 64V18Z" fill="#1e2a5a"/><path d="M193 66V15H219V66" fill="none" stroke="#3a1a10" stroke-width="3"/><circle cx="203" cy="30" r="1.2" fill="#fff6c8"/><circle cx="210" cy="40" r=".9" fill="#fff6c8"/><g transform="translate(160 98) scale(1.25)">${fig(Object.assign({}, meLook(), { arms: 'hold', mood: 'calm' }))}</g><path d="M178 92V120M186 92V120" stroke="#5a3a1e" stroke-width="2"/><rect x="174" y="88" width="16" height="4" fill="#6b4226"/><path d="M182 88V80" stroke="#f4efe2" stroke-width="3"/><path d="M182 80q-2 -4 0 -7q2 3 0 7z" fill="#ffb84a"/><rect x="6" y="14" width="228" height="10" rx="2" fill="#7a1e16"/><path d="M6 24H234" stroke="#e2b23c" stroke-width="2" stroke-dasharray="3 3"/><path d="M6 24Q1 70 9 122H19Q13 78 20 24Z" fill="#9b1f12" stroke="rgba(0,0,0,.3)"/><g transform="translate(6 2)">${q}${bump}</g></svg>`;
+        const arm = (d, hx, hy) => `<path d="${d}" stroke="rgba(60,40,20,.45)" stroke-width="8.2" stroke-linecap="round" fill="none"/><path d="${d}" stroke="#efe6d4" stroke-width="6.5" stroke-linecap="round" fill="none"/><circle cx="${hx}" cy="${hy}" r="3.4" fill="#f1c8a8" stroke="rgba(0,0,0,.4)" stroke-width=".6"/>`;
+        // with child: the belly rises high under the blanket, her hand resting on it
+        const bump = '<path d="M90 90Q93 70 112 68Q131 70 136 90Z" fill="#5a2a6a" stroke="rgba(0,0,0,.35)"/><path d="M95 86Q100 74 112 73Q125 74 131 86" stroke="#e2b23c" stroke-width="1.4" fill="none" opacity=".8"/><path d="M104 76Q112 72 122 76" stroke="rgba(255,255,255,.18)" stroke-width="2" fill="none"/>' + arm('M68 94Q80 97 90 89Q97 80 106 76', 108.2, 75.2);
+        // delivered: the blanket lies flat again, and the baby is in her arms
+        const wrap = sex === 'f' ? '#f2c8d4' : '#bcd6ee', wrap2 = sex === 'f' ? '#d89aae' : '#86aed4';
+        const baby = `<ellipse cx="100" cy="85" rx="14" ry="7.6" fill="${wrap}" stroke="${wrap2}"/><path d="M90 87Q100 81 112 85" stroke="${wrap2}" stroke-width="1" fill="none"/><path d="M95 80Q99 86 96 91" stroke="${wrap2}" stroke-width=".9" fill="none"/><circle cx="89" cy="83.6" r="5" fill="#f4cdb0" stroke="rgba(0,0,0,.35)" stroke-width=".5"/><path d="M87.4 82.8q.8 .7 1.6 0M89.8 82.2q.8 .7 1.6 0" stroke="#5a3a22" stroke-width=".55" fill="none"/><path d="M88.4 85.6q.9 .6 1.8 0" stroke="#b86a5a" stroke-width=".5" fill="none"/><path d="M84.6 81.4Q86.4 77.4 91 78.4" stroke="${wrap2}" stroke-width="2.2" fill="none"/>` + arm('M68 94Q86 99 110 89', 112, 88);
+        return `<svg viewBox="0 0 240 132" class="bi-bed" aria-hidden="true"><rect width="240" height="132" fill="#6b3a4a"/><rect y="120" width="240" height="12" fill="#4a2a1e"/><path d="M196 18V64Q206 50 216 64V18Z" fill="#1e2a5a"/><path d="M193 66V15H219V66" fill="none" stroke="#3a1a10" stroke-width="3"/><circle cx="203" cy="30" r="1.2" fill="#fff6c8"/><circle cx="210" cy="40" r=".9" fill="#fff6c8"/><g transform="translate(160 98) scale(1.25)">${fig(Object.assign({}, meLook(), { arms: 'hold', mood: born ? 'happy' : 'calm' }))}</g><path d="M178 92V120M186 92V120" stroke="#5a3a1e" stroke-width="2"/><rect x="174" y="88" width="16" height="4" fill="#6b4226"/><path d="M182 88V80" stroke="#f4efe2" stroke-width="3"/><path d="M182 80q-2 -4 0 -7q2 3 0 7z" fill="#ffb84a"/><rect x="6" y="14" width="228" height="10" rx="2" fill="#7a1e16"/><path d="M6 24H234" stroke="#e2b23c" stroke-width="2" stroke-dasharray="3 3"/><path d="M6 24Q1 70 9 122H19Q13 78 20 24Z" fill="#9b1f12" stroke="rgba(0,0,0,.3)"/><g transform="translate(6 2)">${q}${born ? baby : bump}</g></svg>`;
       };
       const go = () => {
-        mgShow(`${mgHead(MG_BY.birth, 'The queen’s lying-in chamber')}<div class="sc g-bi" id="bi-stage"><div class="bi-room">${bedroom()}<span class="bi-breath" id="bi-breath"></span></div><svg class="bi-wave" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path id="bi-path" d="" fill="rgba(155,31,18,.18)" stroke="#9b1f12" stroke-width="1.2" vector-effect="non-scaling-stroke"/><path d="M${LINE} 0V40" stroke="#1a1208" stroke-width="1.5" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/></svg></div><div class="bi-calm"><span>The queen’s calm</span><b><i id="bi-calm"></i></b></div>${mgBtn('br', '', '🌬️ Breathe with her!', 'go bi-go')}<div class="cu-hud ex-hud" id="bi-hud"></div><p class="mg-tip sc-tip">Tap as each peak crosses the dotted line.</p>`);
+        mgShow(`${mgHead(MG_BY.birth, 'The queen’s lying-in chamber')}<div class="sc g-bi" id="bi-stage"><div class="bi-room" id="bi-room">${bedroom(false)}<span class="bi-breath" id="bi-breath"></span></div><svg class="bi-wave" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path id="bi-path" d="" fill="rgba(155,31,18,.18)" stroke="#9b1f12" stroke-width="1.2" vector-effect="non-scaling-stroke"/><path d="M${LINE} 0V40" stroke="#1a1208" stroke-width="1.5" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/></svg></div><div class="bi-calm"><span>The queen’s calm</span><b><i id="bi-calm"></i></b></div>${mgBtn('br', '', '🌬️ Breathe with her!', 'go bi-go')}<div class="cu-hud ex-hud" id="bi-hud"></div><p class="mg-tip sc-tip">Tap as each peak crosses the dotted line.</p>`);
         hud(); t0 = performance.now();
         mgLoop('bi-stage', (now, dt) => {
           if (over) return false; const el = now - t0;
@@ -31806,14 +31832,20 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       };
       const hud = () => mgSet('bi-hud', `<span>🌬️ Breathed through <b>${good}</b> / ${N}</span><span>⭐ Perfect <b>${perfect}</b></span>`);
       const end = () => {
-        if (over) return; over = true; const baby = pick(['prince', 'princess']);
+        if (over) return; over = true; const sex = P(.5) ? 'm' : 'f', baby = sex === 'm' ? 'prince' : 'princess', nm = pick(NAMES[sex]), title = `${sex === 'm' ? 'Prince' : 'Princess'} ${nm}`;
         const score = clamp(Math.round(((good + perfect * .3) / N - fuss * .02) * 100)) / 100;
-        mgSnd('wedding');
-        mgFinish('birth', score, `A cry at last: a healthy royal ${baby}! ${score >= .7 ? 'The queen, pale but smiling, takes your hand and thanks you.' : 'It was a long and hard night, but mother and child are safe.'} The bells ring across the city.`, (grade, mult, pay) => {
+        // the baby is born: the bump goes, and the queen holds the child
+        const rm = document.getElementById('bi-room'); if (rm) rm.innerHTML = bedroom(true, sex);
+        document.querySelectorAll('#bi-stage .sc-pop').forEach(e => e.remove()); mgPop('bi-stage', `A ${sex === 'm' ? 'boy' : 'girl'}! ${title}!`, 'gold', 50, 14); mgSnd('wedding');
+        const rb = royalBirths(); if (rb) { rb.kids.push({ n: nm, s: sex, y: S.year }); rb.last = S.year; }
+        const nth = rb ? rb.kids.length : 1;
+        say(`You delivered the queen of ${sex === 'm' ? 'a son' : 'a daughter'}: ${title}${nth > 1 ? `, the ${['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth'][nth]} royal child` : ''}.`, 'good');
+        mgAfter(2400, 'bi-stage', () => mgFinish('birth', score, `A cry at last: a healthy royal ${baby}, to be named ${title}! ${score >= .7 ? 'The queen, pale but smiling, takes your hand and thanks you.' : 'It was a long and hard night, but mother and child are safe.'} The bells ring across the city.`, (grade, mult, pay) => {
           const ls = [];
           if (score >= .85) { coin(Math.round(pay * .5 * mult)); fac('crown', 5); st('renown', 3); ls.push(`The king sends you a purse of gold and a length of scarlet cloth.`); }
+          ls.push(`${title} will grow up in the royal nursery. You will see ${sex === 'm' ? 'him' : 'her'} about the castle.`);
           return ls;
-        });
+        }));
       };
       mgOn = a => { if (a === 'start') go(); else if (a === 'br') breathe(); };
       mgIntro(MG_BY.birth, 'Royal midwife', ['The queen’s time has come, and the whole kingdom waits outside the door. You are at her side.', 'Each pain rises like a wave on the line below. <b>Tap “Breathe with her”</b> just as each peak crosses the dotted line, to steady her through it. Tapping between pains only frets her. The pains come closer together towards the end.'], '👶 Roll up your sleeves');
