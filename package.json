@@ -1,11 +1,12 @@
 {
   "name": "mud-crowns",
-  "version": "1.29.2",
+  "version": "1.29.3",
   "private": true,
   "description": "Mud & Crowns: a medieval life simulator",
   "type": "module",
   "scripts": {
-    "build": "node scripts/build-www.mjs",
+    "check": "node scripts/check-styles.mjs",
+    "build": "node scripts/check-styles.mjs && node scripts/build-www.mjs",
     "serve": "npm run build && npx --yes serve www",
     "ios": "npm run build && npx cap sync ios && npx cap open ios",
     "android": "npm run build && npx cap sync android && npx cap open android"

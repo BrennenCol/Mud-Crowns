@@ -379,6 +379,10 @@ fills in anything a newer version expects, and drops a job whose career no longe
   looks so it is the same as a child and as your heir), fades smoothly to grey over about
   twenty years, then to white, and never goes back.
 
+## Checks before every release
+
+`npm run build` first runs `scripts/check-styles.mjs` (also `npm run check`), and stops if it fails. Because the whole game lives in one `index.html`, two parts of it can pick the same short style name without knowing: that is how the Realm lists once turned sky blue (the sermon game's `sm`) and how the start screen's gold corner went missing (a bare `.tl`). The check looks at every style rule that is a single class on its own, and fails if a mini-game and the rest of the game both use that name. The iPhone build runs `npm run build`, so a clash stops it too.
+
 ## Batch 5: the great household and healing (v1.28)
 
 With this batch every elite post has a game of its own: 82 in all.

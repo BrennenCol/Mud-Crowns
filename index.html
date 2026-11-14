@@ -876,7 +876,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .mgf b{position:relative;display:block;width:100%;height:8px;border-radius:4px;background:var(--rule);overflow:hidden}
 .mgf b::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--v);background:linear-gradient(90deg,#b8861b,#e8c45a);border-radius:4px}
 .mgf b::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,transparent 14%,rgba(163,37,26,.6) 14% 16%,transparent 16% 84%,rgba(163,37,26,.6) 84% 86%,transparent 86%)}
-.mgf.warn b::after{background:linear-gradient(90deg,#a3251a,#d65a42)}
+.mgf.mg-warn b::after{background:linear-gradient(90deg,#a3251a,#d65a42)}
 .mgf small{font-size:12px;color:var(--ink-3);text-align:center}
 .mg-fac.big .mgf b{height:12px}
 .mg-facbox .mg-fac{margin-top:8px}
@@ -1081,7 +1081,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .sc-time i.low{background:linear-gradient(90deg,#a3251a,#d65a42)}
 /* petitions */
 .pt-cloth{transform-box:fill-box;transform-origin:50% 0;transition:transform .8s cubic-bezier(.3,1.4,.5,1)}
-.pt-ban.warn .pt-cloth path:first-child{stroke:#ffd76a;stroke-width:2.2;animation:ptWarn .7s infinite alternate}
+.pt-ban.mg-warn .pt-cloth path:first-child{stroke:#ffd76a;stroke-width:2.2;animation:ptWarn .7s infinite alternate}
 @keyframes ptWarn{to{stroke:#ff4a2a}}
 .pt-mark{stroke:rgba(255,240,200,.6);stroke-width:1.2;stroke-dasharray:5 3}
 .pt-mk{font:italic 600 10px var(--serif);fill:#fff3d6;paint-order:stroke;stroke:rgba(40,24,10,.7);stroke-width:2.4px}
@@ -1193,7 +1193,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .bd-shift{transition:transform .4s ease}
 .bd-fall{transform-box:fill-box;transform-origin:center;animation:bdFall .9s ease-in forwards}
 @keyframes bdFall{to{transform:translateY(130px) rotate(40deg);opacity:0}}
-.bd.crash .sc-svg{animation:bfShake .28s 4}
+.bd.bd-crash .sc-svg{animation:bfShake .28s 4}
 .bd-wind path{animation:bdWind 1.6s linear infinite}
 @keyframes bdWind{0%{transform:translateX(-20px);opacity:0}30%{opacity:.8}100%{transform:translateX(60px);opacity:0}}
 /* the envoy */
@@ -1225,7 +1225,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .mg-b.mk-buy{background:#2f6a3c;color:#eaffe8;border-color:#1a4022}
 .mg-b.mk-sell{background:#8a5a10;color:#fff3d6;border-color:#5a3a08}
 /* the spymaster */
-.sp{background:#14141e}
+.g-spy{background:#14141e}
 .sp-map{display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(5,1fr);width:100%;aspect-ratio:7/5}
 .sp-c{position:relative;margin:0;padding:0;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .sp-s{background:#2a2a36 radial-gradient(circle at 30% 30%,rgba(255,255,255,.07) 2px,transparent 3px) 0 0/12px 12px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);transition:background-color .3s}
@@ -1311,7 +1311,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 @keyframes smSway{to{transform:translateX(4px) rotate(4deg)}}
 .sm-c.gone{visibility:hidden}
 /* attendance */
-.at{background:#6b4a5a}
+.g-att{background:#6b4a5a}
 .at-items{position:absolute;left:2%;top:6%;display:grid;grid-template-columns:repeat(3,1fr);gap:5px;width:60%}
 .at-it{height:40px;padding:0;border:0;border-radius:10px;background:rgba(255,248,230,.85);box-shadow:inset 0 0 0 2px #c9952e;font-size:24px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .at-it.ok{background:#d8f0d0;box-shadow:inset 0 0 0 2px #3f8a52}
@@ -1335,7 +1335,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .sc-tray{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:8px 0}
 .mg-b.sc-tile{padding:10px 0;font:26px/1 var(--black);background:linear-gradient(#f6ecd2,#e6d6ae);border-color:#8a6a3a}
 /* the heavens */
-.st{background:#0b1030}
+.g-sta{background:#0b1030}
 .st-s{position:absolute;z-index:2;width:30px;height:30px;margin:-15px 0 0 -15px;padding:0;border:0;border-radius:50%;background:radial-gradient(circle,#fff 0 2px,rgba(255,255,255,.35) 3px,transparent 6px);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .st-s.c{background:radial-gradient(circle,#fff 0 2.6px,rgba(255,255,255,.4) 4px,transparent 7px)}
 .st-s.show{background:radial-gradient(circle,#fff6c0 0 3px,rgba(255,220,120,.7) 5px,transparent 10px)}
@@ -1344,7 +1344,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .st-name{position:absolute;left:8px;top:6px;z-index:3;padding:2px 8px;border-radius:99px;background:rgba(0,0,0,.45);color:#f3d983;font:15px/1.3 var(--black)}
 .st-comet{position:absolute;left:-10%;z-index:3;padding:4px;border:0;background:none;font-size:22px;cursor:pointer;animation:stComet 3.1s linear forwards}
 @keyframes stComet{to{left:104%;transform:translateY(40px)}}
-.sc.st .sc-svg{height:240px}
+.sc.g-sta .sc-svg{height:240px}
 /* the commission */
 .pa{background:linear-gradient(#f3e6c8,#e2cfa4);box-shadow:0 0 0 2px #8a6420,inset 0 0 0 8px #6b4a2e,0 4px 10px rgba(0,0,0,.3)}
 .pa.cloth{background:#efe6cf repeating-linear-gradient(0deg,transparent 0 3px,rgba(140,120,80,.12) 3px 4px),repeating-linear-gradient(90deg,transparent 0 3px,rgba(140,120,80,.12) 3px 4px)}
@@ -1502,7 +1502,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 /* signals */
 .g-lb{background:#9cc4e0}
 .lb-ev{position:absolute;left:8px;top:6px;padding:3px 10px;border-radius:8px;background:rgba(155,31,18,.92);color:#fff3e2;font-size:14px}
-.lb-ship.turn{animation:lbTurn .9s ease-in-out}
+.lb-ship.lb-turn{animation:lbTurn .9s ease-in-out}
 @keyframes lbTurn{50%{transform:translateY(-6px)}}
 .lb-book{display:grid;grid-template-columns:1fr 1fr;gap:3px 8px;margin:6px 0;padding:6px 8px;border-radius:8px;background:var(--vellum-2);box-shadow:inset 0 0 0 1px var(--rule);font-size:12.5px}
 .lb-book span{display:flex;align-items:center;gap:5px}
@@ -1553,7 +1553,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .wr-doc{position:absolute;left:0;right:0;bottom:calc(var(--q) * 18px);height:46px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:3px;background:linear-gradient(#f6ecd2,#e6d6ae);box-shadow:0 2px 4px rgba(0,0,0,.35);transform:rotate(calc((var(--q) - 3) * 1.4deg));color:#2a1d14}
 .wr-doc span{font-size:22px}
 .wr-doc b{font-size:14px}
-.wr-doc.top{z-index:9;box-shadow:0 0 0 2px #ffd76a,0 3px 6px rgba(0,0,0,.4);transform:none}
+.wr-doc.wr-top{z-index:9;box-shadow:0 0 0 2px #ffd76a,0 3px 6px rgba(0,0,0,.4);transform:none}
 .wr-max{position:absolute;right:6px;top:6px;font-size:11px;color:#f1e4c3;opacity:.8}
 .mg-b.wr-s{padding:10px 4px;font-size:14px}
 .wr-wax{display:block;width:26px;height:26px;margin:0 auto 4px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.35),var(--c) 60%);box-shadow:0 0 0 2px rgba(0,0,0,.25)}
@@ -2151,7 +2151,7 @@ button.in-t{cursor:pointer}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.29.2';
+const APP_VERSION = '1.29.3';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -9882,7 +9882,7 @@ const WP_PLACE = {
   tavern: { sc: 'tavern', ci: 'tavern', n: 'At the inn', at: 'the inn' },
   household: { sc: 'kitchen', vr: 'plain', ci: 'household', n: 'Below stairs in a great house', at: 'the kitchen' },
   ckitchen: { sc: 'kitchen', vr: 'royal', ci: 'court', side: 'below', n: 'In the royal kitchen', at: 'the royal kitchen' },
-  claundry: { sc: 'castle', vr: 'laundry', ci: 'court', side: 'below', n: 'In the castle laundry', at: 'the laundry' },
+  claundry: { sc: 'laundry', vr: 'royal', ci: 'court', side: 'below', n: 'In the castle laundry', at: 'the laundry' },
   cgate: { sc: 'castle', vr: 'gate', ci: 'court', side: 'guard', n: 'On the castle walls', at: 'the gate' },
   cstable: { sc: 'stable', vr: 'royal', ci: 'court', side: 'below', n: 'In the royal stables', at: 'the stables' },
   nursery: { sc: 'cradle', vr: 'royal', ci: 'court', side: 'below', n: 'In the royal nursery', at: 'the nursery' },
@@ -23482,7 +23482,7 @@ PETITIONS.push(
   // Rooms are painted like the cradle and the cell: a wall with its windows cut out (the weather shows through them),
   // a floor, and the room's furniture and people. Everything is laid out from the middle outwards in fixed slots, so
   // nothing stands on anything else however wide the frame is.
-  const INSIDE = new Set(['jail', 'cradle', 'hall', 'kitchen', 'forge', 'shop', 'tavern', 'church', 'study', 'stable']);
+  const INSIDE = new Set(['jail', 'cradle', 'hall', 'kitchen', 'laundry', 'forge', 'shop', 'tavern', 'church', 'study', 'stable']);
   const clampX = (X, x, half) => Math.max(half + 2, Math.min(X.W - half - 2, x));
   // through the windows: hills and trees, or the houses across the street
   function outside(X, o = {}) {
@@ -23861,6 +23861,56 @@ PETITIONS.push(
     // the coal boy, back and forth with his basket
     const by = fy + 37;
     X.mid.push(mover(X, 2, by - 25, 16, 27, man(X, 9, by, { h: 22, c: 'earth', hat: 'cap', hc: 'black', hold: (hx, hy) => pa(`M${n1(hx - 4)} ${n1(hy - 2)}h8l-1 5h-6Z`, 'thatch2', 'stroke-width=".4"') + el(hx, hy - 2, 4, 1.2, 'black', NS) }), { from: -24, to: W - 10, dur: 38, bobDur: .4 }));
+  }
+
+  /* ---------- the castle laundry: coppers on the fire, tubs, and the linen drying on lines ---------- */
+  function scLaundry(X) {
+    const W = X.W, L = X.land, fy = 102;
+    outside(X, { town: false });
+    const wx = clampX(X, W * .1, 14);
+    wallOf(X, fy, [[wx, 20, 14, 26, 'arch']], { col: 'stone', tex: 'ashlar', col2: 'stone2', frame: 'stone2' });
+    beams(X, 10);
+    floorOf(X, fy, 'flags');
+    // the fireplace, with the great copper of boiling water on it, and the steam rising
+    const fx = clampX(X, Math.max(wx + 60, W * .3), 40), fw = 64, fh = 44, ft = fy - fh;
+    L.push(pa(`M${n1(fx - fw / 2 - 6)} ${n1(fy)}V${n1(ft - 8)}L${n1(fx - fw / 2 + 6)} 10H${n1(fx + fw / 2 - 6)}L${n1(fx + fw / 2 + 6)} ${n1(ft - 8)}V${n1(fy)}Z`, 'stone', 'stroke-width=".7"'));
+    L.push(pa(holeD(fx, ft, fw, fh, 'arch'), 'iron', 'stroke-width=".7"') + ln(`M${n1(fx - fw / 2 - 6)} ${n1(ft - 8)}H${n1(fx + fw / 2 + 6)}`, 'stone2', 2.6));
+    for (let i = 0; i < 4; i++) X.mid.push(flame(X, fx - 12 + i * 8, fy - 1, i % 2 ? 9 : 12, i % 2 ? 'fire2' : 'fire', -i * .3));
+    X.glow.push([fx - 20, fy - 18, 40, 18, 'soft']);
+    L.push(pa(`M${n1(fx - 17)} ${n1(fy - 26)}H${n1(fx + 17)}L${n1(fx + 14)} ${n1(fy - 9)}Q${n1(fx)} ${n1(fy - 5)} ${n1(fx - 14)} ${n1(fy - 9)}Z`, 'gold2', 'stroke-width=".6"') + el(fx, fy - 26, 17, 3, 'sea', 'stroke-width=".5"') + ln(`M${n1(fx - 17)} ${n1(fy - 23)}H${n1(fx + 17)}`, 'wood2', .6, 'opacity=".5"'));
+    for (let i = 0; i < 3; i++) X.mid.push(spr(X, fx - 10 + i * 8, fy - 52, 8, 24, pa(`M${n1(fx - 7 + i * 8)} ${n1(fy - 29)}q-3 -6 0 -11q3 -5 0 -11`, 'none', `stroke="${V('white')}" stroke-width="1.6" fill="none" opacity=".55"`), 'sc_puff', dd(3 + i * .6, -i)));
+    // a laundress stirring the copper with her long paddle
+    L.push(man(X, fx + fw / 2 + 12, fy + 30, { h: 30, c: 'daub2', hat: 'coif', apron: 'white', gown: true, dir: -1, pose: 'work', fem: true, hold: (hx, hy) => ln(`M${n1(hx)} ${n1(hy)}L${n1(fx + 8)} ${n1(fy - 24)}`, 'wood2', 1.1) }));
+    // lines of linen drying under the beams: sheets, shirts and napkins
+    const lx0 = fx + fw / 2 + 20, lx1 = W - 10;
+    if (lx1 - lx0 > 40) {
+      for (const [ly, sag] of [[24, 4], [40, 5]]) {
+        L.push(pa(`M${n1(lx0)} ${n1(ly)}Q${n1((lx0 + lx1) / 2)} ${n1(ly + sag * 2)} ${n1(lx1)} ${n1(ly)}`, 'none', `stroke="${V('thatch2')}" stroke-width=".6" fill="none"`));
+        let x = lx0 + 6, j = 0;
+        while (x < lx1 - 14) {
+          const w = [16, 9, 12, 7][j % 4], h = [16, 10, 13, 6][j % 4], t = (x + w / 2 - lx0) / (lx1 - lx0), y = ly + sag * 4 * t * (1 - t) * 2;
+          const cloth = pa(`M${n1(x)} ${n1(y)}H${n1(x + w)}V${n1(y + h)}Q${n1(x + w * .5)} ${n1(y + h + 1.6)} ${n1(x)} ${n1(y + h)}Z`, j % 4 === 1 ? 'daub' : 'white', 'stroke-width=".4"') + ln(`M${n1(x + w * .3)} ${n1(y + 1)}V${n1(y + h - 1)}`, 'black', .3, 'opacity=".12"') + ci(x + 1, y, .6, 'wood2', NS) + ci(x + w - 1, y, .6, 'wood2', NS);
+          X.mid.push(spr(X, x - 1, y - 1, w + 2, h + 4, cloth, 'sc_swing', 'animation-duration:' + n1(4 + (j % 3)) + 's;' + dl(X, -X.r() * 4)));
+          x += w + 5; j++;
+        }
+      }
+    }
+    // the washing tubs, a laundress at each, scrubbing on her board
+    const tubs = [W * .62, W * .82].map(x => clampX(X, x, 22));
+    tubs.forEach((tx, i) => {
+      if (tx - (fx + fw / 2 + 30) < 20) return;
+      L.push(man(X, tx + (i ? -16 : 16), fy + 34, { h: 28, c: i ? 'blue' : 'green', hat: i ? 'veil' : 'coif', hc: 'white', apron: 'white', gown: true, dir: i ? 1 : -1, pose: 'work', fem: true }));
+      L.push(pa(`M${n1(tx - 13)} ${n1(fy + 22)}H${n1(tx + 13)}L${n1(tx + 11)} ${n1(fy + 36)}H${n1(tx - 11)}Z`, 'wood', 'stroke-width=".6"') + ln(`M${n1(tx - 12)} ${n1(fy + 26)}H${n1(tx + 12)}M${n1(tx - 11.5)} ${n1(fy + 32)}H${n1(tx + 11.5)}`, 'iron', .8) + el(tx, fy + 22, 13, 2.2, 'sea', 'stroke-width=".4"') + pa(`M${n1(tx - 4)} ${n1(fy + 22)}l2 -9h5l-1 9Z`, 'wood2', 'stroke-width=".4"'));
+      for (let b = 0; b < 3; b++) X.mid.push(spr(X, tx - 8 + b * 6, fy + 14, 4, 8, ci(tx - 6 + b * 6, fy + 19, .9 + (b % 2) * .4, 'white', 'stroke-width=".2"'), 'sc_puff', dd(2.4 + b * .5, -b * .8)));
+    });
+    // a basket of clean linen, and a heap of dirty linen waiting its turn
+    const bx = clampX(X, W * .5, 16);
+    L.push(pa(`M${n1(bx - 11)} ${n1(fy + 26)}H${n1(bx + 11)}L${n1(bx + 9)} ${n1(fy + 36)}H${n1(bx - 9)}Z`, 'thatch2', 'stroke-width=".55"') + pa(`M${n1(bx - 10)} ${n1(fy + 26)}Q${n1(bx - 6)} ${n1(fy + 19)} ${n1(bx)} ${n1(fy + 21)}Q${n1(bx + 6)} ${n1(fy + 18)} ${n1(bx + 10)} ${n1(fy + 26)}Z`, 'white', 'stroke-width=".45"'));
+    const hx2 = fx - fw / 2 - 18;
+    if (hx2 > 12) L.push(pa(`M${n1(hx2 - 12)} ${n1(fy + 30)}Q${n1(hx2 - 9)} ${n1(fy + 18)} ${n1(hx2)} ${n1(fy + 19)}Q${n1(hx2 + 9)} ${n1(fy + 18)} ${n1(hx2 + 12)} ${n1(fy + 30)}Z`, 'daub2', 'stroke-width=".5"') + ln(`M${n1(hx2 - 6)} ${n1(fy + 24)}q3 -2 6 0M${n1(hx2 + 1)} ${n1(fy + 27)}q3 -2 6 0`, 'black', .35, 'opacity=".25"'));
+    X.me = { x: bx + 24, y: fy + 36, h: 28, dir: 1 };
+    addCat(X, fx - 6, fy + 13, 1, 1, 'sleep');
+    addMouse(X, W * .4, fy + 3);
   }
 
   /* ---------- the forge: a smithy, or the royal mint ---------- */
@@ -24460,7 +24510,7 @@ PETITIONS.push(
   // scenes still to be painted fall back on the nearest one there is
   const SC_FALL = { pasture: 'village', mine: 'village', site: 'town', forge: 'town', shop: 'town', tavern: 'town', kitchen: 'manor', stable: 'manor', hall: 'castle', church: 'village', study: 'town' };
   const P0 = s => (String(s).charCodeAt(0) || 0) % 2 === 0;
-  const PAINT = { village: scVillage, town: scTown, market: scMarket, harbour: scHarbour, manor: scManor, castle: scCastle, abbey: scAbbey, camp: scCamp, sea: scSea, outlaw: scWood, forest: scWood, jail: scJail, cradle: scCradle, grave: scGrave, hall: scHall, kitchen: scKitchen, forge: scForge, shop: scShop, tavern: scTavern, church: scChurch, study: scStudy, stable: scStable, pasture: scPasture, mine: scMine, site: scSite };
+  const PAINT = { village: scVillage, town: scTown, market: scMarket, harbour: scHarbour, manor: scManor, castle: scCastle, laundry: scLaundry, abbey: scAbbey, camp: scCamp, sea: scSea, outlaw: scWood, forest: scWood, jail: scJail, cradle: scCradle, grave: scGrave, hall: scHall, kitchen: scKitchen, forge: scForge, shop: scShop, tavern: scTavern, church: scChurch, study: scStudy, stable: scStable, pasture: scPasture, mine: scMine, site: scSite };
   const SEAS = ['spring', 'summer', 'autumn', 'winter'];
   function here() {
     let h = null;
@@ -27422,7 +27472,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     if (mgElite()) h += factionHTML();
     return h;
   }
-  const factionHTML = () => { const f = mgS().fac; return `<div class="sumbox mg-facbox"><span class="climb-h">The four powers</span>How the realm’s great powers feel about you. Keep them all between the warning marks: too low and they turn on you, too high and the others grow jealous.<div class="mg-fac">${FACS.map(([k, i, n]) => `<span class="mgf ${f[k] <= 15 || f[k] >= 85 ? 'warn' : ''}"><i aria-hidden="true">${i}</i><b style="--v:${f[k]}%"></b><small>${n} ${f[k]}</small></span>`).join('')}</div></div>`; };
+  const factionHTML = () => { const f = mgS().fac; return `<div class="sumbox mg-facbox"><span class="climb-h">The four powers</span>How the realm’s great powers feel about you. Keep them all between the warning marks: too low and they turn on you, too high and the others grow jealous.<div class="mg-fac">${FACS.map(([k, i, n]) => `<span class="mgf ${f[k] <= 15 || f[k] >= 85 ? 'mg-warn' : ''}"><i aria-hidden="true">${i}</i><b style="--v:${f[k]}%"></b><small>${n} ${f[k]}</small></span>`).join('')}</div></div>`; };
   JOBPANELS.unshift({ k: 'mg_panel', when: () => S && S.alive && mgElite() && S.age >= 14, html: mgHTML });
 
   /* ---------- v1.20 every game a scene: the pieces they share ---------- */
@@ -27570,7 +27620,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     lords: '<path d="M-4.6 -4.6H4.6V0Q4.6 4.4 0 6Q-4.6 4.4 -4.6 0Z"/>', commons: '<path d="M0 6V-5M0 -3L-3 -5.5M0 -3L3 -5.5M0 0L-3.4 -2.6M0 0L3.4 -2.6M0 3L-3 .6M0 3L3 .6" stroke-width="1.6" stroke-linecap="round" fill="none" stroke="currentColor"/>',
   };
   const banLen = v => 12 + clamp(v) * .9;
-  const banSVG = (k, x, v) => `<g id="pt-b-${k}" class="pt-ban${v <= 15 || v >= 85 ? ' warn' : ''}" transform="translate(${x} 8)"><rect x="-17" y="-3" width="34" height="3.4" rx="1.6" fill="#4a2e16"/><g class="pt-cloth" style="transform:scaleY(${(banLen(v) / 102).toFixed(3)})"><path d="M-13 0H13V102L0 93L-13 102Z" fill="${PB[k][0]}" stroke="rgba(0,0,0,.45)" stroke-width=".8"/><path d="M-13 5H13M-13 9H13" stroke="${PB[k][1]}" stroke-width="1.1" opacity=".75"/></g><g transform="translate(0 20)" fill="${PB[k][1]}" color="${PB[k][1]}">${PICON[k]}</g></g>`;
+  const banSVG = (k, x, v) => `<g id="pt-b-${k}" class="pt-ban${v <= 15 || v >= 85 ? ' mg-warn' : ''}" transform="translate(${x} 8)"><rect x="-17" y="-3" width="34" height="3.4" rx="1.6" fill="#4a2e16"/><g class="pt-cloth" style="transform:scaleY(${(banLen(v) / 102).toFixed(3)})"><path d="M-13 0H13V102L0 93L-13 102Z" fill="${PB[k][0]}" stroke="rgba(0,0,0,.45)" stroke-width=".8"/><path d="M-13 5H13M-13 9H13" stroke="${PB[k][1]}" stroke-width="1.1" opacity=".75"/></g><g transform="translate(0 20)" fill="${PB[k][1]}" color="${PB[k][1]}">${PICON[k]}</g></g>`;
   const hallSVG = () => `<defs>${glowDef}<linearGradient id="sc-hw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8d7b64"/><stop offset="1" stop-color="#65543f"/></linearGradient><pattern id="sc-hs" width="30" height="16" patternUnits="userSpaceOnUse"><path d="M0 .5H30M0 8.5H30M.5 0V8M15.5 8V16" stroke="rgba(40,28,16,.3)" stroke-width="1" fill="none"/></pattern></defs>
     <rect width="360" height="152" fill="url(#sc-hw)"/><rect width="360" height="152" fill="url(#sc-hs)"/>
     <path d="M262 76V36Q270 20 278 36V76Z" fill="#9cc0dc" stroke="#3a2a1a" stroke-width="2.4"/><path d="M270 24V76M262 50H278" stroke="#3a2a1a" stroke-width="1.2"/>
@@ -27589,10 +27639,10 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       const say = h => mgSet('pt-say', h);
       const btns = (on) => { const p = list[i]; if (!p) return mgSet('pt-btns', ''); const dots = d => Object.keys(d[1]).map(k => FACS.find(x => x[0] === k)[1]).join(''); mgSet('pt-btns', ['a', 'b'].map(v => mgBtn('pa', v, `${esc(p[v][0])}<small>${dots(p[v])}</small>`, '', !on)).join('')); };
       const draw = () => {
-        mgShow(`${mgHead(MG_BY.pet, 'Your door is open', 0, N)}<div class="sc pt" id="pt-stage"><svg class="sc-svg" viewBox="0 0 360 210" aria-hidden="true">${hallSVG()}${petLow}${FACS.map(([k], j) => banSVG(k, X[j], F[k])).join('')}<g transform="translate(319 177) scale(1.12)">${fig(Object.assign({ arms: 'hold' }, me))}</g><g id="pt-q"></g>${actor('pt-p', 30, 188, 1.28, {}, 'hid')}</svg></div><div class="sc-say" id="pt-say"><p>The banners show how the four powers feel about you. Keep each between the <b>low</b> and <b>high</b> marks.</p></div><div class="mg-two" id="pt-btns"></div><p class="mg-tip sc-tip">The little icons show which powers an answer moves, but not which way.</p>`);
+        mgShow(`${mgHead(MG_BY.pet, 'Your door is open', 0, N)}<div class="sc g-pt" id="pt-stage"><svg class="sc-svg" viewBox="0 0 360 210" aria-hidden="true">${hallSVG()}${petLow}${FACS.map(([k], j) => banSVG(k, X[j], F[k])).join('')}<g transform="translate(319 177) scale(1.12)">${fig(Object.assign({ arms: 'hold' }, me))}</g><g id="pt-q"></g>${actor('pt-p', 30, 188, 1.28, {}, 'hid')}</svg></div><div class="sc-say" id="pt-say"><p>The banners show how the four powers feel about you. Keep each between the <b>low</b> and <b>high</b> marks.</p></div><div class="mg-two" id="pt-btns"></div><p class="mg-tip sc-tip">The little icons show which powers an answer moves, but not which way.</p>`);
         mgAfter(700, 'pt-stage', next);
       };
-      const banners = () => FACS.forEach(([k], j) => { const g = document.getElementById(`pt-b-${k}`); if (!g) return; const c = g.querySelector('.pt-cloth'); c.style.transform = `scaleY(${(banLen(F[k]) / 102).toFixed(3)})`; g.classList.toggle('warn', F[k] <= 15 || F[k] >= 85); });
+      const banners = () => FACS.forEach(([k], j) => { const g = document.getElementById(`pt-b-${k}`); if (!g) return; const c = g.querySelector('.pt-cloth'); c.style.transform = `scaleY(${(banLen(F[k]) / 102).toFixed(3)})`; g.classList.toggle('mg-warn', F[k] <= 15 || F[k] >= 85); });
       const next = () => {
         i++; if (i >= N) return end();
         const p = list[i]; mgStep(i); mgSub(`Petitioner ${i + 1} of ${N}`);
@@ -28352,7 +28402,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
           let adv = fell ? (b.done > 0 ? -1 : 0) : 1; if (!fell && q >= 85 && laid.length >= N) adv = 2;
           b.done = Math.max(0, Math.min(b.of, b.done + adv)); b.q.push(q);
           const fin = b.done >= b.of, avgQ = Math.round(b.q.reduce((a, x) => a + x, 0) / b.q.length);
-          if (fell) { const st0 = document.getElementById('bd-stage'); if (st0) st0.classList.add('crash'); mgSnd('clash'); }
+          if (fell) { const st0 = document.getElementById('bd-stage'); if (st0) st0.classList.add('bd-crash'); mgSnd('clash'); }
           mgSet('bd-say', `<p class="sc-res ${fell ? 'bad' : q >= 60 ? 'good' : ''}">${fell ? 'The courses crack and slide, and part of the work comes crashing down.' : `${laid.length} courses laid, ${perfect} of them perfect. The master of works rates this year’s building <b>${q}</b> out of 100.`}</p>`);
           const btn = document.querySelector('#card .bd-drop'); if (btn) btn.outerHTML = mgBtn('end', '', 'Down tools for the year', 'go');
           mgOn = a => {
@@ -28564,7 +28614,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       const hud = () => mgSet('sp-hud', `<span>✉ Letters <b>${got} / 4</b></span><span>👁 Seen by the watch <b>${caught}</b></span>`);
       const intro = () => mgShow(`${mgHead(MG_BY.spy, 'A traitor at court')}<div class="cu-desk"><p class="cu-say">Your informants have left <b>letters</b> in houses across the town: a candle burns in each window. Each letter tells you something about the traitor.</p><p class="cu-say">Tap a street to send your agent there, or tap a lit house to fetch its letter. Keep out of the <b>watchmen’s lanterns</b>: if they see your agent, you lose time and the court hears whispers. Get home before dawn.</p></div>${mgBtn('start', '', '🌙 Into the night', 'go')}`);
       const night = () => {
-        mgShow(`${mgHead(MG_BY.spy, 'The streets at night')}<div class="sc sp" id="sp-stage"><div class="sp-map" id="sp-map">${SPY_MAP.map((row, r) => [...row].map((ch, c) => `<button type="button" class="sp-c ${ch === 'H' ? 'sp-h' : 'sp-s'}${letters.has(`${c},${r}`) ? ' let' : ''}${c === SPY_HOME[0] && r === SPY_HOME[1] ? ' home' : ''}" data-mg="go" data-v="${c},${r}" aria-label="${ch === 'H' ? (letters.has(`${c},${r}`) ? 'a house with a letter' : 'a house') : 'a street'}">${ch === 'H' ? '<i class="sp-roof"></i>' : ''}</button>`).join('')).join('')}</div><div class="sp-tok me" id="sp-me">${spyTok('me')}</div><div class="sp-tok w" id="sp-w0">${spyTok('w')}</div><div class="sp-tok w" id="sp-w1">${spyTok('w')}</div><div class="sp-moon" id="sp-moon" aria-hidden="true">🌙</div></div>${timeBar('sp-t')}<div class="mg-tally2" id="sp-hud"></div><div class="sc-say" id="sp-say"><p>Your agent waits at the safe house. Where to?</p></div>${mgBtn('home', '', '🏰 Back to the castle with what you have', 'dim')}`);
+        mgShow(`${mgHead(MG_BY.spy, 'The streets at night')}<div class="sc g-spy" id="sp-stage"><div class="sp-map" id="sp-map">${SPY_MAP.map((row, r) => [...row].map((ch, c) => `<button type="button" class="sp-c ${ch === 'H' ? 'sp-h' : 'sp-s'}${letters.has(`${c},${r}`) ? ' let' : ''}${c === SPY_HOME[0] && r === SPY_HOME[1] ? ' home' : ''}" data-mg="go" data-v="${c},${r}" aria-label="${ch === 'H' ? (letters.has(`${c},${r}`) ? 'a house with a letter' : 'a house') : 'a street'}">${ch === 'H' ? '<i class="sp-roof"></i>' : ''}</button>`).join('')).join('')}</div><div class="sp-tok me" id="sp-me">${spyTok('me')}</div><div class="sp-tok w" id="sp-w0">${spyTok('w')}</div><div class="sp-tok w" id="sp-w1">${spyTok('w')}</div><div class="sp-moon" id="sp-moon" aria-hidden="true">🌙</div></div>${timeBar('sp-t')}<div class="mg-tally2" id="sp-hud"></div><div class="sc-say" id="sp-say"><p>Your agent waits at the safe house. Where to?</p></div>${mgBtn('home', '', '🏰 Back to the castle with what you have', 'dim')}`);
         tokAt('sp-me', me[0], me[1]); for (let q = 0; q < 2; q++) { const c = SPY_W[q][wpos[q]]; tokAt(`sp-w${q}`, c[0], c[1]); }
         paintLit(); hud();
         clock = mgClock(42000, 'sp-stage', f => {
@@ -28837,7 +28887,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       const queen = mgIn('ladywait', 'wm_damsel', 'wm_mistresscham', 'wm_firstlady', 'wm_ladymistress'), IT = shuf(queen ? AT_Q : AT_K), who = queen ? 'The queen' : `The ${KT() === 'Queen' ? 'queen' : 'king'}`;
       const lens = [2, 2, 3, 3, 4, 4]; let r = -1, seq = [], got = 0, right = 0, phase = '', clock = null;
       const royal = { f: queen || KT() === 'Queen', robe: '#5a2a6a', hat: 'crown', hair: '#5a3a22', beard: !(queen || KT() === 'Queen'), arms: 'hold' };
-      const scene = () => `<div class="sc at" id="at-stage"><svg class="sc-svg" viewBox="0 0 360 176" aria-hidden="true"><rect width="360" height="176" fill="#6b4a5a"/><rect width="360" height="176" fill="url(#mt-dam2)" opacity=".5"/><defs><pattern id="mt-dam2" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M10 2Q15 7 10 10Q5 7 10 2Z" fill="#8a5a6a"/></pattern></defs><rect y="144" width="360" height="32" fill="#5a3a22"/><path d="M268 144V66Q300 44 332 66V144Z" fill="#7a1e16" stroke="#e2b23c" stroke-width="2"/><g id="at-royal" transform="translate(300 150) scale(1.55)">${fig(royal)}</g></svg><div class="at-items">${IT.map(([e], j) => `<button type="button" class="at-it" data-mg="it" data-v="${j}" aria-label="${esc(IT[j][1])}">${e}</button>`).join('')}</div><div class="at-say" id="at-say"></div></div>${timeBar('at-t')}<div class="sc-say" id="at-msg"></div>${mgBtn('ready', '', 'Ready', 'go at-ready')}`;
+      const scene = () => `<div class="sc g-att" id="at-stage"><svg class="sc-svg" viewBox="0 0 360 176" aria-hidden="true"><rect width="360" height="176" fill="#6b4a5a"/><rect width="360" height="176" fill="url(#mt-dam2)" opacity=".5"/><defs><pattern id="mt-dam2" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M10 2Q15 7 10 10Q5 7 10 2Z" fill="#8a5a6a"/></pattern></defs><rect y="144" width="360" height="32" fill="#5a3a22"/><path d="M268 144V66Q300 44 332 66V144Z" fill="#7a1e16" stroke="#e2b23c" stroke-width="2"/><g id="at-royal" transform="translate(300 150) scale(1.55)">${fig(royal)}</g></svg><div class="at-items">${IT.map(([e], j) => `<button type="button" class="at-it" data-mg="it" data-v="${j}" aria-label="${esc(IT[j][1])}">${e}</button>`).join('')}</div><div class="at-say" id="at-say"></div></div>${timeBar('at-t')}<div class="sc-say" id="at-msg"></div>${mgBtn('ready', '', 'Ready', 'go at-ready')}`;
       const round = () => {
         r++; if (r >= lens.length) return end();
         seq = shuf(IT.map((_, j) => j)).slice(0, lens[r]); got = 0; phase = 'listen';
@@ -28919,7 +28969,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       let ci = -1, k = 0, done = 0, slips = 0, comets = 0, clock = null, over = false, busy = false;
       const astro = mgIn('jb_courtastro');
       const go = () => {
-        mgShow(`${mgHead(MG_BY.stars, 'On the tower roof')}<div class="sc st" id="st-stage"><svg class="sc-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="st-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1030"/><stop offset="1" stop-color="#1e2a56"/></linearGradient></defs><rect width="100" height="100" fill="url(#st-sky)"/><polyline id="st-guide" vector-effect="non-scaling-stroke" fill="none" stroke="#9fc4ff" stroke-width="1.6" stroke-dasharray="5 4" points=""/><polyline id="st-line" vector-effect="non-scaling-stroke" fill="none" stroke="#ffe08a" stroke-width="2.4" points=""/></svg><div id="st-stars"></div><div class="st-name" id="st-name"></div></div>${timeBar('st-t')}<div class="cu-hud ex-hud" id="st-hud"></div><div class="sc-say" id="st-say"><p>Watch the shape, then trace it, star by star, in order.</p></div>`);
+        mgShow(`${mgHead(MG_BY.stars, 'On the tower roof')}<div class="sc g-sta" id="st-stage"><svg class="sc-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="st-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1030"/><stop offset="1" stop-color="#1e2a56"/></linearGradient></defs><rect width="100" height="100" fill="url(#st-sky)"/><polyline id="st-guide" vector-effect="non-scaling-stroke" fill="none" stroke="#9fc4ff" stroke-width="1.6" stroke-dasharray="5 4" points=""/><polyline id="st-line" vector-effect="non-scaling-stroke" fill="none" stroke="#ffe08a" stroke-width="2.4" points=""/></svg><div id="st-stars"></div><div class="st-name" id="st-name"></div></div>${timeBar('st-t')}<div class="cu-hud ex-hud" id="st-hud"></div><div class="sc-say" id="st-say"><p>Watch the shape, then trace it, star by star, in order.</p></div>`);
         hud(); next();
         clock = mgClock(48000, 'st-stage', f => { setBar('st-t', f); if (P(.0045) && !document.querySelector('#st-stage .st-comet')) comet(); }, end);
       };
@@ -29753,7 +29803,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       const judge = timeout => {
         if (phase !== 'sig') return; phase = 'done'; if (clock) clock.stop();
         const want = SIGNALS.find(s => s[0] === evs[i][1])[1], ok = hoist === want;
-        if (ok) { right++; mgPop('lb-stage', `“${evs[i][1]}!” The fleet obeys.`, 'gold', 50, 30); mgSnd('good'); document.querySelectorAll('#lb-stage .lb-ship').forEach(s => { s.classList.remove('turn'); void s.getBoundingClientRect(); s.classList.add('turn'); }); }
+        if (ok) { right++; mgPop('lb-stage', `“${evs[i][1]}!” The fleet obeys.`, 'gold', 50, 30); mgSnd('good'); document.querySelectorAll('#lb-stage .lb-ship').forEach(s => { s.classList.remove('lb-turn'); void s.getBoundingClientRect(); s.classList.add('lb-turn'); }); }
         else if (timeout) { slow++; mgPop('lb-stage', 'Too slow: your captains do as they please', 'bad', 50, 30); mgSnd('bad'); }
         else { wrong++; mgPop('lb-stage', `Wrong flags! The fleet ${pick(['turns the wrong way', 'falls into confusion', 'drops anchor'])}`, 'bad', 50, 30); mgSnd('bad'); }
         mgAfter(1500, 'lb-stage', next);
@@ -29958,7 +30008,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       const go = () => { mgShow(`${mgHead(MG_BY.writs, 'The writs office')}<div class="qs-book wr-key">${key}</div><div class="sc g-wr" id="wr-stage"><div class="wr-pile" id="wr-pile"></div><div class="wr-max">Topples at 8</div></div>${timeBar('wr-t')}<div class="mg-three">${Object.entries(WR_S).map(([k, [e, n, c]]) => `<button type="button" class="mg-b wr-s" data-mg="seal" data-v="${k}" style="--c:${c}"><span class="wr-wax"></span>${esc(n)}</button>`).join('')}</div><div class="cu-hud ex-hud" id="wr-hud"></div>`); t0 = performance.now(); add(); add(); hud();
         clock = mgClock(40000, 'wr-stage', f => { setBar('wr-t', f); const now = performance.now() - t0; if (now >= nextAt) { nextAt = now + Math.max(700, 1700 - f * 900); add(); } }, end); };
       const add = () => { if (over) return; pile.push(pick(Object.keys(WR_T))); draw(); if (pile.length >= 8) { mgPop('wr-stage', 'The pile topples!', 'bad', 50, 30); mgSnd('clash'); end(); } };
-      const draw = () => mgSet('wr-pile', pile.map((k, q) => `<div class="wr-doc${q === 0 ? ' top' : ''}" style="--q:${q}"><span>${WR_T[k][0]}</span>${q === 0 ? `<b>${esc(WR_T[k][1])}</b>` : ''}</div>`).join(''));
+      const draw = () => mgSet('wr-pile', pile.map((k, q) => `<div class="wr-doc${q === 0 ? ' wr-top' : ''}" style="--q:${q}"><span>${WR_T[k][0]}</span>${q === 0 ? `<b>${esc(WR_T[k][1])}</b>` : ''}</div>`).join(''));
       const stamp = v => {
         if (over || !pile.length) return; const k = pile[0];
         if (WR_T[k][2] === v) { pile.shift(); done++; mgPop('wr-stage', 'Sealed', 'gold', 50, 70); mgSnd('tick'); }
