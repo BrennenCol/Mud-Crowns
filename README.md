@@ -379,6 +379,28 @@ fills in anything a newer version expects, and drops a job whose career no longe
   looks so it is the same as a child and as your heir), fades smoothly to grey over about
   twenty years, then to white, and never goes back.
 
+## Every elite job its own game, batch 1: the military (v1.24)
+
+The plan is for every one of the 81 elite posts to have a game of its own (shared games stay as
+extras). Batch 1 gives one to each military post:
+
+| Game | Post | How it plays |
+| --- | --- | --- |
+| The joust | Knight | Stop a needle on helm, shield or body, then strike as a ring closes; three passes; unhorsing |
+| The charge | Knight commander | Tap knights who drift out of line; charge when the enemy is in the gold band |
+| Raise the levies | Baron's captain | Villagers walk past; tap the fit men, not the old, boys, sick or the priest |
+| The muster | Marshal | Four ranks of six; flag men missing helm, pike or sword, or drunk |
+| The siege | Constable | Set the trebuchet's pull, then release on the swing; wind; three hits break the gate |
+| Ride the march | Duke's captain | Raiders come down to five fords; send the nearest of two riders in time |
+| The palace guard | Captain of the guard | Find the assassin (glint of steel, shifty eyes) before he reaches the throne |
+| The great bombard | Master gunner | Choose 1 to 3 kegs (range), fire when the mark is on a siege tower; 3 kegs can burst |
+| The contract | Condottiero | Three cities' offers creep up while patience falls; raise your price, sign in time |
+| Signal the fleet | Admiral of the fleet | Read the battle, find the order in the signal book, hoist its flags in order |
+| The pilgrim road | Preceptor | Bandits show in the trees beside the road; tap them before a pilgrim is robbed |
+| Hold the fortress | Grand master | Six wall sections; throw down ladders, double-tap to counter-mine |
+
+Shared pieces added: `tri()`, `horseSVG()`/`rider()`, `meterHTML()`/`meterPos()`.
+
 ## A game for every high post (v1.23)
 
 Every one of the 81 high posts now has at least one game that fits its daily work (24 games in all).

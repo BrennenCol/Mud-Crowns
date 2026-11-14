@@ -1406,6 +1406,130 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .mg-b.rvl-b.hit{animation:rvHit .18s ease-out}
 @keyframes rvHit{50%{transform:scale(.92)}}
 @media (prefers-reduced-motion:reduce){.rf-sea,.ht-bg,.sf-waves,.rg.on .rg-fx{animation:none}}
+/* ---------- v1.24 batch 1: the military ---------- */
+.mt-meter{position:relative;height:30px;margin:8px 4px 6px;border-radius:8px;overflow:hidden;box-shadow:inset 0 0 0 2px #3a2412}
+.mt-meter b{position:absolute;top:0;bottom:0;display:grid;place-items:center;opacity:.85}
+.mt-meter b small{font:600 11.5px/1 var(--serif);color:#1a1208}
+.mt-meter i{position:absolute;top:-3px;bottom:-3px;width:5px;margin-left:-2.5px;border-radius:3px;background:#fff;box-shadow:0 0 0 1.5px #1a1208;animation:cvSwing .9s linear infinite alternate}
+/* joust */
+.g-jo{background:#7fa25a}
+.jo-run{transition:transform 1.6s linear}
+.jo-fall>g{transform-box:fill-box;transform-origin:50% 100%;animation:joFall .9s ease-in forwards}
+@keyframes joFall{to{transform:rotate(-70deg) translate(-10px,16px);opacity:.75}}
+.jo-burst{animation:scPop .7s ease-out forwards}
+.jo-ring{position:relative;width:72px;height:72px;margin:6px auto;border-radius:50%;box-shadow:inset 0 0 0 3px #c9952e}
+.jo-ring i{position:absolute;inset:0;border-radius:50%;box-shadow:inset 0 0 0 4px #a3251a}
+@keyframes joRing{from{transform:scale(2.2);opacity:.3}to{transform:scale(1);opacity:1}}
+.mg-b.jo-strike{padding:14px;font-size:19px}
+/* charge */
+.g-cg{height:250px;background:linear-gradient(#b8d0b0,#7fa25a)}
+.cg-zone{position:absolute;left:50%;width:14%;top:0;bottom:0;background:rgba(255,215,106,.22);box-shadow:inset 2px 0 #ffd76a,inset -2px 0 #ffd76a}
+.cg-k{position:absolute;left:22%;width:62px;height:46px;margin-left:-31px;padding:0;border:0;background:none;cursor:pointer;transition:left .1s linear;-webkit-tap-highlight-color:transparent}
+.cg-k svg{width:100%;height:100%}
+.cg-k.out{filter:drop-shadow(0 0 4px #ff5a3a)}
+.cg-k.go{left:75%!important;transition:left 1s ease-in}
+.cg-foe{position:absolute;top:4%;bottom:4%;left:100%;display:flex;flex-direction:column;justify-content:space-between;width:30px;transition:left .1s linear}
+.cg-foe svg{width:30px;height:40px}
+/* levies */
+.g-lv{background:#b89a6a}
+.lv-lane{position:absolute;left:0;right:0;top:40%;height:56%}
+.lv-p{position:absolute;left:100%;width:44px;height:76px;padding:0;border:0;background:none;cursor:pointer;animation:lvWalk linear forwards;-webkit-tap-highlight-color:transparent}
+.lv-p svg{width:100%;height:100%}
+@keyframes lvWalk{to{left:-14%}}
+.lv-p.took{animation-play-state:paused;filter:drop-shadow(0 0 6px #ffd76a);opacity:0;transition:opacity .5s}
+.lv-p.no{filter:drop-shadow(0 0 6px #ff5a3a)}
+.lv-ranks{position:absolute;left:6px;top:6px;display:flex;flex-wrap:wrap;gap:1px;width:40%;font-size:13px}
+.lv-ranks i{font-style:normal}
+/* muster */
+.g-mu{padding:6px;background:linear-gradient(#a8c4a0,#8aa45a)}
+.mu-roll{margin:0 0 6px;padding:5px 8px;border-radius:6px;background:rgba(255,248,230,.85);font-size:13px;color:#2a1d14}
+.mu-rank{display:grid;grid-template-columns:repeat(6,1fr);gap:3px}
+.mu-rank.in{animation:muIn .6s ease-out}
+@keyframes muIn{from{transform:translateX(60%);opacity:0}}
+.mu-m{height:96px;padding:0;border:0;border-radius:8px;background:rgba(255,255,255,.15);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mu-m svg{width:100%;height:100%}
+.mu-m.flag{box-shadow:inset 0 0 0 3px #a3251a;background:rgba(163,37,26,.18)}
+.mu-m.right{box-shadow:inset 0 0 0 3px #3f8a52;background:rgba(63,138,82,.25)}
+.mu-m.wrong{box-shadow:inset 0 0 0 3px #a3251a;opacity:.6}
+.mu-m.missed{box-shadow:inset 0 0 0 3px #ff9a3a}
+.mu-wob{animation:smSway .5s ease-in-out infinite alternate}
+/* siege */
+.g-sg{background:#b8d0e0}
+.sg-arm{transform-origin:46px 114px;transform-box:view-box}
+.sg-arm.throw{animation:sgThrow .5s ease-out}
+@keyframes sgThrow{50%{transform:rotate(120deg)}}
+.sg-broken{animation:sgBreak .8s ease-in forwards}
+@keyframes sgBreak{to{transform:translateY(30px);opacity:0}}
+.sg-wind{position:absolute;left:8px;top:6px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.7);font-size:12.5px;color:#2a1a0c}
+/* the march */
+.g-mr{height:240px;background:#d8c8a0}
+.mr-far,.mr-near{position:absolute;left:0;right:0;text-align:center;font:italic 13px var(--serif);color:#3a2412}
+.mr-far{top:4px}.mr-near{bottom:4px}
+.mr-river{position:absolute;left:0;right:0;top:44%;height:16%;background:linear-gradient(#5a8aba,#3a6a9a);box-shadow:0 0 0 3px #a8c0d8}
+.mr-ford{position:absolute;top:40%;width:17%;height:24%;margin-left:-8.5%;padding:0;border:2px dashed rgba(255,248,230,.8);border-radius:10px;background:rgba(232,216,170,.45);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mr-ford span{position:absolute;left:0;right:0;bottom:-18px;font-size:11px;color:#3a2412}
+.mr-rider{position:absolute;top:68%;font-style:normal;font-size:26px;transform:translateX(-50%);transition:left .6s ease-in-out}
+.mr-raid{position:absolute;top:10%;font-style:normal;font-size:22px;transform:translateX(-50%);animation:mrRaid linear forwards}
+@keyframes mrRaid{to{top:40%}}
+/* palace guard */
+.g-gd{background:#5a2a2a}
+.gd-crowd{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;padding:4px;background:linear-gradient(#7a4a3a,#5a3a2a)}
+.gd-p{height:82px;padding:0;border:0;background:none;cursor:pointer;transform:translateY(var(--fwd,0));transition:transform .6s ease;-webkit-tap-highlight-color:transparent}
+.gd-p svg{width:100%;height:100%}
+.gd-t{opacity:0;transition:opacity .15s}
+.s-knife .gd-t.knife,.s-eye .gd-t.eye,.s-cough .gd-t.cough,.s-bow .gd-t.bow{opacity:1}
+.gd-p.found{filter:drop-shadow(0 0 6px #ffd76a)}
+.gd-p.wrongp{opacity:.45}
+/* bombard */
+.g-bb{background:#c8d8e0}
+.bb-kegs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0}
+.bb-kegs .mg-b{padding:8px 2px;font-size:15px}
+/* contract */
+.g-ct{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:8px;background:linear-gradient(#7a5a3a,#4a2e16)}
+.ct-c{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;border-radius:10px;background:rgba(255,248,230,.9);color:#2a1d14;transition:opacity .5s}
+.ct-c svg{width:40px;height:66px}
+.ct-c b{font-size:13px;text-align:center}
+.ct-o{font:26px/1 var(--black);color:#7a5a10}
+.ct-c small{font-size:11px;color:#7a6a4a}
+.ct-p{display:block;width:90%;height:6px;margin:3px 0;border-radius:3px;background:rgba(0,0,0,.15);overflow:hidden;font-style:normal}
+.ct-p em{display:block;height:100%;width:100%;background:#3f8a52;transition:width .1s linear}
+.ct-p em.low{background:#a3251a}
+.ct-c.gone{opacity:.3;pointer-events:none}
+.mg-b.ct-s{margin-top:4px;padding:6px 4px;font-size:14px;width:100%}
+.mg-b.ct-raise{margin-top:6px}
+/* signals */
+.g-lb{background:#9cc4e0}
+.lb-ev{position:absolute;left:8px;top:6px;padding:3px 10px;border-radius:8px;background:rgba(155,31,18,.92);color:#fff3e2;font-size:14px}
+.lb-ship.turn{animation:lbTurn .9s ease-in-out}
+@keyframes lbTurn{50%{transform:translateY(-6px)}}
+.lb-book{display:grid;grid-template-columns:1fr 1fr;gap:3px 8px;margin:6px 0;padding:6px 8px;border-radius:8px;background:var(--vellum-2);box-shadow:inset 0 0 0 1px var(--rule);font-size:12.5px}
+.lb-book span{display:flex;align-items:center;gap:5px}
+.lb-book i{display:flex;gap:2px}
+.lb-book svg{width:18px;height:13px}
+.lb-flags{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin:6px 0}
+.mg-b.lb-f{padding:8px 2px}
+.lb-f svg{width:28px;height:21px}
+/* the pilgrim road */
+.g-pr{height:220px;background:#8aa45a}
+.pr-road{position:absolute;left:0;right:0;top:44%;height:16%;background:#c9b48a;box-shadow:0 2px 0 #a8946a,0 -2px 0 #a8946a}
+.pr-b{position:absolute;width:52px;height:46px;margin:-23px 0 0 -26px}
+.pr-bush{display:grid;place-items:center;width:100%;height:100%;font-size:30px}
+.pr-w{position:absolute;top:36%;left:-8%;width:30px;height:54px;font-style:normal;animation:prWalk 13s linear forwards;pointer-events:none}
+.pr-w svg{width:100%;height:100%}
+.pr-w.robbed{filter:grayscale(1) brightness(.8)}
+@keyframes prWalk{to{left:96%}}
+.pr-home{position:absolute;right:2px;top:34%;font-size:30px}
+/* hold the fortress */
+.g-hf{padding:6px;background:linear-gradient(#c8d8e0 0 30%,#8a7a5a 30%)}
+.hf-wall{display:grid;grid-template-columns:repeat(6,1fr);gap:3px}
+.hf-sec{position:relative;display:flex;flex-direction:column;gap:3px;padding:16px 2px 4px;border-radius:4px 4px 0 0;background:linear-gradient(#9a9a92,#7a7a72);box-shadow:inset 0 0 0 2px #4a4a44}
+.hf-sec::before{content:"";position:absolute;left:0;right:0;top:-6px;height:8px;background:repeating-linear-gradient(90deg,#9a9a92 0 8px,transparent 8px 13px)}
+.hf-sec.down{background:linear-gradient(#6a5a4a,#4a3a2a);opacity:.6}
+.hf-hp{font-size:9px;letter-spacing:-1px;color:#2a1a0c;text-align:center}
+.hf-l,.hf-m{height:62px;border-radius:6px;background:rgba(0,0,0,.12)}
+.hf-ldr,.hf-mine{display:grid;place-items:center;height:100%;font-size:22px;opacity:.25}
+.rg.on .hf-ldr,.rg.on .hf-mine{opacity:1}
+@media (prefers-reduced-motion:reduce){.mu-wob{animation:none}}
 @media (prefers-reduced-motion:reduce){.bf.clash,.bf-rain,.cu-flame,.cu-brazier,.bf-me.danger .bf-mv,.bf-me.chance .bf-mv{animation:none}}
 </style>
 </head>
@@ -1445,7 +1569,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.23.0';
+const APP_VERSION = '1.24.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -6391,9 +6515,9 @@ function showWhatsNew() {
   store.set(NEWKEY, APP_VERSION);
   modalOpen = true;
   const items = [
-    ['🎭', 'A game for every high post', '24 in all: battles, sea fights, the conclave, the night watch in the royal prison, the royal kitchen, the hunt, the masque, and more.'],
-    ['🏛️', 'Halls and land', 'the Hall of Legends scores every climb, the Collection Hall holds rare relics, and land is for sale.'],
-    ['👨‍👩‍👧', 'Families', 'your children live their own lives, courting works as it really did, and royal matches hang in a portrait gallery.'],
+    ['⚔️', 'A game for every soldier', 'the joust, the cavalry charge, the siege, the great bombard, the palace guard, holding the fortress and more: every military post now has a game of its own.'],
+    ['🎭', 'Games for every high post', 'from the night watch in the royal prison to the royal kitchen, the hunt and the masque. 36 in all.'],
+    ['🏛️', 'Halls, land and family', 'the Hall of Legends, rare relics, land for sale, children who live their own lives, and courting as it really was.'],
     ['⛪', 'And more', 'choices that come back years later, the road to Pope, clearer headings, a Main menu button, and many fixes. Backup codes are gone.'],
   ];
   $('card').innerHTML = `<div class="ev-icon" aria-hidden="true">📜</div><h2 class="card-h">New in version ${esc(verMinor(APP_VERSION))}</h2><ul class="notes whatsnew">${items.map(([i, n, d]) => `<li><b>${i} ${esc(n)}:</b> ${esc(d)}</li>`).join('')}</ul><div class="row"><button class="btn ghost" id="wnOk">Got it</button><button class="btn" id="wnCourt">Open Work</button></div>`;
@@ -28560,6 +28684,534 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     { k: 'mg_cup', i: '🍷', n: 'Not on My Watch', d: 'Become a Legendary cupbearer.' },
     { k: 'mg_hunt', i: '🦌', n: 'Master of Hounds', d: 'Become Legendary at the royal hunt.' },
     { k: 'mg_revels', i: '🎭', n: 'Lord of Misrule', d: 'Become Legendary at the masque.' },
+  );
+
+
+  /* ================= v1.24 every elite job its own game, batch 1: the military ================= */
+  const tri = (t, per) => { const ph = ((t / per) % 1 + 1) % 1; return ph < .5 ? ph * 2 : 2 - ph * 2; };
+  const horseSVG = (col, cap) => `<path d="M-22 -16Q-4 -24 16 -18L24 -26L30 -22L22 -12Q20 -4 12 -2H-16Q-24 -6 -22 -16Z" fill="${col || '#6b4a2e'}" stroke="#2a1a0c"/>${cap ? `<path d="M-20 -14Q0 -20 14 -14L12 -2H-16Z" fill="${cap}" opacity=".9"/>` : ''}<path d="M-16 -2L-20 12M-8 -2L-6 12M8 -2L4 12M14 -4L20 10" stroke="#4a2e16" stroke-width="3" stroke-linecap="round"/><path d="M-22 -14Q-30 -10 -30 0" stroke="#2a1a0c" stroke-width="2" fill="none"/>`;
+  const rider = (look, col, cap, lance) => `<g>${horseSVG(col, cap)}<g transform="translate(0 -14) scale(.9)">${fig(Object.assign({ hat: 'helm', arms: 'hold' }, look))}</g>${lance ? '<path d="M4 -30L44 -36" stroke="#c9a060" stroke-width="2.4" stroke-linecap="round"/><path d="M4 -30L10 -31" stroke="#9b1f12" stroke-width="4"/>' : ''}</g>`;
+  const meterHTML = (id, zones) => `<div class="mt-meter" id="${id}">${zones.map(([a, b, c, l]) => `<b style="left:${a}%;width:${b - a}%;background:${c}"><small>${l || ''}</small></b>`).join('')}<i id="${id}-n"></i></div>`;
+  const meterPos = id => { const m = document.getElementById(id), n = document.getElementById(`${id}-n`); if (!m || !n) return 50; const a = m.getBoundingClientRect(), b = n.getBoundingClientRect(); n.style.animationPlayState = 'paused'; return (b.left + b.width / 2 - a.left) / a.width * 100; };
+
+  /* ---------- 26. The knight: the joust ---------- */
+  mgAdd({ k: 'joust', i: '🏇', n: 'The joust', d: 'Three passes in the lists. Aim your lance, strike at the moment of impact, and try to unhorse your man.', seal: 'mg_joust', payK: .6, who: () => mgIn('knightmil'),
+    play() {
+      const foeN = `Sir ${pick(NAMES.m)} ${pick(SUR.noble)}`, me = meLook(), myCol = REALM_COL[S.realm] || '#9b1f12', foeCol = pick(['#2f5fa8', '#2f7a3a', '#5a2a6a', '#8a5a1a']);
+      let pass = 0, mine = 0, his = 0, aim = null, over = false, fell = '', t0 = 0;
+      const ZONES = [[0, 24, '#c9952e', 'Helm'], [24, 72, '#4a7ab8', 'Shield'], [72, 100, '#8a6a4a', 'Body']];
+      const scene = () => `<div class="sc g-jo" id="jo-stage"><svg class="sc-svg" viewBox="0 0 360 170" aria-hidden="true"><rect width="360" height="170" fill="#a9c8e0"/><rect y="40" width="360" height="40" fill="#7a5a3a"/>${Array.from({ length: 18 }, (_, q) => `<rect x="${q * 20 + 2}" y="${44 + (q % 3) * 10}" width="14" height="8" rx="3" fill="${['#9b1f12', '#2f5fa8', '#e2b23c', '#2f7a3a'][q % 4]}"/>`).join('')}<rect y="80" width="360" height="90" fill="#7fa25a"/><rect x="0" y="112" width="360" height="7" fill="#c9a060" stroke="#6b4a2e"/>${[20, 80, 140, 200, 260, 320].map(x => `<path d="M${x} 112V124" stroke="#6b4a2e" stroke-width="3"/>`).join('')}<g id="jo-me" class="jo-run" style="transform:translate(40px,140px)">${rider(me, '#e8e0d0', myCol, true)}</g><g id="jo-foe" class="jo-run" style="transform:translate(320px,108px) scaleX(-1)">${rider({ robe: foeCol }, '#3a2a1a', foeCol, true)}</g><g id="jo-fx"></g></svg></div>`;
+      const go = () => { mgShow(`${mgHead(MG_BY.joust, `Against ${foeN}`, 0, 3)}${scene()}<div class="cu-hud ex-hud" id="jo-hud"></div><div class="sc-say" id="jo-say"></div><div id="jo-act"></div>`); hud(); next(); };
+      const hud = () => mgSet('jo-hud', `<span>You <b>${mine}</b></span><span>${esc(foeN)} <b>${his}</b></span>`);
+      const next = () => {
+        pass++; if (pass > 3 || fell) return end(); mgStep(pass - 1); aim = null;
+        const a = document.getElementById('jo-me'), b = document.getElementById('jo-foe'); if (a) { a.style.transition = 'none'; a.style.transform = 'translate(40px,140px)'; } if (b) { b.style.transition = 'none'; b.style.transform = 'translate(320px,108px) scaleX(-1)'; }
+        mgSet('jo-say', `<p class="sc-q">Pass ${pass} of 3. Couch your lance: stop the needle on where you will strike.</p>`);
+        mgSet('jo-act', `${meterHTML('jo-m', ZONES)}${mgBtn('aim', '', '🎯 Couch the lance', 'go')}`);
+      };
+      const charge = () => {
+        aim = meterPos('jo-m'); const z = ZONES.find(([x, y]) => aim >= x && aim <= y) || ZONES[1];
+        mgSet('jo-say', `<p>You aim at his <b>${z[3].toLowerCase()}</b>. The trumpet sounds!</p>`);
+        mgSet('jo-act', `<div class="jo-ring"><i id="jo-ring"></i></div>${mgBtn('hit', z[3], '💥 Strike!', 'go jo-strike')}`);
+        const a = document.getElementById('jo-me'), b = document.getElementById('jo-foe');
+        requestAnimationFrame(() => { if (a) { a.style.transition = 'transform 1.6s linear'; a.style.transform = 'translate(178px,140px)'; } if (b) { b.style.transition = 'transform 1.6s linear'; b.style.transform = 'translate(196px,108px) scaleX(-1)'; } });
+        t0 = performance.now(); mgSnd('battle');
+        const r = document.getElementById('jo-ring'); if (r) r.style.animation = 'joRing 1.6s linear forwards';
+        mgAfter(2100, 'jo-stage', () => { if (t0) strike('Shield', true); });
+      };
+      const strike = (zone, late) => {
+        if (!t0) return; const dt = Math.abs(performance.now() - t0 - 1600); t0 = 0;
+        const timing = late ? 0 : dt < 90 ? 1 : dt < 200 ? .7 : dt < 380 ? .4 : .1;
+        const hitP = { Helm: .45, Shield: .85, Body: .62 }[zone] * timing, hit = P(hitP);
+        let txt = '', pts = 0;
+        if (hit && zone === 'Helm' && P(.65)) { pts = 3; fell = 'him'; txt = `A blow to the helm! ${foeN} goes over his horse’s tail and lands in the dust.`; }
+        else if (hit && zone === 'Body' && P(.2)) { pts = 3; fell = 'him'; txt = `Your lance takes him square in the chest, and ${foeN} is unhorsed!`; }
+        else if (hit) { pts = 1; txt = `Your lance shatters on his ${zone.toLowerCase()}. A clean break!`; }
+        else txt = late ? 'You struck too late, and your lance glanced off into the air.' : `Your lance glances off ${timing < .5 ? '(your timing was off)' : ''}.`;
+        mine += pts;
+        const his1 = P(.42), unh = !fell && his1 && P(.08 + (S.stats.health < 50 ? .05 : 0));
+        if (unh) { fell = 'you'; txt += ' But his lance catches you, and you go down with a crash of steel.'; }
+        else if (his1) { his++; txt += ' His lance breaks on your shield.'; }
+        hud();
+        const fx = document.getElementById('jo-fx'); if (fx && (pts || his1)) fx.innerHTML = '<g class="jo-burst"><circle cx="188" cy="104" r="16" fill="#ffd76a" opacity=".8"/><path d="M176 92L200 116M200 92L176 116M188 86V122" stroke="#fff6d0" stroke-width="3"/></g>';
+        setTimeout(() => { const f2 = document.getElementById('jo-fx'); if (f2) f2.innerHTML = ''; }, 700);
+        if (fell === 'him') { const b = document.getElementById('jo-foe'); if (b) b.classList.add('jo-fall'); }
+        if (fell === 'you') { const a = document.getElementById('jo-me'); if (a) a.classList.add('jo-fall'); }
+        mgSnd(pts >= 3 ? 'fanfare' : pts ? 'clash' : 'bad');
+        mgSet('jo-say', `<p class="sc-res ${pts ? 'good' : unh ? 'bad' : ''}">${esc(txt)}</p>`);
+        mgSet('jo-act', mgBtn('next', '', pass < 3 && !fell ? 'The next pass' : 'Ride out of the lists', 'go'));
+      };
+      const end = () => {
+        if (over) return; over = true;
+        const won = fell === 'him' || (fell !== 'you' && mine > his), score = fell === 'you' ? 0 : fell === 'him' ? 1 : mine > his ? .8 : mine === his ? .5 : .25;
+        mgFinish('joust', score, fell === 'him' ? `You unhorsed ${foeN}. The stands are on their feet.` : fell === 'you' ? `${foeN} unhorsed you, and the heralds will not let you forget it.` : `${mine} to ${his}. ${won ? 'The prize is yours.' : mine === his ? 'Honours even.' : `${foeN} takes the prize.`}`, (grade, mult, pay) => {
+          const ls = [];
+          if (won) { const g = Math.round(pay * .5 * mult); coin(g); st('renown', fell === 'him' ? 4 : 2); ls.push(`The prize purse: ${g} silver, and a lady’s favour on your lance.`); }
+          if (fell === 'you') { st('health', -R(6, 16)); ls.push('You will ache for a month.'); }
+          if (fell === 'him') { const g = Math.round(pay * .4 * mult); coin(g); ls.push(`By custom his horse and armour are yours. He buys them back for ${g} silver.`); }
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'start') go(); else if (a === 'aim') charge(); else if (a === 'hit') strike(v); else if (a === 'next') next(); };
+      mgIntro(MG_BY.joust, `Against ${foeN}`, ['Three passes down the lists. Before each one, stop the needle on where you will aim: the <b>helm</b> can unhorse him but is hard to hit; the <b>shield</b> is a sure lance-break.', 'Then the horses charge. Tap <b>Strike!</b> the moment the shrinking ring closes, when the lances meet.'], '🏇 Enter the lists');
+    } });
+
+  /* ---------- 27. The knight commander: the charge ---------- */
+  mgAdd({ k: 'charge', i: '🐎', n: 'The charge', d: 'Keep your line of knights level as they advance at the canter, then call the charge at the right distance.', seal: 'mg_charge', payK: .5, who: () => mgIn('knightcmd'),
+    play() {
+      const N = 5, off = Array(N).fill(0), vel = Array(N).fill(0); let t0 = 0, coh = 0, ticks = 0, over = false, fired = false, ex = 100, clock = null, res = '';
+      const look = meLook();
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.charge, 'The line advances')}<div class="sc g-cg" id="cg-stage"><div class="cg-zone"></div>${Array.from({ length: N }, (_, j) => `<button type="button" class="cg-k" id="cg${j}" data-mg="k" data-v="${j}" style="top:${8 + j * 18}%"><svg viewBox="-34 -50 72 64" aria-hidden="true">${rider(j === 2 ? look : { robe: '#6a6a72' }, '#5a3a22', REALM_COL[S.realm] || '#9b1f12', true)}</svg></button>`).join('')}<div class="cg-foe" id="cg-foe">${Array.from({ length: N }, () => `<svg viewBox="-24 -50 48 54" aria-hidden="true">${fig({ robe: '#3a3a42', hat: 'helm', arms: 'hold' })}<path d="M-10 4V-60" stroke="#8a7a5a" stroke-width="1.6"/></svg>`).join('')}</div></div>${timeBar('cg-t')}<div class="cu-hud ex-hud" id="cg-hud"></div>${mgBtn('charge', '', '📯 Charge!', 'go cg-go')}<p class="mg-tip sc-tip">Tap any knight who drifts out of line. Charge when the enemy reaches the gold band.</p>`);
+        t0 = performance.now();
+        clock = mgClock(24000, 'cg-stage', f => {
+          setBar('cg-t', f); ex = 100 - f * 74;
+          const fe = document.getElementById('cg-foe'); if (fe) fe.style.left = `${ex}%`;
+          for (let j = 0; j < N; j++) { vel[j] = Math.max(-3, Math.min(3, vel[j] + (Math.random() - .5) * 1.4)); off[j] = Math.max(-60, Math.min(60, off[j] + vel[j])); const e = document.getElementById(`cg${j}`); if (e) { e.style.left = `calc(22% + ${off[j].toFixed(0)}px)`; e.classList.toggle('out', Math.abs(off[j]) > 30); } }
+          const c = 1 - off.reduce((a, x) => a + Math.min(60, Math.abs(x)), 0) / (N * 60); coh += c; ticks++;
+          mgSet('cg-hud', `<span>Line <b>${Math.round(c * 100)}%</b></span><span>Enemy <b>${Math.round(Math.max(0, ex - 20) * 4)} paces</b></span>`);
+          if (ex < 38 && !fired) { fired = true; res = 'late'; finish(); }
+        }, () => { if (!fired) { fired = true; res = 'late'; finish(); } });
+      };
+      const dress = j => { off[+j] = 0; vel[+j] = 0; mgSnd('tick'); };
+      const charge = () => {
+        if (fired || over) return; fired = true;
+        res = ex <= 64 && ex >= 50 ? 'perfect' : ex < 50 ? 'late' : ex <= 74 ? 'early' : 'rash';
+        finish();
+      };
+      const finish = () => {
+        if (over) return; over = true; if (clock) clock.stop();
+        const c = ticks ? coh / ticks : .5;
+        document.querySelectorAll('#cg-stage .cg-k').forEach(e => { e.classList.add('go'); });
+        const t = { perfect: 'You called the charge at exactly the right moment. Your knights hit their line at full gallop, knee to knee.', early: 'You charged a little early. The horses were blown by the time they struck, but the line held.', rash: 'You charged far too soon. The horses were spent long before they reached the enemy.', late: 'You charged too late, and the enemy pikes were set to meet you.' }[res];
+        mgSnd(res === 'perfect' ? 'battle' : 'clash');
+        const say = document.querySelector('#card .sc-tip'); if (say) say.outerHTML = `<div class="sc-say"><p class="sc-res ${res === 'perfect' ? 'good' : 'bad'}">${esc(t)} Your line held at ${Math.round(c * 100)}%.</p></div>`;
+        const b = document.querySelector('#card .cg-go'); if (b) b.outerHTML = mgBtn('end', '', 'Rally the knights', 'go');
+        mgOn = a => {
+          if (a !== 'end') return;
+          const score = clamp(Math.round((c * .5 + { perfect: .5, early: .3, rash: .1, late: 0 }[res]) * 100)) / 100;
+          mgFinish('charge', score, score >= .8 ? 'The enemy line broke and ran. A famous charge.' : score >= .5 ? 'The charge drove them back, at a price.' : 'The charge broke on their pikes.', (grade, mult) => {
+            const ls = [];
+            if (score >= .8) { st('renown', 3); fac('crown', 3); ls.push('Songs will be sung about that charge.'); }
+            if (score < .5) { st('health', -R(4, 10)); jobPerf(-5); ls.push('Good men and good horses were lost.'); }
+            return ls;
+          });
+        };
+      };
+      mgOn = (a, v) => { if (a === 'start') go(); else if (a === 'k') dress(v); else if (a === 'charge') charge(); };
+      mgIntro(MG_BY.charge, 'Knight commander', ['Five knights advance at the canter. Horses being horses, they drift ahead and fall behind. <b>Tap any knight who drifts</b> to dress the line.', 'The enemy comes on. Call <b>Charge!</b> when they reach the <b>gold band</b>: too soon and your horses are blown, too late and their pikes are set.'], '🐎 Advance at the walk');
+    } });
+
+  /* ---------- 28. The baron's captain: raise the levies ---------- */
+  const LV_KIND = {
+    fit: () => ({ look: Object.assign(randFolk(false), { hat: pick(['cap', 'hood', '']), mood: 'calm' }), extra: '<path d="M10 0V-40M8 -40L10 -46L12 -40" stroke="#6b4a2e" stroke-width="1.4" fill="#8a8a92"/>', s: 1 }),
+    old: () => ({ look: Object.assign(randFolk(false), { hair: '#c9c4ba', beard: 1, mood: 'sad' }), extra: '<path d="M-12 0L-8 -26" stroke="#6b4a2e" stroke-width="2"/>', s: .92, bend: 1 }),
+    boy: () => ({ look: Object.assign(randFolk(false), { mood: 'happy' }), extra: '', s: .7 }),
+    sick: () => ({ look: Object.assign(randFolk(false), { skin: '#b9c48c', mood: 'sad' }), extra: '<rect x="-8" y="-40" width="16" height="3" fill="#f4efe2"/>', s: 1 }),
+    priest: () => ({ look: { robe: '#1e1e22', bald: 1, beard: 0, mood: 'calm', arms: 'hold' }, extra: '<path d="M0 -24V-18M-2 -22H2" stroke="#e2b23c" stroke-width="1"/>', s: 1 }),
+  };
+  mgAdd({ k: 'levy', i: '🔱', n: 'Raise the levies', d: 'The village files past. Call up the fit men, and leave the old, the boys, the sick and the priest.', seal: 'mg_levy', who: () => mgIn('barcmd'),
+    play() {
+      let got = 0, wrong = 0, missed = 0, seq = 0, over = false, clock = null, nextAt = 0, t0 = 0;
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.levy, 'Muster day in the village')}<div class="sc g-lv" id="lv-stage"><svg class="sc-svg" viewBox="0 0 360 150" aria-hidden="true"><rect width="360" height="150" fill="#a9c8e0"/>${[10, 80, 250, 310].map((x, q) => `<path d="M${x} 110V60L${x + 26} 38L${x + 52} 60V110Z" fill="${['#c9b48a', '#b89a6a'][q % 2]}" stroke="#5a3a1e"/><path d="M${x - 4} 62L${x + 26} 34L${x + 56} 62" stroke="#8a6a3a" stroke-width="5" fill="none"/>`).join('')}<rect y="108" width="360" height="42" fill="#b89a6a"/><path d="M150 110V70H210V110" fill="#9a9a92" stroke="#4a4a44"/><text x="180" y="96" text-anchor="middle" font-size="16">⛪</text></svg><div class="lv-lane" id="lv-lane"></div><div class="lv-ranks" id="lv-ranks"></div></div>${timeBar('lv-t')}<div class="cu-hud ex-hud" id="lv-hud"></div><p class="mg-tip sc-tip">Tap the fit men as they pass.</p>`);
+        hud(); t0 = performance.now();
+        document.getElementById('lv-stage').addEventListener('animationend', e => { if (e.animationName !== 'lvWalk') return; const el = e.target.closest('.lv-p'); if (!el) return; if (!el.dataset.done && el.dataset.k === 'fit') { missed++; hud(); } el.remove(); });
+        clock = mgClock(32000, 'lv-stage', f => { setBar('lv-t', f); const now = performance.now() - t0; if (now >= nextAt) { nextAt = now + Math.max(520, 1000 - f * 420); spawn(f); } }, end);
+      };
+      const spawn = f => {
+        const k = P(.48) ? 'fit' : pick(['old', 'boy', 'sick', 'priest']), d = LV_KIND[k](), id = `lv${++seq}`;
+        const lane = document.getElementById('lv-lane'); if (!lane) return;
+        lane.insertAdjacentHTML('beforeend', `<button type="button" class="lv-p" id="${id}" data-mg="p" data-v="${id}" data-k="${k}" style="top:${R(0, 30)}%;animation-duration:${Math.round(3600 - f * 1100)}ms" aria-label="a villager"><svg viewBox="-16 -52 32 56" aria-hidden="true"><g transform="scale(${d.s}) ${d.bend ? 'rotate(8)' : ''}">${fig(d.look)}${d.extra}</g></svg></button>`);
+      };
+      const tap = (id, el) => {
+        if (over || !el || el.dataset.done) return; el.dataset.done = 1; const k = el.dataset.k, [x, y] = pctOf(el, 'lv-stage');
+        if (k === 'fit') { got++; el.classList.add('took'); mgPop('lv-stage', 'Signed!', 'gold', x, y); mgSnd('tick'); const r = document.getElementById('lv-ranks'); if (r) r.insertAdjacentHTML('beforeend', '<i>🔱</i>'); }
+        else { wrong++; el.classList.add('no'); mgPop('lv-stage', { old: 'too old!', boy: 'only a boy!', sick: 'too sick!', priest: 'a priest!' }[k], 'bad', x, y); mgSnd('bad'); }
+        hud();
+      };
+      const hud = () => mgSet('lv-hud', `<span>🔱 Raised <b>${got} / 12</b></span><span>✖ Wrong <b>${wrong}</b></span><span>🚶 Let go <b>${missed}</b></span>`);
+      const end = () => {
+        if (over) return; over = true;
+        const score = clamp(Math.round((Math.min(12, got) / 12 - wrong * .08) * 100)) / 100;
+        mgFinish('levy', score, `${got} fit men raised for the baron’s host${wrong ? `, and ${wrong} who should never have been called` : ''}.`, (grade, mult) => {
+          const ls = [];
+          if (got >= 12) { fac('lords', 4); ls.push('The baron’s host is the best-manned in the shire.'); }
+          if (wrong >= 3) { fac('commons', -4); fac('church', wrong >= 4 ? -3 : 0); ls.push('The village is furious that you took the old and the young.'); }
+          return ls;
+        });
+      };
+      mgOn = (a, v, el) => { if (a === 'start') go(); else if (a === 'p') tap(v, el); };
+      mgIntro(MG_BY.levy, 'The baron’s captain', ['The baron needs twelve men for his host. The village files past the church.', 'Tap the <b>fit men</b> (they carry a spear). Leave the <b>old</b> (grey, with a stick), the <b>boys</b> (small), the <b>sick</b> (green and bandaged) and the <b>priest</b> (in black).'], '🔱 Read the summons');
+    } });
+
+  /* ---------- 29. The marshal: the muster ---------- */
+  mgAdd({ k: 'muster', i: '🛡️', n: 'The muster', d: 'Inspect the ranks. Catch every man missing his helmet, his pike or his sword, and the ones who come drunk.', seal: 'mg_muster', who: () => mgIn('marshal'),
+    play() {
+      const RANKS = 4, PER = 6; let r = -1, caught = 0, wrong = 0, slip = 0, men = [], clock = null, over = false;
+      const soldier = m => { const look = { robe: '#7a6040', hat: m.miss === 'helm' ? '' : 'helm', hair: '#5a3a22', beard: m.beard, mood: m.miss === 'drunk' ? 'happy' : 'calm', arms: 'hold', skin: m.skin }; let ex = ''; if (m.miss !== 'pike') ex += '<path d="M10 2V-58" stroke="#8a7a5a" stroke-width="1.6"/><path d="M8.6 -58L10 -64L11.4 -58Z" fill="#cfd5dc"/>'; if (m.miss !== 'sword') ex += '<path d="M-9 -16L-13 -2" stroke="#cfd5dc" stroke-width="1.6"/><path d="M-10.6 -16H-7" stroke="#6b4a2e" stroke-width="1.4"/>'; if (m.miss === 'drunk') ex += '<text x="6" y="-44" font-size="9">🍺</text>'; return `<svg viewBox="-16 -66 32 70" aria-hidden="true"${m.miss === 'drunk' ? ' class="mu-wob"' : ''}>${fig(look)}${ex}</svg>`; };
+      const go = () => { mgShow(`${mgHead(MG_BY.muster, 'The muster', 0, RANKS)}<div class="sc g-mu" id="mu-stage"><div class="mu-roll"><b>The muster roll:</b> every man with 🪖 a helmet, 🔱 a pike, 🗡️ a sword, and sober.</div><div class="mu-rank" id="mu-rank"></div></div>${timeBar('mu-t')}<div class="cu-hud ex-hud" id="mu-hud"></div><div class="mg-col" id="mu-act"></div>`); hud(); rank(); };
+      const rank = () => {
+        r++; if (r >= RANKS) return end(); mgStep(r);
+        const nBad = R(1, 3); men = Array.from({ length: PER }, (_, j) => ({ miss: null, beard: P(.4), skin: pick(FIG_SKIN), flag: false }));
+        shuf(men).slice(0, nBad).forEach(m => { m.miss = pick(['helm', 'pike', 'sword', 'drunk']); });
+        mgSet('mu-rank', men.map((m, j) => `<button type="button" class="mu-m" data-mg="m" data-v="${j}">${soldier(m)}</button>`).join(''));
+        const rk = document.getElementById('mu-rank'); if (rk) { rk.classList.remove('in'); void rk.offsetWidth; rk.classList.add('in'); }
+        mgSet('mu-act', mgBtn('pass', '', '✔ This rank passes', 'go'));
+        clock = mgClock(Math.max(5000, 8000 - r * 700), 'mu-rank', f => setBar('mu-t', f), () => judge());
+      };
+      const flag = (j, el) => { const m = men[+j]; if (!m || over) return; m.flag = !m.flag; el.classList.toggle('flag', m.flag); mgSnd('tick'); };
+      const judge = () => {
+        if (clock) clock.stop(); clock = null;
+        let c = 0, w = 0, s = 0; men.forEach((m, j) => { const el = document.querySelectorAll('#mu-rank .mu-m')[j]; if (m.flag && m.miss) { c++; el && el.classList.add('right'); } else if (m.flag) { w++; el && el.classList.add('wrong'); } else if (m.miss) { s++; el && el.classList.add('missed'); } });
+        caught += c; wrong += w; slip += s; hud();
+        mgSnd(w || s ? 'bad' : 'good');
+        mgSet('mu-act', `<div class="sc-say"><p class="sc-res ${w || s ? 'bad' : 'good'}">${c} defaulter${c === 1 ? '' : 's'} caught${s ? `, ${s} got past you` : ''}${w ? `, ${w} good man wrongly named` : ''}.</p></div>${mgBtn('next', '', r < RANKS - 1 ? 'Next rank, march!' : 'Dismiss the muster', 'go')}`);
+      };
+      const hud = () => mgSet('mu-hud', `<span>✔ Caught <b>${caught}</b></span><span>🚶 Slipped by <b>${slip}</b></span><span>✖ Wrongly named <b>${wrong}</b></span>`);
+      const end = () => {
+        if (over) return; over = true;
+        const tot = caught + slip || 1, score = clamp(Math.round((caught / tot - wrong * .1) * 100)) / 100;
+        mgFinish('muster', score, `${caught} of ${tot} defaulters caught at the muster${wrong ? `, and ${wrong} honest soldier${wrong > 1 ? 's' : ''} wrongly named` : ''}.`, (grade, mult) => {
+          const ls = [];
+          if (score >= .8) { fac('crown', 4); ls.push('The king’s army is properly armed, and the king knows whom to thank.'); }
+          if (slip >= 4) { jobPerf(-6); ls.push('Half-armed men will be standing in the line when it matters.'); }
+          return ls;
+        });
+      };
+      mgOn = (a, v, el) => { if (a === 'start') go(); else if (a === 'm') flag(v, el); else if (a === 'pass') judge(); else if (a === 'next') rank(); };
+      mgIntro(MG_BY.muster, 'Marshal of the host', ['Four ranks of six march up for inspection. Each man should have a <b>helmet</b>, a <b>pike</b> and a <b>sword</b>, and be <b>sober</b>.', 'Tap every man who is missing something (tap again to change your mind), then pass the rank before the drum stops.'], '🥁 Sound the drum');
+    } });
+
+  /* ---------- 30. The constable: the siege ---------- */
+  mgAdd({ k: 'siege', i: '🏰', n: 'The siege', d: 'Set the trebuchet’s pull and its release, and breach the gate before your stones run out.', seal: 'mg_siege', payK: .5, who: () => mgIn('constable'),
+    play() {
+      let stones = 7, gate = 3, wall = 0, phase = '', power = 0, over = false, wind = 0;
+      const castle = `<rect x="262" y="58" width="98" height="104" fill="#9a9a92" stroke="#4a4a44"/>${[262, 282, 302, 322, 342].map(x => `<rect x="${x}" y="48" width="12" height="12" fill="#9a9a92" stroke="#4a4a44"/>`).join('')}<g id="sg-gate"><path d="M296 162V118Q311 100 326 118V162Z" fill="#5a3a1e" stroke="#2a1a0c" stroke-width="1.4"/><path d="M302 118V162M311 108V162M320 118V162" stroke="#3a2412"/></g><g id="sg-cracks"></g>`;
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.siege, 'Before the walls')}<div class="sc g-sg" id="sg-stage"><svg class="sc-svg" viewBox="0 0 360 180" aria-hidden="true"><rect width="360" height="180" fill="#b8d0e0"/><rect y="160" width="360" height="20" fill="#7a9a4a"/>${castle}<g transform="translate(46 160)"><path d="M-22 0L0 -46L22 0" stroke="#6b4a2e" stroke-width="4" fill="none"/><g id="sg-arm" class="sg-arm"><path d="M0 -46L-30 -66" stroke="#5a3a1e" stroke-width="4"/><path d="M0 -46L14 -38" stroke="#5a3a1e" stroke-width="5"/><rect x="8" y="-40" width="12" height="12" fill="#4a4a4a"/></g></g><circle id="sg-ball" r="5" fill="#5a5a52" cx="-20" cy="-20"/><g id="sg-fx"></g></svg><div class="sg-wind" id="sg-wind"></div></div><div class="cu-hud ex-hud" id="sg-hud"></div><div id="sg-act"></div>`);
+        hud(); aimPower();
+      };
+      const hud = () => mgSet('sg-hud', `<span>🪨 Stones <b>${stones}</b></span><span>🚪 Gate <b>${'■'.repeat(gate)}${'□'.repeat(3 - gate)}</b></span>`);
+      const aimPower = () => { if (stones <= 0 || gate <= 0) return end(); phase = 'power'; wind = R(-3, 3); mgSet('sg-wind', `Wind ${wind > 0 ? '→'.repeat(wind) : wind < 0 ? '←'.repeat(-wind) : 'still'}`); mgSet('sg-act', `<p class="mg-tip">1. Set the pull on the windlass.</p>${meterHTML('sg-m', [[0, 100, 'linear-gradient(90deg,#3f8a52,#e8c45a,#a3251a)', '']])}${mgBtn('pull', '', '⚙️ Set the pull', 'go')}`); };
+      const aimRelease = () => { power = meterPos('sg-m') / 100; phase = 'rel'; mgSet('sg-act', `<p class="mg-tip">2. Release as the arm swings: the angle sets the arc.</p>${meterHTML('sg-r', [[0, 33, '#7a9ab8', 'Low'], [33, 66, '#e8c45a', 'Middle'], [66, 100, '#7a9ab8', 'High']])}${mgBtn('loose', '', '🪨 Loose!', 'go')}`); };
+      const loose = () => {
+        const rel = meterPos('sg-r') / 100, ang = (22 + rel * 46) * Math.PI / 180; phase = 'fly'; stones--;
+        const dist = 60 + power * 300 * Math.sin(2 * ang) + wind * 6, land = Math.round(46 + dist);
+        const arm = document.getElementById('sg-arm'); if (arm) { arm.classList.remove('throw'); void arm.getBoundingClientRect(); arm.classList.add('throw'); }
+        mgSet('sg-act', ''); mgSnd('clash');
+        const ball = document.getElementById('sg-ball'), t0 = performance.now(), peak = 40 + Math.sin(ang) * power * 90;
+        mgLoop('sg-stage', now => { const f = Math.min(1, (now - t0) / 1100), x = 46 + (land - 46) * f, y = 114 - Math.sin(f * Math.PI) * peak + f * 28; if (ball) { ball.setAttribute('cx', x.toFixed(1)); ball.setAttribute('cy', y.toFixed(1)); } if (f >= 1) { impact(land); return false; } return true; });
+      };
+      const impact = x => {
+        const fx = document.getElementById('sg-fx'), ball = document.getElementById('sg-ball'); if (ball) ball.setAttribute('cx', -20);
+        let msg = '';
+        if (x >= 292 && x <= 330) { gate--; msg = 'A hit on the gate! Timbers split.'; mgSnd('battle'); const c = document.getElementById('sg-cracks'); if (c) c.insertAdjacentHTML('beforeend', `<path d="M${R(298, 322)} ${R(118, 130)}l${R(-6, 6)} 12l${R(-6, 6)} 10" stroke="#1a0c04" stroke-width="2" fill="none"/>`); if (gate <= 0) { const g = document.getElementById('sg-gate'); if (g) g.classList.add('sg-broken'); msg = 'The gate gives way with a roar! The breach is open.'; } }
+        else if (x >= 262 && x <= 360) { wall++; msg = 'It smashes into the wall, but the wall holds.'; mgSnd('clash'); }
+        else msg = x < 262 ? 'Short! It thuds into the ditch.' : 'Long! It sails over the walls into the town.';
+        if (fx) { fx.innerHTML = `<g class="sf-boom"><circle cx="${Math.min(352, x)}" cy="${x >= 262 ? 130 : 160}" r="14" fill="#c9b48a" opacity=".85"/></g>`; setTimeout(() => { fx.innerHTML = ''; }, 700); }
+        mgPop('sg-stage', msg.split('!')[0] + '!', x >= 292 && x <= 330 ? 'gold' : 'dim', Math.min(90, x / 3.6), 50);
+        hud(); mgSet('sg-act', `<div class="sc-say"><p>${esc(msg)}</p></div>${gate > 0 && stones > 0 ? mgBtn('again', '', 'Wind the windlass', 'go') : mgBtn('done', '', 'Send in the assault', 'go')}`);
+      };
+      const end = () => {
+        if (over) return; over = true;
+        const score = gate <= 0 ? (stones >= 2 ? 1 : .8) : gate === 1 ? .45 : .2;
+        mgFinish('siege', score, gate <= 0 ? `The gate is down with ${stones} stone${stones === 1 ? '' : 's'} to spare. Your men pour through the breach.` : 'Your stones ran out and the gate still stands. The siege drags on.', (grade, mult, pay) => {
+          const ls = [];
+          if (gate <= 0) { fac('crown', 5); st('renown', 3); coin(Math.round(pay * .3 * mult)); ls.push('The town surrenders. Your share of the spoils is a fat one.'); }
+          else { jobPerf(-4); ls.push('The king asks how long this siege will take.'); }
+          return ls;
+        });
+      };
+      mgOn = a => { if (a === 'start') go(); else if (a === 'pull' && phase === 'power') aimRelease(); else if (a === 'loose' && phase === 'rel') loose(); else if (a === 'again') aimPower(); else if (a === 'done') end(); };
+      mgIntro(MG_BY.siege, 'Constable of the host', ['Seven stones for the trebuchet. Each throw has two steps: <b>set the pull</b> (more pull throws farther) and <b>loose</b> as the arm swings (the angle sets the arc: low, middle or high).', 'Mind the wind. Three hits on the <b>gate</b> will break it.'], '🏰 Bring up the trebuchet');
+    } });
+
+  /* ---------- 31. The duke's captain: ride the march ---------- */
+  mgAdd({ k: 'march', i: '🐴', n: 'Ride the march', d: 'Raiders come down to the border fords. Send your riders to meet them before they cross.', seal: 'mg_march', who: () => mgIn('dukecmd'),
+    play() {
+      const F = 5; let riders = [{ at: 1, busy: 0 }, { at: 3, busy: 0 }], raids = [], held = 0, burned = 0, seq = 0, over = false, clock = null, t0 = 0, nextAt = 1200;
+      const fx = j => (j + .5) / F * 100;
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.march, 'The border fords')}<div class="sc g-mr" id="mr-stage"><div class="mr-far">🏴 The enemy shore</div><div class="mr-river"></div><div class="mr-near">🏘️ Your villages</div>${Array.from({ length: F }, (_, j) => `<button type="button" class="mr-ford" data-mg="ford" data-v="${j}" style="left:${fx(j)}%" aria-label="ford ${j + 1}"><span>Ford ${j + 1}</span></button>`).join('')}${riders.map((r, q) => `<i class="mr-rider" id="mr-r${q}" style="left:${fx(r.at)}%">🐎</i>`).join('')}<div id="mr-raids"></div></div>${timeBar('mr-t')}<div class="cu-hud ex-hud" id="mr-hud"></div><p class="mg-tip sc-tip">Tap a ford to send your nearest free rider there.</p>`);
+        hud(); t0 = performance.now();
+        clock = mgClock(42000, 'mr-stage', f => {
+          setBar('mr-t', f); const now = performance.now() - t0;
+          if (now >= nextAt) { nextAt = now + Math.max(1400, 2800 - f * 1200); const j = R(0, F - 1); if (!raids.some(x => x.f === j && !x.done)) { const id = `mr${++seq}`; raids.push({ id, f: j, t: now, dur: Math.round(4200 - f * 1400), done: false }); const b = document.getElementById('mr-raids'); if (b) b.insertAdjacentHTML('beforeend', `<i class="mr-raid" id="${id}" style="left:${fx(j)}%;animation-duration:${raids[raids.length - 1].dur}ms">🗡️</i>`); } }
+          for (const x of raids) if (!x.done && now - x.t >= x.dur) { x.done = true; const el = document.getElementById(x.id); const def = riders.some(r => r.at === x.f && now >= r.busy); if (def) { held++; mgPop('mr-stage', 'Driven back!', 'gold', fx(x.f), 46); mgSnd('clash'); } else { burned++; mgPop('mr-stage', 'A village burns!', 'bad', fx(x.f), 70); mgSnd('bad'); } if (el) el.remove(); hud(); }
+        }, end);
+      };
+      const send = j => {
+        if (over) return; const now = performance.now() - t0; j = +j;
+        if (riders.some(r => r.at === j)) return;
+        const free = riders.filter(r => now >= r.busy); if (!free.length) return mgPop('mr-stage', 'Both riders are on the road!', 'dim', 50, 30);
+        const r = free.sort((a, b) => Math.abs(a.at - j) - Math.abs(b.at - j))[0], q = riders.indexOf(r), travel = 450 + Math.abs(r.at - j) * 450;
+        r.at = j; r.busy = now + travel; const el = document.getElementById(`mr-r${q}`); if (el) { el.style.transitionDuration = `${travel}ms`; el.style.left = `${fx(j)}%`; } mgSnd('tick');
+      };
+      const hud = () => mgSet('mr-hud', `<span>🛡️ Driven back <b>${held}</b></span><span>🔥 Villages burned <b>${burned}</b></span>`);
+      const end = () => {
+        if (over) return; over = true;
+        const tot = held + burned || 1, score = clamp(Math.round((held / tot - burned * .04) * 100)) / 100;
+        mgFinish('march', score, `${held} raid${held === 1 ? '' : 's'} driven back at the fords${burned ? `, ${burned} village${burned > 1 ? 's' : ''} burned` : ', and not one village lost'}.`, (grade, mult) => {
+          const ls = [];
+          if (!burned) { fac('commons', 4); fac('lords', 3); ls.push('The border villages sleep easy for the first time in years.'); }
+          if (burned >= 3) { fac('commons', -5); jobPerf(-6); ls.push('Refugees from the burned villages crowd the duke’s gate.'); }
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'start') go(); else if (a === 'ford') send(v); };
+      mgIntro(MG_BY.march, 'Captain of the duke’s march', ['Five fords cross the border river. Raiders 🗡️ will come down to them from the far side, one after another.', 'You have <b>two riders</b>. Tap a ford to send the nearest free rider there: riding takes time, farther fords take longer. A raid that reaches an empty ford burns a village.'], '🐴 Mount up');
+    } });
+
+  /* ---------- 32. The captain of the guard: the assassin in the crowd ---------- */
+  mgAdd({ k: 'guard', i: '⚔️', n: 'The palace guard', d: 'A crowd fills the throne room. One of them carries a knife. Find him before he reaches the throne.', seal: 'mg_guard', who: () => mgIn('jb_guardcaptain'),
+    play() {
+      const ROUNDS = 3; let r = -1, caught = 0, wrongs = 0, strikes = 0, crowd = [], ax = -1, steps = 0, over = false, busy = false, timers = [];
+      const later = (ms, fn) => timers.push(mgAfter(ms, 'gd-stage', fn));
+      const king = { robe: '#5a2a6a', hat: 'crown', beard: KT() !== 'Queen', f: KT() === 'Queen', hair: '#5a3a22', arms: 'hold' };
+      const go = () => round();
+      const round = () => {
+        r++; if (r >= ROUNDS) return end(); busy = false; steps = 0;
+        crowd = Array.from({ length: 10 }, () => ({ look: Object.assign(randFolk(null, true), { mood: 'calm' }) })); ax = R(0, 9);
+        mgShow(`${mgHead(MG_BY.guard, 'The audience chamber', r, ROUNDS)}<div class="sc g-gd" id="gd-stage"><svg class="sc-svg" viewBox="0 0 360 70" aria-hidden="true"><rect width="360" height="70" fill="#5a2a2a"/><path d="M150 70V20Q180 0 210 20V70Z" fill="#7a1e16" stroke="#e2b23c" stroke-width="2"/><g transform="translate(180 66) scale(1.2)">${fig(king)}</g></svg><div class="gd-crowd" id="gd-crowd">${crowd.map((c, j) => `<button type="button" class="gd-p" id="gd${j}" data-mg="p" data-v="${j}" style="--row:${j < 5 ? 0 : 1}"><svg viewBox="-16 -58 32 62" aria-hidden="true">${fig(c.look)}<g class="gd-t knife"><path d="M8 -20L14 -28" stroke="#e8eef4" stroke-width="2"/><circle cx="14" cy="-28" r="2" fill="#fff"/></g><g class="gd-t eye"><rect x="-4.6" y="-38" width="9.2" height="3.2" fill="${c.look.skin}"/><circle cx="-1.2" cy="-36.4" r=".95" fill="#1a1208"/><circle cx="3.4" cy="-36.4" r=".95" fill="#1a1208"/></g><g class="gd-t cough"><text x="5" y="-38" font-size="8">💨</text></g><g class="gd-t bow"><text x="6" y="-44" font-size="8">🙇</text></g></svg></button>`).join('')}</div></div><div class="sc-say" id="gd-say"><p>Watch the crowd. Tap the one you are sure of.</p></div>`);
+        tick();
+      };
+      const tick = () => {
+        if (over || busy) return;
+        const el = document.getElementById(`gd${ax}`);
+        if (P(.55)) { const t = pick(['knife', 'eye']); if (el) { el.classList.add(`s-${t}`); later(900, () => el.classList.remove(`s-${t}`)); } }
+        const o = R(0, 9); if (o !== ax && P(.75)) { const d = document.getElementById(`gd${o}`), t = pick(['cough', 'bow']); if (d) { d.classList.add(`s-${t}`); later(1000, () => d.classList.remove(`s-${t}`)); } }
+        steps++; if (el) el.style.setProperty('--fwd', `${Math.min(5, steps) * -9}px`);
+        if (steps >= 7) return stab();
+        later(R(1100, 1600) - r * 120, tick);
+      };
+      const stab = () => { busy = true; strikes++; mgSet('gd-say', '<p class="sc-res bad">A knife flashes! The guards wrestle him down at the very foot of the throne. Too close. Far too close.</p>'); mgSnd('clash'); const el = document.getElementById(`gd${ax}`); if (el) el.classList.add('found'); later(2200, round); };
+      const arrest = (j, el) => {
+        if (busy || over) return; j = +j;
+        if (j === ax) { busy = true; caught++; el.classList.add('found', 's-knife'); mgSet('gd-say', '<p class="sc-res good">Your men seize him. A long knife falls from his sleeve onto the floor. The court gasps.</p>'); mgSnd('fanfare'); later(2000, round); }
+        else { wrongs++; el.classList.add('wrongp'); mgPop('gd-stage', 'An innocent man!', 'bad', ...pctOf(el, 'gd-stage')); mgSnd('bad'); }
+      };
+      const end = () => {
+        if (over) return; over = true;
+        const score = clamp(Math.round((caught / ROUNDS - wrongs * .1) * 100)) / 100;
+        mgFinish('guard', score, `${caught} of ${ROUNDS} would-be assassins caught${strikes ? `, ${strikes} stopped only at the throne` : ''}${wrongs ? `, and ${wrongs} innocent ${wrongs > 1 ? 'people' : 'person'} dragged off` : ''}.`, (grade, mult, pay) => {
+          const ls = [];
+          if (caught === ROUNDS) { fac('crown', 8); coin(Math.round(pay * .4 * mult)); st('renown', 3); ls.push(`The ${KT() === 'Queen' ? 'queen' : 'king'} owes you a life, and has said so in front of everyone.`); }
+          if (strikes) { jobPerf(-6 * strikes); ls.push('A knife reached the throne room. Questions are being asked about the guard.'); }
+          if (wrongs >= 2) { fac('lords', -4); ls.push('The lords complain that no one is safe from your guards.'); }
+          return ls;
+        });
+      };
+      mgOn = (a, v, el) => { if (a === 'start') go(); else if (a === 'p') arrest(v, el); };
+      mgIntro(MG_BY.guard, 'Captain of the guard', ['Three audiences, three crowds. In each, one person has come to kill. He edges forward through the crowd, and now and then gives himself away: a <b>glint of steel</b> at his sleeve, or <b>shifty eyes</b> darting to the throne.', 'Honest folk cough and bow; that proves nothing. Tap the assassin before he reaches the throne. Seizing the wrong person shames you.'], '⚔️ Open the doors');
+    } });
+
+  /* ---------- 33. The master gunner: the great bombard ---------- */
+  mgAdd({ k: 'bombard', i: '💣', n: 'The great bombard', d: 'Siege towers roll toward the walls. Choose your powder, aim, and fire before they arrive. Too much powder, and the gun may burst.', seal: 'mg_bombard', payK: .5, who: () => mgIn('jb_gunner'),
+    play() {
+      let towers = [], shots = 9, kills = 0, breach = 0, kegs = 0, over = false, t0 = 0, ax = 0, burst = 0, ready = true, seq = 0;
+      const BAND = { 1: [110, 200], 2: [170, 270], 3: [240, 350] };
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.bombard, 'On the gun platform')}<div class="sc g-bb" id="bb-stage"><svg class="sc-svg" viewBox="0 0 360 160" aria-hidden="true"><rect width="360" height="160" fill="#c8d8e0"/><rect y="132" width="360" height="28" fill="#8a9a5a"/><rect x="0" y="80" width="40" height="80" fill="#9a9a92" stroke="#4a4a44"/>${[0, 14, 28].map(x => `<rect x="${x}" y="72" width="10" height="10" fill="#9a9a92" stroke="#4a4a44"/>`).join('')}<g transform="translate(34 78)"><rect x="0" y="-6" width="34" height="12" rx="4" fill="#3a3a40" transform="rotate(-8)"/><circle cx="2" cy="6" r="6" fill="#6b4a2e"/></g><g id="bb-towers"></g><g id="bb-aim"></g><g id="bb-fx"></g></svg></div>${timeBar('bb-t')}<div class="cu-hud ex-hud" id="bb-hud"></div><div class="bb-kegs" id="bb-kegs">${[1, 2, 3].map(k => mgBtn('keg', k, `${'🛢️'.repeat(k)}<small>${['Near', 'Middle', 'Far'][k - 1]}</small>`, '')).join('')}</div>${mgBtn('fire', '', '🔥 Touch off the gun', 'go bb-fire', true)}`);
+        hud(); t0 = performance.now(); let nextAt = 0;
+        mgLoop('bb-stage', now => {
+          if (over) return false; const t = now - t0;
+          if (t >= nextAt && towers.filter(x => !x.dead).length < 3 && seq < 7) { nextAt = t + R(3200, 5200); towers.push({ id: ++seq, x: 370, sp: .018 + Math.random() * .012, dead: false }); }
+          let h = '';
+          for (const w of towers) { if (w.dead) continue; w.x -= w.sp * 16; if (w.x <= 52) { w.dead = true; breach++; mgPop('bb-stage', 'A tower reaches the wall!', 'bad', 15, 40); mgSnd('bad'); hud(); continue; } h += `<g transform="translate(${w.x.toFixed(1)} 132)"><path d="M-10 0V-52H10V0Z" fill="#7a5a3a" stroke="#3a2412"/><path d="M-10 -40H10M-10 -26H10M-10 -12H10" stroke="#3a2412"/><path d="M-12 -52H12" stroke="#3a2412" stroke-width="3"/><circle cx="-6" cy="2" r="4" fill="#4a2e16"/><circle cx="6" cy="2" r="4" fill="#4a2e16"/></g>`; }
+          mgSet('bb-towers', h);
+          if (kegs) { const [a, b] = BAND[kegs]; ax = a + (b - a) * tri(t, 1500); mgSet('bb-aim', `<g transform="translate(${ax.toFixed(1)} 118)"><circle r="10" fill="none" stroke="#ff8a3a" stroke-width="2"/><path d="M-14 0H14M0 -14V14" stroke="#ff8a3a" stroke-width="1.4"/></g><rect x="${a}" y="146" width="${b - a}" height="4" fill="#ff8a3a" opacity=".5"/>`); }
+          if ((shots <= 0 && ready) || seq >= 7 && towers.every(x => x.dead)) { end(); return false; }
+          return true;
+        });
+      };
+      const hud = () => mgSet('bb-hud', `<span>💥 Shots <b>${shots}</b></span><span>🏚️ Towers smashed <b>${kills}</b></span><span>⚠️ At the wall <b>${breach}</b></span>`);
+      const pickKeg = k => { kegs = +k; document.querySelectorAll('#bb-kegs .mg-b').forEach((b, q) => b.classList.toggle('sel', q + 1 === kegs)); const f = document.querySelector('#card .bb-fire'); if (f) f.disabled = !ready; };
+      const fire = () => {
+        if (!kegs || !ready || over || shots <= 0) return; ready = false; shots--;
+        const f = document.querySelector('#card .bb-fire'); if (f) { f.disabled = true; f.innerHTML = '⏳ Swabbing and loading…'; }
+        if (kegs === 3 && P(.12)) { burst++; mgPop('bb-stage', 'The gun bursts its hoops!', 'bad', 16, 30); mgSnd('clash'); st('health', -R(4, 10)); }
+        else {
+          const hit = towers.find(w => !w.dead && Math.abs(w.x - ax) < 18);
+          const fx = document.getElementById('bb-fx'); if (fx) { fx.innerHTML = `<g class="sf-boom"><circle cx="${ax}" cy="112" r="16" fill="${hit ? '#ffb53d' : '#c9b48a'}" opacity=".9"/></g><g class="sf-boom"><circle cx="70" cy="74" r="10" fill="#9a9a9a" opacity=".8"/></g>`; setTimeout(() => { fx.innerHTML = ''; }, 700); }
+          if (hit) { hit.dead = true; kills++; mgPop('bb-stage', 'Smashed to kindling!', 'gold', ax / 3.6, 40); mgSnd('battle'); } else { mgPop('bb-stage', 'A miss', 'dim', ax / 3.6, 50); mgSnd('clash'); }
+        }
+        hud();
+        setTimeout(() => { ready = true; const f2 = document.querySelector('#card .bb-fire'); if (f2 && !over) { f2.disabled = !kegs; f2.innerHTML = '🔥 Touch off the gun'; } }, 1700);
+      };
+      const end = () => {
+        if (over) return; over = true;
+        const score = breach >= 3 ? 0 : clamp(Math.round((kills / 7 + .25 - breach * .25 - burst * .1) * 100)) / 100;
+        mgFinish('bombard', score, `${kills} siege tower${kills === 1 ? '' : 's'} smashed${breach ? `, ${breach} reached the walls` : ''}${burst ? `, and the gun burst ${burst > 1 ? `${burst} times` : 'once'}` : ''}.`, (grade, mult) => {
+          const ls = [];
+          if (!breach) { fac('crown', 5); st('renown', 3); ls.push('Not one tower reached the walls. The gunners drink to your name.'); }
+          if (breach >= 2) { jobPerf(-6); ls.push('The enemy got men onto the walls before they were thrown back.'); }
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'start') go(); else if (a === 'keg') pickKeg(v); else if (a === 'fire') fire(); };
+      mgIntro(MG_BY.bombard, 'Master gunner', ['Siege towers are rolling toward your walls. Choose how much <b>powder</b> to load: one keg for near, two for the middle, three for far.', 'The orange mark sweeps across that range. <b>Touch off the gun</b> when it is on a tower. Three kegs reach farthest, but the gun may burst. Reloading takes time.'], '💣 Load the gun');
+    } });
+
+  /* ---------- 34. The condottiero: the contract ---------- */
+  mgAdd({ k: 'condotta', i: '📜', n: 'The contract', d: 'Three cities want your company. Push the price up, but sign before they lose patience and walk away.', seal: 'mg_condotta', payK: .3, who: () => mgIn('jb_condottiero'),
+    play() {
+      const pay = mgPay(), cities = shuf(TOWNS).slice(0, 3).map((t, j) => ({ n: t, offer: Math.round(pay * (1.6 + j * .2 + Math.random() * .4)), rate: .012 + Math.random() * .02, pat: 100, pl: .55 + Math.random() * .5, gone: false, look: { robe: pick(['#2f5fa8', '#7a1e16', '#2f7a3a']), hat: 'brim', capc: '#1a1a1a', beard: P(.5) } }));
+      const best0 = Math.max(...cities.map(c => c.offer)); let over = false, signed = -1, clock = null, raises = 0;
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.condotta, 'Envoys at your tent')}<div class="sc g-ct" id="ct-stage">${cities.map((c, j) => `<div class="ct-c" id="ct${j}"><svg viewBox="-16 -52 32 56" aria-hidden="true">${fig(c.look)}</svg><b>${esc(c.n)}</b><span class="ct-o" id="ct-o${j}">${c.offer}</span><small>silver</small><i class="ct-p"><em id="ct-p${j}"></em></i>${mgBtn('sign', j, '✍️ Sign', 'go ct-s')}</div>`).join('')}</div>${timeBar('ct-t')}${mgBtn('raise', '', '📈 Raise your price', 'ct-raise')}<p class="mg-tip sc-tip">Offers creep up while they wait. Raising your price makes every offer jump, and every envoy less patient.</p>`);
+        clock = mgClock(30000, 'ct-stage', f => {
+          setBar('ct-t', f);
+          cities.forEach((c, j) => { if (c.gone) return; c.offer = c.offer * (1 + c.rate * .1); c.pat -= c.pl * .5; const o = document.getElementById(`ct-o${j}`), p = document.getElementById(`ct-p${j}`); if (o) o.textContent = Math.round(c.offer); if (p) { p.style.width = `${Math.max(0, c.pat)}%`; p.classList.toggle('low', c.pat < 30); } if (c.pat <= 0) leave(j); });
+          if (cities.every(c => c.gone)) finish();
+        }, finish);
+      };
+      const leave = j => { const c = cities[j]; c.gone = true; const el = document.getElementById(`ct${j}`); if (el) el.classList.add('gone'); mgPop('ct-stage', `${c.n} walks out!`, 'bad', (j + .5) * 33, 40); mgSnd('bad'); };
+      const raise = () => { if (over || performance.now() < (raise.t || 0)) return; raise.t = performance.now() + 1200; raises++; cities.forEach((c, j) => { if (c.gone) return; c.offer = c.offer * 1.12; c.pat -= 14 + raises * 3; if (c.pat <= 0) leave(j); }); mgSnd('coins'); mgPop('ct-stage', '“My lances do not come cheap.”', 'gold', 50, 12); };
+      const sign = j => { if (over) return; j = +j; const c = cities[j]; if (c.gone) return; c.offer = Math.round(c.offer); signed = j; finish(); };
+      const finish = () => {
+        if (over) return; over = true; if (clock) clock.stop();
+        const c = signed >= 0 ? cities[signed] : null;
+        mgSet('ct-stage', c ? `<div class="sc-say"><p class="sc-res good">You sign with ${esc(c.n)} for <b>${c.offer}</b> silver. Your company marches at dawn under their banner.</p></div>` : '<div class="sc-say"><p class="sc-res bad">Every envoy has gone home. Your men grumble about empty purses.</p></div>');
+        const r = document.querySelector('#card .ct-raise'); if (r) r.outerHTML = mgBtn('end', '', 'Strike the tents', 'go');
+        mgOn = a => {
+          if (a !== 'end') return;
+          const ratio = c ? c.offer / best0 : 0, score = !c ? 0 : ratio >= 1.6 ? 1 : ratio >= 1.3 ? .8 : ratio >= 1.1 ? .55 : .35;
+          mgFinish('condotta', score, c ? `A condotta with ${c.n}: ${c.offer} silver, ${Math.round((ratio - 1) * 100)}% above their first offer.` : 'No contract this year.', (grade, mult) => {
+            const ls = [];
+            if (c) { const g = Math.round(c.offer * .25); coin(g); ls.push(`Your own share of the contract: ${g} silver.`); }
+            else { st('renown', -3); jobPerf(-6); ls.push('A captain with no contract soon has no company.'); }
+            return ls;
+          });
+        };
+      };
+      mgOn = (a, v) => { if (a === 'start') go(); else if (a === 'raise') raise(); else if (a === 'sign') sign(v); };
+      mgIntro(MG_BY.condotta, 'Captain of a free company', ['Envoys from three cities sit in your tent, each with an offer for your lances. Their offers creep up as they wait, but their <b>patience</b> runs out.', '<b>Raise your price</b> to make every offer jump, but it costs patience. <b>Sign</b> with the best offer before they all walk out.'], '⛺ Receive the envoys');
+    } });
+
+  /* ---------- 35. The admiral of the fleet: signal flags ---------- */
+  const FLAGS = { r: '#b3202c', b: '#2f5fa8', y: '#e8c45a', w: '#f4efe2', g: '#2f7a3a' };
+  const SIGNALS = [['Form line ahead', 'rb'], ['Close with the enemy', 'yr'], ['Wear ship', 'bw'], ['Chase', 'gy'], ['Make sail', 'wg'], ['Engage more closely', 'ryb'], ['Anchor', 'bg'], ['Break the line', 'yw']];
+  const EVT = [['The enemy is fleeing', 'Chase'], ['The wind backs round to the north', 'Wear ship'], ['The enemy is in range', 'Close with the enemy'], ['Your ships are scattered', 'Form line ahead'], ['Their line has a gap', 'Break the line'], ['The wind drops away', 'Make sail'], ['A storm is coming on', 'Anchor'], ['Your captains hang back', 'Engage more closely']];
+  const flagSVG = c => `<svg viewBox="0 0 24 18" aria-hidden="true"><rect width="24" height="18" rx="1" fill="${FLAGS[c]}" stroke="rgba(0,0,0,.35)"/>${c === 'w' ? '<path d="M0 9H24M12 0V18" stroke="#b3202c" stroke-width="3"/>' : c === 'y' ? '<circle cx="12" cy="9" r="4" fill="#1a1a1a"/>' : ''}</svg>`;
+  mgAdd({ k: 'signals', i: '🚩', n: 'Signal the fleet', d: 'From the flagship, run up the right flags for each turn of the battle, fast, before your captains act on their own.', seal: 'mg_signals', who: () => mgIn('jb_admiralfleet'),
+    play() {
+      const evs = shuf(EVT).slice(0, 7); let i = -1, hoist = '', right = 0, slow = 0, wrong = 0, clock = null, over = false, phase = '';
+      const book = SIGNALS.map(([n, f]) => `<span><i>${f.split('').map(flagSVG).join('')}</i>${esc(n)}</span>`).join('');
+      const go = () => { mgShow(`${mgHead(MG_BY.signals, 'The flagship’s quarterdeck', 0, evs.length)}<div class="sc g-lb" id="lb-stage"><svg class="sc-svg" viewBox="0 0 360 110" aria-hidden="true"><rect width="360" height="110" fill="#9cc4e0"/><rect y="70" width="360" height="40" fill="#2f6a8a"/>${[40, 100, 160, 220, 280].map((x, q) => `<g class="lb-ship" style="--d:${q * .15}s" transform="translate(${x} 82)"><path d="M-16 0H16L12 8H-12Z" fill="#6b3a1e"/><path d="M0 0V-26M0 -24Q10 -14 0 -6" stroke="#4a2e16" stroke-width="1.4" fill="#f4efe2"/></g>`).join('')}<path d="M330 70V10" stroke="#4a2e16" stroke-width="3"/><g id="lb-hoist" transform="translate(332 12)"></g></svg><div class="lb-ev" id="lb-ev"></div></div><div class="lb-book">${book}</div>${timeBar('lb-t')}<div class="lb-flags">${Object.keys(FLAGS).map(c => mgBtn('flag', c, flagSVG(c), 'lb-f')).join('')}${mgBtn('clear', '', '↺', 'lb-f dim')}</div>${mgBtn('run', '', '🚩 Run up the signal', 'go')}`); next(); };
+      const next = () => {
+        i++; if (i >= evs.length) return end(); mgStep(i); hoist = ''; phase = 'sig'; draw();
+        mgSet('lb-ev', `⚓ ${esc(evs[i][0])}!`);
+        if (clock) clock.stop(); clock = mgClock(7000 - i * 300, 'lb-stage', f => setBar('lb-t', f), () => judge(true));
+      };
+      const draw = () => mgSet('lb-hoist', hoist.split('').map((c, q) => `<g transform="translate(0 ${q * 16})">${flagSVG(c).replace('<svg viewBox="0 0 24 18" aria-hidden="true">', '').replace('</svg>', '')}</g>`).join(''));
+      const add = c => { if (phase !== 'sig' || hoist.length >= 3) return; hoist += c; draw(); mgSnd('tick'); };
+      const judge = timeout => {
+        if (phase !== 'sig') return; phase = 'done'; if (clock) clock.stop();
+        const want = SIGNALS.find(s => s[0] === evs[i][1])[1], ok = hoist === want;
+        if (ok) { right++; mgPop('lb-stage', `“${evs[i][1]}!” The fleet obeys.`, 'gold', 50, 30); mgSnd('good'); document.querySelectorAll('#lb-stage .lb-ship').forEach(s => { s.classList.remove('turn'); void s.getBoundingClientRect(); s.classList.add('turn'); }); }
+        else if (timeout) { slow++; mgPop('lb-stage', 'Too slow: your captains do as they please', 'bad', 50, 30); mgSnd('bad'); }
+        else { wrong++; mgPop('lb-stage', `Wrong flags! The fleet ${pick(['turns the wrong way', 'falls into confusion', 'drops anchor'])}`, 'bad', 50, 30); mgSnd('bad'); }
+        mgAfter(1500, 'lb-stage', next);
+      };
+      const end = () => {
+        if (over) return; over = true;
+        const score = clamp(Math.round((right / evs.length - wrong * .05) * 100)) / 100;
+        mgFinish('signals', score, `${right} of ${evs.length} signals right and in time${wrong ? `, ${wrong} wrong` : ''}${slow ? `, ${slow} too slow` : ''}.`, (grade, mult, pay) => {
+          const ls = [];
+          if (score >= .8) { fac('crown', 6); st('renown', 4); coin(Math.round(pay * .4 * mult)); ls.push('The fleet fought like one ship. A famous victory, and prize money for all.'); }
+          if (score < .4) { jobPerf(-8); ls.push('Your captains fought their own battles, and lost most of them.'); }
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'start') go(); else if (a === 'flag') add(v); else if (a === 'clear' && phase === 'sig') { hoist = ''; draw(); } else if (a === 'run') judge(false); };
+      mgIntro(MG_BY.signals, 'Admiral of the fleet', ['Seven turns of a sea battle. For each, the signal book shows which <b>flags</b> mean which order.', 'Read what is happening, find the right order in the book, tap its flags <b>in order</b> (top flag first), then <b>run up the signal</b>, all before the time runs out.'], '🚩 Hoist your flag');
+    } });
+
+  /* ---------- 36. The preceptor: the pilgrim road ---------- */
+  mgAdd({ k: 'pilgrims', i: '🛡️', n: 'The pilgrim road', d: 'Pilgrims walk the road past your commandery. Send your knights at the bandits before they strike.', seal: 'mg_pilgrims', who: () => mgIn('jb_preceptor'),
+    play() {
+      const BUSH = [[10, 30], [26, 74], [40, 26], [54, 76], [68, 30], [82, 72], [94, 28]];
+      let safe = 0, robbed = 0, driven = 0, over = false, clock = null, t0 = 0, seq = 0, walkers = [], nextB = 1500, nextP = 0;
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.pilgrims, 'The road to the shrine')}<div class="sc g-pr" id="pr-stage"><div class="pr-road"></div>${BUSH.map((b, j) => rgCell(`pr${j}`, '<span class="pr-bush">🌳</span>', 'pr-b').replace('class="rg pr-b"', `class="rg pr-b" style="left:${b[0]}%;top:${b[1]}%"`)).join('')}<div id="pr-walk"></div><span class="pr-home">🏰</span></div>${timeBar('pr-t')}<div class="cu-hud ex-hud" id="pr-hud"></div><p class="mg-tip sc-tip">Tap a bandit 🗡️ the moment he shows himself.</p>`);
+        hud(); t0 = performance.now();
+        document.getElementById('pr-stage').addEventListener('animationend', e => {
+          if (e.animationName === 'rgRun') { const el = e.target.closest('.rg'); if (el && el.classList.contains('on')) { rgStop(el); const w = walkers.find(x => !x.done); if (w) { w.robbed = true; const we = document.getElementById(w.id); if (we) we.classList.add('robbed'); } robbed++; mgPop('pr-stage', 'A pilgrim is robbed!', 'bad', ...pctOf(el, 'pr-stage')); mgSnd('bad'); hud(); } }
+          if (e.animationName === 'prWalk') { const el = e.target.closest('.pr-w'); if (!el) return; const w = walkers.find(x => x.id === el.id); if (w && !w.done) { w.done = true; if (!w.robbed) safe++; hud(); } el.remove(); }
+        });
+        clock = mgClock(40000, 'pr-stage', f => {
+          setBar('pr-t', f); const now = performance.now() - t0;
+          if (now >= nextP) { nextP = now + R(1800, 2600); const id = `pw${++seq}`; walkers.push({ id, done: false }); const b = document.getElementById('pr-walk'); if (b) b.insertAdjacentHTML('beforeend', `<i class="pr-w" id="${id}"><svg viewBox="-14 -52 28 56" aria-hidden="true">${fig({ robe: pick(['#6a5a4a', '#7a6a4a', '#5a4a3a']), hat: 'brim', capc: '#4a3a2a', beard: P(.5), f: P(.3) })}<path d="M10 0V-36" stroke="#6b4a2e" stroke-width="1.6"/></svg></i>`); }
+          if (now >= nextB) { nextB = now + Math.max(900, 2000 - f * 900); const free = [...document.querySelectorAll('#pr-stage .pr-b')].filter(el => !el.dataset.on); const el = pick(free); if (el) rgStart(el, Math.round(3000 - f * 1000), 'pr-bandit', '🗡️'); }
+        }, end);
+      };
+      const tap = id => { const el = document.getElementById(id); if (!el || over || !el.classList.contains('on')) return; rgStop(el); driven++; mgPop('pr-stage', 'Driven off!', 'gold', ...pctOf(el, 'pr-stage')); mgSnd('clash'); hud(); };
+      const hud = () => mgSet('pr-hud', `<span>🙏 Safe <b>${safe}</b></span><span>🗡️ Driven off <b>${driven}</b></span><span>💰 Robbed <b>${robbed}</b></span>`);
+      const end = () => {
+        if (over) return; over = true; document.querySelectorAll('#pr-stage .rg').forEach(rgStop);
+        const score = clamp(Math.round((1 - robbed * .15 + driven * .02) * 100)) / 100;
+        mgFinish('pilgrims', score, `${driven} bandits driven off${robbed ? `, but ${robbed} pilgrim${robbed > 1 ? 's were' : ' was'} robbed on your road` : ', and not a pilgrim robbed'}.`, (grade, mult) => {
+          const ls = [];
+          if (!robbed) { st('piety', 3); fac('church', 5); ls.push('Pilgrims bless the knights of your commandery all the way to the shrine.'); }
+          if (robbed >= 3) { fac('church', -4); jobPerf(-5); ls.push('Word spreads that your road is not safe.'); }
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'start') go(); else if (a === 'cell') tap(v); };
+      mgIntro(MG_BY.pilgrims, 'Preceptor of the order', ['Pilgrims walk the road past your commandery to the shrine. Bandits lurk in the trees along the way.', 'When a bandit 🗡️ shows himself, <b>tap him</b> before the ring runs out, and your knights ride him down. If you are too slow, a pilgrim is robbed.'], '🛡️ Saddle the knights');
+    } });
+
+  /* ---------- 37. The grand master: hold the fortress ---------- */
+  mgAdd({ k: 'fortress', i: '🏯', n: 'Hold the fortress', d: 'The great assault. Push down the ladders, and dig counter-mines where the sappers are tunnelling.', seal: 'mg_fortress', payK: .6, who: () => mgIn('jb_grandmaster'),
+    play() {
+      const N = 6; let wall = Array(N).fill(3), pushed = 0, mines = 0, over = false, clock = null, t0 = 0, nextL = 800, nextM = 4000;
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.fortress, 'The great assault')}<div class="sc g-hf" id="hf-stage"><div class="hf-wall">${Array.from({ length: N }, (_, j) => `<div class="hf-sec" id="hfs${j}"><b class="hf-hp" id="hfh${j}">■■■</b>${rgCell(`hfl${j}`, '<span class="hf-ldr">🪜</span>', 'hf-l')}${rgCell(`hfm${j}`, '<span class="hf-mine">⛏️</span>', 'hf-m')}</div>`).join('')}</div></div>${timeBar('hf-t')}<div class="cu-hud ex-hud" id="hf-hud"></div><p class="mg-tip sc-tip">Ladders go up fast: tap to throw them down. Sappers dig slowly: tap twice to counter-mine.</p>`);
+        hud(); t0 = performance.now();
+        document.getElementById('hf-stage').addEventListener('animationend', e => { if (e.animationName !== 'rgRun') return; const el = e.target.closest('.rg'); if (!el || !el.classList.contains('on')) return; const j = +el.id.replace(/\D/g, ''); const mine = el.id.startsWith('hfm'); rgStop(el); hurt(j, mine ? 2 : 1, mine ? 'The mine is fired! The wall slumps.' : 'They are over the wall!'); });
+        clock = mgClock(45000, 'hf-stage', f => {
+          setBar('hf-t', f); const now = performance.now() - t0;
+          if (now >= nextL) { nextL = now + Math.max(650, 1500 - f * 800); const free = [...Array(N).keys()].filter(j => wall[j] > 0 && !document.getElementById(`hfl${j}`).dataset.on); const j = pick(free); if (j != null) rgStart(document.getElementById(`hfl${j}`), Math.round(2900 - f * 900), 'hf-up', '⚔️'); }
+          if (now >= nextM) { nextM = now + R(4200, 6200); const free = [...Array(N).keys()].filter(j => wall[j] > 0 && !document.getElementById(`hfm${j}`).dataset.on); const j = pick(free); if (j != null) { const el = document.getElementById(`hfm${j}`); el.dataset.dig = 2; rgStart(el, 6500, 'hf-dig', '🕳️'); } }
+          if (wall.filter(x => x <= 0).length >= 3) end();
+        }, end);
+      };
+      const hurt = (j, d, msg) => { wall[j] = Math.max(0, wall[j] - d); const h = document.getElementById(`hfh${j}`); if (h) h.textContent = '■'.repeat(wall[j]) + '□'.repeat(3 - wall[j]); const s = document.getElementById(`hfs${j}`); if (s) s.classList.toggle('down', wall[j] <= 0); mgPop('hf-stage', msg, 'bad', (j + .5) / N * 100, 30); mgSnd('clash'); hud(); };
+      const tap = id => {
+        const el = document.getElementById(id); if (!el || over || !el.classList.contains('on')) return; const [x, y] = pctOf(el, 'hf-stage');
+        if (id.startsWith('hfm')) { const left = (+el.dataset.dig || 1) - 1; el.dataset.dig = left; if (left > 0) { mgPop('hf-stage', 'Dig!', 'dim', x, y); mgSnd('tick'); return; } rgStop(el); mines++; mgPop('hf-stage', 'Mine collapsed!', 'gold', x, y); mgSnd('good'); }
+        else { rgStop(el); pushed++; mgPop('hf-stage', 'Thrown down!', 'gold', x, y); mgSnd('tick'); }
+        hud();
+      };
+      const hud = () => mgSet('hf-hud', `<span>🪜 Ladders down <b>${pushed}</b></span><span>⛏️ Mines stopped <b>${mines}</b></span><span>🧱 Wall <b>${Math.round(wall.reduce((a, b) => a + b, 0) / (N * 3) * 100)}%</b></span>`);
+      const end = () => {
+        if (over) return; over = true; if (clock) clock.stop(); document.querySelectorAll('#hf-stage .rg').forEach(rgStop);
+        const hp = wall.reduce((a, b) => a + b, 0) / (N * 3), fell = wall.filter(x => x <= 0).length >= 3;
+        const score = fell ? 0 : clamp(Math.round((hp * 1.1 - .05) * 100)) / 100;
+        mgFinish('fortress', score, fell ? 'The walls are breached in three places. The order falls back to the citadel.' : `The assault is beaten off with ${Math.round(hp * 100)}% of the walls still standing.`, (grade, mult, pay) => {
+          const ls = [];
+          if (!fell && hp >= .8) { st('renown', 6); fac('church', 6); coin(Math.round(pay * .5 * mult)); ls.push('All Christendom hears how the fortress held. Gifts pour in for the order.'); }
+          if (fell) { st('health', -R(6, 14)); jobPerf(-10); ls.push('Many brothers of the order fell on the walls.'); }
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'start') go(); else if (a === 'cell') tap(v); };
+      mgIntro(MG_BY.fortress, 'Grand master of the order', ['Six sections of wall, and the enemy everywhere. <b>Ladders</b> 🪜 go up quickly: tap them before the ring runs out to throw them down.', '<b>Sappers</b> ⛏️ tunnel slowly under the wall: tap twice to dig a counter-mine. A fired mine does double damage. Lose three sections and the fortress falls.'], '🏯 To the walls!');
+    } });
+  FEATS.push(
+    { k: 'mg_joust', i: '🏇', n: 'Champion of the Lists', d: 'Become Legendary at the joust.' },
+    { k: 'mg_charge', i: '🐎', n: 'Knee to Knee', d: 'Become Legendary at the charge.' },
+    { k: 'mg_levy', i: '🔱', n: 'The Baron’s Host', d: 'Become Legendary at raising the levies.' },
+    { k: 'mg_muster', i: '🛡️', n: 'Not a Man Short', d: 'Become Legendary at the muster.' },
+    { k: 'mg_siege', i: '🏰', n: 'Breaker of Gates', d: 'Become Legendary at the siege.' },
+    { k: 'mg_march', i: '🐴', n: 'Warden of the March', d: 'Become Legendary at riding the march.' },
+    { k: 'mg_guard', i: '⚔️', n: 'The King’s Shield', d: 'Become Legendary in the palace guard.' },
+    { k: 'mg_bombard', i: '💣', n: 'Master of the Great Guns', d: 'Become Legendary with the great bombard.' },
+    { k: 'mg_condotta', i: '📜', n: 'A Captain’s Price', d: 'Become Legendary at striking a contract.' },
+    { k: 'mg_signals', i: '🚩', n: 'One Fleet, One Will', d: 'Become Legendary at signalling the fleet.' },
+    { k: 'mg_pilgrims', i: '🛡️', n: 'Shield of Pilgrims', d: 'Become Legendary on the pilgrim road.' },
+    { k: 'mg_fortress', i: '🏯', n: 'The Fortress Held', d: 'Become Legendary in holding the fortress.' },
   );
 
   /* ---------- v1.22 the portrait gallery: a crown or a great house chooses a match ---------- */
