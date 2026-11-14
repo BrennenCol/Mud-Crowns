@@ -847,6 +847,8 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .mg-step{display:flex;gap:4px}
 .mg-step i{width:9px;height:9px;border-radius:50%;background:var(--rule);box-shadow:inset 0 0 0 1px var(--rule-2)}
 .mg-step i.on{background:var(--gold)}
+.mg-step.num{flex:none;align-items:baseline;gap:1px;padding:2px 8px;border-radius:99px;background:var(--vellum-2);box-shadow:inset 0 0 0 1px var(--rule-2);font:600 13px/1.4 var(--serif);color:var(--ink-3)}
+.mg-step.num b{color:var(--gold-2,#8a6410);font-size:15px}
 .mg-lk{display:flex;justify-content:space-between;gap:6px;margin:4px 0 0;font-size:12px;font-style:italic;color:var(--ink-3)}
 .mg-tip{margin:8px 0;font-size:14.5px;line-height:1.35;color:var(--ink-2)}
 .mg-last{margin:8px 0;padding:8px 10px;border-radius:8px;background:var(--vellum-2);border-left:3px solid var(--gold);font-size:14.5px;line-height:1.35}
@@ -2149,7 +2151,7 @@ button.in-t{cursor:pointer}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.28.0';
+const APP_VERSION = '1.28.1';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -27303,7 +27305,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
   const mgCard = () => $('card');
   function mgShow(html) { const c = mgCard(); c.classList.add('mgc'); c.innerHTML = html; c.scrollTop = 0; }
   mgCard().addEventListener('click', e => { if (!mgOn || !mgCard().classList.contains('mgc')) return; const b = e.target.closest('[data-mg]'); if (!b || b.disabled || b.getAttribute('aria-disabled') === 'true') return; mgOn(b.dataset.mg, b.dataset.v, b); });
-  const mgHead = (g, sub, step, of) => `<div class="mg-h"><span class="mg-i" aria-hidden="true">${g.i}</span><div class="mg-ht"><b>${esc(g.n)}</b><small>${esc(sub || MG_TIER[mgTier(g.k)][1])}</small></div>${of ? `<span class="mg-step" aria-label="${step} of ${of}">${Array.from({ length: of }, (_, i) => `<i class="${i < step ? 'on' : ''}"></i>`).join('')}</span>` : ''}</div>`;
+  const mgHead = (g, sub, step, of) => `<div class="mg-h"><span class="mg-i" aria-hidden="true">${g.i}</span><div class="mg-ht"><b>${esc(g.n)}</b><small>${esc(sub || MG_TIER[mgTier(g.k)][1])}</small></div>${of ? (of > 7 ? `<span class="mg-step num" data-of="${of}" aria-label="${step} of ${of}"><b>${step}</b>/${of}</span>` : `<span class="mg-step" aria-label="${step} of ${of}">${Array.from({ length: of }, (_, i) => `<i class="${i < step ? 'on' : ''}"></i>`).join('')}</span>`) : ''}</div>`;
   const mgBtn = (act, v, label, cls, dis) => `<button type="button" class="mg-b${cls ? ' ' + cls : ''}" data-mg="${act}" data-v="${esc(String(v))}"${dis ? ' disabled' : ''}>${label}</button>`;
 
   // the end of every game: grade, rewards that grow with your name, and the result card
@@ -27394,7 +27396,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     const e = document.createElement('span'); e.className = `sc-pop ${cls || ''}`; e.textContent = text;
     e.style.left = `${x}%`; e.style.top = `${y}%`; h.appendChild(e); setTimeout(() => e.remove(), 1200);
   }
-  const mgStep = n => document.querySelectorAll('#card .mg-step i').forEach((e, j) => e.classList.toggle('on', j < n));
+  const mgStep = n => { document.querySelectorAll('#card .mg-step i').forEach((e, j) => e.classList.toggle('on', j < n)); const t = document.querySelector('#card .mg-step.num'); if (t) { t.querySelector('b').textContent = Math.min(n, +t.dataset.of); t.setAttribute('aria-label', `${Math.min(n, +t.dataset.of)} of ${t.dataset.of}`); } };
   const mgSub = t => { const e = document.querySelector('#card .mg-ht small'); if (e) e.textContent = t; };
   const mgSet = (id, html) => { const e = document.getElementById(id); if (e) e.innerHTML = html; return e; };
   const timeBar = id => `<div class="sc-time" aria-hidden="true"><i id="${id}"></i></div>`;
