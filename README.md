@@ -379,6 +379,21 @@ fills in anything a newer version expects, and drops a job whose career no longe
   looks so it is the same as a child and as your heir), fades smoothly to grey over about
   twenty years, then to white, and never goes back.
 
+## Batch 2: government, law and the town (v1.25)
+
+| Game | Post | How it plays |
+| --- | --- | --- |
+| The king's ear | Courtier | Step out as the king reaches the gap in the crowd, then answer his mood (merry: jest, angry: soothe, bored: gossip, worried: good news) |
+| Quarter sessions | Magistrate | Twelve offenders; sentence each by the rule book (stocks, fine, gaol, sent home); children are let off |
+| The writs office | Royal official | Stamp the top writ with the right seal (Great, Privy, Signet) before the pile reaches eight |
+| The privy council | Adviser | Keep the king leaning your way; counter each rival's argument (treasury, war, Church, honour) before he sits |
+| Parliament divides | Chancellor | Four divisions; tap every member who rises for Aye before the count closes |
+| Objection! | Serjeant-at-law | Check each claim against the evidence board; object to the three false ones |
+| The hue and cry | Sheriff | Ride down an outlaw running for the forest; raise the villagers three times to block him |
+| Raise the posse | High sheriff | Two riders to five villages (farther: more men, longer ride); fourteen men before the robbers arrive |
+| Fire in the ward | Alderman | Twelve houses; douse each fire before its ring runs out or it spreads next door |
+| Bread and ale | Mayor | Loaves on the scales (short of the line: fine them) and cups of ale (watered or sour: fine them) |
+
 ## Every elite job its own game, batch 1: the military (v1.24)
 
 The plan is for every one of the 81 elite posts to have a game of its own (shared games stay as
