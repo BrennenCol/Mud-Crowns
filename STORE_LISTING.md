@@ -61,23 +61,20 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.22.0.txt`, ready to copy (it covers 1.22 and ends with short notes on 1.21 and 1.20).
+Also in `store/whats_new_1.23.0.txt`, ready to copy. The last version in the App Store was 1.15.1, so it sums up everything since then, briefly.
 
 ```
-THE PORTRAIT GALLERY
-When your council or your family finds you a match, the candidates now hang on easels in a long gallery, under velvet cloths that fall away one by one. Tap a portrait to see who they are and, in plain words, what they would bring: an alliance, the great lords' support, a dowry, or a scandal. Choose one, and their portrait is carried to the middle of the gallery as the bells ring and petals fall.
-
-A LADY OF THE HOUSEHOLD
-Kings and queens now find one of their own court among the candidates: one of the queen mother's ladies-in-waiting, or a gentleman of the chamber. Someone who already knows you, with a small dowry and no alliance. The council will grumble.
-
-THE KING'S EYE
-A woman serving at court as a lady-in-waiting may catch the eye of the king, or a prince. As history shows, there is not much she can do about it: curtsey and say little, let him see she is pleased, or beg the queen to send her home, and hope she is allowed to go. From there it can end in a crown, a manor and a knight for a husband, or being sent home in disgrace.
-
-COURTING AS IT WAS (1.21)
-Men mostly married women younger than themselves. A man is sought for his land, trade and silver; a woman for her youth, family and dowry. Most marry within their own rank, and nobody under eighteen courts.
-
-EVERY OFFICE, PLAYED (1.20)
-All the work of high office is a real game in its own painted scene.
+NEW SINCE 1.15
+- Every high post has its own game to play, 24 in all: battles, sea fights, the conclave, the assize, the night watch in the royal prison, the royal kitchen, the hunt, the masque, and more.
+- The Hall of Legends and the Collection Hall: every climb is scored, and rare relics are won.
+- Buy land: manors, and counties from kings who need silver.
+- Choices at work come back a year or three later.
+- Your children live their own lives, and you can carry on as one of them.
+- The road to Pope, with a real Pope who grows old.
+- Courting as it really was, and a portrait gallery for royal matches.
+- A lady-in-waiting may catch the king's eye.
+- Clearer headings, a Main menu button, safer progress, and many fixes.
+- Backup codes are gone, because they could be faked.
 ```
 
 ## Category

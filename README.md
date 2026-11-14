@@ -379,6 +379,30 @@ fills in anything a newer version expects, and drops a job whose career no longe
   looks so it is the same as a child and as your heir), fades smoothly to grey over about
   twenty years, then to white, and never goes back.
 
+## A game for every high post (v1.23)
+
+Every one of the 81 high posts now has at least one game that fits its daily work (24 games in all).
+"Hear the petitions" is limited to those who heard petitions (`PET_WHO`: lords, judges, mayors,
+sheriffs, stewards, prelates and the king's ministers). Twelve new games:
+
+| Game | Posts | How it plays |
+| --- | --- | --- |
+| The night watch | Keeper of the royal prison | 9 cells; escapes (dig, rope, bribe, file) start with a countdown ring; tap before it closes; harmless prisoners cost time |
+| The sermon | Preacher | 10 listeners drift (doze, gossip, wander); tap to rouse; answer hecklers for a cheer |
+| In attendance | Ladies of the household, wardrobe, courtier | The queen or king names 2 to 4 things; fetch them in order from memory |
+| The scriptorium | Scholar, professor, rector, tutor, chronicler, writer | Tap the next letter of the master's line from a tray of six; slips blot |
+| Chart the heavens | Astronomer, court astrologer | A constellation's lines flash, then trace its stars in order; tap comets |
+| The royal commission | Painter, embroiderer | Join numbered points in order to paint or stitch three pieces |
+| The sea fight | Admirals, pirate captain, privateer | Fire as the rolling aim crosses her hull; she fires back; board when she is beaten |
+| Through the reefs | Ship's master, explorers | Steer between 5 lanes past rocks and tide-races; salvage casks or chart islands |
+| The royal feast | Master cook | Four fires; take each dish off in the gold band, not raw, not burnt |
+| The king's cup | Cupbearer | Spot poison (powder, a fly, green wine), else pour and stop at the line |
+| The royal hunt | Huntsman, master of the horse | Jump nine obstacles at the gallop, then loose at the stag at bay |
+| The masque | Master of the Revels, court poet | Three lanes of cues; tap on the beat |
+
+Shared pieces: `rgCell`/`rgStart`/`rgStop` (targets with a countdown ring), `mgIntro`, `pctOf`.
+Watch for CSS names already in use elsewhere (`.ring`, `.tw`, `.rv`, `.rv-n`, `.sp` all were).
+
 ## The portrait gallery and the king's eye (v1.22)
 
 - **The portrait gallery** (`window.mtGallery(cs)`, in the mini-game block so it can use `fig()`)

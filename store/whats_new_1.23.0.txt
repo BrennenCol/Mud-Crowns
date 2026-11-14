@@ -1,0 +1,11 @@
+NEW SINCE 1.15
+- Every high post has its own game to play, 24 in all: battles, sea fights, the conclave, the assize, the night watch in the royal prison, the royal kitchen, the hunt, the masque, and more.
+- The Hall of Legends and the Collection Hall: every climb is scored, and rare relics are won.
+- Buy land: manors, and counties from kings who need silver.
+- Choices at work come back a year or three later.
+- Your children live their own lives, and you can carry on as one of them.
+- The road to Pope, with a real Pope who grows old.
+- Courting as it really was, and a portrait gallery for royal matches.
+- A lady-in-waiting may catch the king's eye.
+- Clearer headings, a Main menu button, safer progress, and many fixes.
+- Backup codes are gone, because they could be faked.
