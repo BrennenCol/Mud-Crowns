@@ -2151,7 +2151,7 @@ button.in-t{cursor:pointer}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.28.3';
+const APP_VERSION = '1.29.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -3073,6 +3073,7 @@ function ageUp() {
   { const raw = store.get(KEY); if (raw) store.set(BKEY, raw); }
   S.age++; S.year++; S.deeds = DEEDS_PER_YEAR;
   cur();
+  try { royalYear(); } catch (e) { console.error(e); }
   { const st = stageOf(S.age); if (st[0] === S.age && S.age > 0) say(`Chapter ${roman(STAGES.indexOf(st) + 1)}: ${st[1]}`, 'chapter'); }
   { const ch = $('chron'); ch.classList.remove('flip'); void ch.offsetWidth; ch.classList.add('flip'); }
   yearKin();
@@ -3390,7 +3391,7 @@ const EVENTS = [
   { id: 'saintday', passive: true, min: 2, w: 2, cool: 3, fx: () => { st('happy', 3); return `On Saint ${pick(SAINTS)}'s Day the whole village feasted on roast goose and danced around a bonfire.`; } },
   { id: 'comet', passive: true, min: 3, w: .6, cool: 25, fx: () => { st('piety', 2); return `A fiery comet hung in the sky for nine nights. The priest says it portends ${pick(['the death of a king', 'war', 'plague', 'the end of days', 'a very good harvest'])}.`; } },
   { id: 'eclipse', passive: true, min: 3, w: .4, cool: 30, fx: () => 'The sun went black at noon. Everyone screamed. Then it came back, looking slightly embarrassed.' },
-  { id: 'kingnews', passive: true, min: 8, w: 1, cool: 10, cond: () => !S.ruling && !rulerKin() && !bornRoyal(), fx: () => { const old = S.king; if (P(.4)) { S.flags.queenReg = 0; S.king = `${pick(NAMES.m)} ${roman(R(1, 5))}`; const pardon = S.flags.rebel ? ' The new king has pardoned all rebels, including you.' : ''; S.flags.rebel = 0; return `News from the capital: King ${old} is dead. Long live ${KT()} ${S.king}!${pardon}`; } return `News from the capital: King ${old} has ${pick(['married a foreign princess', 'raised taxes again', 'fallen off his horse', 'built a new castle', 'banned football', 'declared war on the weather'])}.`; } },
+  { id: 'kingnews', passive: true, min: 8, w: 1, cool: 10, cond: () => !S.ruling && !rulerKin() && !bornRoyal(), fx: () => { const old = S.king, oldT = KT(); if (P(.4)) { const heir = royalHeir(); S.flags.queenReg = heir && heir.s === 'f' ? 1 : 0; S.king = heir ? `${heir.n} ${roman(R(1, 3))}` : `${pick(NAMES.m)} ${roman(R(1, 5))}`; const pardon = S.flags.rebel ? ` The new ${KT() === 'Queen' ? 'queen' : 'king'} has pardoned all rebels, including you.` : ''; S.flags.rebel = 0; const who = heir ? ` ${heir.s === 'm' ? 'Prince' : 'Princess'} ${heir.n}, ${oldT === 'Queen' ? 'her' : 'his'} eldest ${heir.s === 'm' ? 'son' : 'daughter'}, is crowned.${heir.me ? ` You brought ${heir.s === 'm' ? 'him' : 'her'} into the world ${S.year - heir.y} years ago.` : ''}` : ''; return `News from the capital: ${oldT} ${old} is dead.${who} Long live ${KT()} ${S.king}!${pardon}`; } return `News from the capital: King ${old} has ${pick(['married a foreign princess', 'raised taxes again', 'fallen off his horse', 'built a new castle', 'banned football', 'declared war on the weather'])}.`; } },
   { id: 'hanging', passive: true, min: 6, w: 1, cool: 6, fx: () => `A ${pick(['horse thief', 'sheep stealer', 'counterfeiter', 'highwayman'])} was hanged at the crossroads. The crowd brought pies.` },
   { id: 'mummers', passive: true, min: 3, w: 1.5, cool: 5, fx: () => { st('happy', 2); return 'A troupe of mummers performed a play about Saint George. The dragon was two men in a blanket.'; } },
   { id: 'knees', passive: true, min: 60, w: 2, cool: 8, fx: () => 'Your knees now predict the weather more accurately than the priest.' },
@@ -3890,6 +3891,16 @@ function queenWithChild() {
   const h = [...`${S.king}|${S.year}`].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7) % 100;
   return h < 55 ? true : 'The queen is not with child this year';
 }
+// each new year the royal family can grow on its own (a royal midwife delivers the babies herself)
+function royalYear() {
+  if (!S || !S.world || S.ruling || rulerKin() || bornRoyal()) return;
+  const o = occOfJob(); if (o && o.k === 'wm_royalmidwife') return;
+  if (queenWithChild() !== true || !P(.6)) return;
+  const rb = royalBirths(), sx = P(.5) ? 'm' : 'f', n = pick(NAMES[sx]); rb.kids.push({ n, s: sx, y: S.year }); rb.last = S.year;
+  say(`The bells ring out from the castle: the queen has given birth to ${sx === 'm' ? 'Prince' : 'Princess'} ${n}.`);
+}
+// the heir: the eldest grown son, or failing a son, the eldest grown daughter
+function royalHeir() { const k = royalKids().filter(x => S.year - x.y >= 16).sort((a, b) => a.y - b.y); return k.find(x => x.s === 'm') || k[0] || null; }
 function lordOf(x) {
   if (x.you) return 'you';
   if (x.cap) return x.realm === S.realm && S.ruling ? 'you' : `the crown, under ${royalOf(x.realm)}`;
@@ -22425,6 +22436,7 @@ PETITIONS.push(
       }
       // an ear
       if (hat !== 'helm' && hat !== 'coif' && !(fem && hstyle !== 'bun')) s += el(hx - .45 * hr * d, hy + .12 * hr, .2 * hr, .28 * hr, 'skin', 'stroke-width=".3"');
+      if (o.crown) s += pa(`M${n1(hx - .8 * hr)} ${n1(hy - .72 * hr)}L${n1(hx - .92 * hr)} ${n1(hy - 1.5 * hr)}L${n1(hx - .42 * hr)} ${n1(hy - 1.1 * hr)}L${n1(hx)} ${n1(hy - 1.66 * hr)}L${n1(hx + .42 * hr)} ${n1(hy - 1.1 * hr)}L${n1(hx + .92 * hr)} ${n1(hy - 1.5 * hr)}L${n1(hx + .8 * hr)} ${n1(hy - .72 * hr)}Z`, 'gold', 'stroke-width=".35"') + ci(hx, hy - 1.02 * hr, .13 * hr, 'red', 'stroke-width=".2"');
     }
     // the face, turned the way the figure faces
     const fx = covered ? hx + .2 * hr * d : hx, fy = covered ? hy + .08 * hr : hy;
@@ -23431,7 +23443,7 @@ PETITIONS.push(
     X.land.push(man(X, cx - cw / 2 - 9, cy + 2, { h: 32, gown: true, hat: 'veil', hc: grand ? 'white' : 'daub', c: grand ? 'green' : 'blue' }));
     if (X.vr === 'royal' && X.wp === 'nursery') X.meAt = [cx - cw / 2 - 9, cy - 30];
     // the royal children who are past the cradle play on the nursery floor
-    if (X.vr === 'royal') royalKids().filter(k => S.year - k.y >= 2 && S.year - k.y <= 11).slice(0, 4).forEach((k, i) => { const age = S.year - k.y; X.land.push(man(X, cx + cw / 2 + 14 + i * 13, cy + 4 + (i % 2) * 3, { h: Math.min(16, 8 + age), c: k.s === 'f' ? 'green' : 'blue', gown: k.s === 'f', hat: 'crown', dir: i % 2 ? -1 : 1 })); });
+    if (X.vr === 'royal') royalKids().filter(k => S.year - k.y >= 2 && S.year - k.y <= 11).sort((a, b) => a.y - b.y).slice(0, 3).forEach((k, i) => { const age = S.year - k.y; X.land.push(man(X, W * .27 + i * 14.5, cy + 2 + (i % 2) * 2, { h: Math.min(16, 8 + age), c: k.s === 'f' ? 'green' : 'blue', gown: k.s === 'f', hat: 'crown', dir: 1 })); });
     // a stool and a spindle
     const tx = grand ? W * .22 : W * .28;
     L.push(pa(wr(X, tx - 7, 122, 14, 2.6, .2), 'wood', 'stroke-width=".5"') + ln(`M${n1(tx - 5)} 124.6l-1.6 11M${n1(tx + 5)} 124.6l1.6 11`, 'wood2', 1) + ln(`M${n1(tx + 2)} 122L${n1(tx + 7)} 98`, 'wood2', .7) + el(tx + 6.4, 101.5, 2.2, 3.6, 'white', 'stroke-width=".4"'));
@@ -23699,11 +23711,12 @@ PETITIONS.push(
       L.push(pa(`M${n1(cx - 13)} ${n1(fy + 2)}V${n1(fy - 46)}Q${n1(cx)} ${n1(fy - 54)} ${n1(cx + 13)} ${n1(fy - 46)}V${n1(fy + 2)}Z`, 'gold', 'stroke-width=".65"') + pa(`M${n1(cx - 10)} ${n1(fy - 44)}Q${n1(cx)} ${n1(fy - 50)} ${n1(cx + 10)} ${n1(fy - 44)}V${n1(fy - 14)}H${n1(cx - 10)}Z`, 'blue', 'stroke-width=".45"') + ci(cx - 13, fy - 47, 2, 'gold', 'stroke-width=".4"') + ci(cx + 13, fy - 47, 2, 'gold', 'stroke-width=".4"') + pa(wr(X, cx - 15, fy - 14, 30, 4, .1), 'gold2', 'stroke-width=".5"'));
       const me = vr === 'mine';
       const qf = me ? (S.sex === 'f' && !(typeof disguised === 'function' && disguised())) : (typeof KT === 'function' && KT() === 'Queen');
-      L.push(sitter(X, cx, fy - 11, fy + 1, { h: 32, c: me ? 'purple' : 'red', hat: 'crown', gown: true, front: true, fem: qf, beard: !qf && X.r() < .7, hold: (hx, hy, k) => ln(`M${n1(hx)} ${n1(hy)}L${n1(hx + 1)} ${n1(hy - 9 * k / 2.9)}`, 'gold', .9) + ci(hx + 1, hy - 9.6 * k / 2.9, 1.3, 'gold', 'stroke-width=".3"') }));
+      L.push(sitter(X, cx, fy - 11, fy + 1, { h: 32, c: me ? 'purple' : 'red', hat: 'crown', gown: qf, front: true, fem: qf, beard: !qf, hold: (hx, hy, k) => ln(`M${n1(hx)} ${n1(hy)}L${n1(hx + 1)} ${n1(hy - 9 * k / 2.9)}`, 'gold', .9) + ci(hx + 1, hy - 9.6 * k / 2.9, 1.3, 'gold', 'stroke-width=".3"') }));
       // guards at the foot of the dais, and the court standing about in its finery
-      for (const sd of [-1, 1]) L.push(man(X, cx + sd * 44, fy + 22, { h: 30, c: X.banner, hat: 'helm', tool: 'spear', dir: -sd }));
-      // the king's children stand on the dais beside the throne
-      if (!me) royalKids().filter(k => S.year - k.y >= 3).slice(0, 6).forEach((k, i) => { const age = S.year - k.y, sd = i % 2 ? 1 : -1; L.push(man(X, cx + sd * (20 + Math.floor(i / 2) * 8), fy + 5, { h: Math.min(16, 9 + age * .6), c: k.s === 'f' ? 'green' : 'blue', gown: k.s === 'f', hat: 'crown', dir: -sd })); });
+      // the king's children stand on the dais beside the throne, two to a side, eldest nearest; the guards stand in front of them
+      const kids = me ? [] : royalKids().filter(k => S.year - k.y >= 3 && S.year - k.y <= 25).sort((a, b) => a.y - b.y).slice(0, 4);
+      kids.forEach((k, i) => { const age = S.year - k.y, sd = i % 2 ? 1 : -1, big = age >= 16, h = big ? Math.min(29, 20 + (age - 16) * 2) : Math.min(16, 9 + age * .6), x = cx + sd * (i < 2 ? 21 : 33); L.push(man(X, x, fy + 4, big ? { h, c: k.s === 'f' ? 'green' : 'blue', gown: k.s === 'f', fem: k.s === 'f', hat: '', crown: true, dir: -sd } : { h, c: k.s === 'f' ? 'green' : 'blue', gown: k.s === 'f', hat: 'crown', dir: -sd })); });
+      for (const sd of [-1, 1]) L.push(man(X, cx + sd * (kids.length ? 52 : 44), fy + 22, { h: 30, c: X.banner, hat: 'helm', tool: 'spear', dir: -sd }));
       const finery = [['purple', 'cap', 'gold', 0], ['green', 'veil', 'white', 1], ['blue', 'hood', 'red', 0], ['red2', 'veil', 'gold', 1], ['gold', 'cap', 'blue', 0], ['wood', 'hood', 'green', 0]];
       for (let j = 0, n = 0; ; j++) { const d = 78 + j * 30; if (cx + d > W - 12) break; for (const sd of [-1, 1]) { if (j === 0 && sd < 0 && !me) continue; if (j === 1 && sd > 0) { addJuggler(X, cx + d, fy + 34, 27, -1); continue; } const [c, hat, hc, gown] = finery[n++ % finery.length]; L.push(man(X, cx + sd * d, fy + 30 + (j % 2) * 4, { h: 28, c, hat, hc, gown: !!gown, fem: !!gown, dir: -sd })); } }
       if (me) X.meAt = [cx, fy - 33]; else X.me = { x: cx - 78, y: fy + 30, h: 28, dir: 1 };
@@ -24437,7 +24450,7 @@ PETITIONS.push(
     const st = station(), vr = VR, wp = typeof wpNow === 'function' ? (wpNow() || '') : '', h = here(), sea = st === 'sea';
     const home = S.world && S.home != null && S.world.t ? TT(S.home) : null;
     const flags = ['war', 'front', 'plague', 'plagueNear', 'famine', 'murrain', 'crusade', 'comet', 'mourning'].map(k => (h[k] && !(sea && /plague|famine|murrain/.test(k))) ? 1 : 0).join('');
-    return { st, vr, wp, h, flags, ter: home ? home.ter : 'plains', key: [st, vr, wp, h.season, h.weather, flags, home ? home.ter : '-', SC.W, S.year, typeof royalKids === 'function' ? royalKids().length : 0, ['cradle', 'jail'].includes(st) ? S.cls : st === 'castle' ? (S.ruling ? 'r' : '') : '', S.job ? S.job.track + ':' + S.job.level : '-', S.age < 14 ? 'c' : '', typeof disguised === 'function' && disguised() ? 'd' : '', S.vows ? 'v' : '', S.last, S.realm, S.sex].join('|') };
+    return { st, vr, wp, h, flags, ter: home ? home.ter : 'plains', key: [st, vr, wp, h.season, h.weather, flags, home ? home.ter : '-', SC.W, S.year, typeof royalKids === 'function' ? royalKids().map(k => k.s + k.y).join('') : '', `${typeof KT === 'function' ? KT() : ''}${S.king || ''}`, ['cradle', 'jail'].includes(st) ? S.cls : st === 'castle' ? (S.ruling ? 'r' : '') : '', S.job ? S.job.track + ':' + S.job.level : '-', S.age < 14 ? 'c' : '', typeof disguised === 'function' && disguised() ? 'd' : '', S.vows ? 'v' : '', S.last, S.realm, S.sex].join('|') };
   }
   function armsOf(name) {
     let h = 0; for (const ch of String(name || '')) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
@@ -31837,7 +31850,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
         // the baby is born: the bump goes, and the queen holds the child
         const rm = document.getElementById('bi-room'); if (rm) rm.innerHTML = bedroom(true, sex);
         document.querySelectorAll('#bi-stage .sc-pop').forEach(e => e.remove()); mgPop('bi-stage', `A ${sex === 'm' ? 'boy' : 'girl'}! ${title}!`, 'gold', 50, 14); mgSnd('wedding');
-        const rb = royalBirths(); if (rb) { rb.kids.push({ n: nm, s: sex, y: S.year }); rb.last = S.year; }
+        const rb = royalBirths(); if (rb) { rb.kids.push({ n: nm, s: sex, y: S.year, me: 1 }); rb.last = S.year; }
         const nth = rb ? rb.kids.length : 1;
         say(`You delivered the queen of ${sex === 'm' ? 'a son' : 'a daughter'}: ${title}${nth > 1 ? `, the ${['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth'][nth]} royal child` : ''}.`, 'good');
         mgAfter(2400, 'bi-stage', () => mgFinish('birth', score, `A cry at last: a healthy royal ${baby}, to be named ${title}! ${score >= .7 ? 'The queen, pale but smiling, takes your hand and thanks you.' : 'It was a long and hard night, but mother and child are safe.'} The bells ring across the city.`, (grade, mult, pay) => {

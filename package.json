@@ -1,6 +1,6 @@
 {
   "name": "mud-crowns",
-  "version": "1.28.3",
+  "version": "1.29.0",
   "private": true,
   "description": "Mud & Crowns: a medieval life simulator",
   "type": "module",

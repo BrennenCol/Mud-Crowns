@@ -61,12 +61,13 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.28.3.txt`, ready to copy. The last version in the App Store was 1.15.1, so this is one short catch-up list of everything new since then.
+Also in `store/whats_new_1.29.0.txt`, ready to copy. The last version in the App Store was 1.15.1, so this is one short catch-up list of everything new since then.
 
 ```
 BIG UPDATE: everything new since 1.15
 
 - A game for every high post: 82 mini-games in all. Joust in the lists, lead a cavalry charge, crown a king, raid a merchant ship, steer by the stars, break a wild colt, run a hospital ward, and many more.
+- A royal family that lives: princes and princesses are born, grow up at court, and one day take the throne.
 - The Hall of Legends and the Collection Hall: every life is scored, and rare relics can be won.
 - Buy land: manors, and whole counties from kings who need silver.
 - Choices at work come back to you a year or three later.

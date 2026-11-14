@@ -403,6 +403,8 @@ With this batch every elite post has a game of its own: 82 in all.
 
 Royal births follow the queen, not the calendar: she is with child only some years, never two years running, and at most six times a reign. Each baby is named and remembered: little ones play in the royal nursery, older ones stand by the throne in the great hall, and the royal nurse and tutor care for them by name.
 
+The children grow up year by year: little ones in the nursery, older ones beside the throne, full size and crowned once grown, and away from court (married or in their own households) after about 25. Royal babies are born in years when you are not the midwife too. When the old king dies, his eldest grown son is crowned, or failing a son, his eldest grown daughter reigns as queen.
+
 ## Batch 4: trade, sea and money (v1.27)
 
 | Game | Post | How it plays |
