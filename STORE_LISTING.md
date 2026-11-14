@@ -61,9 +61,12 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.27.0.txt`, ready to copy. It opens with what is new in 1.27, 1.26, 1.25 and 1.24, then the short list of everything since 1.15.1 (the last version in the App Store).
+Also in `store/whats_new_1.28.0.txt`, ready to copy. It opens with what is new in 1.28 back to 1.24, then the short list of everything since 1.15.1 (the last version in the App Store).
 
 ```
+NEW IN 1.28
+- Every high post now has a game of its own, 82 in all. The last fifteen: the reeve's tally (steward), rats in the larder (castellan), dressing the king (wardrobe), the audience (chamberlain), the high table (seneschal), breaking the colt (master of the horse), the Latin lesson (tutor), rhyme time (poet), the queen's train (damsel), warming the royal bed (mistress of the chamber), the queen's jewels (first lady), the lullaby (royal nurse), the chatelaine's keys (lady mistress), the hospital ward, and the royal birth (midwife).
+
 NEW IN 1.27
 - Ten trade, sea and money jobs get a game of their own: the guild inspection (guild master), loading the hold (ship's captain), the money changer (banker), the king's loan (royal banker), striking the coin (mint), the silk loom (silkwoman), the heraldic panel (embroiderer), plunder (pirate captain), letters of marque (privateer), and steering by the stars (discoverer).
 - Fixed: some lists in the Realm screen showed in blue.
@@ -78,7 +81,7 @@ NEW IN 1.24
 - Every military post now has a game of its own: the joust, the cavalry charge, raising the levies, the muster, the siege, riding the border, the palace guard, the great bombard, a mercenary contract, signalling the fleet, guarding the pilgrim road, and holding the fortress.
 
 NEW SINCE 1.15
-- Every high post has a game to play, 67 in all: battles, sea fights, the conclave, the assize, the night watch in the royal prison, the royal kitchen, the hunt, the masque, and more.
+- Every high post has a game to play, 82 in all: battles, sea fights, the conclave, the assize, the night watch in the royal prison, the royal kitchen, the hunt, the masque, and more.
 - The Hall of Legends and the Collection Hall: every climb is scored, and rare relics are won.
 - Buy land: manors, and counties from kings who need silver.
 - Choices at work come back a year or three later.

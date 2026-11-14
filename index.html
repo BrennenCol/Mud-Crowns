@@ -1902,6 +1902,214 @@ button.in-t{cursor:pointer}
 .nv-comp i{position:absolute;top:-4px;bottom:-4px;width:6px;margin-left:-3px;border-radius:3px;background:#fff;box-shadow:0 0 0 1.5px #1a1208}
 .mg-b.nv-b{padding:12px 4px;font-size:15px}
 @media (prefers-reduced-motion:reduce){.ho2-sea,.pl-sea,.mq-w,.nv-sea,.mq-fl .mq-f,.nv-pole span,.lm-sp.snap{animation:none}}
+/* ---------- v1.28 batch 5: the great household and healing ---------- */
+.g-ty{height:170px;background:linear-gradient(#a8c4dc 0 45%,#c9b06a 45%)}
+.ty-road{position:absolute;left:0;right:0;bottom:22px;height:26px;background:#a88a5a;box-shadow:inset 0 2px 0 rgba(0,0,0,.15)}
+.ty-barn{position:absolute;right:4px;bottom:22px;width:108px;height:98px}
+.ty-reeve{position:absolute;left:6px;bottom:10px;width:40px;height:68px;z-index:3}
+.ty-cart{position:absolute;left:-60%;bottom:30px;z-index:2;width:56%;height:84px}
+.ty-cart.in{animation:tyIn .7s ease-out forwards}
+.ty-cart.out{animation:tyOut .8s ease-in forwards}
+@keyframes tyIn{from{left:-60%}to{left:22%}}
+@keyframes tyOut{from{left:22%}to{left:105%}}
+.ty-bed{position:absolute;left:0;right:0;top:0;bottom:16px;border-radius:4px 4px 8px 8px;background:linear-gradient(#8a5a2e,#6b4226);box-shadow:inset 0 0 0 3px #4a2c18}
+.ty-bed i{position:absolute;margin:4px 0 0 4px;font-size:21px;font-style:normal;line-height:1}
+.ty-wh{position:absolute;bottom:0;width:26px;height:26px;border-radius:50%;background:radial-gradient(#5a3a22 30%,#3a2412 32% 45%,#7a5230 47%);box-shadow:0 0 0 2px #2a1a0c}
+.ty-wh.l{left:12%}.ty-wh.r{right:12%}
+.g-lar{height:270px;background:radial-gradient(ellipse at 50% 55%,#7a6a5a,#4a3e34 75%);box-shadow:0 0 0 2px #8a6420,inset 0 0 40px rgba(0,0,0,.6)}
+.lar-h{position:absolute;width:26px;height:16px;border-radius:50%;background:#140e08;transform:translate(-50%,-50%);box-shadow:0 0 0 3px #5a4a3a}
+.lar-s{position:absolute;display:flex;flex-direction:column;align-items:center;transform:translate(-50%,-50%)}
+.lar-s b{display:grid;place-items:center;width:48px;height:48px;border-radius:40% 40% 46% 46%;background:radial-gradient(#d8c49a,#a88a5a);box-shadow:0 3px 4px rgba(0,0,0,.45);font-size:26px;font-weight:400}
+.lar-s i{width:40px;height:5px;margin-top:3px;border-radius:3px;background:rgba(0,0,0,.4);overflow:hidden}
+.lar-s em{display:block;height:100%;background:#7ac06a;transition:width .3s}
+.lar-s.hit b{animation:bfShake .2s 2}
+.lar-s.gone b{filter:grayscale(1) brightness(.6)}
+.lar-rat{position:absolute;z-index:3;width:44px;height:44px;margin:0;padding:0;border:0;background:none;font-size:26px;line-height:44px;transform:translate(-50%,-50%);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.lar-rat.r{transform:translate(-50%,-50%) scaleX(-1)}
+.lar-rat.dead{animation:larDie .35s ease-in forwards}
+@keyframes larDie{to{opacity:0;transform:translate(-50%,-50%) scale(1.6) rotate(180deg)}}
+.dr-clue{margin:4px 0 6px;padding:7px 10px;border-radius:8px;background:#f6ecd2;box-shadow:inset 0 0 0 1px #c9b48a;font:italic 14px/1.35 var(--serif)}
+.dr-clue b{display:block;font-style:normal;color:#7a1e16}
+.g-dr{display:flex;align-items:center;gap:8px;padding:6px 10px;background:linear-gradient(#5a3a4a,#3a2430)}
+.dr-fig{flex:none;width:96px;height:144px}
+.dr-slots{flex:1;display:flex;flex-wrap:wrap;align-items:center;gap:3px;font-size:12.5px;color:#f1e4c3}
+.dr-slots span{padding:3px 7px;border-radius:10px;background:rgba(255,255,255,.1)}
+.dr-slots span.now{background:#ffd76a;color:#1a1208;font-weight:700}
+.dr-slots span.did{opacity:.45;text-decoration:line-through}
+.dr-slots i{opacity:.5;font-style:normal}
+.dr-ward{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:6px 0}
+.mg-b.dr-b{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 2px;font-size:11px;line-height:1.15}
+.dr-b span{font-size:20px;line-height:1.1}
+.dr-sw{display:block;width:24px;height:20px;border-radius:5px 5px 2px 2px;box-shadow:0 0 0 1px rgba(0,0,0,.45)}
+.dr-sw.ermine{background-image:radial-gradient(circle at 30% 40%,#1a1a1a 0 1.6px,transparent 2px),radial-gradient(circle at 70% 70%,#1a1a1a 0 1.6px,transparent 2px)!important}
+.dr-b.done{opacity:.35}
+.dr-b.no{animation:bfShake .22s 2;box-shadow:inset 0 0 0 2px #a3251a}
+.aud-rank{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 4px;margin:4px 0;font-size:11.5px;color:var(--ink-2)}
+.aud-rank i{font-style:normal;opacity:.5}
+.g-aud{min-height:230px;padding:8px;background:linear-gradient(#6b4a3a,#4a3226)}
+.aud-door{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;padding:6px;border-radius:8px;background:rgba(0,0,0,.3);color:#f1e4c3;font-size:14px;transition:background .2s}
+.aud-door span{font-size:26px}
+.aud-door.open{background:#ffe9a8;color:#1a1208;box-shadow:0 0 14px rgba(255,214,110,.8);animation:bfPop .3s ease-out}
+.aud-q{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.aud-v{display:flex;flex-direction:column;align-items:center;padding:5px 3px 6px;border:0;border-radius:8px;background:#f6ecd2;color:#2a1d14;box-shadow:0 2px 3px rgba(0,0,0,.35);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.aud-v span{font-size:22px;line-height:1.1}
+.aud-v b{font-size:11.5px;line-height:1.15;text-align:center}
+.aud-v small{font-size:10.5px;color:#7a5a2a}
+.aud-v i{width:85%;height:5px;margin-top:3px;border-radius:3px;background:rgba(0,0,0,.15);overflow:hidden}
+.aud-v em{display:block;height:100%;background:#7ac06a}
+.aud-v.low em{background:#d22}
+.aud-v.low{animation:bfShake .3s infinite}
+.aud-v.msg{box-shadow:0 0 0 2px #d22,0 2px 3px rgba(0,0,0,.35)}
+.aud-empty{grid-column:span 3;margin:20px 0;text-align:center;color:#d8c8a0;font-style:italic}
+.tb-ladder{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 3px;margin:4px 0;font-size:11px;color:var(--ink-3)}
+.tb-ladder span{padding:1px 4px;border-radius:6px;opacity:.55}
+.tb-ladder span.in{opacity:1;background:#ffe9a8;color:#1a1208;font-weight:700}
+.tb-ladder i{font-style:normal;opacity:.4}
+.g-tb{padding:8px 6px;background:linear-gradient(#5a3a22,#3a2412)}
+.tb-table{display:flex;align-items:flex-end;gap:3px;padding:4px;border-radius:6px;background:#efe6cf;box-shadow:0 3px 5px rgba(0,0,0,.4)}
+.tb-king{flex:none;display:flex;flex-direction:column;align-items:center;width:40px;font-size:10px}
+.tb-king svg{width:38px;height:62px}
+.tb-seat{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0;height:70px;padding:3px 1px;border:0;border-radius:6px;background:#d8c49a;color:#2a1d14;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tb-seat b{font-size:13px}
+.tb-seat span{font-size:18px;line-height:1.1;text-align:center}
+.tb-seat span small{display:block;font-size:9px}
+.tb-seat.ok{background:#cfe6b8}
+.tb-seat.moved{background:#f4c8b8}
+.tb-door{display:flex;align-items:center;gap:8px;margin-top:8px;padding:6px 10px;border-radius:8px;background:rgba(255,248,230,.94);color:#2a1d14}
+.tb-door.in{animation:muIn .35s ease-out}
+.tb-door span{font-size:28px}
+.tb-door p{margin:0;font-size:14px;line-height:1.3}
+.tb-door small{display:block;color:#7a5a2a}
+.g-co .sc-svg{height:170px}
+.co-h{transform-box:fill-box;transform-origin:50% 100%}
+.co-h.buck{transform-origin:85% 100%;animation:coBuck .6s ease-in-out}
+.co-h.rear{transform-origin:15% 100%;animation:coRear .7s ease-in-out}
+.co-h.snort{animation:bfShake .2s 2}
+.co-h.thrown{animation:coBuck .6s ease-in-out 2}
+@keyframes coBuck{40%{transform:rotate(16deg)}}
+@keyframes coRear{40%{transform:rotate(-22deg)}}
+.co-tell{position:absolute;left:50%;top:8px;padding:5px 12px;border-radius:12px;background:#fffdf4;color:#2a1d14;font:italic 700 15px/1.2 var(--serif);transform:translateX(-50%);opacity:0;transition:opacity .1s;box-shadow:0 2px 6px rgba(0,0,0,.35);white-space:nowrap}
+.co-tell span{margin-right:5px;font-style:normal}
+.co-tell.on{opacity:1}
+.co-bal{display:grid;grid-template-columns:76px 1fr;align-items:center;gap:8px;margin:4px;font-size:12.5px;color:var(--ink-2)}
+.co-bal b{height:12px;border-radius:6px;background:rgba(0,0,0,.12);overflow:hidden;box-shadow:inset 0 0 0 1px var(--rule)}
+.co-bal i{display:block;height:100%;background:#3f8a52;transition:width .3s}
+.co-bal i.low{background:#d22}
+.co-bal.co-spr i{background:#9b1f12}
+.mg-b.co-b{padding:12px 4px;font-size:15px}
+.mg-b.co-b.on{box-shadow:inset 0 0 0 3px #ffd76a}
+.g-la{display:flex;align-items:center;gap:10px;padding:6px 12px;background:linear-gradient(#6b5a4a,#4a3a2e)}
+.la-pupil{flex:none;width:56px;height:94px}
+.la-att{flex:1;color:#f1e4c3;font-size:12px}
+.la-att b{display:block;height:12px;margin-top:3px;border-radius:6px;background:rgba(0,0,0,.35);overflow:hidden}
+.la-att i{display:block;height:100%;background:#7ac06a;transition:width .3s}
+.la-att i.low{background:#d22}
+.la-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0}
+.la-cols>div{display:flex;flex-direction:column;gap:5px}
+.la-w{display:flex;flex-direction:column;align-items:center;min-height:42px;justify-content:center;padding:5px;border:0;border-radius:8px;background:#f6ecd2;color:#2a1d14;font:15px/1.2 var(--serif);box-shadow:0 1px 3px rgba(0,0,0,.3);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.la-w.lat b{font-style:italic;color:#7a1e16}
+.la-w small{font-size:11px;color:#7a5a2a}
+.la-w.sel{box-shadow:0 0 0 3px #d1a93a}
+.la-w.ok{opacity:.35;background:#cfe6b8}
+.la-w.no{animation:bfShake .22s 2;box-shadow:0 0 0 2px #a3251a}
+.g-rh{display:flex;align-items:flex-end;gap:6px;padding:8px;background:linear-gradient(#5a2a3a,#3a1a24)}
+.rh-crowd{flex:1;display:grid;grid-template-columns:repeat(6,1fr)}
+.rh-crowd svg{width:100%;height:62px}
+.rh-me{flex:none;width:52px;height:88px}
+.rh-say p{margin:0;font:italic 16px/1.45 var(--serif);text-align:center}
+.rh-gap{color:#a3251a}
+.rh-say b.ok{color:#3f8a52}
+.rh-say b.bad{color:#a3251a}
+.rh-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;min-height:46px;margin:6px 0}
+.mg-b.rh-b{padding:10px 4px;font:italic 16px/1.2 var(--serif)}
+.mg-b.rh-b.ok{box-shadow:inset 0 0 0 3px #3f8a52}
+.g-qt{height:200px;overflow:hidden;background:#6b4a3a}
+.qt-wall{position:absolute;left:0;right:0;top:0;height:62%;background:repeating-linear-gradient(90deg,#7a2a2e 0 60px,#5a3a22 60px 66px,#2d4a6a 66px 126px,#5a3a22 126px 132px);animation:qtScroll 6s linear infinite}
+@keyframes qtScroll{to{background-position:-132px 0}}
+.qt-floor{position:absolute;left:0;right:0;bottom:0;height:38%;background:repeating-linear-gradient(90deg,#9a8a6a 0 38px,#8a7a5a 38px 40px);animation:qtScroll2 2.4s linear infinite}
+@keyframes qtScroll2{to{background-position:-40px 0}}
+.qt-o{position:absolute;bottom:16px;z-index:2;font-size:30px;line-height:1;transform:translateX(-50%)}
+.qt-o.draw{bottom:22px;filter:drop-shadow(0 0 6px #ffb84a)}
+.qt-o.ok{animation:qtOk .5s ease-out forwards}
+.qt-o.bad{animation:bfShake .2s 3;filter:sepia(1) hue-rotate(-40deg) saturate(3)}
+@keyframes qtOk{to{opacity:0;transform:translate(-50%,-26px)}}
+.qt-fig{position:absolute;bottom:8px;z-index:3}
+.qt-fig.q{left:48%;width:62px;height:116px}
+.qt-fig.me{left:2%;width:48px;height:82px}
+.qt-train{position:absolute;left:10%;width:42%;bottom:20px;z-index:2;height:12px;border-radius:2px 8px 8px 2px;background:linear-gradient(#b3202c,#7a1e16);box-shadow:0 2px 3px rgba(0,0,0,.4);transform-origin:100% 50%}
+.qt-train.lift{animation:qtLift .55s ease-out}
+.qt-train.draw{animation:qtDraw .55s ease-out}
+.qt-train.trip{animation:bfShake .2s 3}
+@keyframes qtLift{40%{transform:translateY(-34px) rotate(4deg)}}
+@keyframes qtDraw{40%{transform:scaleX(.55)}}
+.qt-zone{position:absolute;left:15%;width:21%;bottom:6px;height:6px;border-radius:3px;background:rgba(255,214,110,.75);box-shadow:0 0 8px rgba(255,214,110,.8)}
+.mg-b.qt-b{padding:12px 4px;font-size:15px}
+.g-wb{padding:10px;background:linear-gradient(#4a3040,#2a1a24)}
+.wb-win{position:absolute;left:8px;top:6px;font-size:26px;opacity:.85}
+.wb-win.open{animation:bfShake .3s infinite;filter:drop-shadow(0 0 6px #9cc0dc)}
+.wb-bed{margin:22px auto 0;width:86%;padding:8px;border-radius:10px;background:#6b2a2e;box-shadow:0 0 0 4px #3a1a1e,0 4px 8px rgba(0,0,0,.5)}
+.wb-pillow{height:18px;margin:0 10% 6px;border-radius:9px;background:#fffaf0}
+.wb-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px}
+.wb-c{height:46px;padding:0;border:0;border-radius:4px;transition:background .3s;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.wb-c.pan{box-shadow:inset 0 0 0 3px #fff}
+.wb-c.sizzle{animation:bfShake .15s infinite;box-shadow:inset 0 0 0 3px #d22}
+.wb-c.burnt{background:#3a1a0a!important;background-image:radial-gradient(#1a0a04 30%,transparent 60%)!important}
+.wb-pan{position:absolute;z-index:3;width:56px;height:28px;margin-left:20px;transform:translate(-50%,-50%);transition:left .25s,top .25s;pointer-events:none;filter:drop-shadow(0 0 6px #ff8a3a)}
+.wb-key{display:flex;justify-content:center;gap:4px;margin:4px 0;font-size:11px}
+.wb-key span{padding:1px 6px;border-radius:6px;color:#1a1208}
+.g-jw{padding:8px;background:radial-gradient(#5a2a3e,#2a1420)}
+.jw-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.jw-b{position:relative;height:58px;padding:0;border:0;border-radius:6px;background:linear-gradient(#8a5a2e,#5a3a1e);box-shadow:inset 0 0 0 2px #c9952e,0 2px 3px rgba(0,0,0,.5);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.jw-lid{position:absolute;left:4px;right:4px;top:4px;height:16px;border-radius:4px 4px 0 0;background:linear-gradient(#a87a3a,#7a5a2e);box-shadow:inset 0 -2px 0 #c9952e;transition:transform .25s;transform-origin:50% 0}
+.jw-lid::after{content:"";position:absolute;left:50%;bottom:-6px;width:8px;height:8px;margin-left:-4px;border-radius:2px;background:#e2b23c}
+.jw-b b{display:block;padding-top:18px;font-size:26px;font-weight:400;opacity:0;transition:opacity .2s}
+.jw-b.open b{opacity:1}
+.jw-b.open .jw-lid{transform:scaleY(-.6) translateY(4px)}
+.jw-b.got{box-shadow:inset 0 0 0 2px #ffd76a,0 0 10px rgba(255,214,110,.8)}
+.jw-b.no{box-shadow:inset 0 0 0 3px #d22}
+.g-lu{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px;background:linear-gradient(#f0d8e0,#c8b0c8)}
+.lu-cradle{position:relative;width:180px}
+.lu-cradle svg{display:block;width:100%}
+.lu-cradle span{position:absolute;left:50%;top:-16px;font-size:28px;transform:translateX(-50%);animation:rgFx 1.2s ease-in-out infinite alternate}
+.lu-cry{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px;width:80%;font-size:12px;color:#3a2430}
+.lu-cry b{height:10px;border-radius:5px;background:rgba(0,0,0,.15);overflow:hidden}
+.lu-cry i{display:block;height:100%;background:#d22;transition:width .4s}
+.lu-bells{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0}
+.lu-b{height:72px;padding:0;border:0;border-radius:14px;background:var(--c);box-shadow:inset 0 -4px 0 rgba(0,0,0,.2),0 2px 4px rgba(0,0,0,.3);font-size:28px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .08s,filter .08s}
+.lu-b.on{transform:scale(1.08);filter:brightness(1.35);box-shadow:0 0 18px var(--c),inset 0 -4px 0 rgba(0,0,0,.2)}
+.g-ck{padding:10px;background:repeating-linear-gradient(90deg,#6b4226 0 28px,#5a361e 28px 30px)}
+.ck-door{display:flex;align-items:center;gap:12px}
+.ck-door p{flex:1;margin:0;padding:8px 10px;border-radius:8px;background:rgba(255,248,230,.94);color:#2a1d14;font-size:14px;line-height:1.3}
+.ck-lock svg{display:block;width:70px;height:82px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))}
+.ck-ring{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:6px 0}
+.mg-b.ck-k{padding:4px}
+.ck-k svg{display:block;width:100%;height:40px}
+.mg-b.ck-k.ok{box-shadow:inset 0 0 0 3px #3f8a52}
+.mg-b.ck-k.no{opacity:.4;box-shadow:inset 0 0 0 2px #a3251a}
+.g-hw{padding:6px;background:linear-gradient(#e8dcc0,#cfc0a0)}
+.hw-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.hw-c{height:62px;border-radius:6px}
+.hw-c .rg-fx{left:auto;right:4px;top:auto;bottom:24px;font-size:22px}
+.hw-c.on{box-shadow:0 0 0 2px #d1a93a,0 0 10px rgba(255,214,110,.6);border-radius:6px}
+.hw-c.worse{animation:bfShake .25s 3;filter:hue-rotate(60deg) saturate(1.4)}
+.hw-c.eased{filter:brightness(1.15) drop-shadow(0 0 6px #7ac06a)}
+.hw-table{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:6px 0}
+.mg-b.hw-s{display:flex;flex-direction:column;align-items:center;padding:5px 1px;font-size:11px;line-height:1.1}
+.hw-s span{font-size:22px}
+.mg-b.hw-s.on{box-shadow:0 0 0 3px #1a1208,0 0 8px rgba(255,214,110,.9)}
+.g-bi{padding:6px;background:linear-gradient(#5a3a4a,#3a2430)}
+.bi-room{position:relative}
+.bi-bed{display:block;width:100%;height:auto}
+.bi-breath{position:absolute;left:22.5%;top:62%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:3px solid rgba(255,248,230,.0);pointer-events:none}
+.bi-breath.go{animation:biBreath .9s ease-out}
+@keyframes biBreath{from{transform:scale(.5);border-color:rgba(255,248,230,.9)}to{transform:scale(2.6);border-color:rgba(255,248,230,0)}}
+.bi-wave{display:block;width:100%;height:84px;margin-top:4px;border-radius:6px;background:#f6ecd2}
+.bi-calm{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:8px;margin:6px 4px;font-size:12.5px;color:var(--ink-2)}
+.bi-calm b{height:12px;border-radius:6px;background:rgba(0,0,0,.12);overflow:hidden;box-shadow:inset 0 0 0 1px var(--rule)}
+.bi-calm i{display:block;height:100%;background:#7ac06a;transition:width .3s}
+.bi-calm i.low{background:#d22}
+.mg-b.bi-go{font-size:18px}
+@media (prefers-reduced-motion:reduce){.qt-wall,.qt-floor,.lu-cradle span,.aud-v.low{animation:none}}
 @media (prefers-reduced-motion:reduce){.bf.clash,.bf-rain,.cu-flame,.cu-brazier,.bf-me.danger .bf-mv,.bf-me.chance .bf-mv{animation:none}}
 </style>
 </head>
@@ -1941,7 +2149,7 @@ button.in-t{cursor:pointer}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.27.0';
+const APP_VERSION = '1.28.0';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -6888,7 +7096,7 @@ function showWhatsNew() {
   modalOpen = true;
   const items = [
     ['⚔️', 'Games of their own', 'every soldier, and now courtiers, magistrates, sheriffs, mayors and more: the joust, the siege, Parliament, the hue and cry, fire in the ward.'],
-    ['🎭', 'Games for every high post', 'from the night watch in the royal prison to the coronation, the hunt and a pirate raid. 67 in all.'],
+    ['🎭', 'A game for every high post', 'every one has its own now, from the night watch in the royal prison to the coronation, a pirate raid and the royal nursery. 82 in all.'],
     ['🏛️', 'Halls, land and family', 'the Hall of Legends, rare relics, land for sale, children who live their own lives, and courting as it really was.'],
     ['⛪', 'And more', 'choices that come back years later, the road to Pope, clearer headings, a Main menu button, and many fixes. Backup codes are gone.'],
   ];
@@ -24606,8 +24814,12 @@ PETITIONS.push(
     knell: t0 => { const t = t0 != null ? t0 : ctx.currentTime; bell(hz(50), t, .14, sfxBus, 4); },
     battle: t0 => { const t = t0 != null ? t0 : ctx.currentTime; drum(t, .5, sfxBus, 1); drum(t + .18, .3, sfxBus); drum(t + .36, .45, sfxBus, 1); noise(t + .4, .3, .14, 3500, sfxBus, 'highpass'); },
     clash: t0 => { const t = t0 != null ? t0 : ctx.currentTime; drum(t, .4, sfxBus, 1); noise(t + .05, .25, .16, 4200, sfxBus, 'highpass'); },
+    n0: t0 => { const t = t0 != null ? t0 : ctx.currentTime; bell(hz(72), t, .09, sfxBus, 1.6); },
+    n1: t0 => { const t = t0 != null ? t0 : ctx.currentTime; bell(hz(74), t, .09, sfxBus, 1.6); },
+    n2: t0 => { const t = t0 != null ? t0 : ctx.currentTime; bell(hz(76), t, .09, sfxBus, 1.6); },
+    n3: t0 => { const t = t0 != null ? t0 : ctx.currentTime; bell(hz(79), t, .09, sfxBus, 1.6); },
   };
-  const RANK = { tick: 0, page: 1, card: 1, coins: 2, bad: 2, good: 3, clash: 3, chime: 4, battle: 4, knell: 4, fanfare: 5, wedding: 5, toll: 6 };
+  const RANK = { tick: 0, page: 1, card: 1, coins: 2, bad: 2, good: 3, clash: 3, chime: 4, battle: 4, knell: 4, fanfare: 5, wedding: 5, toll: 6, n0: 3, n1: 3, n2: 3, n3: 3 };
   let pend = null;
   // play now, or (inside a busy moment like turning the page) keep only the most important one
   function sfx(k) {
@@ -30944,6 +31156,674 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     { k: 'mg_plunder', i: '☠️', n: 'Terror of the Seas', d: 'Become Legendary at plunder.' },
     { k: 'mg_marque', i: '📜', n: 'Lawful Prize', d: 'Become Legendary at the letters of marque.' },
     { k: 'mg_navigate', i: '🌟', n: 'Land Ho!', d: 'Become Legendary at steering by the stars.' },
+  );
+
+
+  /* ================= v1.28 batch 5: the great household and healing ================= */
+  /* ---------- 69. The steward: the reeve's tally ---------- */
+  mgAdd({ k: 'tally', i: '🌾', n: 'The reeve’s tally', d: 'The harvest carts roll into the barn. Count each load as it passes, and catch the reeve when he swears to fewer sheaves than there are.', seal: 'mg_tally', who: () => mgIn('steward'),
+    play() {
+      const N = 12; let j = -1, n = 0, claim = 0, right = 0, wrong = 0, caught = 0, phase = '', over = false, clock = null;
+      const reeve = `${pick(NAMES.m)} the reeve`;
+      const cart = () => {
+        j++; if (j >= N) return end(); phase = 'look';
+        n = R(6, 11) + Math.floor(j / 3); claim = P(.5) ? n : n - R(1, j > 7 ? 1 : 2);
+        const slots = shuf(Array.from({ length: 24 }, (_, q) => q)).slice(0, n);
+        mgSet('ty-cart', `<div class="ty-bed">${slots.map(q => `<i style="left:${(q % 8) * 12 + R(-2, 3)}%;top:${Math.floor(q / 8) * 30 + R(-4, 4)}%;transform:rotate(${R(-30, 30)}deg)">🌾</i>`).join('')}</div><span class="ty-wh l"></span><span class="ty-wh r"></span>`);
+        const c = document.getElementById('ty-cart'); if (c) { c.className = 'ty-cart'; void c.offsetWidth; c.classList.add('in'); }
+        mgSet('ty-say', `<p>Cart ${j + 1} of ${N} rolls in from the fields…</p>`); setBtns(false);
+        const look = Math.max(1300, 2500 - j * 100);
+        mgAfter(700 + look, 'ty-stage', () => {
+          const c2 = document.getElementById('ty-cart'); if (c2) c2.classList.add('out'); phase = 'judge';
+          mgSet('ty-say', `<p>“<b>${claim}</b> sheaves in that one, my lord,” says ${esc(reeve)}, touching his cap.</p>`); setBtns(true);
+          if (clock) clock.stop(); clock = mgClock(5000, 'ty-stage', f => setBar('ty-t', f), () => judge('ok'));
+        });
+      };
+      const setBtns = on => document.querySelectorAll('#card [data-mg="j"]').forEach(b => { b.disabled = !on; });
+      const judge = v => {
+        if (phase !== 'judge' || over) return; phase = ''; if (clock) clock.stop(); setBtns(false); setBar('ty-t', 0);
+        const honest = claim === n, ok = (v === 'ok') === honest;
+        if (ok) { right++; if (!honest) caught++; mgPop('ty-stage', honest ? `Right: ${n} sheaves` : `Caught him! It was ${n}`, 'gold', 50, 25); mgSnd(honest ? 'tick' : 'good'); }
+        else { wrong++; mgPop('ty-stage', honest ? `He was honest: ${n} it was` : `He cheated you: it was ${n}`, 'bad', 50, 25); mgSnd('bad'); }
+        hud(); mgAfter(1300, 'ty-stage', cart);
+      };
+      const hud = () => mgSet('ty-hud', `<span>✔ Right calls <b>${right}</b></span><span>🕵️ Cheats caught <b>${caught}</b></span><span>✖ Wrong <b>${wrong}</b></span>`);
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.tally, 'The tithe barn at harvest')}<div class="sc g-ty" id="ty-stage"><svg class="ty-barn" viewBox="0 0 100 90" aria-hidden="true"><path d="M4 40L50 6L96 40V90H4Z" fill="#8a3a22" stroke="#4a1a10" stroke-width="2"/><path d="M0 42L50 4L100 42" fill="none" stroke="#5a2a16" stroke-width="5"/><path d="M28 90V52H72V90Z" fill="#3a1a10"/><path d="M28 52L72 90M72 52L28 90" stroke="#c9a060" stroke-width="2.4"/><path d="M28 52H72V90H28Z" fill="none" stroke="#c9a060" stroke-width="3"/><circle cx="50" cy="30" r="7" fill="#3a1a10" stroke="#c9a060" stroke-width="2"/></svg><div class="ty-road"></div><div class="ty-cart" id="ty-cart"></div><svg class="ty-reeve" viewBox="-16 -50 32 54" aria-hidden="true">${fig({ robe: '#6a5a3a', hat: 'brim', capc: '#4a3a1e', beard: 1, mood: 'happy', arms: 'hold' })}</svg></div><div class="sc-say" id="ty-say"></div>${timeBar('ty-t')}<div class="mg-two">${mgBtn('j', 'ok', '✔ Agreed', '', true)}${mgBtn('j', 'short', '✖ You’re short, reeve!', 'go', true)}</div><div class="cu-hud ex-hud" id="ty-hud"></div>`);
+        hud(); cart();
+      };
+      const end = () => {
+        if (over) return; over = true;
+        const score = clamp(Math.round(right / N * 100)) / 100;
+        mgFinish('tally', score, `${right} of ${N} loads judged rightly${caught ? `; ${caught} times you caught the reeve skimming` : ''}.`, (grade, mult, pay) => {
+          const ls = [];
+          if (score >= .85) { coin(Math.round(pay * .3 * mult)); fac('lords', 2); ls.push(`${reeve} has given up trying to cheat you. Your lord’s barns have never been fuller.`); }
+          if (wrong >= 5) ls.push(`${reeve} is building himself a fine new house. Nobody asks where the money came from.`);
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'start') go(); else if (a === 'j') judge(v); };
+      mgIntro(MG_BY.tally, 'Steward of the manor', [`Twelve carts of corn come in from the fields. Each passes the barn door for a moment: <b>count the sheaves</b>.`, `Then ${reeve} tells you how many there were. If he says fewer than you counted, he is keeping the rest for himself: <b>call him out</b>. But accuse an honest man and the village will grumble.`], '🌾 Open the barn doors');
+    } });
+
+  /* ---------- 70. The castellan: rats in the larder ---------- */
+  const LAR_S = [['🌾', 'grain'], ['🧀', 'cheeses'], ['🥓', 'salt pork'], ['🍎', 'apples'], ['🫘', 'beans'], ['🐟', 'salt fish']];
+  mgAdd({ k: 'larder', i: '🐀', n: 'Rats in the larder', d: 'The castle’s stores must last a siege. Drive off every rat before it gets its teeth into the sacks.', seal: 'mg_larder', who: () => mgIn('castellan'),
+    play() {
+      const HOLES = [[3, 20], [3, 55], [3, 88], [97, 18], [97, 52], [97, 86], [30, 4], [70, 4], [50, 97]];
+      const sacks = LAR_S.map(([i, n], q) => ({ i, n, x: 30 + (q % 3) * 20, y: 38 + Math.floor(q / 3) * 30, hp: 3 }));
+      let rats = [], seq = 0, killed = 0, bites = 0, over = false, t0 = 0, nextAt = 500;
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.larder, 'The castle undercroft')}<div class="sc g-lar" id="lar-stage">${HOLES.map(([x, y]) => `<span class="lar-h" style="left:${x}%;top:${y}%"></span>`).join('')}${sacks.map((s, q) => `<span class="lar-s" id="lar-s${q}" style="left:${s.x}%;top:${s.y}%"><b>${s.i}</b><i><em style="width:100%"></em></i></span>`).join('')}<div id="lar-r"></div></div>${timeBar('lar-t')}<div class="cu-hud ex-hud" id="lar-hud"></div><p class="mg-tip sc-tip">Tap the rats before they reach the stores.</p>`);
+        hud(); t0 = performance.now();
+        mgLoop('lar-stage', (now, dt) => {
+          if (over) return false; const el = now - t0, f = el / 40000; setBar('lar-t', f);
+          if (el >= nextAt) { nextAt = el + Math.max(450, 1300 - f * 850) + R(-150, 150); spawn(f); if (f > .5 && P(.3)) spawn(f); }
+          for (const r of rats) {
+            if (r.gone) continue; const s = sacks[r.t], dx = s.x - r.x, dy = s.y - r.y, d = Math.hypot(dx, dy), sp = r.sp * dt / 1000;
+            if (d <= sp + 3) { r.gone = true; bite(r.t); const e = document.getElementById(r.id); if (e) e.remove(); continue; }
+            r.x += dx / d * sp; r.y += dy / d * sp; const e = document.getElementById(r.id); if (e) { e.style.left = `${r.x}%`; e.style.top = `${r.y}%`; }
+          }
+          rats = rats.filter(r => !r.gone);
+          if (f >= 1 || sacks.every(s => s.hp <= 0)) { end(); return false; }
+          return true;
+        });
+      };
+      const spawn = f => {
+        const alive = sacks.map((s, q) => q).filter(q => sacks[q].hp > 0); if (!alive.length) return;
+        const [hx, hy] = pick(HOLES), t = pick(alive), id = `lar${++seq}`, r = { id, x: hx, y: hy, t, sp: 9 + f * 9 + Math.random() * 4, gone: false }; rats.push(r);
+        const box = document.getElementById('lar-r'); if (box) box.insertAdjacentHTML('beforeend', `<button type="button" class="lar-rat${sacks[t].x > hx ? ' r' : ''}" id="${id}" data-mg="rat" data-v="${id}" style="left:${hx}%;top:${hy}%" aria-label="Rat">🐀</button>`);
+      };
+      const bite = q => {
+        const s = sacks[q]; if (s.hp <= 0) return; s.hp--; bites++; const e = document.getElementById(`lar-s${q}`);
+        if (e) { const m = e.querySelector('em'); if (m) m.style.width = `${s.hp / 3 * 100}%`; e.classList.remove('hit'); void e.offsetWidth; e.classList.add('hit'); if (s.hp <= 0) e.classList.add('gone'); }
+        mgPop('lar-stage', s.hp <= 0 ? `The ${s.n} are spoiled!` : 'Gnawed!', 'bad', s.x, s.y - 8); mgSnd('bad'); hud();
+      };
+      const swat = id => { const r = rats.find(x => x.id === id); if (!r || r.gone || over) return; r.gone = true; killed++; const e = document.getElementById(id); if (e) { e.classList.add('dead'); e.disabled = true; setTimeout(() => e.remove(), 350); } mgSnd('tick'); hud(); };
+      const hud = () => mgSet('lar-hud', `<span>🐀 Rats driven off <b>${killed}</b></span><span>🦷 Bites <b>${bites}</b></span>`);
+      const end = () => {
+        if (over) return; over = true; rats.forEach(r => { const e = document.getElementById(r.id); if (e) e.remove(); });
+        const hp = sacks.reduce((s, x) => s + Math.max(0, x.hp), 0), days = hp * 10, score = clamp(Math.round(hp / 18 * 100)) / 100;
+        mgFinish('larder', score, `${killed} rats driven off. The stores left whole would feed the garrison through a siege of ${days} days.`, (grade, mult) => {
+          const ls = [];
+          if (score >= .85) { fac('crown', 2); fac('lords', 2); ls.push('The king’s marshal inspects your stores and goes away impressed.'); }
+          if (score < .4) { jobPerf(-6); ls.push('Half the winter stores are rat-eaten. The garrison will be on short rations.'); }
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'start') go(); else if (a === 'rat') swat(v); };
+      mgIntro(MG_BY.larder, 'Castellan', ['A siege may come any day, and the castle’s stores must last it out. But the undercroft is full of rats.', 'Rats run out of the holes in the walls towards the sacks. <b>Tap each rat</b> to drive it off before it bites. Three bites and a store is spoiled. Every store left whole is ten more days the castle can hold.'], '🐀 Light a lantern');
+    } });
+
+  /* ---------- 71. The keeper of the wardrobe: dress the king ---------- */
+  const DR_O = {
+    coronation: { n: 'The coronation', clue: 'Cloth of gold and ermine, the great collar of state, and the crown.', gown: ['cloth-of-gold gown', '#e2b23c'], cloak: ['ermine mantle', '#f4efe2', 1], orn: ['great collar', '📿'], head: ['crown', '👑', 'crown'] },
+    hunt: { n: 'The royal hunt', clue: 'Hunting green, a stout leather cloak, a horn at the belt, and a feathered cap.', gown: ['green doublet', '#3b8550'], cloak: ['leather cloak', '#7a5230'], orn: ['hunting horn', '📯'], head: ['feathered cap', '🪶', 'brim'] },
+    mourning: { n: 'A royal funeral', clue: 'Black from head to toe, and nothing that glitters: a plain wooden cross and a black hood.', gown: ['black gown', '#1f1f1f'], cloak: ['black mantle', '#2a2a2a'], orn: ['wooden cross', '✝️'], head: ['black hood', '🖤', 'hood'] },
+    feast: { n: 'The Easter feast', clue: 'Scarlet for rejoicing, a fur-trimmed cloak, a jewelled chain, and a gold circlet.', gown: ['scarlet gown', '#b3202c'], cloak: ['fur-trimmed cloak', '#6c4f9c'], orn: ['jewelled chain', '💎'], head: ['gold circlet', '⭕', 'crown'] },
+  };
+  const DR_SLOT = ['shirt', 'gown', 'cloak', 'orn', 'head'], DR_NM = { shirt: 'Shirt', gown: 'Gown', cloak: 'Mantle', orn: 'Jewel', head: 'Hat' };
+  mgAdd({ k: 'dress', i: '👘', n: 'Dress the king', d: 'Each occasion has its proper robes. Dress the king in the right things, in the right order, before the trumpets sound.', seal: 'mg_dress', who: () => mgIn('jb_wardrobe'),
+    play() {
+      const order = shuf(Object.keys(DR_O)), king = KT() === 'Queen' ? 'queen' : 'king'; let r = -1, step = 0, occ = null, worn = {}, good = 0, slips = 0, clock = null, over = false, busy = false;
+      const item = (k, s) => s === 'shirt' ? { id: 'shirt', s, n: 'linen shirt', ic: '<i class="dr-sw" style="background:#f4efe2"></i>' } : { id: `${k}-${s}`, s, k, n: DR_O[k][s][0], ic: s === 'gown' || s === 'cloak' ? `<i class="dr-sw${DR_O[k][s][2] ? ' ermine' : ''}" style="background:${DR_O[k][s][1]}"></i>` : `<span>${DR_O[k][s][1]}</span>` };
+      const look = () => { const o = DR_O[occ]; return { robe: worn.gown ? o.gown[1] : '#efe6cf', f: king === 'queen', hair: '#5a3a22', beard: king !== 'queen', hat: worn.head ? o.head[2] : '', hood: '#1f1f1f', capc: '#3b5a2a', mood: 'calm', extra: (worn.cloak ? `<path d="M-8 -28Q-15 -12 -14 -1L-9 -1Q-8 -14 -5 -26ZM8 -28Q15 -12 14 -1L9 -1Q8 -14 5 -26Z" fill="${o.cloak[1]}" stroke="rgba(0,0,0,.4)" stroke-width=".6"/>${o.cloak[2] ? '<path d="M-12 -12h1M-11 -6h1M11 -10h1M12 -4h1" stroke="#1a1a1a" stroke-width="1.4"/>' : ''}` : '') + (worn.orn ? (occ === 'coronation' || occ === 'feast' ? `<path d="M-5 -28Q0 -20 5 -28" fill="none" stroke="#e2b23c" stroke-width="1.6"/><circle cy="-21" r="1.6" fill="${occ === 'feast' ? '#2d5ba3' : '#e2b23c'}"/>` : occ === 'hunt' ? '<path d="M6 -18Q12 -16 12 -10" stroke="#c9a060" stroke-width="2.4" fill="none"/>' : '<path d="M0 -26V-18M-2.4 -23.5H2.4" stroke="#8a6a3a" stroke-width="1.4"/>') : '') + (worn.shirt && !worn.gown ? '<path d="M-6 -28Q0 -25 6 -28" stroke="#d8d0c0" stroke-width="2" fill="none"/>' : '') }; };
+      const draw = () => { const g = document.getElementById('dr-king'); if (g) g.innerHTML = fig(look()); mgSet('dr-slots', DR_SLOT.map((s, q) => `<span class="${q < step ? 'did' : q === step ? 'now' : ''}">${DR_NM[s]}</span>`).join('<i>›</i>')); };
+      const round = () => {
+        r++; if (r >= order.length) return end(); occ = order[r]; step = 0; worn = {}; busy = false;
+        const need = DR_SLOT.map(s => item(occ, s)), decoys = shuf(Object.keys(DR_O).filter(k => k !== occ).flatMap(k => DR_SLOT.slice(1).map(s => item(k, s)))).slice(0, 7);
+        const all = shuf(need.concat(decoys));
+        mgShow(`${mgHead(MG_BY.dress, DR_O[occ].n, r, order.length)}<div class="dr-clue"><b>${esc(DR_O[occ].n)}</b>${esc(DR_O[occ].clue)}</div><div class="sc g-dr" id="dr-stage"><svg class="dr-fig" viewBox="-20 -56 40 60" aria-hidden="true"><g id="dr-king"></g></svg><div class="dr-slots" id="dr-slots"></div></div><div class="dr-ward">${all.map(it => mgBtn('w', it.id, `${it.ic}<small>${esc(it.n)}</small>`, 'dr-b')).join('')}</div>${timeBar('dr-t')}<div class="cu-hud ex-hud" id="dr-hud"></div>`);
+        draw(); hud(); if (clock) clock.stop(); clock = mgClock(Math.max(16000, 24000 - r * 2500), 'dr-stage', f => setBar('dr-t', f), () => { if (busy) return; busy = true; slips += 2; mgPop('dr-stage', `The trumpets sound and the ${king} is not ready!`, 'bad', 50, 30); mgSnd('bad'); hud(); mgAfter(1600, 'dr-stage', round); });
+      };
+      const wear = (id, el) => {
+        if (busy || over) return; const s = id === 'shirt' ? 'shirt' : id.split('-')[1], k = id === 'shirt' ? occ : id.split('-')[0];
+        if (k !== occ) { slips++; el.classList.add('no'); setTimeout(() => el.classList.remove('no'), 400); mgPop('dr-stage', `Not for ${DR_O[occ].n.toLowerCase()}!`, 'bad', 50, 30); mgSnd('bad'); if (clock) clock.cut(1500); hud(); return; }
+        if (s !== DR_SLOT[step]) { slips++; el.classList.add('no'); setTimeout(() => el.classList.remove('no'), 400); mgPop('dr-stage', `The ${DR_NM[DR_SLOT[step]].toLowerCase()} goes on first`, 'bad', 50, 30); mgSnd('bad'); if (clock) clock.cut(1000); hud(); return; }
+        worn[s] = 1; step++; el.disabled = true; el.classList.add('done'); mgSnd('tick'); draw();
+        if (step >= DR_SLOT.length) { busy = true; good++; if (clock) clock.stop(); mgPop('dr-stage', `The ${king} looks magnificent`, 'gold', 50, 30); mgSnd('fanfare'); hud(); mgAfter(1400, 'dr-stage', round); }
+      };
+      const hud = () => mgSet('dr-hud', `<span>👘 Dressed in time <b>${good} / ${order.length}</b></span><span>✖ Slips <b>${slips}</b></span>`);
+      const end = () => {
+        if (over) return; over = true;
+        const score = clamp(Math.round((good / order.length - slips * .04) * 100)) / 100;
+        mgFinish('dress', score, `The ${king} was dressed ${good} times of ${order.length} before the trumpets${slips ? `, with ${slips} slip${slips > 1 ? 's' : ''}` : ', without a single slip'}.`, () => {
+          const ls = [];
+          if (score >= .85) { fac('crown', 3); st('renown', 2); ls.push(`Foreign envoys write home about how splendid the ${king} looks.`); }
+          return ls;
+        });
+      };
+      mgOn = (a, v, el) => { if (a === 'start') round(); else if (a === 'w') wear(v, el); };
+      mgIntro(MG_BY.dress, 'Keeper of the Wardrobe', [`Four great occasions, and the ${king} must be dressed for each. The clue at the top says what is proper.`, 'Dress from the inside out: <b>shirt, gown, mantle, jewel, then hat</b>. Tap each from the wardrobe in that order. Things meant for another occasion are mixed in to catch you out.'], '👘 Open the wardrobe');
+    } });
+
+  /* ---------- 72. The chamberlain: the audience ---------- */
+  const AUD_R = { msg: ['⚡', 'Messenger from the war', 6, 6500], duke: ['🦁', 'Duke', 5, 11000], bishop: ['⛪', 'Bishop', 4, 12000], earl: ['🛡️', 'Earl', 4, 12000], knight: ['⚔️', 'Knight', 2, 14000], merchant: ['💰', 'Merchant', 1, 16000] };
+  mgAdd({ k: 'audience', i: '🚪', n: 'The audience', d: 'The great and the small wait in the antechamber. Each time the king is free, show in whoever ranks highest, before anyone storms off.', seal: 'mg_audience', who: () => mgIn('jb_chamberlain'),
+    play() {
+      const OPEN = 12, king = KT() === 'Queen' ? 'queen' : 'king'; let q = [], seq = 0, opens = 0, isOpen = false, good = 0, bad = 0, stormed = 0, over = false, t0 = 0, nextIn = 0, nextOpen = 2600, openAt = 0, noChurch = false;
+      const rank = v => AUD_R[v.k][2];
+      const best = () => { const ok = q.filter(v => !(noChurch && v.k === 'bishop')); if (!ok.length) return null; return ok.slice().sort((a, b) => rank(b) - rank(a) || a.t - b.t)[0]; };
+      const add = el => { const k = q.length && P(.12) && !q.some(v => v.k === 'msg') ? 'msg' : pick(['duke', 'bishop', 'earl', 'knight', 'knight', 'merchant', 'merchant', 'earl']); const nm = k === 'msg' ? pick(['young Hal', 'a mud-spattered rider', 'Will the scout']) : `${pick(k === 'merchant' ? ['Master'] : k === 'knight' ? ['Sir'] : ['the'])} ${k === 'duke' || k === 'earl' || k === 'bishop' ? `${AUD_R[k][1]} of ${pick(TOWNS)}` : pick(NAMES.m)}`; q.push({ id: `aud${++seq}`, k, nm, t: el, pat: AUD_R[k][3] * (1.1 + Math.random() * .3), left: 1 }); draw(); };
+      const draw = () => mgSet('aud-q', q.map(v => `<button type="button" class="aud-v ${v.k}" id="${v.id}" data-mg="v" data-v="${v.id}"><span>${AUD_R[v.k][0]}</span><b>${esc(cap(v.nm))}</b><small>${AUD_R[v.k][1]}</small><i><em style="width:${(v.left * 100).toFixed(0)}%"></em></i></button>`).join('') || '<p class="aud-empty">The antechamber is empty.</p>');
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.audience, 'The antechamber')}<div class="aud-rank">${['msg', 'duke', 'bishop', 'earl', 'knight', 'merchant'].map(k => `<span>${AUD_R[k][0]} ${AUD_R[k][1].replace(' from the war', '')}</span>`).join('<i>›</i>')}</div><div class="sc g-aud" id="aud-stage"><div class="aud-door" id="aud-door"><span>🚪</span><b id="aud-dt">The ${king} is busy</b></div><div class="aud-q" id="aud-q"></div></div><p class="mg-tip" id="aud-rule">When the door opens, tap whoever ranks highest. Equal ranks: whoever has waited longest.</p><div class="cu-hud ex-hud" id="aud-hud"></div>`);
+        hud(); t0 = performance.now(); add(0); add(0);
+        mgLoop('aud-stage', (now, dt) => {
+          if (over) return false; const el = now - t0;
+          if (el >= nextIn && q.length < 6) { nextIn = el + R(2400, 3500); add(el); }
+          let ch = false; for (const v of q) { v.left -= dt / v.pat; if (v.left <= 0) { v.gone = true; stormed++; ch = true; mgPop('aud-stage', `${cap(v.nm)} storms off in a fury!`, 'bad', 50, 70); mgSnd('bad'); } }
+          if (ch) { q = q.filter(v => !v.gone); hud(); }
+          q.forEach(v => { const e = document.querySelector(`#${v.id} em`); if (e) { e.style.width = `${Math.max(0, v.left * 100).toFixed(0)}%`; e.parentNode.parentNode.classList.toggle('low', v.left < .3); } });
+          if (!isOpen && el >= nextOpen && best()) { isOpen = true; openAt = el; const d = document.getElementById('aud-door'); if (d) d.classList.add('open'); mgSet('aud-dt', `The ${king} will see the next!`); mgSnd('chime'); }
+          if (isOpen && el - openAt > 3200) { isOpen = false; bad++; opens++; nextOpen = el + R(2200, 3200); const d = document.getElementById('aud-door'); if (d) d.classList.remove('open'); mgSet('aud-dt', `The ${king} is busy`); mgPop('aud-stage', `The ${king} waited, and nobody came in!`, 'bad', 50, 20); mgSnd('bad'); hud(); if (opens >= OPEN) { end(); return false; } }
+          if (opens === 6 && !noChurch) { noChurch = true; const rl = document.getElementById('aud-rule'); if (rl) rl.innerHTML = `<b>New order:</b> the ${king} has quarrelled with the Church and will see <b>no bishops</b> today. Pass them over.`; mgPop('aud-stage', 'No bishops today!', 'gold', 50, 20); }
+          return true;
+        });
+      };
+      const usher = id => {
+        if (over) return; const v = q.find(x => x.id === id); if (!v) return;
+        if (!isOpen) { mgPop('aud-stage', `Wait for the ${king}’s door to open`, 'bad', 50, 20); return; }
+        const b = best(), el = performance.now() - t0; isOpen = false; opens++; nextOpen = el + R(2200, 3400);
+        if (noChurch && v.k === 'bishop') { bad++; mgPop('aud-stage', `A bishop! The ${king} throws a cup at you`, 'bad', 50, 20); mgSnd('bad'); }
+        else if (b && rank(v) === rank(b)) { good++; mgPop('aud-stage', v === b ? 'Just so' : 'Well chosen', 'gold', 50, 20); mgSnd('tick'); }
+        else { bad++; mgPop('aud-stage', `${cap(b.nm)} is insulted to be passed over!`, 'bad', 50, 20); mgSnd('bad'); b.left = Math.max(.05, b.left - .4); }
+        q = q.filter(x => x !== v); const d = document.getElementById('aud-door'); if (d) d.classList.remove('open'); mgSet('aud-dt', `The ${king} is busy`); draw(); hud();
+        if (opens >= OPEN) end();
+      };
+      const hud = () => mgSet('aud-hud', `<span>🚪 Shown in rightly <b>${good}</b></span><span>✖ Blunders <b>${bad}</b></span><span>😤 Stormed off <b>${stormed}</b></span>`);
+      const end = () => {
+        if (over) return; over = true;
+        const score = clamp(Math.round((good / OPEN - stormed * .05) * 100)) / 100;
+        mgFinish('audience', score, `${good} of ${OPEN} audiences rightly given${stormed ? `; ${stormed} visitor${stormed > 1 ? 's' : ''} stormed off` : ''}.`, () => {
+          const ls = [];
+          if (score >= .85) { fac('lords', 3); fac('crown', 2); ls.push('The great lords say the court runs like clockwork under you.'); }
+          if (stormed >= 3) { fac('lords', -4); ls.push('Some proud lords have gone home in a sulk.'); }
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'start') go(); else if (a === 'v') usher(v); };
+      mgIntro(MG_BY.audience, 'Lord Chamberlain', [`The antechamber fills with people who want to see the ${king}. Each time the ${king}’s door opens, <b>tap the visitor who ranks highest</b>: a messenger from the war first, then dukes, then bishops and earls, then knights, then merchants.`, 'Everyone’s patience runs down. Pass over a great lord and he is insulted. Keep the door waiting and the king is annoyed.'], '🚪 Open the antechamber');
+    } });
+
+  /* ---------- 73. The seneschal: the high table ---------- */
+  const TB_R = [['🦁', 'Duke'], ['🔱', 'Marquess'], ['🛡️', 'Earl'], ['⛪', 'Bishop'], ['🏰', 'Viscount'], ['🗝️', 'Baron'], ['✝️', 'Abbot'], ['⚔️', 'Knight'], ['🏛️', 'Mayor'], ['🐎', 'Squire']];
+  mgAdd({ k: 'hightable', i: '🍽️', n: 'The high table', d: 'Seat the guests at the high table in strict order of rank, the greatest nearest the king. A lord seated too low never forgives it.', seal: 'mg_hightable', who: () => mgIn('jb_seneschal'),
+    play() {
+      const FEASTS = 3, king = KT() === 'Queen' ? 'queen' : 'king'; let f = -1, guests = [], arr = [], k = 0, seats = [], good = 0, bad = 0, clock = null, over = false, busy = false;
+      const feast = () => {
+        f++; if (f >= FEASTS) return end(); busy = false; k = 0;
+        const n = 5 + f; const rs = shuf(TB_R.map((_, j) => j)).slice(0, n).sort((a, b) => a - b);
+        guests = rs.map((ri, j) => ({ ri, seat: j, nm: `${TB_R[ri][1] === 'Knight' ? 'Sir' : TB_R[ri][1] === 'Mayor' ? 'Master' : TB_R[ri][1] === 'Squire' ? 'Young' : `the ${TB_R[ri][1]} of`} ${TB_R[ri][1] === 'Knight' || TB_R[ri][1] === 'Mayor' || TB_R[ri][1] === 'Squire' ? pick(NAMES.m) : pick(TOWNS)}` }));
+        arr = shuf(guests.slice()); seats = Array(n).fill(null);
+        mgShow(`${mgHead(MG_BY.hightable, `Feast ${f + 1}: ${n} at the high table`, f, FEASTS)}<div class="tb-ladder">${TB_R.map(([i, n2]) => `<span class="${rs.some(x => TB_R[x][1] === n2) ? 'in' : ''}">${i} ${n2}</span>`).join('<i>›</i>')}</div><div class="sc g-tb" id="tb-stage"><div class="tb-table"><span class="tb-king"><svg viewBox="-16 -50 32 54" aria-hidden="true">${fig({ robe: '#7a1e16', hat: 'crown', f: king === 'queen', beard: king !== 'queen', hair: '#5a3a22', mood: 'calm' })}</svg><small>${cap(king)}</small></span>${seats.map((_, j) => `<button type="button" class="tb-seat" id="tb-s${j}" data-mg="seat" data-v="${j}"><b>${j + 1}</b><span></span></button>`).join('')}</div><div class="tb-door" id="tb-door"></div></div>${timeBar('tb-t')}<div class="cu-hud ex-hud" id="tb-hud"></div><p class="mg-tip sc-tip">Seat 1 is nearest the ${king}. The ladder above shows who outranks whom; tonight’s ranks are lit.</p>`);
+        hud(); next();
+      };
+      const next = () => {
+        if (k >= arr.length) { busy = true; mgPop('tb-stage', 'The table is set. Let the feast begin!', 'gold', 50, 30); mgSnd('fanfare'); return mgAfter(1500, 'tb-stage', feast); }
+        const g = arr[k]; mgSet('tb-door', `<span>${TB_R[g.ri][0]}</span><p>Announcing <b>${esc(g.nm)}</b><small>${TB_R[g.ri][1]}</small></p>`);
+        const d = document.getElementById('tb-door'); if (d) { d.classList.remove('in'); void d.offsetWidth; d.classList.add('in'); }
+        if (clock) clock.stop(); clock = mgClock(Math.max(4500, 8000 - f * 1000), 'tb-stage', fr => setBar('tb-t', fr), () => place(-1));
+      };
+      const place = j => {
+        if (busy || over) return; j = +j; const g = arr[k]; if (j >= 0 && seats[j]) return;
+        if (clock) clock.stop(); const ok = j === g.seat;
+        if (ok) { good++; mgSnd('tick'); } else { bad++; mgPop('tb-stage', j < 0 ? `${cap(g.nm)} stands about, embarrassed` : `Wrong seat! ${cap(g.nm)} belongs in seat ${g.seat + 1}`, 'bad', 50, 30); mgSnd('bad'); }
+        seats[g.seat] = g; const s = document.getElementById(`tb-s${g.seat}`); if (s) { s.classList.add(ok ? 'ok' : 'moved'); s.disabled = true; s.querySelector('span').innerHTML = `${TB_R[g.ri][0]}<small>${TB_R[g.ri][1]}</small>`; }
+        k++; hud(); next();
+      };
+      const hud = () => mgSet('tb-hud', `<span>🍽️ Seated rightly <b>${good}</b></span><span>✖ Mistakes <b>${bad}</b></span>`);
+      const end = () => {
+        if (over) return; over = true; const tot = good + bad || 1;
+        const score = clamp(Math.round(good / tot * 100)) / 100;
+        mgFinish('hightable', score, `${good} of ${tot} guests seated in their proper place.`, () => {
+          const ls = [];
+          if (score >= .9) { fac('lords', 3); st('renown', 2); ls.push('Not one lord went home offended. That is a rare feast.'); }
+          if (bad >= 5) { fac('lords', -4); ls.push('Two earls are not speaking to each other, or to you.'); }
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'start') feast(); else if (a === 'seat') place(v); };
+      mgIntro(MG_BY.hightable, 'Seneschal', [`Three great feasts. The guests arrive one at a time, and you must show each to the right seat at once. <b>Seat 1</b>, nearest the ${king}, is for the highest rank present tonight, seat 2 for the next, and so on.`, 'The ladder of ranks is shown at the top, with tonight’s guests lit up. Work out where each newcomer fits among them, and leave room for greater guests still to come.'], '🍽️ Sound the dinner horn');
+    } });
+
+  /* ---------- 74. The master of the horse: break the colt ---------- */
+  const CO_T = { buck: ['Ears pinned back…', 'back', '👂'], rear: ['Head flung up…', 'fwd', '⬆️'], snort: ['A snort, a shake…', '', '💨'] };
+  mgAdd({ k: 'colt', i: '🐎', n: 'Break the colt', d: 'A wild young stallion for the king’s stable. Read his tells and shift your weight the right way, or you will be eating dirt.', seal: 'mg_colt', who: () => mgIn('jb_masterhorse'),
+    play() {
+      const N = 16; let n = 0, bal = 100, ok = 0, wrongs = 0, cur = null, want = '', did = '', over = false, t0 = 0, spirit = 100;
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.colt, 'The breaking ring')}<div class="sc g-co" id="co-stage"><svg class="sc-svg" viewBox="0 0 360 150" aria-hidden="true"><rect width="360" height="150" fill="#9ab86a"/><rect y="110" width="360" height="40" fill="#b89a6a"/>${[20, 80, 140, 200, 260, 320].map(x => `<path d="M${x} 60V110" stroke="#6b4226" stroke-width="5"/>`).join('')}<path d="M0 70H360M0 92H360" stroke="#7a5230" stroke-width="4"/><g transform="translate(180 128) scale(2.2)"><g id="co-horse" class="co-h">${rider(Object.assign({}, meLook(), { hat: 'cap', capc: '#3a2a1a' }), '#2a1a0c')}</g></g></svg><div class="co-tell" id="co-tell"></div></div><div class="co-bal"><span>Your seat</span><b><i id="co-bal" style="width:100%"></i></b></div><div class="co-bal co-spr"><span>His spirit</span><b><i id="co-sp" style="width:100%"></i></b></div><div class="mg-two">${mgBtn('m', 'back', '⬇️ Sit back deep', 'co-b')}${mgBtn('m', 'fwd', '⬆️ Lean forward', 'co-b')}</div><div class="cu-hud ex-hud" id="co-hud"></div>`);
+        hud(); move();
+      };
+      const move = () => {
+        if (over) return; if (n >= N || bal <= 0) return end(); n++;
+        const k = n > 2 && P(.22) ? 'snort' : pick(['buck', 'rear']); cur = k; want = CO_T[k][1]; did = '';
+        const tell = Math.max(650, 1300 - n * 40);
+        mgSet('co-tell', `<span>${CO_T[k][2]}</span>${CO_T[k][0]}`); const tl = document.getElementById('co-tell'); if (tl) { tl.classList.remove('on'); void tl.offsetWidth; tl.classList.add('on'); }
+        mgAfter(tell, 'co-stage', () => {
+          const h = document.getElementById('co-horse'); if (h) { h.classList.remove('buck', 'rear', 'snort'); void h.getBoundingClientRect(); h.classList.add(k); }
+          const tl2 = document.getElementById('co-tell'); if (tl2) tl2.classList.remove('on');
+          const right = did === want;
+          if (k === 'snort') { if (did) { bal -= 18; wrongs++; mgPop('co-stage', 'He only snorted: you threw yourself off balance', 'bad', 50, 25); mgSnd('bad'); } else { ok++; spirit -= 4; mgPop('co-stage', 'Steady…', 'up', 50, 25); } }
+          else if (right) { ok++; spirit -= 9; mgPop('co-stage', k === 'buck' ? 'He bucks, and you sit it out!' : 'He rears, and you stay on!', 'gold', 50, 25); mgSnd('tick'); }
+          else { bal -= did ? 30 : 25; wrongs++; mgPop('co-stage', did ? 'Wrong way! You are half out of the saddle' : 'Too slow! You lurch in the saddle', 'bad', 50, 25); mgSnd('bad'); }
+          spirit = Math.max(0, spirit); bal = Math.max(0, bal); hud();
+          mgAfter(R(700, 1100), 'co-stage', move);
+        });
+      };
+      const act = v => { if (over || !cur || did) return; did = v; document.querySelectorAll('#card .co-b').forEach(b => b.classList.toggle('on', b.dataset.v === v)); setTimeout(() => document.querySelectorAll('#card .co-b').forEach(b => b.classList.remove('on')), 300); mgSnd('tick'); };
+      const hud = () => { const b = document.getElementById('co-bal'); if (b) { b.style.width = `${bal}%`; b.classList.toggle('low', bal < 40); } const s = document.getElementById('co-sp'); if (s) s.style.width = `${spirit}%`; mgSet('co-hud', `<span>🐎 Moves ridden <b>${ok}</b> / ${n}</span>`); };
+      const end = () => {
+        if (over) return; over = true; const thrown = bal <= 0;
+        const h = document.getElementById('co-horse'); if (h && thrown) h.classList.add('thrown');
+        const score = thrown ? clamp(Math.round(ok / N * 50)) / 100 : clamp(Math.round((ok / N) * 100)) / 100;
+        mgFinish('colt', score, thrown ? 'You go flying over his head and land in the dirt. The stable boys pretend not to laugh.' : spirit < 30 ? 'He stands at last, blowing and quiet, and lets you walk him round the ring. The colt is broken.' : 'You stayed on, but he is far from broken. Tomorrow, again.', (grade, mult) => {
+          const ls = [];
+          if (!thrown && score >= .85) { st('renown', 3); fac('crown', 2); ls.push('The king rides the new stallion within the month, and asks who broke him.'); }
+          if (thrown) st('health', -R(3, 8));
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'start') go(); else if (a === 'm') act(v); };
+      mgIntro(MG_BY.colt, 'Master of the Horse', ['A wild colt for the royal stable, and you will break him yourself. Before each move, he gives a <b>tell</b>.', '<b>Ears pinned back</b>: he is about to buck, so <b>sit back deep</b>. <b>Head flung up</b>: he is about to rear, so <b>lean forward</b>. A mere <b>snort</b>: do nothing. Be quick: the tells get shorter.'], '🐎 Mount up');
+    } });
+
+  /* ---------- 75. The royal tutor: the Latin lesson ---------- */
+  const LA_W = [['rex', 'king', 'regal'], ['regina', 'queen', 'regal'], ['equus', 'horse', 'equestrian'], ['aqua', 'water', 'aquarium'], ['panis', 'bread', 'pantry'], ['gladius', 'sword', 'gladiator'], ['liber', 'book', 'library'], ['canis', 'dog', 'canine'], ['ignis', 'fire', 'ignite'], ['terra', 'land', 'terrain'], ['mare', 'sea', 'marine'], ['lux', 'light', 'lucid'], ['pax', 'peace', 'pacify'], ['bellum', 'war', 'belligerent'], ['amicus', 'friend', 'amicable'], ['vinum', 'wine', 'vine'], ['mons', 'mountain', 'mount'], ['navis', 'ship', 'navy'], ['stella', 'star', 'stellar'], ['luna', 'moon', 'lunar'], ['sol', 'sun', 'solar'], ['domus', 'house', 'domestic']];
+  mgAdd({ k: 'latin', i: '📖', n: 'The Latin lesson', d: 'Teach the prince his Latin. Match each word to its meaning quickly, before his mind wanders to the window.', seal: 'mg_latin', who: () => mgIn('jb_tutor'),
+    play() {
+      const ROUNDS = 3, pupil = pick(['prince', 'princess']); let r = -1, set = [], sel = null, done = 0, right = 0, wrong = 0, att = 100, clock = null, over = false, busy = false, hinted = {};
+      const round = () => {
+        r++; if (r >= ROUNDS) return end(); busy = false; sel = null; done = 0;
+        set = shuf(LA_W).slice(0, 5 + r);
+        const L = shuf(set.map((w, j) => j)), E = shuf(set.map((w, j) => j));
+        mgShow(`${mgHead(MG_BY.latin, `Lesson ${r + 1}`, r, ROUNDS)}<div class="sc g-la" id="la-stage"><svg class="la-pupil" viewBox="-16 -50 32 54" aria-hidden="true"><g id="la-p"></g></svg><div class="la-att"><small>The ${pupil}’s attention</small><b><i id="la-att"></i></b></div></div><div class="la-cols"><div>${L.map(j => `<button type="button" class="la-w lat" id="la-l${j}" data-mg="l" data-v="${j}"><b>${set[j][0]}</b><small id="la-h${j}"></small></button>`).join('')}</div><div>${E.map(j => `<button type="button" class="la-w" id="la-e${j}" data-mg="e" data-v="${j}">${set[j][1]}</button>`).join('')}</div></div>${timeBar('la-t')}<div class="cu-hud ex-hud" id="la-hud"></div>`);
+        draw(); hud(); if (clock) clock.stop(); const wander = () => { if (busy) return; busy = true; if (clock) clock.stop(); mgPop('la-stage', `The ${pupil} is gazing out of the window…`, 'bad', 50, 30); mgSnd('bad'); mgAfter(1500, 'la-stage', round); };
+        clock = mgClock(30000 - r * 2000, 'la-stage', f => { setBar('la-t', f); att = Math.max(0, att - 0.5); draw(); if (att <= 0) wander(); }, wander);
+      };
+      const draw = () => { const p = document.getElementById('la-p'); if (p) p.innerHTML = fig({ robe: '#2d5ba3', f: pupil === 'princess', hair: '#c9a060', hat: 'crown', mood: att > 65 ? 'happy' : att > 30 ? 'calm' : 'sad', arms: att < 30 ? 'up' : 'hold' }); const b = document.getElementById('la-att'); if (b) { b.style.width = `${att}%`; b.classList.toggle('low', att < 30); } };
+      const pickL = (j, el) => { if (busy || over) return; document.querySelectorAll('#card .la-w.lat').forEach(b => b.classList.remove('sel')); sel = +j; el.classList.add('sel'); mgSnd('tick'); };
+      const pickE = (j, el) => {
+        if (busy || over || sel == null) { if (sel == null) mgPop('la-stage', 'Tap a Latin word first', 'up', 50, 30); return; }
+        j = +j; const l = document.getElementById(`la-l${sel}`);
+        if (j === sel) { right++; done++; att = Math.min(100, att + 12); [l, el].forEach(b => { b.classList.remove('sel'); b.classList.add('ok'); b.disabled = true; }); mgSnd('good'); sel = null; if (done >= set.length) { busy = true; if (clock) clock.stop(); mgPop('la-stage', `“Optime!” The ${pupil} has it all.`, 'gold', 50, 30); mgAfter(1300, 'la-stage', round); } }
+        else { wrong++; att = Math.max(0, att - 10); el.classList.add('no'); setTimeout(() => el.classList.remove('no'), 400); mgPop('la-stage', `The ${pupil} giggles. Wrong!`, 'bad', 50, 30); mgSnd('bad'); if (!hinted[sel]) { hinted[sel] = 1; mgSet(`la-h${sel}`, `think of “${set[sel][2]}”`); } }
+        draw(); hud();
+      };
+      const hud = () => mgSet('la-hud', `<span>📖 Words learned <b>${right}</b></span><span>✖ Muddles <b>${wrong}</b></span>`);
+      const end = () => {
+        if (over) return; over = true; const tot = 5 + 6 + 7;
+        const score = clamp(Math.round((right / tot - wrong * .03) * 100)) / 100;
+        mgFinish('latin', score, `The ${pupil} learned ${right} of ${tot} words${wrong ? `, after ${wrong} muddle${wrong > 1 ? 's' : ''}` : ''}.`, () => {
+          const ls = [];
+          if (score >= .85) { st('wits', 2); fac('crown', 3); ls.push(`The ${pupil} recites a whole psalm in Latin before the court. The king beams at you.`); }
+          if (score < .4) ls.push(`The ${pupil} has carved a horse into the lesson table.`);
+          return ls;
+        });
+      };
+      mgOn = (a, v, el) => { if (a === 'start') round(); else if (a === 'l') pickL(v, el); else if (a === 'e') pickE(v, el); };
+      mgIntro(MG_BY.latin, 'Royal tutor', [`Three lessons with the ${pupil}. Tap a <b>Latin word</b> on the left, then its <b>meaning</b> on the right.`, `Every right answer wins back the ${pupil}’s attention; a wrong one loses it, and earns a hint: an English word that comes from the Latin. <i>Aqua</i>? Think of an aquarium.`], '📖 Open the grammar');
+    } });
+
+  /* ---------- 76. The court poet: rhyme time ---------- */
+  const RH_C = [
+    ['Our gracious king rode out at dawn,', 'His banner high, his sword…', 'drawn', 'lawn', 'ready'],
+    ['The queen is fair as summer light,', 'Her eyes like stars on a winter…', 'night', 'kite', 'evening'],
+    ['The harvest’s in, the barns are full,', 'The sheep have given up their…', 'wool', 'bull', 'fleece'],
+    ['The knight was bold, his heart was true,', 'He slew the dragon, and the giant…', 'too', 'shoe', 'also'],
+    ['The bells ring out across the town', 'To greet the prince who wears the…', 'crown', 'clown', 'circlet'],
+    ['The river runs beneath the hill', 'And turns the wheel of the old…', 'mill', 'pill', 'forge'],
+    ['When winter comes with frost and snow,', 'The fires in the hall burn…', 'low', 'toe', 'bright'],
+    ['The jester leaps, the jester sings,', 'He makes a mockery of…', 'kings', 'wings', 'princes'],
+    ['A maiden waits beside the well,', 'She hears the ringing chapel…', 'bell', 'smell', 'chimes'],
+    ['The ship sets sail upon the tide', 'With all the kingdom’s hopes…', 'inside', 'fried', 'aboard'],
+    ['The castle stands on rock and stone,', 'And there the king sits on his…', 'throne', 'bone', 'chair'],
+    ['The cook has roasted swan and deer,', 'And brewed a barrel of good…', 'beer', 'ear', 'ale'],
+    ['The monk bent low with quill in hand', 'To write the story of the…', 'land', 'sand', 'kingdom'],
+    ['Our foes have fled across the plain,', 'They will not trouble us…', 'again', 'drain', 'soon'],
+  ];
+  mgAdd({ k: 'rhyme', i: '🪶', n: 'Rhyme time', d: 'The court waits on your every word. Finish each couplet with the word that rhymes and makes sense, before the silence grows awkward.', seal: 'mg_rhyme', who: () => mgIn('jb_poet'),
+    play() {
+      const N = 8, cs = shuf(RH_C).slice(0, N); let j = -1, good = 0, silly = 0, flat = 0, clock = null, over = false, busy = false, mood = 50;
+      const crowd = Array.from({ length: 6 }, () => randFolk(null, true));
+      const drawCrowd = m => mgSet('rh-crowd', crowd.map(l => `<svg viewBox="-16 -50 32 54" aria-hidden="true">${fig(Object.assign({}, l, { mood: m, arms: m === 'happy' ? 'up' : '' }))}</svg>`).join(''));
+      const next = () => {
+        j++; if (j >= N) return end(); busy = false; const c = cs[j];
+        mgSet('rh-say', `<p>${esc(c[0])}<br>${esc(c[1])} <b class="rh-gap">…?</b></p>`); mgStep(j);
+        mgSet('rh-opts', shuf([c[2], c[3], c[4]]).map(w => mgBtn('w', w, esc(w), 'rh-b')).join(''));
+        if (clock) clock.stop(); clock = mgClock(Math.max(5500, 9000 - j * 400), 'rh-stage', f => setBar('rh-t', f), () => answer(''));
+      };
+      const answer = w => {
+        if (busy || over) return; busy = true; if (clock) clock.stop(); const c = cs[j];
+        mgSet('rh-say', `<p>${esc(c[0])}<br>${esc(c[1].replace('…', ''))} <b class="${w === c[2] ? 'ok' : 'bad'}">${esc(w || '…um…')}</b></p>`);
+        if (w === c[2]) { good++; drawCrowd('happy'); mgPop('rh-stage', pick(['Bravo!', 'The court applauds!', 'Charming!', 'Exquisite!']), 'gold', 50, 25); mgSnd('good'); }
+        else if (w === c[3]) { silly++; drawCrowd('happy'); mgPop('rh-stage', 'It rhymes… but the court roars with laughter', 'up', 50, 25); mgSnd('tick'); }
+        else { flat++; drawCrowd('sad'); mgPop('rh-stage', w ? 'That does not rhyme! A groan goes round' : 'An awkward silence…', 'bad', 50, 25); mgSnd('bad'); }
+        document.querySelectorAll('#card .rh-b').forEach(b => { b.disabled = true; if (b.dataset.v === c[2]) b.classList.add('ok'); });
+        hud(); mgAfter(1700, 'rh-stage', () => { drawCrowd('calm'); next(); });
+      };
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.rhyme, 'Verses for the court', 0, N)}<div class="sc g-rh" id="rh-stage"><div class="rh-crowd" id="rh-crowd"></div><svg class="rh-me" viewBox="-16 -50 32 54" aria-hidden="true">${fig(Object.assign({}, meLook(), { arms: 'up' }))}</svg></div><div class="sc-say rh-say" id="rh-say"></div>${timeBar('rh-t')}<div class="rh-opts" id="rh-opts"></div><div class="cu-hud ex-hud" id="rh-hud"></div>`);
+        drawCrowd('calm'); hud(); next();
+      };
+      const hud = () => mgSet('rh-hud', `<span>🪶 Perfect couplets <b>${good}</b></span><span>😂 Laughs <b>${silly}</b></span><span>😑 Groans <b>${flat}</b></span>`);
+      const end = () => {
+        if (over) return; over = true;
+        const score = clamp(Math.round((good + silly * .3) / N * 100)) / 100;
+        mgFinish('rhyme', score, `${good} of ${N} couplets finished perfectly${silly ? `, and ${silly} that made the court laugh for the wrong reasons` : ''}.`, (grade, mult, pay) => {
+          const ls = [];
+          if (score >= .85) { st('renown', 3); coin(Math.round(pay * .3 * mult)); ls.push('Your verses are copied and sung in every hall in the kingdom.'); }
+          if (silly >= 3) { st('joy', 2); ls.push('The jester has asked to borrow some of your rhymes.'); }
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'start') go(); else if (a === 'w') answer(v); };
+      mgIntro(MG_BY.rhyme, 'Court poet', ['Eight couplets to recite before the whole court, and your memory keeps failing on the last word.', 'Choose the word that <b>rhymes and makes sense</b>. A word that only rhymes will make them laugh at you; one that does not rhyme will make them groan. Do not leave them waiting.'], '🪶 Clear your throat');
+    } });
+
+  /* ---------- 77. The damsel: the queen's train ---------- */
+  const QT_O = { hound: ['🐕', 'lift'], wine: ['🍷', 'lift'], bone: ['🦴', 'lift'], rushes: ['🌾', 'lift'], candle: ['🕯️', 'draw'], brazier: ['🔥', 'draw'] };
+  mgAdd({ k: 'qtrain', i: '👗', n: 'The queen’s train', d: 'Carry the queen’s long train through the great hall. Lift it over what lies on the floor, and draw it in away from the flames.', seal: 'mg_qtrain', who: () => mgIn('wm_damsel'),
+    play() {
+      const N = 20; let obs = [], seq = 0, sent = 0, clear = 0, trips = 0, over = false, t0 = 0, nextAt = 1200, lastAct = 0;
+      const queen = KT() === 'Queen' ? 'queen' : 'queen consort';
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.qtrain, 'Through the great hall')}<div class="sc g-qt" id="qt-stage"><div class="qt-wall"></div><div class="qt-floor"></div><div id="qt-obs"></div><svg class="qt-fig q" viewBox="-16 -56 32 60" aria-hidden="true">${fig({ robe: '#7a1e16', f: true, hat: 'crown', hair: '#5a3a22', mood: 'calm' })}</svg><div class="qt-train" id="qt-train"></div><svg class="qt-fig me" viewBox="-16 -50 32 54" aria-hidden="true">${fig(Object.assign({}, meLook(), { arms: 'hold' }))}</svg><span class="qt-zone"></span></div><div class="cu-hud ex-hud" id="qt-hud"></div><div class="mg-two">${mgBtn('a', 'lift', '⬆️ Lift the train', 'go qt-b')}${mgBtn('a', 'draw', '↩️ Draw it in', 'qt-b')}</div><p class="mg-tip sc-tip">Act as each thing reaches the end of the train (the gold band).</p>`);
+        hud(); t0 = performance.now();
+        mgLoop('qt-stage', (now, dt) => {
+          if (over) return false; const el = now - t0;
+          if (sent < N && el >= nextAt) { sent++; nextAt = el + Math.max(900, 2000 - sent * 55) + R(-200, 300); const k = sent > 2 && P(.35) ? pick(['candle', 'brazier']) : pick(['hound', 'wine', 'bone', 'rushes']), id = `qt${++seq}`; obs.push({ id, k, x: 104, done: false }); const box = document.getElementById('qt-obs'); if (box) box.insertAdjacentHTML('beforeend', `<span class="qt-o ${QT_O[k][1]}" id="${id}" style="left:104%">${QT_O[k][0]}</span>`); }
+          const sp = (16 + sent * .5) * dt / 1000;
+          for (const o of obs) { o.x -= sp; const e = document.getElementById(o.id); if (e) e.style.left = `${o.x}%`; if (!o.done && o.x < 15) { o.done = true; trips++; fail(o, e); } if (o.x < -8 && e) e.remove(); }
+          obs = obs.filter(o => o.x >= -8);
+          if (trips >= 4 || (sent >= N && !obs.some(o => !o.done))) { end(); return false; }
+          return true;
+        });
+      };
+      const fail = (o, e) => { if (e) e.classList.add('bad'); const tr = document.getElementById('qt-train'); if (tr) { tr.classList.remove('trip'); void tr.offsetWidth; tr.classList.add('trip'); } mgPop('qt-stage', QT_O[o.k][1] === 'draw' ? 'The hem is singed! The queen smells smoke' : 'The train snags! The queen stumbles', 'bad', 40, 20); mgSnd('bad'); hud(); };
+      const act = v => {
+        if (over) return; const now = performance.now(); if (now - lastAct < 250) return; lastAct = now;
+        const tr = document.getElementById('qt-train'); if (tr) { tr.classList.remove('lift', 'draw'); void tr.offsetWidth; tr.classList.add(v); }
+        const o = obs.filter(x => !x.done && x.x >= 15 && x.x <= 36).sort((a, b) => a.x - b.x)[0]; if (!o) return;
+        o.done = true; const e = document.getElementById(o.id);
+        if (QT_O[o.k][1] === v) { clear++; if (e) e.classList.add('ok'); mgSnd('tick'); hud(); }
+        else { trips++; fail(o, e); }
+      };
+      const hud = () => mgSet('qt-hud', `<span>👗 Cleared <b>${clear}</b> / ${N}</span><span>✖ Stumbles <b>${trips}</b> / 4</span>`);
+      const end = () => {
+        if (over) return; over = true; const fell = trips >= 4;
+        const score = fell ? clamp(Math.round(clear / N * 40)) / 100 : clamp(Math.round((clear / N - trips * .05) * 100)) / 100;
+        mgFinish('qtrain', score, fell ? `The ${queen} trips on her own train and sprawls before the whole court. She will not forget whose hands were holding it.` : `The ${queen} sweeps the length of the hall like a swan${trips ? `, with only ${trips} small stumble${trips > 1 ? 's' : ''}` : ''}.`, () => {
+          const ls = [];
+          if (!fell && score >= .85) { fac('crown', 3); st('renown', 2); ls.push(`The ${queen} chooses you to carry her train at the next great feast.`); }
+          if (fell) { fac('crown', -5); jobPerf(-6); }
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'start') go(); else if (a === 'a') act(v); };
+      mgIntro(MG_BY.qtrain, 'Maid of honour', [`You carry the ${queen}’s long train as she walks the length of the great hall. Things come towards the end of the train.`, 'Things on the floor (a dog, spilt wine, a bone, loose rushes): <b>lift the train</b>. Flames (a candle, a brazier): <b>draw it in</b>. Act as each one reaches the gold band. Four stumbles and the queen falls.'], '👗 Take up the train');
+    } });
+
+  /* ---------- 78. The mistress of the chamber: warm the royal bed ---------- */
+  mgAdd({ k: 'warmbed', i: '🛏️', n: 'Warm the royal bed', d: 'The queen retires soon, and the bed must be warm all over. Move the warming pan about, but never leave it so long that it scorches the linen.', seal: 'mg_warmbed', who: () => mgIn('wm_mistresscham'),
+    play() {
+      const C = 4, RW = 3; let cells = [], pan = -1, scorch = 0, over = false, t0 = 0, arrive = R(30000, 38000), warned = false, draught = 0;
+      const col = t => t > 95 ? '#e8742a' : t >= 60 ? '#f0b04a' : t > 40 ? '#c9b48a' : '#8fb4d8';
+      const go = () => {
+        cells = Array.from({ length: C * RW }, (_, j) => ({ t: R(25, 45), cool: (j % C === 0 ? 2.8 : j % C === C - 1 ? 2 : 1.6) + Math.random() * .8, burnt: false }));
+        mgShow(`${mgHead(MG_BY.warmbed, 'The queen’s bedchamber')}<div class="sc g-wb" id="wb-stage"><div class="wb-win" id="wb-win">🪟</div><div class="wb-bed"><div class="wb-pillow"></div><div class="wb-grid">${cells.map((c, j) => `<button type="button" class="wb-c" id="wb-c${j}" data-mg="c" data-v="${j}"><i></i></button>`).join('')}</div></div><div class="wb-pan" id="wb-pan"><svg viewBox="0 0 60 30" aria-hidden="true"><path d="M22 15H58" stroke="#6b4226" stroke-width="4" stroke-linecap="round"/><circle cx="13" cy="15" r="12" fill="#c9952e" stroke="#7a5a10" stroke-width="2"/><circle cx="13" cy="15" r="7" fill="none" stroke="#e8c070" stroke-width="1.4"/><path d="M8 11l2 2M15 9l1 2M17 18l2 1M9 18l1 2" stroke="#7a5a10" stroke-width="1.2"/></svg></div></div><div class="wb-key"><span style="background:#8fb4d8">cold</span><span style="background:#f0b04a">just right</span><span style="background:#e8742a">too hot</span><span style="background:#7a2a10;color:#fff">scorched</span></div>${timeBar('wb-t')}<div class="cu-hud ex-hud" id="wb-hud"></div><p class="mg-tip sc-tip">Tap a part of the bed to move the warming pan there.</p>`);
+        t0 = performance.now(); let tick = 0;
+        mgLoop('wb-stage', (now, dt) => {
+          if (over) return false; const el = now - t0, s = dt / 1000; setBar('wb-t', el / arrive);
+          if (!draught && el > 9000 && P(.003)) { draught = el + 5000; mgPop('wb-stage', 'A draught from the window!', 'bad', 20, 20); const w = document.getElementById('wb-win'); if (w) w.classList.add('open'); }
+          if (draught && el > draught) { draught = -1; const w = document.getElementById('wb-win'); if (w) w.classList.remove('open'); }
+          cells.forEach((c, j) => {
+            if (c.burnt) return; const x = j % C, y = Math.floor(j / C), px = pan % C, py = Math.floor(pan / C), d = Math.abs(x - px) + Math.abs(y - py);
+            const heat = pan < 0 ? 0 : d === 0 ? 18 : d === 1 ? 10 : 0, cool = c.cool * (draught > 0 && x === 0 ? 2.6 : 1);
+            c.t = Math.max(0, Math.min(d === 0 && pan >= 0 ? 100 : Math.max(c.t, 95), c.t + (heat - cool) * s));
+            if (c.t >= 100) { c.burnt = true; scorch++; mgPop('wb-stage', 'Scorched! The linen is ruined', 'bad', (x + .5) / C * 100, 40); mgSnd('bad'); }
+          });
+          if (++tick % 4 === 0) draw();
+          if (!warned && el > arrive - 6000) { warned = true; mgPop('wb-stage', 'Footsteps in the passage: the queen is coming!', 'gold', 50, 15); mgSnd('chime'); }
+          if (el >= arrive) { end(); return false; }
+          return true;
+        });
+        draw();
+      };
+      const draw = () => {
+        cells.forEach((c, j) => { const e = document.getElementById(`wb-c${j}`); if (e) { e.style.background = col(c.t); e.classList.toggle('burnt', c.burnt); e.classList.toggle('pan', j === pan); e.classList.toggle('sizzle', j === pan && c.t > 90 && !c.burnt); } });
+        const p = document.getElementById(`wb-c${pan}`), pn = document.getElementById('wb-pan'), st0 = document.getElementById('wb-stage');
+        if (pn) pn.style.display = pan < 0 ? 'none' : ''; if (p && pn && st0) { const [x, y] = pctOf(p, 'wb-stage'); const b = p.getBoundingClientRect(), a = st0.getBoundingClientRect(); pn.style.left = `${x}%`; pn.style.top = `${(b.top + b.height / 2 - a.top) / a.height * 100}%`; }
+        const good = cells.filter(c => !c.burnt && c.t >= 60 && c.t <= 95).length;
+        mgSet('wb-hud', `<span>🛏️ Just right <b>${good} / ${cells.length}</b></span>${scorch ? `<span>🔥 Scorched <b>${scorch}</b></span>` : ''}`);
+      };
+      const move = j => { if (over) return; pan = +j; mgSnd('tick'); draw(); };
+      const end = () => {
+        if (over) return; over = true; draw();
+        const good = cells.filter(c => !c.burnt && c.t >= 60 && c.t <= 95).length, score = clamp(Math.round((good / cells.length - scorch * .1) * 100)) / 100;
+        mgFinish('warmbed', score, `The queen slips between the sheets: ${good} of ${cells.length} parts of the bed just right${scorch ? `, and ${scorch} scorch mark${scorch > 1 ? 's' : ''} on the royal linen` : ''}.`, () => {
+          const ls = [];
+          if (score >= .85) { fac('crown', 3); ls.push('“As warm as a summer meadow,” the queen murmurs, and falls asleep smiling.'); }
+          if (scorch) ls.push('The laundresses whisper about the brown marks on the queen’s sheets.');
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'start') go(); else if (a === 'c') move(v); };
+      mgIntro(MG_BY.warmbed, 'Mistress of the Chamber', ['The queen will soon retire, and her great bed is cold. <b>Tap a part of the bed</b> to move the warming pan of hot coals there. It warms that spot fast and the spots beside it a little.', 'When she arrives, every part should be <b>just right</b> (gold). The side by the window cools fastest. Leave the pan too long in one place and it <b>scorches</b> the linen.'], '🔥 Fill the warming pan');
+    } });
+
+  /* ---------- 79. The first lady of the bedchamber: the queen's jewels ---------- */
+  const JW_I = [['💍', 'sapphire ring'], ['📿', 'rope of pearls'], ['👑', 'little coronet'], ['💎', 'great diamond'], ['🧿', 'blue amulet'], ['🪮', 'ivory comb'], ['🏵️', 'rose brooch'], ['⚜️', 'lily brooch'], ['🦚', 'peacock fan'], ['🪙', 'gold medal'], ['🌸', 'flower circlet'], ['🔔', 'silver bells'], ['🪞', 'hand mirror'], ['🧤', 'jewelled gloves'], ['🎀', 'silk ribbons'], ['🗝️', 'casket key']];
+  mgAdd({ k: 'jewels', i: '💎', n: 'The queen’s jewels', d: 'The queen calls for her jewels one by one. Remember which casket holds which, and fetch each without fumbling.', seal: 'mg_jewels', who: () => mgIn('wm_firstlady'),
+    play() {
+      const RD = [[12, 3600, 6], [16, 3400, 7], [16, 2600, 8]]; let r = -1, box = [], asks = [], a = 0, found = 0, fumbles = 0, firstTry = true, clean = 0, busy = true, over = false, clock = null;
+      const round = () => {
+        r++; if (r >= RD.length) return end(); const [n, peek, k] = RD[r]; busy = true; a = 0; firstTry = true;
+        box = shuf(JW_I).slice(0, n); asks = shuf(box.map((_, j) => j)).slice(0, k);
+        mgShow(`${mgHead(MG_BY.jewels, `The queen dresses for ${['mass', 'the feast', 'the ambassador'][r]}`, r, RD.length)}<div class="sc g-jw" id="jw-stage"><div class="jw-grid c${n}">${box.map((it, j) => `<button type="button" class="jw-b open" id="jw${j}" data-mg="b" data-v="${j}"><span class="jw-lid"></span><b>${it[0]}</b></button>`).join('')}</div></div><div class="sc-say" id="jw-say"><p>Look well: the caskets are open for a moment only…</p></div>${timeBar('jw-t')}<div class="cu-hud ex-hud" id="jw-hud"></div>`);
+        hud(); if (clock) clock.stop(); clock = mgClock(peek, 'jw-stage', f => setBar('jw-t', f), () => { document.querySelectorAll('#card .jw-b').forEach(b => b.classList.remove('open')); mgSnd('page'); ask(); });
+      };
+      const ask = () => {
+        if (a >= asks.length) { busy = true; mgPop('jw-stage', 'The queen is adorned!', 'gold', 50, 30); mgSnd('chime'); return mgAfter(1300, 'jw-stage', round); }
+        busy = false; firstTry = true; const it = box[asks[a]];
+        mgSet('jw-say', `<p>“Bring me my <b>${it[1]}</b> ${it[0]}.”</p>`);
+        if (clock) clock.stop(); clock = mgClock(7000, 'jw-stage', f => setBar('jw-t', f), () => { fumbles++; mgPop('jw-stage', '“Never mind, I shall wear something else.”', 'bad', 50, 30); mgSnd('bad'); a++; hud(); ask(); });
+      };
+      const open = (j, el) => {
+        if (busy || over || el.classList.contains('got')) return; j = +j;
+        if (j === asks[a]) { busy = true; if (clock) clock.stop(); el.classList.add('open', 'got'); found++; if (firstTry) clean++; mgSnd('tick'); a++; hud(); mgAfter(500, 'jw-stage', ask); }
+        else { fumbles++; firstTry = false; el.classList.add('open', 'no'); mgSnd('bad'); setTimeout(() => el.classList.remove('open', 'no'), 700); hud(); }
+      };
+      const hud = () => mgSet('jw-hud', `<span>💎 Fetched <b>${found}</b></span><span>✨ At first try <b>${clean}</b></span><span>✖ Fumbles <b>${fumbles}</b></span>`);
+      const end = () => {
+        if (over) return; over = true; const tot = RD.reduce((s, x) => s + x[2], 0);
+        const score = clamp(Math.round((clean / tot) * 100)) / 100;
+        mgFinish('jewels', score, `${clean} of ${tot} jewels fetched at the first try${fumbles ? `, with ${fumbles} fumble${fumbles > 1 ? 's' : ''}` : ''}.`, () => {
+          const ls = [];
+          if (score >= .85) { fac('crown', 3); st('wits', 1); ls.push('The queen trusts no one else with the keys to her jewel caskets.'); }
+          return ls;
+        });
+      };
+      mgOn = (x, v, el) => { if (x === 'start') round(); else if (x === 'b') open(v, el); };
+      mgIntro(MG_BY.jewels, 'First Lady of the Bedchamber', ['The queen is dressing, and calls for her jewels one at a time. Before she starts, the caskets are opened for a <b>moment</b>: remember what lies in each.', 'Then tap the casket that holds what she asks for. A wrong casket opens and shuts again, which helps you remember, but the queen notices.'], '💎 Unlock the jewel caskets');
+    } });
+
+  /* ---------- 80. The royal nurse: the lullaby ---------- */
+  const LU_B = [['#e98aa0', 'n0'], ['#e2b23c', 'n1'], ['#7eb0e0', 'n2'], ['#7ac06a', 'n3']];
+  mgAdd({ k: 'lullaby', i: '🍼', n: 'The lullaby', d: 'The royal baby will not settle. Sing the lullaby back, note for note, a little longer each verse, until the little one sleeps.', seal: 'mg_lullaby', who: () => mgIn('wm_royalnurse'),
+    play() {
+      const V = 6, tune = Array.from({ length: 9 }, () => R(0, 3)); let v = -1, len = 0, pos = 0, tries = 0, sung = 0, slips = 0, busy = true, over = false, cry = 60, clock = null;
+      const babe = pick(['prince', 'princess']);
+      const draw = () => { const b = document.getElementById('lu-cry'); if (b) b.style.width = `${cry}%`; const z = document.getElementById('lu-z'); if (z) z.textContent = cry < 25 ? '💤' : cry < 55 ? '😌' : '😭'; };
+      const light = (k, ms) => { const e = document.getElementById(`lu${k}`); if (e) { e.classList.add('on'); setTimeout(() => e.classList.remove('on'), ms); } mgSnd(LU_B[k][1]); };
+      const verse = () => {
+        v++; if (v >= V) return end(); len = 3 + v; pos = 0; tries = 0; play();
+      };
+      const play = () => {
+        busy = true; mgStep(v); mgSet('lu-say', `<p>Verse ${v + 1}: listen…</p>`);
+        const gap = Math.max(380, 620 - v * 40);
+        tune.slice(0, len).forEach((k, q) => mgAfter(500 + q * gap, 'lu-stage', () => light(k, gap * .7)));
+        mgAfter(500 + len * gap + 150, 'lu-stage', () => { busy = false; pos = 0; mgSet('lu-say', `<p>Now you sing it back: <b>${len}</b> notes.</p>`); if (clock) clock.stop(); clock = mgClock(3000 + len * 600, 'lu-stage', f => setBar('lu-t', f), () => { if (!busy) miss('You forgot the tune'); }); });
+      };
+      const tap = k => {
+        if (busy || over) return; k = +k; light(k, 260);
+        if (k === tune[pos]) { pos++; if (pos >= len) { if (clock) clock.stop(); busy = true; sung++; cry = Math.max(0, cry - 14); draw(); mgPop('lu-stage', pick(['Hush now…', 'The cries soften', 'Little eyes grow heavy']), 'gold', 50, 25); hud(); mgAfter(1100, 'lu-stage', verse); } }
+        else miss('Wrong note!');
+      };
+      const miss = why => { if (clock) clock.stop(); busy = true; slips++; cry = Math.min(100, cry + 15); draw(); mgPop('lu-stage', `${why} The ${babe} wails`, 'bad', 50, 25); mgSnd('bad'); hud(); tries++; mgAfter(1200, 'lu-stage', tries >= 2 ? verse : play); };
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.lullaby, 'The royal nursery', 0, V)}<div class="sc g-lu" id="lu-stage"><div class="lu-cradle"><span id="lu-z">😭</span><svg viewBox="0 0 120 50" aria-hidden="true"><path d="M10 10Q60 60 110 10Z" fill="#8a5a2e" stroke="#4a2c18" stroke-width="2"/><path d="M14 12Q60 50 106 12Z" fill="#f4efe2"/><circle cx="60" cy="18" r="8" fill="${pick(FIG_SKIN)}"/><path d="M28 14Q60 34 92 14" fill="#9cc0dc"/></svg></div><div class="lu-cry"><small>Crying</small><b><i id="lu-cry"></i></b></div></div><div class="sc-say" id="lu-say"></div>${timeBar('lu-t')}<div class="lu-bells">${LU_B.map(([c], k) => `<button type="button" class="lu-b" id="lu${k}" data-mg="n" data-v="${k}" style="--c:${c}" aria-label="Note ${k + 1}"><span>🔔</span></button>`).join('')}</div><div class="cu-hud ex-hud" id="lu-hud"></div>`);
+        draw(); hud(); verse();
+      };
+      const hud = () => mgSet('lu-hud', `<span>🎵 Verses sung <b>${sung} / ${V}</b></span><span>✖ Wrong notes <b>${slips}</b></span>`);
+      const end = () => {
+        if (over) return; over = true;
+        const score = clamp(Math.round((sung / V - slips * .04) * 100)) / 100;
+        mgFinish('lullaby', score, sung >= 5 ? `The little ${babe} is fast asleep, one fist curled under a rosy cheek.` : sung >= 3 ? `The ${babe} dozes at last, but wakes at every creak.` : `The ${babe} howls on, and the whole tower hears it.`, () => {
+          const ls = [];
+          if (score >= .85) { fac('crown', 3); st('joy', 3); ls.push(`The queen says the ${babe} sleeps for nobody but you.`); }
+          return ls;
+        });
+      };
+      mgOn = (a, x) => { if (a === 'start') go(); else if (a === 'n') tap(x); };
+      mgIntro(MG_BY.lullaby, 'Royal nurse', [`The royal ${babe} is crying, and only the old lullaby will do. Each verse, the bells ring the tune: <b>listen</b>, then <b>ring it back</b> in the same order.`, 'Each verse is a note longer than the last. A wrong note sets the baby off again, and you must try that verse once more.'], '🍼 Lift the little one');
+    } });
+
+  /* ---------- 81. The lady mistress: the chatelaine's keys ---------- */
+  const CK_D = ['pantry', 'buttery', 'wine cellar', 'linen press', 'spice chest', 'chapel', 'nursery', 'jewel house', 'strongroom', 'still-room', 'wardrobe', 'muniment chest', 'larder', 'tower stair'];
+  mgAdd({ k: 'chatkeys', i: '🗝️', n: 'The chatelaine’s keys', d: 'Forty keys hang at your belt, and the household needs doors opened all day. Find the key whose teeth fit each lock, fast.', seal: 'mg_chatkeys', who: () => mgIn('wm_ladymistress'),
+    play() {
+      const N = 12; let d = -1, want = null, keys = [], right = 0, wrong = 0, quick = 0, clock = null, over = false, busy = false;
+      const bit = (p, x0, y0, u, fill) => p.map((h, q) => `<rect x="${x0 + q * u}" y="${y0}" width="${u}" height="${h * u * .8}" fill="${fill}"/>`).join('');
+      const keySVG = (p, bow) => `<svg viewBox="0 0 90 40" aria-hidden="true">${bow === 0 ? '<circle cx="12" cy="14" r="10" fill="none" stroke="#b8862e" stroke-width="5"/>' : bow === 1 ? '<path d="M12 3L22 14L12 25L2 14Z" fill="none" stroke="#b8862e" stroke-width="5"/>' : '<rect x="3" y="5" width="18" height="18" rx="3" fill="none" stroke="#b8862e" stroke-width="5"/>'}<rect x="21" y="11" width="56" height="6" fill="#b8862e"/>${bit(p, 56, 17, 7, '#b8862e')}</svg>`;
+      const near = (p, k) => { const c = p.slice(), idx = shuf([0, 1, 2]).slice(0, k); idx.forEach(i => { c[i] = ((c[i] - 1 + R(1, 2)) % 3) + 1; }); return c; };
+      const door = () => {
+        d++; if (d >= N) return end(); busy = false;
+        want = [R(1, 3), R(1, 3), R(1, 3)]; const diff = d < 4 ? 2 : 1, ks = [want];
+        while (ks.length < 6) { const c = near(want, P(.5) ? diff : 2); if (!ks.some(x => x.join() === c.join())) ks.push(c); }
+        keys = shuf(ks.map(p => ({ p, bow: R(0, 2) })));
+        const room = pick(CK_D), who = pick(['The cook', 'The butler', 'A maid', 'The chaplain', 'The steward', 'A page', 'The laundress']);
+        mgShow(`${mgHead(MG_BY.chatkeys, `Door ${d + 1} of ${N}`)}<div class="sc g-ck" id="ck-stage"><div class="ck-door"><p>${esc(who)} needs the <b>${esc(room)}</b> opened.</p><div class="ck-lock"><svg viewBox="0 0 60 70" aria-hidden="true"><rect x="2" y="2" width="56" height="66" rx="8" fill="#c9952e" stroke="#7a5a10" stroke-width="3"/><circle cx="30" cy="22" r="8" fill="#1a1208"/>${bit(want, 19.5, 26, 7, '#1a1208')}<rect x="27" y="22" width="6" height="8" fill="#1a1208"/></svg></div></div></div><div class="ck-ring">${keys.map((k, j) => mgBtn('k', j, keySVG(k.p, k.bow), 'ck-k')).join('')}</div>${timeBar('ck-t')}<div class="cu-hud ex-hud" id="ck-hud"></div>`);
+        hud(); if (clock) clock.stop(); clock = mgClock(Math.max(4500, 9000 - d * 350), 'ck-stage', f => setBar('ck-t', f), () => { if (busy) return; busy = true; wrong++; mgPop('ck-stage', `${who} gives up waiting`, 'bad', 50, 30); mgSnd('bad'); hud(); mgAfter(1100, 'ck-stage', door); });
+      };
+      const tryK = (j, el) => {
+        if (busy || over) return; const k = keys[+j];
+        if (k.p.join() === want.join()) { busy = true; const f = clock ? clock.f() : 1; if (clock) clock.stop(); right++; if (f < .45) quick++; el.classList.add('ok'); mgPop('ck-stage', f < .45 ? 'Click! First time' : 'Click!', 'gold', 50, 30); mgSnd('good'); hud(); mgAfter(900, 'ck-stage', door); }
+        else { el.classList.add('no'); el.disabled = true; mgSnd('bad'); if (clock) clock.cut(1500); mgPop('ck-stage', 'It will not turn', 'bad', 50, 30); }
+      };
+      const hud = () => mgSet('ck-hud', `<span>🗝️ Doors opened <b>${right}</b></span><span>⚡ Quick <b>${quick}</b></span><span>✖ Kept waiting <b>${wrong}</b></span>`);
+      const end = () => {
+        if (over) return; over = true;
+        const score = clamp(Math.round((right / N + quick * .02) * 100)) / 100;
+        mgFinish('chatkeys', score, `${right} of ${N} doors opened for the household${quick ? `, ${quick} of them at a glance` : ''}.`, () => {
+          const ls = [];
+          if (score >= .85) { fac('crown', 2); st('wits', 2); ls.push('The household runs so smoothly that the queen never hears of a single locked door.'); }
+          return ls;
+        });
+      };
+      mgOn = (a, v, el) => { if (a === 'start') door(); else if (a === 'k') tryK(v, el); };
+      mgIntro(MG_BY.chatkeys, 'Lady Mistress of the household', ['All day long, someone needs a door unlocked. The <b>keyhole</b> shows the shape of the teeth that will fit.', 'Find the key on your ring whose teeth (the steps on its end) match the keyhole exactly, and tap it. The shape of the handle does not matter. A wrong key wastes time.'], '🗝️ Take up the keys');
+    } });
+
+  /* ---------- 82. The hospital mistress: the ward ---------- */
+  const HW_N = { water: ['💧', 'thirsty'], blanket: ['🧣', 'shivering'], broth: ['🍲', 'hungry'], cloth: ['🧽', 'feverish'], priest: ['✝️', 'asking for the priest'] };
+  mgAdd({ k: 'ward', i: '🏥', n: 'The ward', d: 'Eight beds in the hospital ward, and every patient needs something. Carry the right thing to each bed before they grow worse.', seal: 'mg_ward', who: () => mgIn('wm_hospmistress'),
+    play() {
+      const B = 8, beds = Array.from({ length: B }, (_, j) => ({ j, need: '', look: { skin: pick(FIG_SKIN), hair: pick(FIG_HAIR.slice(0, 7)), f: P(.5) }, col: pick(['#7a8aa0', '#a08a6a', '#8a9a7a', '#9a7a8a']) }));
+      let hand = '', met = 0, missed = 0, wrongs = 0, over = false, t0 = 0, nextAt = 600;
+      const bedSVG = b => `<svg viewBox="0 0 60 44" aria-hidden="true"><rect x="2" y="8" width="56" height="34" rx="4" fill="#6b4226"/><rect x="5" y="10" width="50" height="30" rx="3" fill="#efe6cf"/><ellipse cx="30" cy="16" rx="12" ry="5" fill="#fffaf0" stroke="#c9b48a"/><path d="M27 21h6v3h-6z" fill="${b.look.skin}"/><circle cx="30" cy="16" r="5.4" fill="${b.look.skin}" stroke="rgba(0,0,0,.3)" stroke-width=".5"/><path d="M25.4 14Q30 9 34.6 14" fill="${b.look.hair}"/><circle cx="28" cy="16" r=".7" fill="#1a1208"/><circle cx="32" cy="16" r=".7" fill="#1a1208"/><rect x="7" y="23" width="46" height="16" rx="3" fill="${b.col}"/><path d="M7 26H53" stroke="rgba(255,255,255,.35)"/></svg>`;
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.ward, 'The hospital of Saint John')}<div class="sc g-hw" id="hw-stage"><div class="hw-grid">${beds.map(b => rgCell(`hw${b.j}`, bedSVG(b), 'hw-c')).join('')}</div></div><div class="hw-table">${Object.entries(HW_N).map(([k, [i]]) => mgBtn('s', k, `<span>${i}</span>${{ water: 'Water', blanket: 'Blanket', broth: 'Broth', cloth: 'Cool cloth', priest: 'Priest' }[k]}`, 'hw-s')).join('')}</div><p class="mg-tip sc-tip" id="hw-hand">Pick up something from the table, then tap the bed that needs it.</p>${timeBar('hw-t')}<div class="cu-hud ex-hud" id="hw-hud"></div>`);
+        hud(); t0 = performance.now();
+        document.getElementById('hw-stage').addEventListener('animationend', e => { if (e.animationName !== 'rgRun') return; const el = e.target.closest('.rg'); if (el && el.classList.contains('on')) { const b = beds[+el.id.slice(2)]; rgStop(el); b.need = ''; missed++; el.classList.add('worse'); setTimeout(() => el.classList.remove('worse'), 900); mgPop('hw-stage', 'Left too long: the patient is worse', 'bad', ...pctOf(el, 'hw-stage')); mgSnd('bad'); hud(); } });
+        mgClock(45000, 'hw-stage', f => {
+          setBar('hw-t', f); const el = performance.now() - t0;
+          if (el >= nextAt) { nextAt = el + Math.max(900, 2300 - f * 1300); const free = beds.filter(b => !b.need); if (free.length) { const b = pick(free), k = P(.08) ? 'priest' : pick(['water', 'blanket', 'broth', 'cloth', 'water']); b.need = k; const c = document.getElementById(`hw${b.j}`); if (c) rgStart(c, Math.round(Math.max(4200, 7500 - f * 2800)), 'hw-on', `<span class="hw-need">${HW_N[k][0]}</span>`); } }
+        }, end);
+      };
+      const take = k => { if (over) return; hand = k; document.querySelectorAll('#card .hw-s').forEach(b => b.classList.toggle('on', b.dataset.v === k)); mgSet('hw-hand', `In your hands: <b>${HW_N[k][0]} ${({ water: 'a cup of water', blanket: 'a warm blanket', broth: 'a bowl of broth', cloth: 'a cool cloth', priest: 'word for the priest' })[k]}</b>. Now tap the bed.`); mgSnd('tick'); };
+      const serve = id => {
+        const el = document.getElementById(id); if (!el || over) return; const b = beds[+id.slice(2)];
+        if (!b.need) return; if (!hand) { mgPop('hw-stage', 'Take something from the table first', 'up', ...pctOf(el, 'hw-stage')); return; }
+        if (hand === b.need) { met++; rgStop(el); b.need = ''; el.classList.add('eased'); setTimeout(() => el.classList.remove('eased'), 700); mgPop('hw-stage', pick(['Bless you, mistress', 'Much better', 'Thank you…']), 'gold', ...pctOf(el, 'hw-stage')); mgSnd('good'); }
+        else { wrongs++; mgPop('hw-stage', `Not that: this one is ${HW_N[b.need][1]}`, 'bad', ...pctOf(el, 'hw-stage')); mgSnd('bad'); }
+        hud();
+      };
+      const hud = () => mgSet('hw-hud', `<span>🤲 Needs met <b>${met}</b></span><span>✖ Left too long <b>${missed}</b></span>`);
+      const end = () => {
+        if (over) return; over = true; document.querySelectorAll('#hw-stage .rg').forEach(rgStop);
+        const score = clamp(Math.round((met / Math.max(1, met + missed) - wrongs * .02) * 100)) / 100;
+        mgFinish('ward', score, `${met} needs met in the ward${missed ? `, ${missed} left too long` : ''}.`, () => {
+          const ls = [];
+          if (score >= .85) { st('piety', 3); fac('church', 3); fac('commons', 2); ls.push('The poor say that in your hospital, nobody waits for a cup of water.'); }
+          return ls;
+        });
+      };
+      mgOn = (a, v) => { if (a === 'start') go(); else if (a === 's') take(v); else if (a === 'cell') serve(v); };
+      mgIntro(MG_BY.ward, 'Mistress of the hospital', ['Eight beds, and the sick need many things: <b>water</b> 💧 for the thirsty, a <b>blanket</b> 🧣 for the shivering, <b>broth</b> 🍲 for the hungry, a <b>cool cloth</b> 🧽 for fever, and sometimes the <b>priest</b> ✝️.', 'Pick up the right thing from the table, then tap the bed whose sign shows that need, before its ring runs out. You can carry the same thing to several beds.'], '🏥 Walk the ward');
+    } });
+
+  /* ---------- 83. The royal midwife: the royal birth ---------- */
+  mgAdd({ k: 'birth', i: '👶', n: 'The royal birth', d: 'The queen’s time has come. Steady her through every pain, breathing with her as each one rises, until the bells can ring for a royal baby.', seal: 'mg_birth', who: () => mgIn('wm_royalmidwife'),
+    play() {
+      const N = 14; let waves = [], sent = 0, good = 0, perfect = 0, missed = 0, fuss = 0, over = false, t0 = 0, nextAt = 1400, calm = 70;
+      const LINE = 28;
+      const go = () => {
+        mgShow(`${mgHead(MG_BY.birth, 'The queen’s lying-in chamber')}<div class="sc g-bi" id="bi-stage"><div class="bi-room"><svg viewBox="0 0 200 90" class="bi-bed" aria-hidden="true"><rect x="10" y="30" width="180" height="56" rx="6" fill="#6b2a2e"/><rect x="16" y="34" width="168" height="48" rx="5" fill="#efe6cf"/><ellipse cx="42" cy="56" rx="22" ry="14" fill="#fffaf0" stroke="#c9b48a"/><path d="M50 53H61V59H50Z" fill="#f0c8a0"/><path d="M40 47Q30 48 30 56Q30 64 40 65Q36 56 40 47Z" fill="#5a3a22"/><path d="M28 49L32 51L29 54L32 56L29 58L32 61L28 63" fill="none" stroke="#e2b23c" stroke-width="2.2" stroke-linejoin="round"/><circle cx="45" cy="56" r="8.6" fill="#f0c8a0" stroke="rgba(0,0,0,.3)" stroke-width=".6"/><path d="M38 49Q34 56 38 63" fill="none" stroke="#5a3a22" stroke-width="3"/><circle cx="46" cy="53" r=".95" fill="#1a1208"/><circle cx="46" cy="59" r=".95" fill="#1a1208"/><path d="M44 52.4L44.6 54M44 58L44.6 59.6" stroke="#5a3a22" stroke-width=".5"/><path d="M50.4 54.4Q51.6 56 50.4 57.6" fill="none" stroke="#9a4a3a" stroke-width=".9"/><circle cx="48.4" cy="53" r="1.2" fill="#e8a0a0" opacity=".5"/><circle cx="48.4" cy="59" r="1.2" fill="#e8a0a0" opacity=".5"/><rect x="58" y="56" width="124" height="24" rx="4" fill="#9b1f12"/></svg><span class="bi-breath" id="bi-breath"></span></div><svg class="bi-wave" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path id="bi-path" d="" fill="rgba(155,31,18,.18)" stroke="#9b1f12" stroke-width="1.2" vector-effect="non-scaling-stroke"/><path d="M${LINE} 0V40" stroke="#1a1208" stroke-width="1.5" stroke-dasharray="2 2" vector-effect="non-scaling-stroke"/></svg></div><div class="bi-calm"><span>The queen’s calm</span><b><i id="bi-calm"></i></b></div>${mgBtn('br', '', '🌬️ Breathe with her!', 'go bi-go')}<div class="cu-hud ex-hud" id="bi-hud"></div><p class="mg-tip sc-tip">Tap as each peak crosses the dotted line.</p>`);
+        hud(); t0 = performance.now();
+        mgLoop('bi-stage', (now, dt) => {
+          if (over) return false; const el = now - t0;
+          if (sent < N && el >= nextAt) { sent++; nextAt = el + Math.max(1300, 3200 - sent * 140) + R(-250, 250); waves.push({ x: 108, w: R(8, 12), h: Math.min(36, 18 + sent * 1.3), done: false }); }
+          const sp = (17 + sent * .7) * dt / 1000;
+          for (const w of waves) { w.x -= sp; if (!w.done && w.x < LINE - 6) { w.done = true; missed++; calm = Math.max(0, calm - 12); mgPop('bi-stage', 'The pain takes her by surprise', 'bad', 30, 20); mgSnd('bad'); hud(); } }
+          waves = waves.filter(w => w.x > -20);
+          let d = 'M0 40'; for (let x = 0; x <= 100; x += 2) { let y = 40; for (const w of waves) { const t = (x - w.x) / w.w; if (Math.abs(t) < 1) y = Math.min(y, 40 - w.h * (Math.cos(t * Math.PI) + 1) / 2); } d += `L${x} ${y.toFixed(1)}`; } d += 'L100 40Z';
+          const p = document.getElementById('bi-path'); if (p) p.setAttribute('d', d);
+          const c = document.getElementById('bi-calm'); if (c) { c.style.width = `${calm}%`; c.classList.toggle('low', calm < 30); }
+          if (sent >= N && !waves.some(w => !w.done)) { end(); return false; }
+          return true;
+        });
+      };
+      const breathe = () => {
+        if (over) return; const b = document.getElementById('bi-breath'); if (b) { b.classList.remove('go'); void b.offsetWidth; b.classList.add('go'); }
+        const w = waves.filter(x => !x.done).sort((a, c) => Math.abs(a.x - LINE) - Math.abs(c.x - LINE))[0];
+        if (!w || Math.abs(w.x - LINE) > 6) { fuss++; calm = Math.max(0, calm - 3); mgPop('bi-stage', 'Not yet…', 'up', 30, 20); return; }
+        w.done = true; const d = Math.abs(w.x - LINE);
+        if (d < 1.8) { good++; perfect++; calm = Math.min(100, calm + 8); mgPop('bi-stage', 'Perfect: she breathes through it', 'gold', 30, 20); mgSnd('chime'); }
+        else { good++; calm = Math.min(100, calm + 4); mgPop('bi-stage', 'Steady, steady', 'up', 30, 20); mgSnd('tick'); }
+        hud();
+      };
+      const hud = () => mgSet('bi-hud', `<span>🌬️ Breathed through <b>${good}</b> / ${N}</span><span>⭐ Perfect <b>${perfect}</b></span>`);
+      const end = () => {
+        if (over) return; over = true; const baby = pick(['prince', 'princess']);
+        const score = clamp(Math.round(((good + perfect * .3) / N - fuss * .02) * 100)) / 100;
+        mgSnd('wedding');
+        mgFinish('birth', score, `A cry at last: a healthy royal ${baby}! ${score >= .7 ? 'The queen, pale but smiling, takes your hand and thanks you.' : 'It was a long and hard night, but mother and child are safe.'} The bells ring across the city.`, (grade, mult, pay) => {
+          const ls = [];
+          if (score >= .85) { coin(Math.round(pay * .5 * mult)); fac('crown', 5); st('renown', 3); ls.push(`The king sends you a purse of gold and a length of scarlet cloth.`); }
+          return ls;
+        });
+      };
+      mgOn = a => { if (a === 'start') go(); else if (a === 'br') breathe(); };
+      mgIntro(MG_BY.birth, 'Royal midwife', ['The queen’s time has come, and the whole kingdom waits outside the door. You are at her side.', 'Each pain rises like a wave on the line below. <b>Tap “Breathe with her”</b> just as each peak crosses the dotted line, to steady her through it. Tapping between pains only frets her. The pains come closer together towards the end.'], '👶 Roll up your sleeves');
+    } });
+  FEATS.push(
+    { k: 'mg_tally', i: '🌾', n: 'Not a Sheaf Missing', d: 'Become Legendary at the reeve’s tally.' },
+    { k: 'mg_larder', i: '🐀', n: 'Bane of Rats', d: 'Become Legendary at guarding the larder.' },
+    { k: 'mg_dress', i: '👘', n: 'Glass of Fashion', d: 'Become Legendary at dressing the king.' },
+    { k: 'mg_audience', i: '🚪', n: 'Keeper of the Door', d: 'Become Legendary at the audience.' },
+    { k: 'mg_hightable', i: '🍽️', n: 'Every Lord in His Place', d: 'Become Legendary at the high table.' },
+    { k: 'mg_colt', i: '🐎', n: 'Horse Whisperer', d: 'Become Legendary at breaking the colt.' },
+    { k: 'mg_latin', i: '📖', n: 'Magister', d: 'Become Legendary at the Latin lesson.' },
+    { k: 'mg_rhyme', i: '🪶', n: 'Silver Tongue', d: 'Become Legendary at rhyme time.' },
+    { k: 'mg_qtrain', i: '👗', n: 'Grace Itself', d: 'Become Legendary at carrying the queen’s train.' },
+    { k: 'mg_warmbed', i: '🛏️', n: 'Just Right', d: 'Become Legendary at warming the royal bed.' },
+    { k: 'mg_jewels', i: '💎', n: 'Keeper of the Caskets', d: 'Become Legendary at the queen’s jewels.' },
+    { k: 'mg_lullaby', i: '🍼', n: 'Sweet Dreams', d: 'Become Legendary at the lullaby.' },
+    { k: 'mg_chatkeys', i: '🗝️', n: 'Mistress of Keys', d: 'Become Legendary at the chatelaine’s keys.' },
+    { k: 'mg_ward', i: '🏥', n: 'Angel of the Ward', d: 'Become Legendary in the hospital ward.' },
+    { k: 'mg_birth', i: '👶', n: 'Safe Delivery', d: 'Become Legendary at the royal birth.' },
   );
 
   /* ---------- v1.22 the portrait gallery: a crown or a great house chooses a match ---------- */

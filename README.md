@@ -379,6 +379,28 @@ fills in anything a newer version expects, and drops a job whose career no longe
   looks so it is the same as a child and as your heir), fades smoothly to grey over about
   twenty years, then to white, and never goes back.
 
+## Batch 5: the great household and healing (v1.28)
+
+With this batch every elite post has a game of its own: 82 in all.
+
+| Game | Post | How it plays |
+| --- | --- | --- |
+| The reeve's tally | Steward | Count the sheaves on each cart as it passes; call out the reeve when he claims fewer |
+| Rats in the larder | Castellan | Tap rats before they reach the stores; each whole store is ten more days of siege |
+| Dress the king | Keeper of the Wardrobe | Shirt, gown, mantle, jewel, hat: the right things for the occasion, in order |
+| The audience | Lord Chamberlain | When the king's door opens, show in whoever ranks highest; no bishops after the quarrel |
+| The high table | Seneschal | Seat each arriving guest by rank among tonight's company, seat 1 nearest the king |
+| Break the colt | Master of the Horse | Ears back: sit deep. Head up: lean forward. A snort: do nothing |
+| The Latin lesson | Royal tutor | Match Latin words to their meanings; a wrong guess earns a hint ("aqua": think of aquarium) |
+| Rhyme time | Court poet | Finish each couplet with the word that rhymes and makes sense |
+| The queen's train | Maid of honour | Lift the train over things on the floor; draw it in from flames |
+| Warm the royal bed | Mistress of the Chamber | Move the warming pan so the whole bed is just right when the queen comes, without scorching it |
+| The queen's jewels | First Lady of the Bedchamber | Remember which casket holds what, then fetch each jewel she asks for |
+| The lullaby | Royal nurse | Ring the bells back in the order you heard them, a note longer each verse |
+| The chatelaine's keys | Lady Mistress | Pick the key whose teeth match the keyhole |
+| The ward | Mistress of the hospital | Carry water, blankets, broth, a cool cloth or the priest to each bed in time |
+| The royal birth | Royal midwife | Breathe with the queen as each wave peaks; nothing graphic |
+
 ## Batch 4: trade, sea and money (v1.27)
 
 | Game | Post | How it plays |
