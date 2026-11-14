@@ -2151,7 +2151,7 @@ button.in-t{cursor:pointer}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.29.1';
+const APP_VERSION = '1.29.2';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -22385,8 +22385,30 @@ PETITIONS.push(
         s += el(bL[1][0] + .3 * k * d, y - .3 * k, .78 * k, .38 * k, 'black', 'stroke-width=".35"') + el(fL[1][0] + .38 * k * d, y - .3 * k, .82 * k, .4 * k, 'black', 'stroke-width=".35"');
       } else s += el(x + 1.2 * k * d, y - .2 * k, .8 * k, .36 * k, 'black', 'stroke-width=".35"') + el(x + .2 * k * d, y - .15 * k, .7 * k, .32 * k, 'black', 'stroke-width=".35"');
     }
-    // the back arm, in shadow
-    s += limb([bSh, bEl, bHa], sleeve, W2) + ln(P([bSh, bEl, bHa]), 'black', W2, 'opacity=".18"') + hand(bHa, .4);
+    // the arm on the side the figure faces, with the tool it holds
+    const frontArm = shade => {
+      let t = '';
+    if (tool === 'spear' || tool === 'staff') {
+      const sx = fHa[0];
+      t += ln(`M${n1(sx)} ${n1(y + .3)}V${n1(top - (tool === 'spear' ? 3.4 : 1) * k)}`, 'wood2', .5 * k);
+      if (tool === 'spear') t += pa(`M${n1(sx)} ${n1(top - 5.4 * k)}l${n1(.65 * k)} ${n1(2.2 * k)}h${n1(-1.3 * k)}Z`, 'iron2', 'stroke-width=".35"') + ln(`M${n1(sx - .7 * k)} ${n1(top - 3.2 * k)}h${n1(1.4 * k)}`, 'iron', .3 * k);
+      else if (o.crook) t += ln(`M${n1(sx)} ${n1(top - 1 * k)}q0 ${n1(-1.6 * k)} ${n1(1 * k * d)} ${n1(-1.6 * k)}q${n1(1 * k * d)} 0 ${n1(.9 * k * d)} ${n1(1 * k)}`, 'wood2', .5 * k);
+    } else if (tool === 'hoe' || tool === 'rake') {
+      t += ln(`M${n1(fHa[0] - .6 * k * d)} ${n1(fHa[1] - 1.2 * k)}L${n1(x + 5.2 * k * d)} ${n1(y - .2)}`, 'wood2', .45 * k) + (tool === 'hoe' ? pa(`M${n1(x + 5.2 * k * d)} ${n1(y - .2)}l${n1(1.3 * k * d)} ${n1(-.3 * k)}l${n1(-.2 * k * d)} ${n1(.8 * k)}Z`, 'iron2', 'stroke-width=".3"') : ln(`M${n1(x + 4.4 * k * d)} ${n1(y)}h${n1(1.8 * k * d)}M${n1(x + 4.6 * k * d)} ${n1(y)}v.8M${n1(x + 5.2 * k * d)} ${n1(y)}v.8M${n1(x + 5.8 * k * d)} ${n1(y)}v.8`, 'wood2', .3 * k));
+    } else if (tool === 'bow') t += ln(`M${n1(fHa[0])} ${n1(top + .4 * k)}q${n1(1.8 * k * d)} ${n1(5 * k)} 0 ${n1(10 * k)}`, 'wood2', .45 * k) + ln(`M${n1(fHa[0])} ${n1(top + .4 * k)}v${n1(10 * k)}`, 'ol', .2);
+    const armPts = [fSh, fEl, fHa];
+    t += limb(armPts, sleeve, W2) + ln(`M${n1(fEl[0])} ${n1(fEl[1])}L${n1(fHa[0])} ${n1(fHa[1])}`, 'black', W2 * .5, 'opacity=".1"');
+    if (pose === 'down' || pose === 'sack') t += el(fHa[0], fHa[1] - .3 * k, .55 * k, .35 * k, sleeve, 'stroke-width=".3"');
+    t += hand(fHa);
+    if (tool === 'book') t += pa(`M${n1(fHa[0] - .2 * k * d)} ${n1(fHa[1] - 1.2 * k)}h${n1(1.7 * k * d)}v${n1(1.3 * k)}h${n1(-1.7 * k * d)}Z`, 'red2', 'stroke-width=".3"') + ln(`M${n1(fHa[0] - .05 * k * d)} ${n1(fHa[1] - 1.05 * k)}h${n1(1.4 * k * d)}`, 'white', .2 * k);
+      if (shade) t += ln(P(armPts), 'black', W2, 'opacity=".18"');
+      return t;
+    };
+    // turned three-quarters, the arm on the side a figure faces is the far one: it goes behind the body, in shadow, with its tool;
+    // the other arm is the near one, drawn over the body (a sack carrier keeps his sack arm behind)
+    const sackPose = pose === 'sack';
+    if (sackPose) s += limb([bSh, bEl, bHa], sleeve, W2) + ln(P([bSh, bEl, bHa]), 'black', W2, 'opacity=".18"') + hand(bHa, .4);
+    else s += frontArm(true);
     // the body: shoulders, waist, and the fall of the tunic or the gown
     const sw = gown ? 1.38 : 1.52, ww = gown ? 1.18 : 1.38, hw = gown ? 3 : 2.3;
     const body = `M${n1(x - sw * k)} ${n1(top + 3.55 * k)}Q${n1(x)} ${n1(top + 3.0 * k)} ${n1(x + sw * k)} ${n1(top + 3.55 * k)}Q${n1(x + (sw + .1) * k)} ${n1(top + 4.8 * k)} ${n1(x + ww * k)} ${n1(top + 6.1 * k)}Q${n1(x + (ww + (gown ? .5 : .3)) * k)} ${n1(top + 7.4 * k)} ${n1(x + hw * k)} ${n1(hemY)}Q${n1(x)} ${n1(hemY + .55 * k)} ${n1(x - hw * k)} ${n1(hemY)}Q${n1(x - (ww + (gown ? .5 : .3)) * k)} ${n1(top + 7.4 * k)} ${n1(x - ww * k)} ${n1(top + 6.1 * k)}Q${n1(x - (sw + .1) * k)} ${n1(top + 4.8 * k)} ${n1(x - sw * k)} ${n1(top + 3.55 * k)}Z`;
@@ -22453,20 +22475,8 @@ PETITIONS.push(
     else if (hat === 'helm') s += pa(`M${n1(hx - 1.12 * hr)} ${n1(hy - .1 * hr)}Q${n1(hx - 1.05 * hr)} ${n1(hy - 1.55 * hr)} ${n1(hx)} ${n1(hy - 1.6 * hr)}Q${n1(hx + 1.05 * hr)} ${n1(hy - 1.55 * hr)} ${n1(hx + 1.12 * hr)} ${n1(hy - .1 * hr)}Z`, 'iron2', 'stroke-width=".45"') + el(hx, hy - .12 * hr, 1.35 * hr, .26 * hr, 'iron2', 'stroke-width=".4"') + pn(`M${n1(hx - .5 * hr)} ${n1(hy - 1.3 * hr)}Q${n1(hx - .2 * hr)} ${n1(hy - 1.55 * hr)} ${n1(hx + .3 * hr)} ${n1(hy - 1.45 * hr)}`, 'white', 'opacity=".35"') + ln(`M${n1(hx + .35 * hr * d)} ${n1(hy - .15 * hr)}V${n1(hy + .55 * hr)}`, 'iron2', .22 * hr);
     else if (hat === 'crown') s += pa(`M${n1(hx - .95 * hr)} ${n1(hy - .55 * hr)}L${n1(hx - 1.02 * hr)} ${n1(hy - 1.55 * hr)}L${n1(hx - .5 * hr)} ${n1(hy - 1.05 * hr)}L${n1(hx)} ${n1(hy - 1.75 * hr)}L${n1(hx + .5 * hr)} ${n1(hy - 1.05 * hr)}L${n1(hx + 1.02 * hr)} ${n1(hy - 1.55 * hr)}L${n1(hx + .95 * hr)} ${n1(hy - .55 * hr)}Z`, 'gold', 'stroke-width=".4"') + ci(hx, hy - .8 * hr, .14 * hr, 'red', NS) + ci(hx - .55 * hr, hy - .75 * hr, .11 * hr, 'blue', NS) + ci(hx + .55 * hr, hy - .75 * hr, .11 * hr, 'green', NS) + ln(`M${n1(hx - .95 * hr)} ${n1(hy - .62 * hr)}H${n1(hx + .95 * hr)}`, 'gold2', .14 * hr);
     else if (hat === 'mitre') s += pa(`M${n1(hx - .95 * hr)} ${n1(hy - .45 * hr)}L${n1(hx - .8 * hr)} ${n1(hy - 1.8 * hr)}L${n1(hx)} ${n1(hy - 2.55 * hr)}L${n1(hx + .8 * hr)} ${n1(hy - 1.8 * hr)}L${n1(hx + .95 * hr)} ${n1(hy - .45 * hr)}Z`, o.hc || 'white', 'stroke-width=".4"') + ln(`M${n1(hx)} ${n1(hy - 2.4 * hr)}V${n1(hy - .5 * hr)}M${n1(hx - .88 * hr)} ${n1(hy - 1.05 * hr)}H${n1(hx + .88 * hr)}`, 'gold', .14 * hr);
-    // the tool, then the arm that holds it, then whatever is in the hand
-    if (tool === 'spear' || tool === 'staff') {
-      const sx = fHa[0];
-      s += ln(`M${n1(sx)} ${n1(y + .3)}V${n1(top - (tool === 'spear' ? 3.4 : 1) * k)}`, 'wood2', .5 * k);
-      if (tool === 'spear') s += pa(`M${n1(sx)} ${n1(top - 5.4 * k)}l${n1(.65 * k)} ${n1(2.2 * k)}h${n1(-1.3 * k)}Z`, 'iron2', 'stroke-width=".35"') + ln(`M${n1(sx - .7 * k)} ${n1(top - 3.2 * k)}h${n1(1.4 * k)}`, 'iron', .3 * k);
-      else if (o.crook) s += ln(`M${n1(sx)} ${n1(top - 1 * k)}q0 ${n1(-1.6 * k)} ${n1(1 * k * d)} ${n1(-1.6 * k)}q${n1(1 * k * d)} 0 ${n1(.9 * k * d)} ${n1(1 * k)}`, 'wood2', .5 * k);
-    } else if (tool === 'hoe' || tool === 'rake') {
-      s += ln(`M${n1(fHa[0] - .6 * k * d)} ${n1(fHa[1] - 1.2 * k)}L${n1(x + 5.2 * k * d)} ${n1(y - .2)}`, 'wood2', .45 * k) + (tool === 'hoe' ? pa(`M${n1(x + 5.2 * k * d)} ${n1(y - .2)}l${n1(1.3 * k * d)} ${n1(-.3 * k)}l${n1(-.2 * k * d)} ${n1(.8 * k)}Z`, 'iron2', 'stroke-width=".3"') : ln(`M${n1(x + 4.4 * k * d)} ${n1(y)}h${n1(1.8 * k * d)}M${n1(x + 4.6 * k * d)} ${n1(y)}v.8M${n1(x + 5.2 * k * d)} ${n1(y)}v.8M${n1(x + 5.8 * k * d)} ${n1(y)}v.8`, 'wood2', .3 * k));
-    } else if (tool === 'bow') s += ln(`M${n1(fHa[0])} ${n1(top + .4 * k)}q${n1(1.8 * k * d)} ${n1(5 * k)} 0 ${n1(10 * k)}`, 'wood2', .45 * k) + ln(`M${n1(fHa[0])} ${n1(top + .4 * k)}v${n1(10 * k)}`, 'ol', .2);
-    const armPts = [fSh, fEl, fHa];
-    s += limb(armPts, sleeve, W2) + ln(`M${n1(fEl[0])} ${n1(fEl[1])}L${n1(fHa[0])} ${n1(fHa[1])}`, 'black', W2 * .5, 'opacity=".1"');
-    if (pose === 'down' || pose === 'sack') s += el(fHa[0], fHa[1] - .3 * k, .55 * k, .35 * k, sleeve, 'stroke-width=".3"');
-    s += hand(fHa);
-    if (tool === 'book') s += pa(`M${n1(fHa[0] - .2 * k * d)} ${n1(fHa[1] - 1.2 * k)}h${n1(1.7 * k * d)}v${n1(1.3 * k)}h${n1(-1.7 * k * d)}Z`, 'red2', 'stroke-width=".3"') + ln(`M${n1(fHa[0] - .05 * k * d)} ${n1(fHa[1] - 1.05 * k)}h${n1(1.4 * k * d)}`, 'white', .2 * k);
+    if (sackPose) s += frontArm(false);
+    else { s += limb([bSh, bEl, bHa], sleeve, W2); if (pose === 'down') s += el(bHa[0], bHa[1] - .3 * k, .55 * k, .35 * k, sleeve, 'stroke-width=".3"'); s += hand(bHa); }
     if (o.hold) s += o.hold(fHa[0], fHa[1], k, d);
     return s;
   }
@@ -22514,7 +22524,7 @@ PETITIONS.push(
     else if (tool === 'bow') s += ln(`M${n1(x + 2 * k * dir)} ${n1(top + .8 * k)}q${n1(2.2 * k * dir)} ${n1(4.6 * k)} 0 ${n1(9 * k)}`, 'wood2', .55) + ln(`M${n1(x + 2 * k * dir)} ${n1(top + .8 * k)}v${n1(9 * k)}`, 'ol', .2);
     else if (tool === 'book') s += pa(wr(X, x + .8 * k * dir - (dir < 0 ? 1.8 * k : 0), top + 4.8 * k, 1.8 * k, 1.4 * k, .05), 'red2', 'stroke-width=".25"');
     else if (tool === 'axe') s += '';
-    else s += ln(`M${n1(sh[0])} ${n1(sh[1])}l${n1(.5 * k * dir)} ${n1(2.8 * k)}`, o.c || c, .85 * k);
+    else s += ln(`M${n1(x - 1.2 * k * dir)} ${n1(sh[1])}l${n1(-.5 * k * dir)} ${n1(2.8 * k)}`, o.c || c, .85 * k);
     // an apron over the front, and whatever is in the hand
     if (o.apron) s += pa(`M${n1(x - 1.1 * k)} ${n1(top + 4.6 * k)}H${n1(x + 1.1 * k)}L${n1(x + 1.7 * k)} ${n1(gown ? y - 1.2 * k : hem + .3 * k)}H${n1(x - 1.7 * k)}Z`, o.apron, 'stroke-width=".3"');
     if (o.hold) s += o.hold(sh[0] + .5 * k * dir, sh[1] + 2.8 * k, k, dir);
@@ -23608,15 +23618,18 @@ PETITIONS.push(
   function sitter(X, x, seatY, floorY, o) {
     const h = o.h || 30, k = h / 11, c = o.c || 'red';
     if (o.front && o.gown === false) {
-      // a king on his throne: a royal mantle over the shoulders, a tunic to the knee with a gold hem, hose and shoes
-      const knee = seatY + (floorY - seatY) * .45, top = seatY + 1.2 * k - h * .78, sh = top + h * .78 * .3;
-      let m = pa(`M${n1(x - 2.2 * k)} ${n1(sh)}Q${n1(x - 3.6 * k)} ${n1(seatY)} ${n1(x - 3.3 * k)} ${n1(knee + .6 * k)}L${n1(x - 2.1 * k)} ${n1(knee + .4 * k)}Q${n1(x - 2.3 * k)} ${n1(seatY - .4 * k)} ${n1(x - 1.2 * k)} ${n1(sh + .2 * k)}ZM${n1(x + 2.2 * k)} ${n1(sh)}Q${n1(x + 3.6 * k)} ${n1(seatY)} ${n1(x + 3.3 * k)} ${n1(knee + .6 * k)}L${n1(x + 2.1 * k)} ${n1(knee + .4 * k)}Q${n1(x + 2.3 * k)} ${n1(seatY - .4 * k)} ${n1(x + 1.2 * k)} ${n1(sh + .2 * k)}Z`, o.mantle || 'purple', 'stroke-width=".45"');
-      m += ln(`M${n1(x - 3.3 * k)} ${n1(knee + .6 * k)}L${n1(x - 2.1 * k)} ${n1(knee + .4 * k)}M${n1(x + 3.3 * k)} ${n1(knee + .6 * k)}L${n1(x + 2.1 * k)} ${n1(knee + .4 * k)}`, 'white', .55 * k);
+      // a king on his throne: a royal mantle hanging from the shoulders behind him, a tunic to the knee with a gold hem, hose and shoes
+      const knee = seatY + (floorY - seatY) * .45, k2 = .78 * k, top = seatY + 1.2 * k - h * .78, sh = top + 3.55 * k2, hem = knee + .7 * k;
+      let m = pa(`M${n1(x - 1.3 * k)} ${n1(sh)}Q${n1(x - 3.9 * k)} ${n1(sh + 2 * k)} ${n1(x - 3.6 * k)} ${n1(hem)}H${n1(x + 3.6 * k)}Q${n1(x + 3.9 * k)} ${n1(sh + 2 * k)} ${n1(x + 1.3 * k)} ${n1(sh)}Z`, o.mantle || 'purple', 'stroke-width=".45"');
+      m += ln(`M${n1(x - 3.3 * k)} ${n1(sh + 2.4 * k)}Q${n1(x - 3.5 * k)} ${n1(knee)} ${n1(x - 3.2 * k)} ${n1(hem - .3 * k)}M${n1(x + 3.3 * k)} ${n1(sh + 2.4 * k)}Q${n1(x + 3.5 * k)} ${n1(knee)} ${n1(x + 3.2 * k)} ${n1(hem - .3 * k)}`, 'black', .25 * k, 'opacity=".2"');
+      m += ln(`M${n1(x - 3.6 * k)} ${n1(hem - .25 * k)}H${n1(x + 3.6 * k)}`, 'white', .55 * k) + [-3, -2, -1, 1, 2, 3].map(i => ci(x + i * 1.05 * k, hem - .25 * k, .12 * k, 'black', 'stroke="none"')).join('');
       m += ln(`M${n1(x - .85 * k)} ${n1(knee)}L${n1(x - 1 * k)} ${n1(floorY - .6)}M${n1(x + .85 * k)} ${n1(knee)}L${n1(x + 1 * k)} ${n1(floorY - .6)}`, 'black', 1.05 * k);
       m += el(x - 1.1 * k, floorY - .35, .85 * k, .38 * k, 'wood2', 'stroke-width=".3"') + el(x + 1.1 * k, floorY - .35, .85 * k, .38 * k, 'wood2', 'stroke-width=".3"');
       m += pa(`M${n1(x - 1.9 * k)} ${n1(seatY - .8 * k)}Q${n1(x)} ${n1(seatY - 1.3 * k)} ${n1(x + 1.9 * k)} ${n1(seatY - .8 * k)}L${n1(x + 2.3 * k)} ${n1(knee)}Q${n1(x)} ${n1(knee + .45 * k)} ${n1(x - 2.3 * k)} ${n1(knee)}Z`, c, 'stroke-width=".45"');
       m += ln(`M${n1(x - 2.3 * k)} ${n1(knee - .15 * k)}Q${n1(x)} ${n1(knee + .3 * k)} ${n1(x + 2.3 * k)} ${n1(knee - .15 * k)}`, 'gold', .4 * k);
-      return m + man(X, x, seatY + 1.2 * k, Object.assign({}, o, { h: h * .78, gown: true, seated: true }));
+      // the ermine collar sits over the shoulders, on top of everything
+      const collar = pa(`M${n1(x - 1.45 * k)} ${n1(sh - .1 * k)}Q${n1(x)} ${n1(sh - .9 * k)} ${n1(x + 1.45 * k)} ${n1(sh - .1 * k)}Q${n1(x + 1.2 * k)} ${n1(sh + .75 * k)} ${n1(x)} ${n1(sh + .95 * k)}Q${n1(x - 1.2 * k)} ${n1(sh + .75 * k)} ${n1(x - 1.45 * k)} ${n1(sh - .1 * k)}Z`, 'white', 'stroke-width=".35"') + [-.8, 0, .8].map(i => ci(x + i * k, sh + .35 * k, .12 * k, 'black', 'stroke="none"')).join('');
+      return m + man(X, x, seatY + 1.2 * k, Object.assign({}, o, { h: h * .78, gown: true, seated: true })) + collar;
     }
     if (o.front) return pa(`M${n1(x - 1.9 * k)} ${n1(seatY - .8 * k)}Q${n1(x)} ${n1(seatY - 1.3 * k)} ${n1(x + 1.9 * k)} ${n1(seatY - .8 * k)}L${n1(x + 2.7 * k)} ${n1(floorY - .5)}Q${n1(x)} ${n1(floorY + .3 * k)} ${n1(x - 2.7 * k)} ${n1(floorY - .5)}Z`, c, 'stroke-width=".45"') + ln(`M${n1(x - .9 * k)} ${n1(seatY)}q-.2 ${n1((floorY - seatY) * .5)} ${n1(-.5 * k)} ${n1(floorY - seatY - 1)}M${n1(x + .9 * k)} ${n1(seatY)}q.2 ${n1((floorY - seatY) * .5)} ${n1(.5 * k)} ${n1(floorY - seatY - 1)}`, 'ol', .3, 'opacity=".35"') + el(x - .9 * k, floorY - .3, .8 * k, .35 * k, 'black', 'stroke-width=".3"') + el(x + .9 * k, floorY - .3, .8 * k, .35 * k, 'black', 'stroke-width=".3"') + man(X, x, seatY + 1.2 * k, Object.assign({}, o, { h: h * .78, gown: true, seated: true }));
     const d = o.dir || 1, kx = x + 3.9 * k * d, bx = x - 2.4 * k * d;
