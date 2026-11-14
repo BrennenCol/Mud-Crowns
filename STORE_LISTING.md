@@ -61,9 +61,12 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.25.0.txt`, ready to copy. It opens with what is new in 1.25 and 1.24, then the short list of everything since 1.15.1 (the last version in the App Store).
+Also in `store/whats_new_1.26.0.txt`, ready to copy. It opens with what is new in 1.26, 1.25 and 1.24, then the short list of everything since 1.15.1 (the last version in the App Store).
 
 ```
+NEW IN 1.26
+- Eleven Church and learning jobs get a game of their own: ringing the hours (abbot), the coronation (archbishop), the questioning (inquisitor), the papal embassy (legate), the almonry (grand mistress), the tithe harvest (prince-abbess), the disputation (professor), the chronicle (chronicler), town and gown (rector), the horoscope (court astrologer), and the romance (woman of letters).
+
 NEW IN 1.25
 - Ten more jobs get a game of their own: catch the king's ear (courtier), quarter sessions (magistrate), the writs office (official), the privy council (adviser), Parliament divides (chancellor), Objection! (serjeant-at-law), the hue and cry (sheriff), raise the posse (high sheriff), fire in the ward (alderman), and bread and ale (mayor).
 
@@ -71,7 +74,7 @@ NEW IN 1.24
 - Every military post now has a game of its own: the joust, the cavalry charge, raising the levies, the muster, the siege, riding the border, the palace guard, the great bombard, a mercenary contract, signalling the fleet, guarding the pilgrim road, and holding the fortress.
 
 NEW SINCE 1.15
-- Every high post has a game to play, 46 in all: battles, sea fights, the conclave, the assize, the night watch in the royal prison, the royal kitchen, the hunt, the masque, and more.
+- Every high post has a game to play, 57 in all: battles, sea fights, the conclave, the assize, the night watch in the royal prison, the royal kitchen, the hunt, the masque, and more.
 - The Hall of Legends and the Collection Hall: every climb is scored, and rare relics are won.
 - Buy land: manors, and counties from kings who need silver.
 - Choices at work come back a year or three later.

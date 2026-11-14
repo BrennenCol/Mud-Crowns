@@ -379,6 +379,22 @@ fills in anything a newer version expects, and drops a job whose career no longe
   looks so it is the same as a child and as your heir), fades smoothly to grey over about
   twenty years, then to white, and never goes back.
 
+## Batch 3: the Church and learning (v1.26)
+
+| Game | Post | How it plays |
+| --- | --- | --- |
+| The hours | Abbot | The shadow sweeps the sundial; ring the bell as it reaches each of the eight services, Matins to Compline |
+| The coronation | Archbishop | Six rites in order (oil, sword, ring, sceptre, orb, crown); tap each as the gold ring closes; the regalia reshuffle after every rite |
+| The questioning | Inquisitor | Five answers a day; find the two that put the suspect in two places at the same hour |
+| The embassy | Papal legate | Plan the road from Rome to five courts; set out once the route fits before the snows |
+| The almonry | Grand mistress | Twelve at the gate: bread for the hungry, a cloak for the cold, a penny for the stranded, herbs for the wounded; turn away the plump cheats with rings and good shoes |
+| The tithe harvest | Prince-abbess | Gather each tithe sheaf before its ring runs out; sheaves under the drifting rain cloud spoil |
+| The disputation | Professor | A tug-of-war for the hall; interject while the needle is inside each opening in the rival's argument |
+| The chronicle | Royal chronicler | Three years of events by feast day; write them in order; the last year's dates have faded, so use the calendar of feasts |
+| Town and gown | Rector | Students and townsmen in three lanes; hold one back whenever two in the same lane are about to meet; six brawls is a riot |
+| The horoscope | Court astrologer | Turn three rings (signs, planets, elements) to the pointer; on later nights one ring drags another |
+| The romance | Woman of letters | Eight scenes; play to each listener's favourite, never the same kind twice in a row, and let nobody nod off |
+
 ## Batch 2: government, law and the town (v1.25)
 
 | Game | Post | How it plays |
