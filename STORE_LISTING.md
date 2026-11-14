@@ -61,7 +61,7 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.29.0.txt`, ready to copy. The last version in the App Store was 1.15.1, so this is one short catch-up list of everything new since then.
+Also in `store/whats_new_1.29.1.txt`, ready to copy. The last version in the App Store was 1.15.1, so this is one short catch-up list of everything new since then.
 
 ```
 BIG UPDATE: everything new since 1.15

@@ -2151,7 +2151,7 @@ button.in-t{cursor:pointer}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.29.0';
+const APP_VERSION = '1.29.1';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -23607,6 +23607,17 @@ PETITIONS.push(
   // a seated figure in robes: the body from the man() figure, the lap and the fall of the gown below it
   function sitter(X, x, seatY, floorY, o) {
     const h = o.h || 30, k = h / 11, c = o.c || 'red';
+    if (o.front && o.gown === false) {
+      // a king on his throne: a royal mantle over the shoulders, a tunic to the knee with a gold hem, hose and shoes
+      const knee = seatY + (floorY - seatY) * .45, top = seatY + 1.2 * k - h * .78, sh = top + h * .78 * .3;
+      let m = pa(`M${n1(x - 2.2 * k)} ${n1(sh)}Q${n1(x - 3.6 * k)} ${n1(seatY)} ${n1(x - 3.3 * k)} ${n1(knee + .6 * k)}L${n1(x - 2.1 * k)} ${n1(knee + .4 * k)}Q${n1(x - 2.3 * k)} ${n1(seatY - .4 * k)} ${n1(x - 1.2 * k)} ${n1(sh + .2 * k)}ZM${n1(x + 2.2 * k)} ${n1(sh)}Q${n1(x + 3.6 * k)} ${n1(seatY)} ${n1(x + 3.3 * k)} ${n1(knee + .6 * k)}L${n1(x + 2.1 * k)} ${n1(knee + .4 * k)}Q${n1(x + 2.3 * k)} ${n1(seatY - .4 * k)} ${n1(x + 1.2 * k)} ${n1(sh + .2 * k)}Z`, o.mantle || 'purple', 'stroke-width=".45"');
+      m += ln(`M${n1(x - 3.3 * k)} ${n1(knee + .6 * k)}L${n1(x - 2.1 * k)} ${n1(knee + .4 * k)}M${n1(x + 3.3 * k)} ${n1(knee + .6 * k)}L${n1(x + 2.1 * k)} ${n1(knee + .4 * k)}`, 'white', .55 * k);
+      m += ln(`M${n1(x - .85 * k)} ${n1(knee)}L${n1(x - 1 * k)} ${n1(floorY - .6)}M${n1(x + .85 * k)} ${n1(knee)}L${n1(x + 1 * k)} ${n1(floorY - .6)}`, 'black', 1.05 * k);
+      m += el(x - 1.1 * k, floorY - .35, .85 * k, .38 * k, 'wood2', 'stroke-width=".3"') + el(x + 1.1 * k, floorY - .35, .85 * k, .38 * k, 'wood2', 'stroke-width=".3"');
+      m += pa(`M${n1(x - 1.9 * k)} ${n1(seatY - .8 * k)}Q${n1(x)} ${n1(seatY - 1.3 * k)} ${n1(x + 1.9 * k)} ${n1(seatY - .8 * k)}L${n1(x + 2.3 * k)} ${n1(knee)}Q${n1(x)} ${n1(knee + .45 * k)} ${n1(x - 2.3 * k)} ${n1(knee)}Z`, c, 'stroke-width=".45"');
+      m += ln(`M${n1(x - 2.3 * k)} ${n1(knee - .15 * k)}Q${n1(x)} ${n1(knee + .3 * k)} ${n1(x + 2.3 * k)} ${n1(knee - .15 * k)}`, 'gold', .4 * k);
+      return m + man(X, x, seatY + 1.2 * k, Object.assign({}, o, { h: h * .78, gown: true, seated: true }));
+    }
     if (o.front) return pa(`M${n1(x - 1.9 * k)} ${n1(seatY - .8 * k)}Q${n1(x)} ${n1(seatY - 1.3 * k)} ${n1(x + 1.9 * k)} ${n1(seatY - .8 * k)}L${n1(x + 2.7 * k)} ${n1(floorY - .5)}Q${n1(x)} ${n1(floorY + .3 * k)} ${n1(x - 2.7 * k)} ${n1(floorY - .5)}Z`, c, 'stroke-width=".45"') + ln(`M${n1(x - .9 * k)} ${n1(seatY)}q-.2 ${n1((floorY - seatY) * .5)} ${n1(-.5 * k)} ${n1(floorY - seatY - 1)}M${n1(x + .9 * k)} ${n1(seatY)}q.2 ${n1((floorY - seatY) * .5)} ${n1(.5 * k)} ${n1(floorY - seatY - 1)}`, 'ol', .3, 'opacity=".35"') + el(x - .9 * k, floorY - .3, .8 * k, .35 * k, 'black', 'stroke-width=".3"') + el(x + .9 * k, floorY - .3, .8 * k, .35 * k, 'black', 'stroke-width=".3"') + man(X, x, seatY + 1.2 * k, Object.assign({}, o, { h: h * .78, gown: true, seated: true }));
     const d = o.dir || 1, kx = x + 3.9 * k * d, bx = x - 2.4 * k * d;
     // the lap runs forward to the knee; the gown falls from the knee to the floor; the toes peep out
