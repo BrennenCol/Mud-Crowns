@@ -2151,7 +2151,7 @@ button.in-t{cursor:pointer}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.29.4';
+const APP_VERSION = '1.29.5';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -22420,7 +22420,16 @@ PETITIONS.push(
     // the neckline, the belt and its buckle
     s += pa(`M${n1(x - .55 * k)} ${n1(top + 3.3 * k)}L${n1(x + .1 * k * d)} ${n1(top + 4.3 * k)}L${n1(x + .65 * k)} ${n1(top + 3.3 * k)}Z`, gown && o.c !== 'black' ? 'white' : 'daub', 'stroke-width=".3"');
     if (!o.apron) s += ln(`M${n1(x - ww * k)} ${n1(top + 6.15 * k)}Q${n1(x)} ${n1(top + 6.45 * k)} ${n1(x + ww * k)} ${n1(top + 6.15 * k)}`, o.belt || 'wood2', .5 * k) + pa(wr(X, x + .3 * k * d - .32 * k, top + 6.05 * k, .64 * k, .55 * k, .02), 'gold', 'stroke-width=".25"');
-    if (o.apron) s += pa(`M${n1(x - .95 * k)} ${n1(top + 4.4 * k)}H${n1(x + .95 * k)}L${n1(x + 1.55 * k)} ${n1(gown ? y - 1.4 * k : hemY + .5 * k)}Q${n1(x)} ${n1(gown ? y - 1 * k : hemY + .9 * k)} ${n1(x - 1.55 * k)} ${n1(gown ? y - 1.4 * k : hemY + .5 * k)}Z`, o.apron, 'stroke-width=".35"') + ln(`M${n1(x - 1.3 * k)} ${n1(top + 6.15 * k)}H${n1(x + 1.3 * k)}M${n1(x - .9 * k)} ${n1(top + 4.4 * k)}L${n1(x - .5 * k)} ${n1(top + 3.3 * k)}M${n1(x + .9 * k)} ${n1(top + 4.4 * k)}L${n1(x + .5 * k)} ${n1(top + 3.3 * k)}`, 'ol', .3, 'opacity=".55"');
+    if (o.apron) {
+      // a full apron: a bib up the chest on straps round the neck, tied at the waist, the skirt wide over the body to below the hem
+      const ab = gown ? y - 1 * k : hemY + .55 * k, aw = gown ? 2.25 : 2.05;
+      s += pa(`M${n1(x - 1.02 * k)} ${n1(top + 3.95 * k)}H${n1(x + 1.02 * k)}Q${n1(x + 1.12 * k)} ${n1(top + 5 * k)} ${n1(x + 1.2 * k)} ${n1(top + 6.05 * k)}Q${n1(x + (aw - .2) * k)} ${n1(top + 7.4 * k)} ${n1(x + aw * k)} ${n1(ab - .15 * k)}Q${n1(x)} ${n1(ab + .4 * k)} ${n1(x - aw * k)} ${n1(ab - .15 * k)}Q${n1(x - (aw - .2) * k)} ${n1(top + 7.4 * k)} ${n1(x - 1.2 * k)} ${n1(top + 6.05 * k)}Q${n1(x - 1.12 * k)} ${n1(top + 5 * k)} ${n1(x - 1.02 * k)} ${n1(top + 3.95 * k)}Z`, o.apron, 'stroke-width=".35"');
+      s += pn(`M${n1(x - 1.02 * k * d)} ${n1(top + 4 * k)}Q${n1(x - 1.12 * k * d)} ${n1(top + 5 * k)} ${n1(x - 1.2 * k * d)} ${n1(top + 6.05 * k)}Q${n1(x - (aw - .2) * k * d)} ${n1(top + 7.4 * k)} ${n1(x - aw * k * d)} ${n1(ab - .2 * k)}Q${n1(x - (aw - .7) * k * d)} ${n1(ab + .1 * k)} ${n1(x - (aw - 1) * k * d)} ${n1(ab + .2 * k)}Q${n1(x - .9 * k * d)} ${n1(top + 7 * k)} ${n1(x - .7 * k * d)} ${n1(top + 4 * k)}Z`, 'black', 'opacity=".07"');
+      s += ln(`M${n1(x - .92 * k)} ${n1(top + 3.98 * k)}L${n1(x - .5 * k)} ${n1(top + 3.3 * k)}M${n1(x + .92 * k)} ${n1(top + 3.98 * k)}L${n1(x + .5 * k)} ${n1(top + 3.3 * k)}`, 'ol', .3, 'opacity=".6"');
+      s += ln(`M${n1(x - 1.22 * k)} ${n1(top + 6.1 * k)}Q${n1(x)} ${n1(top + 6.3 * k)} ${n1(x + 1.22 * k)} ${n1(top + 6.1 * k)}`, 'ol', .3, 'opacity=".55"') + ln(`M${n1(x - 1.2 * k * d)} ${n1(top + 6.15 * k)}q${n1(-.35 * k * d)} ${n1(.6 * k)} ${n1(-.2 * k * d)} ${n1(1.2 * k)}`, 'ol', .25, 'opacity=".5"');
+      s += pa(`M${n1(x - .55 * k + .3 * k * d)} ${n1(top + 7 * k)}h${n1(1.1 * k)}v${n1(.75 * k)}q${n1(-.55 * k)} ${n1(.3 * k)} ${n1(-1.1 * k)} 0Z`, o.apron, 'stroke-width=".25" stroke-opacity=".6"');
+      s += ln(`M${n1(x + .55 * k * d)} ${n1(top + 6.5 * k)}q${n1(.25 * k * d)} ${n1((ab - top - 6.5 * k) * .5)} ${n1(.5 * k * d)} ${n1(ab - top - 6.7 * k)}`, 'ol', .25, 'opacity=".25"');
+    }
     if (o.chain) s += ln(`M${n1(x - 1.25 * k)} ${n1(top + 3.7 * k)}Q${n1(x)} ${n1(top + 5.6 * k)} ${n1(x + 1.25 * k)} ${n1(top + 3.7 * k)}`, 'gold', .4 * k, 'stroke-dasharray=".5 .3"') + ci(x, top + 5.3 * k, .45 * k, 'gold', 'stroke-width=".25"');
     // the neck and the head
     s += pa(wr(X, hx - .48 * k, hy + .9 * k, .96 * k, 1.1 * k, .02), 'skin', 'stroke-width=".35"');
