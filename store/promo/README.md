@@ -9,7 +9,7 @@ BitLife-style pictures that say what the game is: a medieval life simulator wher
 | MudCrowns_promo_1.png | Rise from serf to king! (the same man climbing: serf, peasant, craftsman, merchant, knight, lord, king; "A medieval life simulator") |
 | MudCrowns_promo_2.png | Who will you be? (hundreds of lives: serf, knight, abbess, outlaw, merchant, queen) |
 | MudCrowns_promo_3.png | Every choice matters! |
-| MudCrowns_promo_4.png | Mini-games for every high post! |
+| MudCrowns_promo_4.png | Live your life one year at a time! (the main screen a player sees most: stats, the painted scene, the year's story, and Turn the page for +1 year) |
 | MudCrowns_promo_5.png | Raise a royal family! |
 | MudCrowns_promo_6.png | Become a legend! (King Hob's gravestone: born a serf, died a king) |
 
