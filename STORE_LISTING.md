@@ -123,7 +123,8 @@ don't apply.
 
 | What | File | Where it goes |
 |---|---|---|
-| iPhone screenshots | `store/iphone/01-whole-life.png` to `08-dynasty.png`, in that order (1206×2622) | App Store Connect → iPhone with Dynamic Island (medium display) |
+| iPhone screenshots | `store/iphone/01-rise-serf-to-king.png` to `06-become-a-legend.png`, in that order (1206×2622), and the same six at 1290×2796 in `store/iphone_67` | App Store Connect → iPhone medium display, and iPhone 6.9-inch display |
+| Product page header | `store/promo/MudCrowns_header_3840x1646.png` (added by hand) | App Store Connect → the version → Product Page Information → Header |
 | Android screenshots | `store/android-phone/*.png` (1080×2160) | Play Console → Phone screenshots |
 | Feature graphic | `store/android-feature-graphic.png` (1024×500) | Play Console → Feature graphic (required) |
 | App icon, Google Play | `icons/icon-512.png` | Play Console → App icon |

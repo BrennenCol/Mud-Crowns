@@ -2,7 +2,9 @@
 
 Runs in GitHub Actions (Store screenshots workflow) with the same App Store Connect API key as the iPhone build.
 It finds the app version you can still edit (Prepare for Submission, or one you removed from review), and for each
-language on it replaces the iPhone screenshots with the PNGs in the folder given, in file-name order.
+language on it replaces the iPhone screenshots with the PNGs in the folder given, in file-name order: the folder's
+pictures (1206 x 2622) go in the medium iPhone slot, and if a folder of the same name ending in _67 exists, its
+pictures (1290 x 2796) go in the large 6.9-inch slot, so every size of iPhone shows the same new pictures.
 
 Usage: python upload_screenshots.py store/iphone
 Environment: ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8, and optionally DISPLAY_TYPE (e.g. APP_IPHONE_61) and NEW_VERSION
@@ -65,8 +67,58 @@ def call(method, path, body=None, soft=False):
     return r.json() if r.text else {}
 
 
+def make_set(loc, kind):
+    print(f"{loc['attributes']['locale']}: making the {kind} slot")
+    return call('POST', '/v1/appScreenshotSets', {'data': {'type': 'appScreenshotSets',
+                'attributes': {'screenshotDisplayType': kind},
+                'relationships': {'appStoreVersionLocalization': {'data': {'type': 'appStoreVersionLocalizations', 'id': loc['id']}}}}})['data']
+
+
+def replace(target, files, lang):
+    kind = target['attributes']['screenshotDisplayType']
+    print(f'{lang}: replacing the {kind} screenshots')
+
+    old = call('GET', f"/v1/appScreenshotSets/{target['id']}/appScreenshots?limit=50")['data']
+    for s in old:
+        call('DELETE', f"/v1/appScreenshots/{s['id']}")
+    print(f'  removed {len(old)} old')
+
+    ids = []
+    for path in files:
+        raw = open(path, 'rb').read()
+        name = os.path.basename(path)
+        shot = call('POST', '/v1/appScreenshots', {'data': {'type': 'appScreenshots',
+                    'attributes': {'fileName': name, 'fileSize': len(raw)},
+                    'relationships': {'appScreenshotSet': {'data': {'type': 'appScreenshotSets', 'id': target['id']}}}}})['data']
+        for op in shot['attributes']['uploadOperations']:
+            part = raw[op['offset']:op['offset'] + op['length']]
+            r = http.request(op['method'], op['url'], data=part,
+                             headers={h['name']: h['value'] for h in op.get('requestHeaders', [])}, timeout=120)
+            if r.status_code >= 400:
+                sys.exit(f'::error::Upload of {name} failed: {r.status_code} {r.text[:500]}')
+        call('PATCH', f"/v1/appScreenshots/{shot['id']}", {'data': {'type': 'appScreenshots', 'id': shot['id'],
+             'attributes': {'uploaded': True, 'sourceFileChecksum': hashlib.md5(raw).hexdigest()}}})
+        state = ''
+        for _ in range(30):
+            a = call('GET', f"/v1/appScreenshots/{shot['id']}")['data']['attributes']
+            state = (a.get('assetDeliveryState') or {}).get('state', '')
+            if state in ('COMPLETE', 'FAILED'):
+                break
+            time.sleep(2)
+        if state == 'FAILED':
+            errs = (a.get('assetDeliveryState') or {}).get('errors')
+            sys.exit(f'::error::Apple did not accept {name}: {errs}')
+        print(f'  {name}: {state or "uploaded"}')
+        ids.append(shot['id'])
+
+    call('PATCH', f"/v1/appScreenshotSets/{target['id']}/relationships/appScreenshots",
+         {'data': [{'type': 'appScreenshots', 'id': i} for i in ids]})
+    print(f'  {len(ids)} screenshots in order')
+
+
 def main(folder):
     files = sorted(glob.glob(os.path.join(folder, '*.png')))
+    big = sorted(glob.glob(os.path.join(folder.rstrip('/') + '_67', '*.png')))
     if not files:
         sys.exit(f'::error::No PNG files in {folder}')
     bundle = json.load(open('capacitor.config.json'))['appId']
@@ -116,56 +168,22 @@ def main(folder):
             print(f"{lang}: What's New {'filled in from ' + notes_file if done is not None else 'not changed (paste it by hand)'}")
         sets = call('GET', f"/v1/appStoreVersionLocalizations/{loc['id']}/appScreenshotSets?limit=50")['data']
         iphone = [s for s in sets if s['attributes']['screenshotDisplayType'].startswith('APP_IPHONE')]
-        target = None
+        print(f"{lang}: iPhone slots now: {', '.join(sorted(s['attributes']['screenshotDisplayType'] for s in iphone)) or 'none'}")
+        jobs = []
         if want:
-            target = next((s for s in sets if s['attributes']['screenshotDisplayType'] == want), None)
-        if not target:
-            target = next((s for s in iphone if s['attributes']['screenshotDisplayType'] == 'APP_IPHONE_61'), None)
-        if not target and iphone:
-            target = iphone[0]
-        if not target:
-            target = call('POST', '/v1/appScreenshotSets', {'data': {'type': 'appScreenshotSets',
-                          'attributes': {'screenshotDisplayType': want or 'APP_IPHONE_61'},
-                          'relationships': {'appStoreVersionLocalization': {'data': {'type': 'appStoreVersionLocalizations', 'id': loc['id']}}}}})['data']
-        kind = target['attributes']['screenshotDisplayType']
-        print(f'{lang}: replacing the {kind} screenshots')
-
-        old = call('GET', f"/v1/appScreenshotSets/{target['id']}/appScreenshots?limit=50")['data']
-        for s in old:
-            call('DELETE', f"/v1/appScreenshots/{s['id']}")
-        print(f'  removed {len(old)} old')
-
-        ids = []
-        for path in files:
-            raw = open(path, 'rb').read()
-            name = os.path.basename(path)
-            shot = call('POST', '/v1/appScreenshots', {'data': {'type': 'appScreenshots',
-                        'attributes': {'fileName': name, 'fileSize': len(raw)},
-                        'relationships': {'appScreenshotSet': {'data': {'type': 'appScreenshotSets', 'id': target['id']}}}}})['data']
-            for op in shot['attributes']['uploadOperations']:
-                part = raw[op['offset']:op['offset'] + op['length']]
-                r = http.request(op['method'], op['url'], data=part,
-                                 headers={h['name']: h['value'] for h in op.get('requestHeaders', [])}, timeout=120)
-                if r.status_code >= 400:
-                    sys.exit(f'::error::Upload of {name} failed: {r.status_code} {r.text[:500]}')
-            call('PATCH', f"/v1/appScreenshots/{shot['id']}", {'data': {'type': 'appScreenshots', 'id': shot['id'],
-                 'attributes': {'uploaded': True, 'sourceFileChecksum': hashlib.md5(raw).hexdigest()}}})
-            state = ''
-            for _ in range(30):
-                a = call('GET', f"/v1/appScreenshots/{shot['id']}")['data']['attributes']
-                state = (a.get('assetDeliveryState') or {}).get('state', '')
-                if state in ('COMPLETE', 'FAILED'):
-                    break
-                time.sleep(2)
-            if state == 'FAILED':
-                errs = (a.get('assetDeliveryState') or {}).get('errors')
-                sys.exit(f'::error::Apple did not accept {name}: {errs}')
-            print(f'  {name}: {state or "uploaded"}')
-            ids.append(shot['id'])
-
-        call('PATCH', f"/v1/appScreenshotSets/{target['id']}/relationships/appScreenshots",
-             {'data': [{'type': 'appScreenshots', 'id': i} for i in ids]})
-        print(f'  {len(ids)} screenshots in order')
+            target = next((s for s in sets if s['attributes']['screenshotDisplayType'] == want), None) or make_set(loc, want)
+            jobs.append((target, files))
+        else:
+            for kind, fl in (('APP_IPHONE_61', files), ('APP_IPHONE_67', big)):
+                if not fl:
+                    continue
+                target = next((s for s in iphone if s['attributes']['screenshotDisplayType'] == kind), None) or make_set(loc, kind)
+                jobs.append((target, fl))
+            rest = [s['attributes']['screenshotDisplayType'] for s in iphone if s['attributes']['screenshotDisplayType'] not in ('APP_IPHONE_61', 'APP_IPHONE_67')]
+            if rest:
+                print(f"::warning::{lang}: these iPhone slots were left as they are: {', '.join(rest)}")
+        for target, fl in jobs:
+            replace(target, fl, lang)
     print('Done. Check them in App Store Connect, under the version, Previews and Screenshots.')
 
 
