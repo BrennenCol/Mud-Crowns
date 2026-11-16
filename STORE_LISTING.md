@@ -61,22 +61,13 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.29.5.txt`, ready to copy. The last version in the App Store was 1.15.1, so this is one short catch-up list of everything new since then.
+Also in `store/whats_new_1.29.5.txt`, ready to copy. 1.29.2 is already in the App Store with the big catch-up list (everything new since 1.15), so this version only lists what changed since then.
 
 ```
-BIG UPDATE: everything new since 1.15
-
-- A game for every high post: 82 mini-games in all. Joust in the lists, lead a cavalry charge, crown a king, raid a merchant ship, steer by the stars, break a wild colt, run a hospital ward, and many more.
-- A royal family that lives: princes and princesses are born, grow up at court, and one day take the throne.
-- The Hall of Legends and the Collection Hall: every life is scored, and rare relics can be won.
-- Buy land: manors, and whole counties from kings who need silver.
-- Choices at work come back to you a year or three later.
-- Your children live their own lives, and you can carry on as one of them.
-- The road to Pope, with a real Pope who grows old.
-- Courting as it really was, with a portrait gallery for royal matches.
-- A lady-in-waiting may catch the king's eye.
-- Clearer headings, a Main menu button, safer progress, and many fixes.
-- Backup codes are gone, because they could be faked.
+- Knights' helmets now fit properly, and soldiers' eyes show under their helmets.
+- Cooks, smiths and washerwomen wear proper full aprons.
+- The castle laundry is now a real laundry room, with laundresses at their tubs.
+- Fixed small look glitches in several mini-games.
 ```
 
 ## Category
