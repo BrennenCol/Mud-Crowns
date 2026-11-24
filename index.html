@@ -2151,7 +2151,7 @@ button.in-t{cursor:pointer}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.29.5';
+const APP_VERSION = '1.29.6';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -5051,7 +5051,7 @@ const AMBITIONS = [
   { k: 'glory', i: '🛡️', n: 'Undying fame', d: 'Reach Renown 80.', ok: () => S.stats.renown >= 80, prog: () => `Renown ${S.stats.renown} of 80` },
   { k: 'land', i: '🏰', n: 'Land of my own', d: 'Hold a county.', ok: () => heldTs().length > 0 || S.ruling, prog: () => `${heldTs().length} counties` },
   { k: 'master', i: '🏅', n: 'Master of a craft', d: 'Become a Master Craftsman, Guild Master, or Master Architect.', ok: () => jobIn('mastercraft', 'guildmaster', 'architect') || (S.held || []).some(x => ['mastercraft', 'guildmaster', 'architect'].includes(x)), prog: () => `${maxCraft()} years at your best craft` },
-  { k: 'crown', i: '👑', n: 'Wear a crown', d: 'Rule a kingdom. The hardest road of all.', ok: () => S.ruling, prog: () => `${S.army || 0} soldiers, ${heldTs().length} counties` },
+  { k: 'crown', i: '👑', n: 'Rule a kingdom', d: 'Sit on the throne yourself: a king’s wife or mistress does not count. The hardest road of all.', ok: () => S.ruling, prog: () => `${S.army || 0} soldiers, ${heldTs().length} counties` },
 ];
 function ambitionEvent() {
   const opts = AMBITIONS.filter(a => !a.ok()).sort(() => Math.random() - .5).slice(0, 4);
@@ -21773,7 +21773,7 @@ PETITIONS.push(
       choices: [
         { t: () => (pc().king ? 'Let him put it to his council' : `Let him ask the ${kingW()}, and wait`), fx: () => kingAnswer() },
         { t: 'Marry him in secret, tonight', ok: () => x.ard >= 85, why: 'He does not love you enough to risk his father’s fury (he must be wild for you)', fx: () => secretWed() },
-        { t: 'Be his acknowledged mistress instead', fx: () => { x.st = 'mistress'; x.ask = S.year; st('piety', -4); st('renown', 3); coin(R(30, 80)); return 'You said you would not cost him a crown. He kissed you, and the next morning the whole court knew. You have rooms of your own now, a gown for every feast day, and a great many enemies. Keep courting him: a mistress who bores a prince is sent home just like a girl who bores him.'; } },
+        { t: () => (x.st === 'mistress' ? 'Stay as you are, his mistress' : 'Be his acknowledged mistress instead'), fx: () => { x.st = 'mistress'; x.ask = S.year; st('piety', -4); st('renown', 3); coin(R(30, 80)); return 'You said you would not cost him a crown. He kissed you, and the next morning the whole court knew. You have rooms of your own now, a gown for every feast day, and a great many enemies. Keep courting him: a mistress who bores a prince is sent home just like a girl who bores him.'; } },
         { t: 'Refuse him, and go home with your honour', fx: () => { st('piety', 5); st('renown', 4); st('happy', -6); return sendHome(x.lady ? 'You told him a lady-in-waiting could not be a princess, and would not be anything less. He did not understand, and then he did. You were sent home within the week. ' + '' : 'You told him a village girl could not be a princess, and would not be anything less. He did not understand, and you did not explain.'); } },
       ] };
   }
@@ -21957,7 +21957,7 @@ PETITIONS.push(
     if (x.ard < 25) { Q.push(() => showEvent(fadeEvent())); return; }
     if (x.ard < 40) say(`${PN()} danced with ${x.rival || 'another lady'} three times at Candlemas. Court him this year, or lose him.`, 'bad');
     const yrsAt = S.year - x.y0;
-    if (x.st === 'court' && x.ard >= 80 && yrsAt >= 2 && (!x.ask || S.year - x.ask >= 4)) { Q.push(() => showEvent(askEvent())); return; }
+    if ((x.st === 'court' || (x.st === 'mistress' && !x.wife)) && x.ard >= 80 && yrsAt >= 2 && (!x.ask || S.year - x.ask >= 4)) { Q.push(() => showEvent(askEvent())); return; }
     if (((x.st === 'mistress' && yrsAt >= 3) || (x.ask && S.year - x.ask >= 1)) && !x.wife && P(.22)) { Q.push(() => showEvent(brideEvent())); return; }
     if (P(.45)) { const e = palaceEvent(); if (e) Q.push(() => showEvent(e)); }
   });

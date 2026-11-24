@@ -1,0 +1,6 @@
+- Knights' helmets now fit properly, and soldiers' eyes show under their helmets.
+- Cooks, smiths and washerwomen wear proper full aprons.
+- The castle laundry is now a real laundry room, with laundresses at their tubs.
+- Fixed small look glitches in several mini-games.
+- The king's mistress can still be asked to marry him, if he has taken no other wife.
+- The life goal "Wear a crown" is now called "Rule a kingdom", and says plainly that a king's wife or mistress does not count.
