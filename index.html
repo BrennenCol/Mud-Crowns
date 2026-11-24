@@ -800,6 +800,10 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .hb-gems{display:flex;justify-content:center;flex-wrap:wrap;gap:4px;margin:5px 0 2px}
 .hb-gems i{width:7px;height:7px;transform:rotate(45deg);background:rgba(120,90,50,.18);border:1px solid rgba(150,110,50,.55)}
 .hb-gems i.on{background:var(--rc);border-color:#c9952e;box-shadow:0 0 4px var(--rc)}
+.rose-arms .arms{box-shadow:inset 0 0 0 3px #f2a6b8,inset 0 0 0 5px rgba(122,20,52,.8),0 0 0 2px #c4486e,0 0 12px rgba(231,132,154,.6),0 3px 8px rgba(60,34,8,.3)}
+.rose-arms .arms::before,.rose-arms .arms::after{content:'🌹';position:absolute;bottom:-5px;font-size:15px;line-height:1;pointer-events:none;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+.rose-arms .arms::before{left:-7px;transform:rotate(-24deg)}
+.rose-arms .arms::after{right:-7px;transform:scaleX(-1) rotate(-24deg)}
 .gilt-arms .arms{box-shadow:inset 0 0 0 3px #f3c955,inset 0 0 0 5px rgba(122,82,12,.85),0 0 0 2px #e2b23c,0 0 14px rgba(243,201,85,.55),0 3px 8px rgba(60,34,8,.3);animation:giltArms 4s ease-in-out infinite}
 @keyframes giltArms{50%{box-shadow:inset 0 0 0 3px #fff2b0,inset 0 0 0 5px rgba(122,82,12,.85),0 0 0 2px #f3c955,0 0 22px rgba(243,201,85,.85),0 3px 8px rgba(60,34,8,.3)}}
 @media (prefers-reduced-motion:reduce){.rv-sparks,.rv-burst{display:none}.rv *,.rl-niche,.rl-niche *,.rl-niche::before,.rl-niche::after,.tw,.gl-m,.hall-shaft,.hall-smoke,.pod-crown,.crest-svg,.new-b,.gilt-arms .arms{animation:none!important}.rv .rv-kick,.rv .rv-rar,.rv .rv-n,.rv .rv-lore,.rv .rv-who,.rv .rv-how,.rv .rv-extra,.rv .rv-ok{opacity:1}.rv-rays{opacity:.2}}
@@ -2151,7 +2155,7 @@ button.in-t{cursor:pointer}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.29.6';
+const APP_VERSION = '1.29.7';
 const DEEDS_PER_YEAR = 3;
 
 /* ---------- utilities ---------- */
@@ -3178,7 +3182,7 @@ function makeSuitor() {
   return p;
 }
 function marry(p) {
-  p.sp = 1; p.bond = R(62, 88); p.alive = true; p.lastYear = -1;
+  p.sp = 1; p.bond = R(62, 88) + (typeof heartWon === 'function' && heartWon() ? 10 : 0); p.alive = true; p.lastYear = -1; p.wy = S.year;
   S.kin.push(p);
   if (p.dowry) coin(p.dowry);
   st('happy', R(8, 14));
@@ -26656,6 +26660,7 @@ function screenAct(s, el) {
     case 'hall': showHall(S && S.dead && !$('screen').hidden && $('screen').querySelector('.stone') ? 'death' : $('screen').querySelector('.start') ? 'start' : hallFrom, (jget(MKEY, {}).seen || 0) < relicCount() ? 'relics' : 'legends'); break;
     case 'htab': hallTab = el.dataset.v; showHall(); break;
     case 'relic': relicShow(el.dataset.v, false); break;
+    case 'rose': { const m = jget(MKEY, {}); m.rose = roseOn() ? 0 : 1; jset(MKEY, m); applyRewards(); showHall(); toast(m.rose ? '🌹 The rose garland is on' : 'The rose garland is off'); break; }
     case 'gild': { const m = jget(MKEY, {}); m.gild = gildOn() ? 0 : 1; jset(MKEY, m); showHall(); toast(m.gild ? '✨ The golden menu is on' : 'The plain menu is back'); break; }
     case 'hallClearGrave': store.set(GKEY, '[]'); showHall(); break;
     case 'hallBack': if (hallFrom === 'death') showDeath(); else if (hallFrom === 'app' && S) hideScreen(); else showStart(); break;
@@ -26886,6 +26891,19 @@ const RELIC_ART = {
     + `<path d="M24.5 63Q50 74 75.5 63" fill="none" stroke="${OL}" stroke-width="6"/><path d="M24.5 63Q50 74 75.5 63" fill="none" stroke="url(#rl-au2)" stroke-width="4.2"/><path d="M50 37Q58 50 50 68.5" fill="none" stroke="${OL}" stroke-width="6"/><path d="M50 37Q58 50 50 68.5" fill="none" stroke="url(#rl-au2)" stroke-width="4.2"/>`
     + `${[[.15, 'pe'], [.3, 'sa'], [.7, 'sa'], [.85, 'pe']].map(([t, g]) => { const [x, y] = qpt([24.5, 63], [50, 74], [75.5, 63], t); return g === 'pe' ? pearl(x, y, 1.6) : gem(+x.toFixed(1), +y.toFixed(1), 2, g); }).join('')}${gem(50, 68.4, 3.4, 'ru')}${gem(54, 49, 2, 'em')}`
     + `<rect x="46.6" y="14" width="6.8" height="25" rx="1" fill="url(#rl-au)" stroke="${OL}" stroke-width="1"/><rect x="40" y="20" width="20" height="6.6" rx="1" fill="url(#rl-au)" stroke="${OL}" stroke-width="1"/>${pearl(50, 12, 2.2)}${pearl(38.6, 23.3, 2)}${pearl(61.4, 23.3, 2)}${gem(50, 23.3, 1.8, 'sa')}${sp(78, 40, 2.8)}${sp(22, 82, 2)}`,
+  // the Wing of the Heart
+  ring: () => `<ellipse cx="50" cy="65" rx="24" ry="21" fill="none" stroke="${OL}" stroke-width="11.5"/><ellipse cx="50" cy="65" rx="24" ry="21" fill="none" stroke="url(#rl-au)" stroke-width="8"/><path d="M31 56A21 18 0 0 1 46 45" stroke="#fff" stroke-opacity=".6" stroke-width="2" fill="none" stroke-linecap="round"/>`
+    + `<path d="M39 46L43 36H57L61 46Z" fill="url(#rl-au)" stroke="${OL}" stroke-width="1.1"/><path d="M41 36L46 26H54L59 36L50 45Z" fill="url(#rl-rd)" stroke="${OL}" stroke-width="1.2"/><path d="M46 26L50 36L54 26M41 36H59" stroke="#fff" stroke-opacity=".45" stroke-width="1" fill="none"/>${sp(72, 26, 3.2)}${sp(26, 34, 2)}`,
+  cradle: () => `<path d="M18 80Q50 95 82 80" stroke="${OL}" stroke-width="6.5" fill="none" stroke-linecap="round"/><path d="M18 80Q50 95 82 80" stroke="url(#rl-au)" stroke-width="3.8" fill="none" stroke-linecap="round"/>`
+    + `<path d="M23 50H77L72 79H28Z" fill="url(#rl-ag)" stroke="${OL}" stroke-width="1.5"/><path d="M25 59H75" stroke="url(#rl-au)" stroke-width="3.2"/><path d="M27 70H73" stroke="url(#rl-au)" stroke-width="1.6"/>`
+    + `<path d="M23 50Q23 28 46 28V50Z" fill="url(#rl-ag)" stroke="${OL}" stroke-width="1.5"/><path d="M27 48Q28 33 43 32" stroke="#fff" stroke-opacity=".6" stroke-width="1.6" fill="none"/>`
+    + `<circle cx="51" cy="45" r="6.4" fill="#f2c9a4" stroke="${OL}" stroke-width="1.1"/><path d="M48.5 45q1 .9 2 0M52.5 45q1 .9 2 0" stroke="${OL}" stroke-width=".7" fill="none"/><path d="M45 51Q61 43 77 50V52H45Z" fill="url(#rl-wh)" stroke="${OL}" stroke-width="1"/>${sp(80, 34, 2.6)}`,
+  tree: () => `<path d="M38 88Q50 82 62 88Z" fill="url(#rl-wd)" stroke="${OL}" stroke-width="1"/><path d="M45 87Q48 72 47 58L53 58Q52 72 55 87Z" fill="url(#rl-wd)" stroke="${OL}" stroke-width="1.2"/><path d="M48 62Q40 58 33 54M52 62Q60 58 67 54" stroke="url(#rl-wd)" stroke-width="3" fill="none" stroke-linecap="round"/>`
+    + `<circle cx="33" cy="50" r="13" fill="url(#rl-au)" stroke="${OL}" stroke-width="1.3"/><circle cx="67" cy="50" r="13" fill="url(#rl-au)" stroke="${OL}" stroke-width="1.3"/><circle cx="50" cy="37" r="18" fill="url(#rl-au)" stroke="${OL}" stroke-width="1.4"/><path d="M38 28Q44 21 54 21" stroke="#fff" stroke-opacity=".55" stroke-width="2" fill="none" stroke-linecap="round"/>`
+    + `${[[50, 30], [41, 41], [59, 40], [29, 52], [71, 52], [50, 47]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="3.2" fill="url(#rl-rd)" stroke="${OL}" stroke-width=".8"/>`).join('')}${sp(80, 26, 2.6)}`,
+  knot: () => `<path d="M42 27Q50 14 58 27Q50 35 42 27Z" fill="none" stroke="${OL}" stroke-width="5.4"/><path d="M42 27Q50 14 58 27Q50 35 42 27Z" fill="none" stroke="url(#rl-au)" stroke-width="3"/><path d="M50 31V38" stroke="url(#rl-au)" stroke-width="3"/>`
+    + `<path d="M50 86C28 70 18 58 18 46Q18 32 32 32Q44 32 50 44Q56 32 68 32Q82 32 82 46C82 58 72 70 50 86Z" fill="url(#rl-rd)" stroke="${OL}" stroke-width="1.8"/><path d="M50 79C32 66 24 56 24 47Q24 38 33 38Q43 38 50 50Q57 38 67 38Q76 38 76 47C76 56 68 66 50 79Z" fill="none" stroke="url(#rl-au)" stroke-width="2.6"/>`
+    + `<path d="M29 44Q31 37 38 37" stroke="#fff" stroke-opacity=".6" stroke-width="2.2" fill="none" stroke-linecap="round"/>${pearl(50, 62, 3.4)}${sp(80, 30, 3)}${sp(22, 76, 2)}`,
 };
 
 const WINGS = [
@@ -26893,6 +26911,7 @@ const WINGS = [
   { k: 'sword', n: 'The Wing of the Sword', m: 'What the sword wins, the sword keeps.', c: '#4e1019', c2: '#b8343f', e: '⚔️' },
   { k: 'cross', n: 'The Wing of Cross and Quill', m: 'Ink and incense: the quiet roads to power.', c: '#132a55', c2: '#3c6cc4', e: '✒️' },
   { k: 'crown', n: 'The Wing of the Crown', m: 'Every crown was once a ploughshare.', c: '#331548', c2: '#8a4cba', e: '👑' },
+  { k: 'heart', n: 'The Wing of the Heart', m: 'Love, children, and the long years together.', c: '#4a1030', c2: '#c4486e', e: '🌹' },
 ];
 const LOW2 = ['serf', 'peasant'], COMMONS = ['serf', 'peasant', 'craft'];
 const RELICS = [
@@ -26912,22 +26931,29 @@ const RELICS = [
   { k: 'ducal', w: 'crown', n: 'The Ducal Coronet', from: COMMONS, d: 'Become a Duke or Duchess.', ok: () => S.titles.some(t => /^(Duke|Duchess) of /.test(t)), lore: 'Strawberry leaves in gold. Only the king stands higher, and on a bad day for the king, not even he.' },
   { k: 'crown', w: 'crown', n: 'The Ploughman’s Crown', from: LOW2, d: 'Rule a kingdom.', ok: () => !!S.ruling, lore: 'They say it was forged from the iron of a plough and gilded afterwards. Kings who were born to their crowns have never liked this one.' },
   { k: 'orb', w: 'crown', n: 'The Orb of the World', from: ['serf'], d: 'Become Emperor or Empress of the known world.', ok: () => !!S.ruling && !!S.flags.emperor, lore: 'The whole world, held in one hand. The hand had blisters once, from a hoe, in a muddy field nobody remembers.' },
+  // the Wing of the Heart: love and family, for any birth (the royal wedding needs a common one). It has its own prize,
+  // and stays out of the count for the Golden Age, so a Hall finished before it was added stays finished.
+  { k: 'ring', w: 'heart', n: 'The Royal Wedding Ring', from: COMMONS, d: 'Marry a reigning king or queen.', ok: () => !!S.flags.consort || S.kin.some(k => k.sp && k.alive && k.ruler), lore: 'A gold ring with a ruby, slipped onto a hand that once milked cows and carried water. The court never forgave it. The king never regretted it.' },
+  { k: 'cradle', w: 'heart', n: 'The Silver Cradle', from: CLS_ORDER, d: 'Have eight children.', ok: () => S.kin.filter(k => k.ch).length >= 8, lore: 'A silver cradle with a hood, rocked by one mother for eight babies in turn. The runners are worn thin.' },
+  { k: 'tree', w: 'heart', n: 'The Family Tree', from: CLS_ORDER, d: 'Have ten grandchildren.', ok: () => S.kin.filter(k => k.ch).reduce((a, k) => a + (k.nkids || 0), 0) >= 10, lore: 'A tree of gold with a ruby for every grandchild. The branches had to be lengthened twice.' },
+  { k: 'knot', w: 'heart', n: 'The Lovers’ Locket', from: CLS_ORDER, d: 'Stay married to the same love for 40 years.', ok: () => { const sp = spouse(); if (!sp) return false; if (sp.wy == null) sp.wy = S.year; return S.year - sp.wy >= 40; }, lore: 'A ruby heart on a knotted gold cord. Inside are two locks of hair, one dark and one grey, and a single word in Latin: always.' },
 ];
-const fromText = x => x.from.length === 1 ? 'Born a serf' : x.from.length === 2 ? 'Born a serf or free peasant' : 'Born a commoner';
+const fromText = x => x.from.length === 1 ? 'Born a serf' : x.from.length === 2 ? 'Born a serf or free peasant' : x.from.length >= CLS_ORDER.length ? 'Any birth' : 'Born a commoner';
 const relicArt = (x, big) => `<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"${big ? ' class="big"' : ''}><circle class="rl-halo" cx="50" cy="56" r="46" fill="url(#rl-glow)"/>${RELIC_ART[x.k]()}</svg>`;
 const relicsGot = () => jget(CKEY, {});
 // What is won stays won. A finished wing, the Golden Age and the highest relic count are written
 // down for good the moment they happen, so adding or changing relics in a later update never takes them away.
 const wonRec = () => (jget(MKEY, {}).won || {});
 const wingNow = (got, w) => RELICS.filter(x => x.w === w).every(x => got[x.k]);
-const allNow = got => RELICS.every(x => got[x.k]);
+const RCORE = RELICS.filter(x => x.w !== 'heart');
+const allNow = got => RCORE.every(x => got[x.k]);
 const wingDone = (got, w) => wingNow(got, w) || !!(wonRec().wings || {})[w];
 const prizeWon = got => allNow(got || relicsGot()) || !!wonRec().prize;
 function lockWins(got) {
   const m = jget(MKEY, {}), w = m.won = m.won || {}; w.wings = w.wings || {}; let ch = false;
   for (const W of WINGS) if (wingNow(got, W.k) && !w.wings[W.k]) { w.wings[W.k] = 1; ch = true; }
   if (allNow(got) && !w.prize) { w.prize = 1; ch = true; }
-  const n = RELICS.filter(x => got[x.k]).length; if (n > (w.glory || 0)) { w.glory = n; ch = true; }
+  const n = RCORE.filter(x => got[x.k]).length; if (n > (w.glory || 0)) { w.glory = n; ch = true; }
   if (ch) jset(MKEY, m);
 }
 const gildOn = () => prizeWon() && jget(MKEY, { gild: 1 }).gild !== 0;
@@ -26959,7 +26985,7 @@ function relicCheck() {
 }
 /* ---------- rarity, niches, and the moment a relic is won ---------- */
 const RAR = { rare: { n: 'Rare', c: '#62b4ff' }, epic: { n: 'Epic', c: '#c983ff' }, legendary: { n: 'Legendary', c: '#ffb53d' }, mythic: { n: 'Mythic', c: '#ff5a76' } };
-const RARITY = { fetter: 'rare', scales: 'rare', hammer: 'epic', keys: 'epic', spurs: 'epic', banner: 'legendary', baton: 'legendary', helm: 'mythic', crozier: 'epic', mitre: 'legendary', seal: 'legendary', heaven: 'mythic', coronet: 'legendary', ducal: 'legendary', crown: 'mythic', orb: 'mythic' };
+const RARITY = { fetter: 'rare', scales: 'rare', hammer: 'epic', keys: 'epic', spurs: 'epic', banner: 'legendary', baton: 'legendary', helm: 'mythic', crozier: 'epic', mitre: 'legendary', seal: 'legendary', heaven: 'mythic', coronet: 'legendary', ducal: 'legendary', crown: 'mythic', orb: 'mythic', ring: 'mythic', cradle: 'epic', tree: 'legendary', knot: 'legendary' };
 const rarKey = x => RARITY[x.k] || 'rare';
 const rarOf = x => RAR[rarKey(x)];
 const NICHE_IN = 'M10 134V52Q10 24 50 11Q90 24 90 52V134Z';
@@ -26995,8 +27021,8 @@ function relicReveal(k, mode, extra) {
     const sparks = fresh ? Array.from({ length: 28 }, (_, i) => `<i style="--a:${(i * 360 / 28 + (i % 3) * 7).toFixed(0)}deg;--d:${110 + (i * 37) % 120}px;--t:${(.25 + (i % 7) * .05).toFixed(2)}s;--s:${(.6 + (i % 4) * .25).toFixed(2)}"></i>`).join('') : '';
     let extraH = '';
     if (extra === 'prize') extraH = '<div class="rv-extra prize"><b>Every case in the Hall is full.</b> The sealed reliquary is opening…</div>';
-    else if (extra) { const w = WINGS.find(z => z.k === extra); extraH = `<div class="rv-extra" style="--wc:${w.c};--wc2:${w.c2}"><b>${esc(w.e)} ${esc(w.n)} is complete!</b> Its banner now hangs over your main menu.</div>`; }
-    const n = RELICS.filter(r => relicsGot()[r.k]).length, gl = fresh ? GLORY.find(m => m[0] === n) : null;
+    else if (extra) { const w = WINGS.find(z => z.k === extra); extraH = `<div class="rv-extra" style="--wc:${w.c};--wc2:${w.c2}"><b>${esc(w.e)} ${esc(w.n)} is complete!</b> ${extra === 'heart' ? 'You have won the Rose Garland: roses on your arms in every life, and every sweetheart you wed starts out fonder of you.' : 'Its banner now hangs over your main menu.'}</div>`; }
+    const n = RCORE.filter(r => relicsGot()[r.k]).length, gl = fresh ? GLORY.find(m => m[0] === n) : null;
     if (gl && gl[0] < 16) extraH += `<div class="rv-extra glory"><b>${gl[1]} Reward unlocked: ${esc(gl[2])}</b> ${esc(gl[3])}</div>`;
     const body = g ? `<p class="rv-lore">${esc(x.lore)}</p><p class="rv-who">Won by ${esc(g.who)}, born ${esc(bornAs(g.bc))}, in the year ${g.y}.</p>` : `<p class="rv-lore">The case is barred and chained. Something glints behind the iron.</p><p class="rv-how"><b>How to win it</b>${esc(fromText(x))}, then: ${esc(x.d.charAt(0).toLowerCase() + x.d.slice(1))}</p>`;
     const el = document.createElement('div');
@@ -27039,7 +27065,7 @@ const GLORY = [
   [12, '💎', 'A jewelled crest', 'A silver crest set with gems crowns your main menu.'],
   [16, '👑', 'The Golden Age', 'Your main menu turns to gold.'],
 ];
-const relicCount = () => { const g = relicsGot(); return Math.max(RELICS.filter(x => g[x.k]).length, wonRec().glory || 0); };
+const relicCount = () => { const g = relicsGot(); return Math.max(RCORE.filter(x => g[x.k]).length, wonRec().glory || 0); };
 function gloryPct(n) {
   const m = GLORY.map(x => x[0]);
   if (n <= m[0]) return 0; if (n >= m[m.length - 1]) return 1;
@@ -27050,7 +27076,9 @@ function gloryHTML(n) {
   const next = GLORY.find(g => n < g[0]);
   return `<div class="glory"><div class="gl-h"><b>The Path of Glory</b><small>${next ? `${next[0] - n} more relic${next[0] - n > 1 ? 's' : ''} to the next reward` : 'Every reward is yours'}</small></div><ol class="gl-track" style="--p:${gloryPct(n).toFixed(3)}">${GLORY.map(g => { const got = n >= g[0], mys = g[0] === 16 && !got; return `<li class="${got ? 'got' : ''}${next === g ? ' next' : ''}${mys ? ' mys' : ''}"><span class="gl-m" aria-hidden="true">${mys ? '?' : g[1]}</span><b>${g[0]}</b><small>${esc(mys ? 'A mystery' : g[2])}</small></li>`; }).join('')}</ol>${next ? `<p class="gl-next"><b>Next reward:</b> ${esc(next[0] === 16 ? 'the sealed reliquary opens. No one alive knows what it holds.' : `${next[2]}. ${next[3]}`)}</p>` : ''}</div>`;
 }
-function applyRewards() { try { document.documentElement.classList.toggle('gilt-arms', relicCount() >= 8); } catch (e) { } }
+const heartWon = () => wingDone(relicsGot(), 'heart');
+const roseOn = () => heartWon() && jget(MKEY, { rose: 1 }).rose !== 0;
+function applyRewards() { try { document.documentElement.classList.toggle('gilt-arms', relicCount() >= 8); document.documentElement.classList.toggle('rose-arms', roseOn()); } catch (e) { } }
 applyRewards();
 
 /* ---------- the Hall of Legends screen ---------- */
@@ -27148,14 +27176,15 @@ function wingWinSVG(W, done) {
   return `<svg class="wing-win${done ? ' lit' : ''}" viewBox="0 0 40 64" aria-hidden="true" focusable="false"><path d="M3 62V24Q3 8 20 2Q37 8 37 24V62Z" fill="url(#rl-au2)" stroke="${OL}"/><path d="M7 59V25Q7 12 20 6.5Q33 12 33 25V59Z" fill="${glass}"/>${done ? `<path d="M7 59V25Q7 12 20 6.5Q33 12 33 25V59Z" fill="url(#rl-glow)" opacity=".75"/><path d="M11 50l9 -9l9 9l-9 7z" fill="#fff" opacity=".22"/>` : ''}<path d="M20 6.5V59M7 31H33M7 45H33M10.5 18H29.5" stroke="#2a1a05" stroke-width="1.3" fill="none"/><text x="20" y="${done ? 42 : 41}" text-anchor="middle" font-size="12" opacity="${done ? 1 : .35}">${W.e}</text></svg>`;
 }
 function hallRelics() {
-  const got = relicsGot(), n = RELICS.filter(x => got[x.k]).length, won = prizeWon(got);
-  let h = `<div class="ch-head"><h2 class="ch-t">The Collection Hall</h2><p class="ch-sub">Sixteen relics, and the only way to win them is to climb. Each one needs a humble birth and a great rise.</p></div>`;
-  h += `<div class="relq${won ? ' open' : ''}">${reliquarySVG(got, won)}<div class="relq-n"><b>${n}</b><span>of ${RELICS.length} relics</span></div>${won ? `<p class="relq-t"><b>The Golden Age</b>The reliquary stands open. Your main menu now shines with the gold of every crown you won.</p><button class="btn ghost relq-b" data-s="gild">${gildOn() ? '✨ Golden menu: on' : 'Golden menu: off'}</button>` : `<p class="relq-t"><b>The Sealed Reliquary</b>Fill every case in the Hall and it will open. No one alive knows what it holds.</p>`}</div>`;
+  const got = relicsGot(), n = RCORE.filter(x => got[x.k]).length, won = prizeWon(got);
+  let h = `<div class="ch-head"><h2 class="ch-t">The Collection Hall</h2><p class="ch-sub">Sixteen relics, and the only way to win them is to climb. Each one needs a humble birth and a great rise. The Wing of the Heart is won by love and family instead.</p></div>`;
+  h += `<div class="relq${won ? ' open' : ''}">${reliquarySVG(got, won)}<div class="relq-n"><b>${n}</b><span>of ${RCORE.length} relics</span></div>${won ? `<p class="relq-t"><b>The Golden Age</b>The reliquary stands open. Your main menu now shines with the gold of every crown you won.</p><button class="btn ghost relq-b" data-s="gild">${gildOn() ? '✨ Golden menu: on' : 'Golden menu: off'}</button>` : `<p class="relq-t"><b>The Sealed Reliquary</b>Fill every case in the Hall and it will open. No one alive knows what it holds.</p>`}</div>`;
   h += gloryHTML(relicCount());
   for (const W of WINGS) {
     const xs = RELICS.filter(x => x.w === W.k), wn = xs.filter(x => got[x.k]).length, done = wn === xs.length;
     h += `<section class="wing${done ? ' done' : ''}" style="--wc:${W.c};--wc2:${W.c2}"><div class="wing-h">${wingWinSVG(W, done)}<div class="wing-t"><b>${esc(W.n)}</b><small>${esc(W.m)}</small><span class="wing-pips" aria-hidden="true">${xs.map(x => `<i class="${got[x.k] ? 'on' : ''}" style="--rc:${rarOf(x).c}"></i>`).join('')}</span></div><span class="wc">${wn}<small>/${xs.length}</small></span></div>`;
-    h += `<p class="wing-rw">${done ? '✦ Banner won. It hangs over your main menu. ✦' : '🏳️ Complete this wing to hang its banner over your main menu.'}</p><div class="rl-grid">`;
+    h += W.k === 'heart' ? `<p class="wing-rw">${wingDone(got, 'heart') ? `✦ The Rose Garland is yours: roses on your arms in every life, and every sweetheart you wed starts out fonder of you. ✦</p><p class="wing-rw"><button class="btn ghost relq-b" data-s="rose">${roseOn() ? '🌹 Rose garland: on' : 'Rose garland: off'}</button>` : '🌹 Complete this wing to win the Rose Garland: roses on your arms in every life, and every sweetheart you wed starts out fonder of you.'}</p><div class="rl-grid">`
+      : `<p class="wing-rw">${done ? '✦ Banner won. It hangs over your main menu. ✦' : '🏳️ Complete this wing to hang its banner over your main menu.'}</p><div class="rl-grid">`;
     h += xs.map(x => { const g = got[x.k], R = rarOf(x); return `<div class="rl-item${g ? ' got' : ' locked'}"><button class="rl-btn" data-s="relic" data-v="${x.k}" aria-label="${esc(x.n)}, ${R.n}${g ? '' : ', not yet won'}">${caseHTML(x, !!g)}</button><div class="rl-plate"><span class="rl-rar" style="--rc:${R.c}">${R.n}</span><b>${esc(x.n)}</b><small>${g ? `${esc(g.who)}, ${g.y}` : esc(fromText(x))}</small></div></div>`; }).join('');
     h += '</div></section>';
   }
