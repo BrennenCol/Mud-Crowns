@@ -1453,12 +1453,12 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .lv-ranks{position:absolute;left:6px;top:6px;display:flex;flex-wrap:wrap;gap:1px;width:40%;font-size:13px}
 .lv-ranks i{font-style:normal}
 /* muster */
-.g-mu{padding:6px;background:linear-gradient(#a8c4a0,#8aa45a)}
+.g-mu{padding:6px;background:linear-gradient(90deg,transparent 0 6%,#c8c2b2 6% 10%,transparent 10%) 0 0/100% 34% no-repeat,linear-gradient(180deg,transparent 0 6px,#3d5c96 6px 10px,transparent 10px) 5.4% 0/5% 34% no-repeat,radial-gradient(ellipse 30px 10px at 50% 100%,rgba(140,110,60,.35),transparent 70%) 0 100%/60px 40px repeat-x,radial-gradient(ellipse 4px 1.6px,rgba(70,100,40,.5) 60%,transparent 70%) 0 0/21px 15px,linear-gradient(180deg,#a8c4d8 0,#c8d8d4 22%,#9ab866 34%,#86a456 70%,#76964a)}
 .mu-roll{margin:0 0 6px;padding:5px 8px;border-radius:6px;background:rgba(255,248,230,.85);font-size:13px;color:#2a1d14}
 .mu-rank{display:grid;grid-template-columns:repeat(6,1fr);gap:3px}
 .mu-rank.in{animation:muIn .6s ease-out}
 @keyframes muIn{from{transform:translateX(60%);opacity:0}}
-.mu-m{height:96px;padding:0;border:0;border-radius:8px;background:rgba(255,255,255,.15);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mu-m{height:96px;padding:0;border:0;border-radius:8px;background:radial-gradient(ellipse 50% 14% at 50% 92%,rgba(0,0,0,.25),transparent 70%),rgba(255,255,255,.1);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .mu-m svg{width:100%;height:100%}
 .mu-m.flag{box-shadow:inset 0 0 0 3px #a3251a;background:rgba(163,37,26,.18)}
 .mu-m.right{box-shadow:inset 0 0 0 3px #3f8a52;background:rgba(63,138,82,.25)}
@@ -1567,7 +1567,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .wr-max{position:absolute;right:6px;top:6px;font-size:11px;color:#f1e4c3;opacity:.8}
 .mg-b.wr-s{padding:10px 4px;font-size:14px}
 .wr-wax{display:block;width:26px;height:26px;margin:0 auto 4px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.35),var(--c) 60%);box-shadow:0 0 0 2px rgba(0,0,0,.25)}
-.g-pv{background:#4a3a2e}
+.g-pv{background:#5a3a2c}
 .pv-up{animation:scHop .4s ease-out}
 .pv-bub span{position:absolute;top:6px;z-index:3;padding:4px 8px;border-radius:10px;background:#fffdf4;color:#2a1d14;font:italic 13px/1.2 var(--serif);white-space:nowrap;transform:translateX(-50%);box-shadow:0 2px 6px rgba(0,0,0,.35);animation:bfPop .25s ease-out}
 .pv-lean{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px;margin:6px 0;font-size:12.5px;color:var(--ink-2)}
@@ -1586,7 +1586,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .ob-board{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;margin:4px 0 6px;padding:6px 8px;border-radius:8px;background:#f6ecd2;box-shadow:inset 0 0 0 2px #8a6a3a;font-size:16px}
 .ob-board b{width:100%;font:13px var(--black);color:#7a1e16}
 .ob-board small{font-size:12px;color:#3a2412}
-.g-ob{background:#5a3a22}
+.g-ob{background:#4a3220}
 .ob-bub{position:absolute;right:4%;top:6px;z-index:3;max-width:66%;padding:6px 10px;border-radius:10px;background:#fffdf4;color:#2a1d14;font:italic 14px/1.3 var(--serif);box-shadow:0 2px 6px rgba(0,0,0,.35)}
 .ob-bub b{font-style:normal;font-size:18px}
 .ob-bub.in{animation:bfPop .25s ease-out}
@@ -1919,8 +1919,8 @@ button.in-t{cursor:pointer}
 .mg-b.nv-b{padding:12px 4px;font-size:15px}
 @media (prefers-reduced-motion:reduce){.ho2-sea,.pl-sea,.mq-w,.nv-sea,.mq-fl .mq-f,.nv-pole span,.lm-sp.snap{animation:none}}
 /* ---------- v1.28 batch 5: the great household and healing ---------- */
-.g-ty{height:170px;background:linear-gradient(#a8c4dc 0 45%,#c9b06a 45%)}
-.ty-road{position:absolute;left:0;right:0;bottom:22px;height:26px;background:#a88a5a;box-shadow:inset 0 2px 0 rgba(0,0,0,.15)}
+.g-ty{height:170px;background:radial-gradient(ellipse 30px 8px at 70% 12%,#fbf8ee 60%,transparent 70%),radial-gradient(ellipse 22px 6px at 30% 8%,#fbf8ee 60%,transparent 70%),radial-gradient(ellipse 7px 12px at 50% 100%,#d9b45a 0 60%,#a8823a 61% 70%,transparent 72%) 0 60px/34px 26px repeat-x,repeating-linear-gradient(100deg,transparent 0 7px,rgba(150,110,40,.25) 7px 8px) 0 100%/100% 54% no-repeat,linear-gradient(#8fb2d2 0,#d8e2de 42%,#a6b896 44%,#d4b86a 46%,#c9a85a)}
+.ty-road{position:absolute;left:0;right:0;bottom:22px;height:26px;background:linear-gradient(180deg,transparent 18%,rgba(90,66,36,.45) 18% 30%,transparent 30% 66%,rgba(90,66,36,.45) 66% 78%,transparent 78%),#b0925e;box-shadow:inset 0 2px 0 rgba(0,0,0,.15)}
 .ty-barn{position:absolute;right:4px;bottom:22px;width:108px;height:98px}
 .ty-reeve{position:absolute;left:6px;bottom:10px;width:40px;height:68px;z-index:3}
 .ty-cart{position:absolute;left:-60%;bottom:30px;z-index:2;width:56%;height:84px}
@@ -2166,7 +2166,7 @@ button.in-t{cursor:pointer}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.30.9';
+const APP_VERSION = '1.31.0';
 const DEEDS_PER_YEAR = 3;
 // the Raven (the prize of the Wing of Shadows) brings one more deed every year
 const deedsMax = () => DEEDS_PER_YEAR + (typeof ravenWon === 'function' && ravenWon() ? 1 : 0);
@@ -30126,7 +30126,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       let lean = 55, over = false, clock = null, t0 = 0, speaker = -1, sk = '', nextAt = 1200, counters = 0, missed = 0, wrongs = 0, turn = 0;
       const opp = Array.from({ length: 3 }, () => ({ look: Object.assign(randFolk(false, true), { robe: pick(['#2a2a2a', '#5a2a3a', '#2f4f7a']), hat: 'cap', capc: '#1a1a1a' }) }));
       const go = () => {
-        mgShow(`${mgHead(MG_BY.council, `The council: ${issue[0]} or ${issue[1]}?`)}<div class="sc g-pv" id="pv-stage"><svg class="sc-svg" viewBox="0 0 360 120" aria-hidden="true"><rect width="360" height="120" fill="#4a3a2e"/><rect x="40" y="76" width="280" height="30" rx="6" fill="#6b4a2e" stroke="#2a1a0c"/>${opp.map((o, j) => `<g id="pv-o${j}" transform="translate(${90 + j * 90} 86) scale(1.1)">${fig(o.look)}</g>`).join('')}<g transform="translate(36 112) scale(1.2)">${fig(Object.assign({}, meLook(), { arms: 'hold' }))}</g><g transform="translate(330 104) scale(1.25)">${fig({ robe: '#5a2a6a', hat: 'crown', beard: ruler === 'king', f: ruler === 'queen' })}</g></svg><div class="pv-bub" id="pv-bub"></div></div><div class="pv-lean"><span>${esc(cap(issue[1]))}</span><b><i id="pv-n" style="left:${lean}%"></i></b><span>${esc(cap(issue[0]))}</span></div><p class="mg-tip">You want <b>${esc(issue[0])}</b>. Keep the needle on the right.</p>${timeBar('pv-t')}<div class="mg-four">${Object.entries(PV_CTR).map(([k, [e, n]]) => mgBtn('ctr', k, `${e} ${esc(n)}`)).join('')}</div>`);
+        mgShow(`${mgHead(MG_BY.council, `The council: ${issue[0]} or ${issue[1]}?`)}<div class="sc g-pv" id="pv-stage"><svg class="sc-svg" viewBox="0 0 360 120" aria-hidden="true"><rect width="360" height="120" fill="#5a3a2c"/>${Array.from({ length: 9 }, (_, q) => `<path d="M${q * 40 + 20} 0V120" stroke="#3a2016" stroke-width="1.2"/>`).join('')}<path d="M100 6H260V58L180 52L100 58Z" fill="#2f5a3a" stroke="#c9952e" stroke-width="2"/><path d="M106 12H254" stroke="#c9952e" stroke-width="1.2"/>${[[130, 34], [180, 28], [230, 34]].map(([x, y]) => `<text x="${x}" y="${y}" text-anchor="middle" font-size="12" fill="#e2b23c">⚜</text>`).join('')}<path d="M18 8H54V50H18Z" fill="#9fc3d8" stroke="#2a1a10" stroke-width="2"/><path d="M36 8V50M18 29H54" stroke="#2a1a10" stroke-width="1.4"/><path d="M18 50L4 76H70L54 50Z" fill="#ffeab0" opacity=".1"/><rect x="40" y="76" width="280" height="30" rx="6" fill="#2f5a3a" stroke="#1a2a18"/><path d="M44 80H316" stroke="#c9952e" stroke-width="1.2"/><rect x="40" y="100" width="280" height="6" rx="2" fill="#6b4a2e" stroke="#2a1a0c"/><path d="M110 82L128 80L130 86L112 88Z" fill="#efe2c0" stroke="#8a7a5a" stroke-width=".6"/><path d="M226 84L246 82L248 88L228 90Z" fill="#efe2c0" stroke="#8a7a5a" stroke-width=".6"/><circle cx="182" cy="86" r="3" fill="#1a1410" stroke="#c9952e" stroke-width=".8"/><path d="M182 83L190 74" stroke="#f3ead6" stroke-width="1.2"/>${opp.map((o, j) => `<g id="pv-o${j}" transform="translate(${90 + j * 90} 86) scale(1.1)">${fig(o.look)}</g>`).join('')}<g transform="translate(36 112) scale(1.2)">${fig(Object.assign({}, meLook(), { arms: 'hold' }))}</g><g transform="translate(330 104) scale(1.25)">${fig({ robe: '#5a2a6a', hat: 'crown', beard: ruler === 'king', f: ruler === 'queen' })}</g></svg><div class="pv-bub" id="pv-bub"></div></div><div class="pv-lean"><span>${esc(cap(issue[1]))}</span><b><i id="pv-n" style="left:${lean}%"></i></b><span>${esc(cap(issue[0]))}</span></div><p class="mg-tip">You want <b>${esc(issue[0])}</b>. Keep the needle on the right.</p>${timeBar('pv-t')}<div class="mg-four">${Object.entries(PV_CTR).map(([k, [e, n]]) => mgBtn('ctr', k, `${e} ${esc(n)}`)).join('')}</div>`);
         t0 = performance.now();
         clock = mgClock(36000, 'pv-stage', f => {
           setBar('pv-t', f); const now = performance.now() - t0;
@@ -30203,7 +30203,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       const claims = Array.from({ length: N }, (_, q) => { const c = pick(cats); let v = truth[c]; if (falseAt.has(q)) { const o = OB_CAT[c].map((_, j) => j).filter(j => j !== v); v = pick(o); } return { c, v, lie: falseAt.has(q) }; });
       let i = -1, caught = 0, wrongs = 0, let_ = 0, live = false, clock = null, over = false, called = false;
       const board = cats.map(c => `<span>${OB_CAT[c][truth[c]][0]} <small>${esc(OB_CAT[c][truth[c]][1])}</small></span>`).join('');
-      const go = () => { mgShow(`${mgHead(MG_BY.objection, 'The court is in session', 0, N)}<div class="ob-board"><b>The evidence</b>${board}</div><div class="sc g-ob" id="ob-stage"><svg class="sc-svg" viewBox="0 0 360 150" aria-hidden="true"><rect width="360" height="150" fill="#5a3a22"/><rect y="118" width="360" height="32" fill="#4a3220"/><g transform="translate(180 96) scale(1.1)">${fig({ robe: '#7a1e16', hat: 'cap', capc: '#1a1a1a', hair: '#a9a297', arms: 'hold' })}</g><rect x="130" y="80" width="100" height="40" fill="#6b4a2e" stroke="#2a1a0c"/><g id="ob-foe" transform="translate(300 140) scale(1.4)">${fig({ robe: '#2a2a2a', hat: 'cap', capc: '#1a1a1a', beard: 1, arms: 'up' })}</g><g transform="translate(56 140) scale(1.4)">${fig(Object.assign({}, meLook(), { robe: '#2a2a2a', arms: 'hold' }))}</g></svg><div class="ob-bub" id="ob-bub"></div></div>${timeBar('ob-t')}${mgBtn('obj', '', '🙋 Objection!', 'go ob-btn')}<div class="cu-hud ex-hud" id="ob-hud"></div>`); next(); };
+      const go = () => { mgShow(`${mgHead(MG_BY.objection, 'The court is in session', 0, N)}<div class="ob-board"><b>The evidence</b>${board}</div><div class="sc g-ob" id="ob-stage"><svg class="sc-svg" viewBox="0 0 360 150" aria-hidden="true"><rect width="360" height="150" fill="#5a3a22"/>${Array.from({ length: 12 }, (_, q) => `<rect x="${q * 30 + 3}" y="6" width="24" height="44" fill="none" stroke="#3a2412" stroke-width="1.6"/><rect x="${q * 30 + 3}" y="58" width="24" height="52" fill="none" stroke="#3a2412" stroke-width="1.6"/>`).join('')}<path d="M160 6H200V30Q200 46 180 52Q160 46 160 30Z" fill="#9b1f12" stroke="#e2b23c" stroke-width="2"/><path d="M168 20L180 14L192 20M168 30L180 24L192 30" stroke="#e2b23c" stroke-width="2" fill="none"/><path d="M152 10L144 4M208 10L216 4" stroke="#e2b23c" stroke-width="2"/><rect y="118" width="360" height="32" fill="#4a3220"/><path d="M0 118H360" stroke="#2a1a0c" stroke-width="2"/><path d="M260 112H350M260 124H350" stroke="#3a2412" stroke-width="3"/>${[264, 282, 300, 318, 336].map(x => `<path d="M${x} 112V138" stroke="#3a2412" stroke-width="3"/>`).join('')}<g transform="translate(180 96) scale(1.1)">${fig({ robe: '#7a1e16', hat: 'cap', capc: '#1a1a1a', hair: '#a9a297', arms: 'hold' })}</g><rect x="126" y="76" width="108" height="44" fill="#6b4a2e" stroke="#2a1a0c"/><rect x="122" y="74" width="116" height="6" fill="#8a5d34" stroke="#2a1a0c"/><rect x="136" y="86" width="88" height="26" fill="none" stroke="#3a2412" stroke-width="1.6"/><path d="M180 88V110M158 99H202" stroke="#c9952e" stroke-width="1.2" opacity=".6"/><g id="ob-foe" transform="translate(300 140) scale(1.4)">${fig({ robe: '#2a2a2a', hat: 'cap', capc: '#1a1a1a', beard: 1, arms: 'up' })}</g><g transform="translate(56 140) scale(1.4)">${fig(Object.assign({}, meLook(), { robe: '#2a2a2a', arms: 'hold' }))}</g></svg><div class="ob-bub" id="ob-bub"></div></div>${timeBar('ob-t')}${mgBtn('obj', '', '🙋 Objection!', 'go ob-btn')}<div class="cu-hud ex-hud" id="ob-hud"></div>`); next(); };
       const next = () => {
         if (live && claims[i] && claims[i].lie && !called) let_++;
         i++; if (i >= N) return end(); mgStep(i); called = false; live = true;

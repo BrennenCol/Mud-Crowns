@@ -61,7 +61,7 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.30.8.txt`, ready to copy.
+Also in `store/whats_new_1.31.0.txt`, ready to copy.
 
 ```
 BIG UPDATE
@@ -74,7 +74,7 @@ BIG UPDATE
 - The life goal "Wear a crown" is now "Rule a kingdom".
 - Knights' helmets fit, and cooks and smiths wear proper aprons.
 - Bug fixes, including a crash in some indoor scenes during a comet year.
-- Twenty-eight mini-games redrawn, from the hue and cry and the siege to the Latin lesson, the chatelaine's keys, the chronicle and the long gallery.
+- Thirty-six mini-games redrawn, from the hue and cry and the siege to the joust, the muster, the court and the privy council.
 - Mini-games now fit the job: a court official no longer judges petitions, a knight no longer commands the whole battle, and each post plays the work it really did.
 ```
 
