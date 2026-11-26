@@ -2165,7 +2165,7 @@ button.in-t{cursor:pointer}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.30.3';
+const APP_VERSION = '1.30.4';
 const DEEDS_PER_YEAR = 3;
 // the Raven (the prize of the Wing of Shadows) brings one more deed every year
 const deedsMax = () => DEEDS_PER_YEAR + (typeof ravenWon === 'function' && ravenWon() ? 1 : 0);
@@ -27679,7 +27679,10 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     { i: '🔔', w: 'The bakers’ guild', t: 'Grant our guild the only right to sell bread in the town. We will pay you for it.', a: ['Grant it (they pay you)', { crown: 4, commons: -9 }, .3], b: ['Anyone may bake', { commons: 8, crown: -3 }] },
   ];
   // only those who really sat to hear petitions: lords, judges, mayors, sheriffs, stewards, prelates and the king's ministers
-  const PET_WHO = ['courtier', 'adviser', 'chancellor', 'official', 'magistrate', 'judge', 'steward', 'castellan', 'jb_seneschal', 'jb_chamberlain', 'jb_mayor', 'jb_lordmayor', 'jb_alderman', 'jb_sheriff', 'jb_highsheriff', 'abbot', 'bishop', 'archbishop', 'wm_princeabbess', 'wm_grandmistress', 'dukecmd', 'barcmd'];
+  // petitions were heard by those who held a court: the Chancellor (the court of Chancery), judges and justices, mayors
+  // and aldermen in the borough court, sheriffs in the county court, stewards and seneschals in the lord's court, and
+  // abbots, abbesses and bishops over their tenants. A court official, an adviser or a chamberlain did not judge them.
+  const PET_WHO = ['chancellor', 'magistrate', 'judge', 'steward', 'jb_seneschal', 'jb_mayor', 'jb_lordmayor', 'jb_alderman', 'jb_sheriff', 'jb_highsheriff', 'abbot', 'bishop', 'archbishop', 'wm_princeabbess', 'wm_grandmistress'];
   // how each petitioner looks; ':na' marks the one whose first answer is a refusal of what they asked
   const PET_LK = ['widow', 'peasant', 'friar', 'baron', 'scholar', 'merchant', 'forester:na', 'messenger', 'soldier', 'lady', 'preacher:na', 'knight', 'serf', 'townsfolk', 'pilgrim', 'lender', 'player', 'abbot', 'wool', 'guild'];
   const PET_LOOK = {
@@ -27787,7 +27790,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
   };
   const exCoin = k => `<svg viewBox="-10 -10 20 20" aria-hidden="true">${EX_COIN[k]}</svg>`;
   const EX_SHER = () => `<svg viewBox="-20 -60 40 64" aria-hidden="true">${fig(Object.assign(randFolk(false, true), { arms: 'hold', robe: pick(['#2f4f7a', '#6a2a3a', '#4f6a2a', '#5a3a6a']) }))}<path d="M-9 -16Q-14 -2 -6 0H6Q14 -2 9 -16Q0 -20 -9 -16Z" fill="#a8865a" stroke="#5a3a1e" stroke-width=".9"/><path d="M-4 -17Q0 -21 4 -17" stroke="#5a3a1e" stroke-width="1.4" fill="none"/></svg>`;
-  mgAdd({ k: 'exch', i: '🧮', n: 'The Exchequer', d: 'Sheriffs pour the shires’ silver onto the chequered cloth. Pull out the clipped and lead coins before they reach the king’s chest.', seal: 'mg_exch', who: () => mgIn('chancellor', 'treasurer', 'official', 'jb_mintmaster', 'jb_royalbanker', 'jb_seneschal', 'steward', 'castellan'),
+  mgAdd({ k: 'exch', i: '🧮', n: 'The Exchequer', d: 'Sheriffs pour the shires’ silver onto the chequered cloth. Pull out the clipped and lead coins before they reach the king’s chest.', seal: 'mg_exch', who: () => mgIn('chancellor', 'treasurer', 'official'),
     play() {
       const shires = S.world && S.world.t ? shuf(S.world.t.map(x => x.n)).slice(0, 4) : shuf(TOWNS.concat(VILLAGES)).slice(0, 4);
       while (shires.length < 4) shires.push(pick(TOWNS));
@@ -27886,7 +27889,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     <rect x="116" y="106" width="128" height="10" fill="#3a2414"/>`;
   const dockSVG = (x, front) => front ? `<rect x="${x - 34}" y="170" width="68" height="40" fill="#6b4a2e" stroke="#2a1a0c" stroke-width="1.4"/><path d="M${x - 34} 178H${x + 34}" stroke="#3a2414" stroke-width="2.4"/><path d="M${x - 17} 178V210M${x} 178V210M${x + 17} 178V210" stroke="#3a2414" stroke-width="1.8"/>` : '';
   const gavelSVG = '<g id="as-gav" class="as-gav" style="transform-origin:224px 108px"><rect x="204" y="92" width="26" height="10" rx="2" fill="#7a4e2a" stroke="#2a1a0c" stroke-width="1"/><path d="M217 102V118" stroke="#5a3a1e" stroke-width="3.4"/></g>';
-  mgAdd({ k: 'assize', i: '⚖️', n: 'Ride the assize', d: 'Three cases. One witness in each is lying: watch for the liar’s tell, catch them out, and judge.', seal: 'mg_assize', who: () => mgIn('judge', 'magistrate', 'jb_serjeant', 'jb_sheriff', 'jb_highsheriff', 'jb_mayor', 'jb_lordmayor', 'jb_alderman', 'jb_inquisitor'),
+  mgAdd({ k: 'assize', i: '⚖️', n: 'Ride the assize', d: 'Three cases. One witness in each is lying: watch for the liar’s tell, catch them out, and judge.', seal: 'mg_assize', who: () => mgIn('judge', 'magistrate', 'jb_mayor', 'jb_lordmayor'),
     play() {
       const me = meLook();
       const cases = shuf(CRIMES).slice(0, 3).map(cr => {
@@ -28001,7 +28004,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     if (t === 'open') for (const [dx, dy] of [[-36, 118], [-6, 128], [24, 120], [-24, 154], [10, 150], [38, 164], [-40, 176]]) s += `<path d="M${x + dx} ${dy}l-2 -4M${x + dx} ${dy}l0 -5M${x + dx} ${dy}l2 -4" stroke="#55703a" stroke-width=".8"/>`;
     return s;
   }
-  mgAdd({ k: 'war', i: '🎌', n: 'The field of battle', d: 'Read the ground, deploy your companies, watch the fight, and send your reserve knights in time.', seal: 'mg_war', payK: .5, who: () => mgIn('general', 'constable', 'marshal', 'knightcmd', 'dukecmd', 'barcmd', 'jb_condottiero', 'jb_grandmaster', 'jb_preceptor', 'jb_guardcaptain', 'jb_gunner', 'knightmil'),
+  mgAdd({ k: 'war', i: '🎌', n: 'The field of battle', d: 'Read the ground, deploy your companies, watch the fight, and send your reserve knights in time.', seal: 'mg_war', payK: .5, who: () => mgIn('general', 'constable', 'marshal', 'knightcmd', 'dukecmd', 'barcmd', 'jb_condottiero', 'jb_grandmaster'),
     play() {
       const foe = bfFoe(), ter = shuf(Object.keys(BF_TER)).slice(0, 3), enemy = shuf(Object.keys(BF_U)), weather = pick(['clear', 'clear', 'rain', 'fog', 'wind']);
       const mineCol = REALM_COL[S.realm] || '#23427a', foeCol = REALM_COL[foe.r] || '#9b1f12';
@@ -28119,7 +28122,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     <rect x="134" y="118" width="54" height="34" rx="2" fill="#6b4a2e" stroke="#2a1a0c" stroke-width="1.4"/><path d="M134 126H188" stroke="#2a1a0c" stroke-width="1.4"/><path d="M146 118V152M176 118V152" stroke="#8a8a90" stroke-width="2.6"/>
     <rect x="198" y="100" width="76" height="7" fill="#6b4a2e" stroke="#2a1a0c" stroke-width="1"/><path d="M204 107V156M268 107V156" stroke="#4a2e16" stroke-width="5"/><rect x="200" y="150" width="72" height="18" fill="rgba(0,0,0,.3)"/>
     <path d="M308 118Q302 140 308 164H346Q352 140 346 118Z" fill="#7a4e2a" stroke="#2a1a0c" stroke-width="1.4"/><path d="M305 128H349M304 154H350" stroke="#4a4c4e" stroke-width="2.4"/><circle cx="327" cy="141" r="3" fill="#3a2412"/>`;
-  mgAdd({ k: 'visit', i: '⛪', n: 'The visitation', d: 'Ride round four parishes and search each priest’s house before the bell rings. Punish the guilty; protect the slandered.', seal: 'mg_visit', who: () => mgIn('abbot', 'bishop', 'archbishop', 'cardinal', 'jb_legate', 'wm_princeabbess', 'wm_grandmistress'),
+  mgAdd({ k: 'visit', i: '⛪', n: 'The visitation', d: 'Ride round four parishes and search each priest’s house before the bell rings. Punish the guilty; protect the slandered.', seal: 'mg_visit', who: () => mgIn('bishop', 'archbishop', 'cardinal', 'jb_legate'),
     play() {
       const ps = shuf(VILLAGES).slice(0, 4).map(v => {
         const kind = wpick([['corrupt', 4], ['slander', 3], ['sound', 2]], x => x[1])[0];
@@ -28332,7 +28335,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     <rect x="236" y="120" width="112" height="7" fill="#6b4a2e" stroke="#2a1a0c"/><path d="M244 127V172M340 127V172" stroke="#4a2e16" stroke-width="5"/>
     <path d="M256 120L262 104H276L282 120Z" fill="#7a2a1e" stroke="#3a1208"/><path d="M256 104H282" stroke="#e2b23c" stroke-width="2"/>`;
   const mortarSVG = n => `<g id="sk-mort"><path d="M296 120Q296 100 302 98H334Q340 100 340 120Z" fill="#9a9a92" stroke="#4a4a44" stroke-width="1.4"/><ellipse cx="318" cy="98" rx="16" ry="4" fill="#5a5a54"/>${n ? `<ellipse cx="318" cy="99" rx="${Math.min(14, 6 + n * 3)}" ry="2.6" fill="#6a8a3a"/>` : ''}<g class="sk-pestle" id="sk-pes"><path d="M322 98L340 70" stroke="#c9b48a" stroke-width="5" stroke-linecap="round"/></g></g>`;
-  mgAdd({ k: 'sick', i: '🩺', n: 'The sickroom', d: 'Three patients, from a carter’s wife to the great. Read the signs, find the remedy in your book, and mix it before they fade.', seal: 'mg_sick', who: () => mgIn('physician', 'wm_hospmistress', 'wm_royalmidwife', 'wm_royalnurse'),
+  mgAdd({ k: 'sick', i: '🩺', n: 'The sickroom', d: 'Three patients, from a carter’s wife to the great. Read the signs, find the remedy in your book, and mix it before they fade.', seal: 'mg_sick', who: () => mgIn('physician', 'wm_hospmistress', 'wm_royalmidwife'),
     play() {
       const t = mgTier('sick'), great = t >= 2 || mgIn('wm_royalmidwife', 'wm_royalnurse');
       const ranks = [{ n: `${pick(NAMES.f)}, a carter’s wife`, r: 0 }, { n: `${pick(NAMES.m)} ${pick(SUR.low)}, a rich wool merchant`, r: 1 }, great ? { n: pick([`${KT() === 'Queen' ? 'Queen' : 'King'} ${S.king}`, 'the young prince', 'the queen mother']), r: 3 } : { n: `Lord ${pick(SUR.noble)}`, r: 2 }];
@@ -28663,7 +28666,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
   const SPY_W = [[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1], [6, 2], [6, 3], [5, 3], [4, 3], [3, 3], [2, 3], [1, 3], [1, 2]], [[4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 3], [4, 2], [4, 1]]];
   const SPY_HOME = [1, 4];
   const spyTok = (kind) => kind === 'me' ? `<svg viewBox="-12 -50 24 52" aria-hidden="true">${fig({ robe: '#1e1e26', hat: 'hood', hood: '#26262e', skin: '#d9b48c', arms: 'hold' })}</svg>` : `<svg viewBox="-14 -50 28 52" aria-hidden="true">${fig({ robe: '#5a4a2a', hat: 'helm', beard: 1, arms: 'hold' })}<path d="M10 -18V-8" stroke="#3a2a1a" stroke-width="1.4"/><rect x="7" y="-8" width="6" height="7" rx="1.4" fill="#ffd36a" stroke="#6a4a10" stroke-width=".8"/></svg>`;
-  mgAdd({ k: 'spy', i: '🕸️', n: 'The spymaster’s web', d: 'Someone at court is a traitor. Slip through the night streets to your informants’ letters, past the watch, then name the traitor.', seal: 'mg_spy', who: () => mgIn('spymaster', 'adviser', 'jb_chamberlain'),
+  mgAdd({ k: 'spy', i: '🕸️', n: 'The spymaster’s web', d: 'Someone at court is a traitor. Slip through the night streets to your informants’ letters, past the watch, then name the traitor.', seal: 'mg_spy', who: () => mgIn('spymaster', 'adviser'),
     play() {
       const titles = shuf(['Lord', 'Lady', 'Sir', 'Dame', 'Master', 'Mistress']);
       const susName = (t, f) => { const sur = pick(SUR.noble); return /^(Sir|Dame)$/.test(t) || /^of /.test(sur) ? `${t} ${pick(NAMES[f ? 'f' : 'm'])} ${sur}` : `${t} ${sur}`; };
@@ -28808,7 +28811,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     ['A pilgrim from {r}', 'asks for a letter of safe passage to the Holy Land.'],
     ['The monks of St {s}', 'ask to be freed from paying tithes to the bishop.'],
   ];
-  mgAdd({ k: 'curia', i: '📜', n: 'The Curia’s letters', d: 'Letters pour in from all Christendom. Seal the true ones, burn the forgeries, before the candle burns down.', seal: 'mg_curia', payK: .5, who: () => mgIn('cardinal', 'archbishop', 'bishop', 'jb_legate', 'wm_princeabbess'),
+  mgAdd({ k: 'curia', i: '📜', n: 'The Curia’s letters', d: 'Letters pour in from all Christendom. Seal the true ones, burn the forgeries, before the candle burns down.', seal: 'mg_curia', payK: .5, who: () => mgIn('cardinal', 'archbishop', 'bishop', 'jb_legate'),
     play() {
       // today's true seal: wax, sign and cord. A forgery gets one of them wrong.
       const T = { w: pick(Object.keys(CU_WAX)), s: pick(Object.keys(CU_SIGN)), c: pick(Object.keys(CU_CORD)) };
@@ -28964,7 +28967,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
   /* ---------- 16. Attend the queen (or the king): fetch what is asked for, in order ---------- */
   const AT_Q = [['📖', 'my book of hours'], ['📿', 'my beads'], ['🍷', 'a cup of wine'], ['🐩', 'my little dog'], ['💐', 'my posy'], ['🧣', 'my shawl'], ['💍', 'my rings'], ['🕯️', 'a candle'], ['🍇', 'some grapes']];
   const AT_K = [['👑', 'my crown'], ['🧤', 'my gloves'], ['💍', 'my signet ring'], ['🗡️', 'my dagger'], ['📜', 'the day’s letters'], ['🍷', 'my wine'], ['🦅', 'my falcon'], ['🧥', 'my cloak'], ['👢', 'my riding boots']];
-  mgAdd({ k: 'attend', i: '👸', n: 'In attendance', d: 'Wait on the queen (or the king) in the royal chamber. Remember what is asked for, and bring it in the right order.', seal: 'mg_attend', who: () => mgIn('ladywait', 'wm_damsel', 'wm_mistresscham', 'wm_firstlady', 'wm_ladymistress', 'jb_wardrobe', 'courtier'),
+  mgAdd({ k: 'attend', i: '👸', n: 'In attendance', d: 'Wait on the queen (or the king) in the royal chamber. Remember what is asked for, and bring it in the right order.', seal: 'mg_attend', who: () => mgIn('ladywait', 'wm_damsel', 'wm_mistresscham', 'wm_firstlady', 'wm_ladymistress', 'jb_wardrobe', 'courtier', 'jb_chamberlain'),
     play() {
       const queen = mgIn('ladywait', 'wm_damsel', 'wm_mistresscham', 'wm_firstlady', 'wm_ladymistress'), IT = shuf(queen ? AT_Q : AT_K), who = queen ? 'The queen' : `The ${KT() === 'Queen' ? 'queen' : 'king'}`;
       const lens = [2, 2, 3, 3, 4, 4]; let r = -1, seq = [], got = 0, right = 0, phase = '', clock = null;
@@ -29940,7 +29943,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     } });
 
   /* ---------- 37. The grand master: hold the fortress ---------- */
-  mgAdd({ k: 'fortress', i: '🏯', n: 'Hold the fortress', d: 'The great assault. Push down the ladders, and dig counter-mines where the sappers are tunnelling.', seal: 'mg_fortress', payK: .6, who: () => mgIn('jb_grandmaster'),
+  mgAdd({ k: 'fortress', i: '🏯', n: 'Hold the fortress', d: 'The great assault. Push down the ladders, and dig counter-mines where the sappers are tunnelling.', seal: 'mg_fortress', payK: .6, who: () => mgIn('jb_grandmaster', 'castellan'),
     play() {
       const N = 6; let wall = Array(N).fill(3), pushed = 0, mines = 0, over = false, clock = null, t0 = 0, nextL = 800, nextM = 4000;
       const go = () => {
@@ -29974,7 +29977,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
         });
       };
       mgOn = (a, v) => { if (a === 'start') go(); else if (a === 'cell') tap(v); };
-      mgIntro(MG_BY.fortress, 'Grand master of the order', ['Six sections of wall, and the enemy everywhere. <b>Ladders</b> 🪜 go up quickly: tap them before the ring runs out to throw them down.', '<b>Sappers</b> ⛏️ tunnel slowly under the wall: tap twice to dig a counter-mine. A fired mine does double damage. Lose three sections and the fortress falls.'], '🏯 To the walls!');
+      mgIntro(MG_BY.fortress, mgIn('castellan') ? 'Keeper of the castle' : 'Grand master of the order', ['Six sections of wall, and the enemy everywhere. <b>Ladders</b> 🪜 go up quickly: tap them before the ring runs out to throw them down.', '<b>Sappers</b> ⛏️ tunnel slowly under the wall: tap twice to dig a counter-mine. A fired mine does double damage. Lose three sections and the fortress falls.'], '🏯 To the walls!');
     } });
   FEATS.push(
     { k: 'mg_joust', i: '🏇', n: 'Champion of the Lists', d: 'Become Legendary at the joust.' },
