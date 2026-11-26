@@ -805,6 +805,9 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 @keyframes roseGlow{0%,100%{filter:drop-shadow(0 1px 1.5px rgba(40,4,12,.45)) drop-shadow(0 0 4px rgba(255,120,150,.25))}50%{filter:drop-shadow(0 1px 1.5px rgba(40,4,12,.45)) drop-shadow(0 0 9px rgba(255,140,170,.55))}}
 @media (prefers-reduced-motion:reduce){.rose-arms .arms::after{animation:none}}
 .rose-arms .arms .badge{z-index:3}
+.raven-arms .arms::before{content:'';position:absolute;top:-19px;right:-8px;width:34px;height:27px;pointer-events:none;z-index:3;background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 32%22%3E%3Cpath d=%22M9 21L0.5 25.5L3.5 21.8L0 21.2L8 18.6Z%22 fill=%22%23141218%22 stroke=%22%23000%22 stroke-width=%22.4%22/%3E%3Cpath d=%22M8 22Q6 14 14 11Q20 9 25 12Q30.5 15 31 21Q28 26.4 20 26.4Q12 26.4 8 22Z%22 fill=%22%2317141c%22 stroke=%22%23000%22 stroke-width=%22.5%22/%3E%3Cpath d=%22M11.5 15.5Q20 11.5 28.5 19Q22 24.5 13.5 22.5Z%22 fill=%22%2326222f%22 stroke=%22%23000%22 stroke-width=%22.4%22/%3E%3Cpath d=%22M14 16.4Q20 14 26 18.6M14.5 19Q19.5 17.6 24.6 21%22 fill=%22none%22 stroke=%22%235d7aa6%22 stroke-width=%22.55%22 opacity=%22.8%22/%3E%3Cpath d=%22M18 25.6L17.2 30.4M22.4 25.6L22.6 30.4M15.6 31H18.6M21 31H24.4%22 stroke=%22%234a4552%22 stroke-width=%221.1%22 stroke-linecap=%22round%22/%3E%3Ccircle cx=%2227%22 cy=%2210.4%22 r=%225.2%22 fill=%22%2317141c%22 stroke=%22%23000%22 stroke-width=%22.5%22/%3E%3Cpath d=%22M31.2 9.2L38.6 11.2L31.2 12.9Z%22 fill=%22%233d3944%22 stroke=%22%23000%22 stroke-width=%22.45%22/%3E%3Ccircle cx=%2228.6%22 cy=%229.4%22 r=%221.25%22 fill=%22%23e2b23c%22/%3E%3Ccircle cx=%2229%22 cy=%229%22 r=%22.42%22 fill=%22%23fff%22/%3E%3Cpath d=%22M23.5 7.2Q26 5.2 29 6.4%22 fill=%22none%22 stroke=%22%236f86b0%22 stroke-width=%22.6%22 opacity=%22.7%22/%3E%3C/svg%3E") no-repeat center/100% 100%;transform-origin:60% 100%;filter:drop-shadow(0 1.5px 1.5px rgba(0,0,0,.4));animation:ravenLook 7s ease-in-out infinite}
+@keyframes ravenLook{0%,62%,100%{transform:none}66%,74%{transform:rotate(-7deg) translateY(-1px)}78%{transform:none}84%,88%{transform:scaleX(-1)}92%{transform:none}}
+@media (prefers-reduced-motion:reduce){.raven-arms .arms::before{animation:none}}
 .gilt-arms .arms{box-shadow:inset 0 0 0 3px #f3c955,inset 0 0 0 5px rgba(122,82,12,.85),0 0 0 2px #e2b23c,0 0 14px rgba(243,201,85,.55),0 3px 8px rgba(60,34,8,.3);animation:giltArms 4s ease-in-out infinite}
 @keyframes giltArms{50%{box-shadow:inset 0 0 0 3px #fff2b0,inset 0 0 0 5px rgba(122,82,12,.85),0 0 0 2px #f3c955,0 0 22px rgba(243,201,85,.85),0 3px 8px rgba(60,34,8,.3)}}
 @media (prefers-reduced-motion:reduce){.rv-sparks,.rv-burst{display:none}.rv *,.rl-niche,.rl-niche *,.rl-niche::before,.rl-niche::after,.tw,.gl-m,.hall-shaft,.hall-smoke,.pod-crown,.crest-svg,.new-b,.gilt-arms .arms{animation:none!important}.rv .rv-kick,.rv .rv-rar,.rv .rv-n,.rv .rv-lore,.rv .rv-who,.rv .rv-how,.rv .rv-extra,.rv .rv-ok{opacity:1}.rv-rays{opacity:.2}}
@@ -1053,7 +1056,9 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .cu-final b{display:block;font:48px/1 var(--black);color:#f3c955}
 .cu-final small{color:#e8d7aa}
 /* ---------- v1.20 every game a scene ---------- */
-.sc{position:relative;margin:4px 0 8px;border-radius:10px;overflow:hidden;box-shadow:0 0 0 2px #8a6420,0 4px 10px rgba(0,0,0,.3);background:#2a1a0c;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+.sc{position:relative;margin:6px 2px 10px;border-radius:10px;overflow:hidden;box-shadow:0 0 0 1.5px #3a2408,0 0 0 4px #c9993a,0 0 0 5.5px #5a3a10,0 7px 16px rgba(40,20,4,.35);background:#2a1a0c;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+/* every mini-game stage is framed like a painted panel: a gold rim, light from above, a soft vignette and a fine paint grain */
+.sc::after{content:'';position:absolute;inset:0;z-index:6;pointer-events:none;border-radius:inherit;background:radial-gradient(ellipse 125% 95% at 50% 42%,rgba(0,0,0,0) 60%,rgba(28,10,0,.34) 100%),linear-gradient(180deg,rgba(255,244,214,.14),rgba(255,244,214,0) 24%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .18 0 0 0 0 .06 0 0 0 .14 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");box-shadow:inset 0 0 0 1px rgba(255,232,180,.45),inset 0 -10px 18px -12px rgba(20,8,0,.35)}
 .sc-svg{display:block;width:100%;height:auto}
 .sc-act{transition:transform .9s ease-in-out,opacity .6s}
 .sc-act.hid{opacity:0}
@@ -1368,8 +1373,8 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .sc.hitme{animation:bfShake .28s 2}
 .mg-b.sf-fire{font-size:18px;padding:13px}
 /* the reefs */
-.rf{height:300px;background:#1f5a7a}
-.rf-sea{position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0 22px,rgba(188,216,232,.18) 22px 24px);animation:rfSea 1s linear infinite}
+.rf{height:300px;background:radial-gradient(ellipse 70% 40% at 30% 0,rgba(220,240,250,.28),rgba(220,240,250,0) 70%),linear-gradient(180deg,#2f7a9a,#1f5a7a 45%,#143f58)}
+.rf-sea{position:absolute;inset:0;background:radial-gradient(ellipse 14px 3px at 20px 10px,rgba(230,246,252,.45),rgba(230,246,252,0) 70%) 0 0/64px 24px,radial-gradient(ellipse 10px 2px at 50px 20px,rgba(230,246,252,.3),rgba(230,246,252,0) 70%) 0 0/64px 24px,repeating-linear-gradient(180deg,transparent 0 22px,rgba(188,216,232,.18) 22px 24px);animation:rfSea 1s linear infinite}
 @keyframes rfSea{to{background-position:0 24px}}
 .rf-o{position:absolute;width:20%;margin-left:-10%;text-align:center;font-style:normal;font-size:26px;line-height:1}
 .rf-o svg{width:62%;height:auto}
@@ -1393,8 +1398,8 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 /* the cup */
 .cp{background:#5a3a2a}
 /* the hunt */
-.ht{background:#9cc4a8}
-.ht-bg{position:absolute;inset:0 0 12% 0;background:repeating-linear-gradient(90deg,transparent 0 40px,rgba(47,90,53,.6) 40px 52px,transparent 52px 70px,rgba(63,106,53,.5) 70px 90px);animation:htBg 1.2s linear infinite}
+.ht{background:radial-gradient(ellipse 40% 70% at 70% 0,rgba(255,246,200,.45),rgba(255,246,200,0) 70%),repeating-linear-gradient(90deg,rgba(120,160,120,0) 0 26px,rgba(108,150,110,.55) 26px 36px,rgba(120,160,120,0) 36px 61px),linear-gradient(180deg,#cfe4c6,#a8cba0 55%,#86ad7c)}
+.ht-bg{position:absolute;inset:0 0 12% 0;background:radial-gradient(circle at 46px 4px,#2c5a26 0 22px,#3f7a34 23px 30px,rgba(0,0,0,0) 31px) 0 0/90px 46px repeat-x,radial-gradient(circle at 80px 12px,#36692e 0 18px,rgba(0,0,0,0) 19px) 0 0/90px 46px repeat-x,repeating-linear-gradient(90deg,transparent 0 40px,#3a2614 40px 41px,#5e4026 41px 45px,#71502f 45px 48px,#3a2614 48px 50px,transparent 50px 70px,#4a3220 70px 71px,#6b4b2c 71px 78px,#82603a 78px 82px,#4a3220 82px 84px,transparent 84px 90px);animation:htBg 1.2s linear infinite}
 @keyframes htBg{to{background-position:-90px 0}}
 .mg-b.ht-jumpb{padding:16px;font-size:20px}
 /* the masque */
@@ -2156,8 +2161,10 @@ button.in-t{cursor:pointer}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.29.8';
+const APP_VERSION = '1.30.0';
 const DEEDS_PER_YEAR = 3;
+// the Raven (the prize of the Wing of Shadows) brings one more deed every year
+const deedsMax = () => DEEDS_PER_YEAR + (typeof ravenWon === 'function' && ravenWon() ? 1 : 0);
 
 /* ---------- utilities ---------- */
 const R = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
@@ -2625,7 +2632,7 @@ function blank(o) {
     v: 2, first: o.first, last: o.last, sex: o.sex, age: o.age || 0, year: o.year, born: o.year - (o.age || 0), alive: true,
     cls: o.cls, birthCls: o.cls, realm: o.realm, village: o.village, stats: baseStats(o.cls), coin: 0,
     job: null, illness: null, kin: [], assets: [], titles: [], flags: {}, done: {}, lastEv: {}, log: [],
-    deeds: DEEDS_PER_YEAR, jail: 0, crimes: 0, vows: false, ruling: false,
+    deeds: deedsMax(), jail: 0, crimes: 0, vows: false, ruling: false,
     gen: o.gen || 1, lineage: o.lineage || [], king: o.king || '', appliedYear: -1, workedYear: -1, epithet: '', dead: null,
     world: null, home: 0, army: 0, armyVet: 0, heat: 0, feats: [], skills: {}, held: [], realism: o.realism || 'hist', amb: null,
   };
@@ -3076,7 +3083,7 @@ function ageUp() {
   if (!S || !S.alive || modalOpen) return;
   closeSheet();
   { const raw = store.get(KEY); if (raw) store.set(BKEY, raw); }
-  S.age++; S.year++; S.deeds = DEEDS_PER_YEAR;
+  S.age++; S.year++; S.deeds = deedsMax();
   cur();
   try { royalYear(); } catch (e) { console.error(e); }
   { const st = stageOf(S.age); if (st[0] === S.age && S.age > 0) say(`Chapter ${roman(STAGES.indexOf(st) + 1)}: ${st[1]}`, 'chapter'); }
@@ -22120,6 +22127,9 @@ PETITIONS.push(
 .sc_cv svg{stroke:var(--sc-ol);stroke-width:.7;stroke-linejoin:round;stroke-linecap:round;fill:none}
 .sc_sky,.sc_land,.sc_lay{position:absolute;left:0;top:0;width:100%;height:100%}
 .sc_sky{background:linear-gradient(180deg,var(--sc-k0),var(--sc-k1) 36%,var(--sc-k2) 64%)}
+.sc_air{pointer-events:none;background:radial-gradient(ellipse 62% 58% at 50% 6%,rgba(255,238,186,.26),rgba(255,238,186,0) 72%),linear-gradient(180deg,rgba(255,250,230,0) 52%,rgba(255,244,214,.08) 64%,rgba(50,30,8,.12) 100%)}
+.sc_room{pointer-events:none;background:radial-gradient(ellipse 60% 95% at 20% 22%,rgba(255,236,190,.2),rgba(255,236,190,0) 62%),linear-gradient(180deg,rgba(20,10,0,.12),rgba(0,0,0,0) 26%,rgba(0,0,0,0) 68%,rgba(40,20,0,.2))}
+.sc_vig{pointer-events:none;background:radial-gradient(ellipse 88% 125% at 50% 46%,rgba(0,0,0,0) 64%,rgba(25,12,0,.3) 100%)}
 .sc_s{position:absolute}
 .sc_s>svg,.sc_i>svg{position:absolute;left:0;top:0;display:block;width:100%;height:100%;overflow:visible}
 .sc_i{position:absolute;inset:0}
@@ -22596,6 +22606,8 @@ PETITIONS.push(
     const W = X.W, L = X.land, ter = X.ter;
     if (o.keep) X.keep = (X.keep || []).concat(o.keep);
     const farB = o.far || 76, farA = (o.farA || 12) * (ter === 'hills' ? 1.8 : ter === 'plains' ? .65 : 1);
+    // the far blue hills, pale with distance, behind everything else on the land
+    { const dist = ridge(X, -4, W + 4, farB - 3, farA * 1.7 + 7, 2.4, H); L.push(pa(dist.d, 'farhi', 'stroke-width=".35" opacity=".72"') + pn(dist.d, 'k2', 'opacity=".28"')); }
     // the sea on the horizon for coastal homes
     if (ter === 'coast' && !o.noSea) {
       const sx = X.r() < .5 ? 0 : W * .55, sw = W * .45;
@@ -22634,6 +22646,7 @@ PETITIONS.push(
     const g = ridge(X, -4, W + 4, gy, 3, 1, H);
     X.gY = g.y;
     L.push(pa(g.d, 'gr', 'stroke-width=".6"'));
+    { let pt = ''; for (let i = 0; i < W / 16; i++) { const px = X.r() * W, py = gy + 5 + X.r() * (H - gy - 7), rw = 5 + X.r() * 12; pt += el(px, py, rw, 1 + X.r() * 1.4, X.r() < .7 ? 'g2' : 'th', NS + ` opacity="${X.snowy ? .12 : .3}"`); } L.push(pt); }
     let tf = ''; for (let i = 0; i < W / 9; i++) { const x = X.r() * W, y = gy + 4 + X.r() * (H - gy - 4); tf += tuft(X, x, y); }
     L.push(tf);
     if (X.season === 'spring' && !X.famine && !X.snowy) { let fl = ''; for (let i = 0; i < W / 14; i++) fl += ci(X.r() * W, gy + 5 + X.r() * (H - gy - 5), .6, i % 3 ? 'white' : 'flower2', NS); L.push(fl); }
@@ -22705,7 +22718,7 @@ PETITIONS.push(
   /* ---------- buildings ---------- */
   function hovel(X, x, y, w, h, o = {}) {
     const L = X.land, wallH = h * .4, eave = y - wallH, ridgeY = y - h;
-    let s = '';
+    let s = el(x + w * .55, y + .8, w * .62, 2.4, 'black', NS + ' opacity=".16"');
     s += pa(wr(X, x, eave, w, wallH, .3), 'daub', 'stroke-width=".6"');
     s += pn(wr(X, x + w * .62, eave, w * .38, wallH, .1), 'daub2', 'opacity=".6"');
     s += ln(`M${n1(x + .8)} ${n1(y)}V${n1(eave)}M${n1(x + w * .5)} ${n1(y)}V${n1(eave)}M${n1(x + w - .8)} ${n1(y)}V${n1(eave)}M${n1(x)} ${n1(eave + wallH * .45)}H${n1(x + w)}`, 'timber', .9);
@@ -22726,7 +22739,7 @@ PETITIONS.push(
   function gableHouse(X, x, y, w, h, o = {}) {
     const g = y - h * .42, u = y - h * .74, apex = y - h, roof = o.roof || pick2(X, ['tile', 'tile', 'slate', 'thatch']);
     const wallC = o.stone ? 'wall' : 'daub';
-    let s = pa(wr(X, x, g, w, y - g, .25), o.stone ? 'stone' : wallC, 'stroke-width=".6"');
+    let s = el(x + w * .55, y + .8, w * .64, 2.2, 'black', NS + ' opacity=".16"') + pa(wr(X, x, g, w, y - g, .25), o.stone ? 'stone' : wallC, 'stroke-width=".6"');
     s += pa(`M${n1(x - 1.6)} ${n1(g)}H${n1(x + w + 1.6)}V${n1(u)}L${n1(x + w / 2)} ${n1(apex + 2)}L${n1(x - 1.6)} ${n1(u)}Z`, 'daub', 'stroke-width=".6"');
     s += ln(`M${n1(x - 1.6)} ${n1(g)}H${n1(x + w + 1.6)}M${n1(x - 1.6)} ${n1(u)}H${n1(x + w + 1.6)}M${n1(x + w * .25)} ${n1(g)}V${n1(u)}M${n1(x + w * .5)} ${n1(g)}V${n1(apex + 3)}M${n1(x + w * .75)} ${n1(g)}V${n1(u)}M${n1(x + w * .25)} ${n1(g)}L${n1(x + w * .5)} ${n1(u)}L${n1(x + w * .75)} ${n1(g)}`, 'timber', .85);
     s += pa(`M${n1(x - 3.2)} ${n1(u + 1.6)}L${n1(x + w / 2)} ${n1(apex)}L${n1(x + w + 3.2)} ${n1(u + 1.6)}L${n1(x + w + 1.4)} ${n1(u + 2.4)}L${n1(x + w / 2)} ${n1(apex + 2.6)}L${n1(x - 1.4)} ${n1(u + 2.4)}Z`, roof, 'stroke-width=".6"');
@@ -22903,7 +22916,7 @@ PETITIONS.push(
     const rainy = wx === 'rain' || wx === 'storm' || wx === 'snow';
     for (let i = 0; i < nC; i++) { const w = 22 + X.r() * 24, x = (i + .2 + X.r() * .6) / nC * X.W - w / 2, y = (rainy ? 12 : 16) + X.r() * (X.inside ? 18 : 30); X.sky.push(cloud(X, x, y, w, { rain: rainy, speed: X.windy ? 5.5 : 1.6 + X.r() })); }
     // a comet: a gold head and a long tail, gently pulsing
-    if (X.comet) { const cx = X.inside ? X.window[0] + 4 : W * .2, cy = X.inside ? X.window[1] + 10 : 18; X.sky.push(spr(X, cx - 4, cy - 14, 34, 22, `<path d="M${n1(cx)} ${n1(cy)}L${n1(cx + 32)} ${n1(cy - 12)}L${n1(cx + 30)} ${n1(cy - 7)}Z" style="fill:${V('gold')}" stroke="none" opacity=".55"/>` + ln(`M${n1(cx + 1)} ${n1(cy - .6)}L${n1(cx + 30)} ${n1(cy - 10)}`, 'snow', .6, 'opacity=".8"') + ci(cx, cy, 2.2, 'gold', 'stroke-width=".4"') + ci(cx, cy, 1, 'snow', NS), 'sc_pulse')); }
+    if (X.comet && (!X.inside || X.window)) { const cx = X.inside ? X.window[0] + 4 : W * .2, cy = X.inside ? X.window[1] + 10 : 18; X.sky.push(spr(X, cx - 4, cy - 14, 34, 22, `<path d="M${n1(cx)} ${n1(cy)}L${n1(cx + 32)} ${n1(cy - 12)}L${n1(cx + 30)} ${n1(cy - 7)}Z" style="fill:${V('gold')}" stroke="none" opacity=".55"/>` + ln(`M${n1(cx + 1)} ${n1(cy - .6)}L${n1(cx + 30)} ${n1(cy - 10)}`, 'snow', .6, 'opacity=".8"') + ci(cx, cy, 2.2, 'gold', 'stroke-width=".4"') + ci(cx, cy, 1, 'snow', NS), 'sc_pulse')); }
   }
   function weather(X) {
     const W = X.W, wx = X.wx, into = X.inside ? X.sky : X.wx2;
@@ -24595,7 +24608,7 @@ PETITIONS.push(
     const svgL = parts => parts.length ? `<svg class="sc_land" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">${parts.join('')}</svg>` : '';
     const land = svgL(X.land.slice(0, X.split)) + X.back.join('') + svgL(X.land.slice(X.split));
     const fg = X.fg ? `<svg class="sc_land" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">${X.fg}</svg>` : '';
-    const html = `<div class="sc_sky"></div>${X.sky.join('')}${land}${X.mid.join('')}${fg}${X.wx2.join('')}${X.night.join('')}`;
+    const html = `<div class="sc_sky"></div>${X.sky.join('')}${land}${X.mid.join('')}${fg}<div class="sc_lay ${X.inside ? 'sc_room' : 'sc_air'}"></div>${X.wx2.join('')}${X.night.join('')}<div class="sc_lay sc_vig"></div>`;
     return { html, vs, kf: X.kf.join('') };
   }
 
@@ -25735,7 +25748,7 @@ function myJobHTML() {
     // what you can do this year
     const fam = jobFam(), acts = TRADE.filter(d => d.tr === S.job.track || (d.fams && d.fams.includes(fam)));
     h += `<h3 class="sec">This year at work</h3>`;
-    h += `<p class="hint">Each of these uses one of your ${DEEDS_PER_YEAR} deeds (you have ${S.deeds} left). Your wage is paid anyway at the end of the year.</p>`;
+    h += `<p class="hint">Each of these uses one of your ${deedsMax()} deeds (you have ${S.deeds} left). Your wage is paid anyway at the end of the year.</p>`;
     if (S.job.track !== 'crown') h += btnItem('work', '', '💪', 'Work diligently', 'Raise your standing in this job. Once a year.', S.workedYear === S.year ? 'Already done this year' : true);
     if (S.job.track === 'thief') h += `<div class="heat"><span>Heat ${S.heat || 0}</span><span class="bar" role="img" aria-label="Heat ${S.heat || 0} of 100"><i class="${(S.heat || 0) >= 60 ? 'lo' : (S.heat || 0) >= 30 ? 'md' : 'hi'}" style="width:${S.heat || 0}%"></i></span></div>`;
     for (const d of acts) { const c = deedCost(d); h += btnItem('trade', d.k, d.i, d.n, d.d, S.deeds <= 0 ? 'No deeds left this year' : tradeWhy(d), c ? `${c} silver` : ''); }
@@ -25820,7 +25833,7 @@ const occOfTrack = (tr, lv) => OCC_BY[tr] && occPos(OCC_BY[tr])[0] === tr ? OCC_
   const _ct = coachText;
   coachText = function () {
     const t = _ct.apply(this, arguments);
-    if (!S || !S.alive || S.jail || !S.job || S.deeds < DEEDS_PER_YEAR || /^(⛓️|🤒|⚠️|👶|🧒)/.test(t || '')) return t;
+    if (!S || !S.alive || S.jail || !S.job || S.deeds < deedsMax() || /^(⛓️|🤒|⚠️|👶|🧒)/.test(t || '')) return t;
     const on = k => JOBPANELS.some(p => p.k === k && (() => { try { return p.when(); } catch (e) { return false; } })());
     if (on('fl_fleet')) return '⚓ Your fleet is ready: open ⚒️ Work, My job to raid a coast or hunt merchant ships.';
     if (on('tr_panel')) return '🐪 Prices have moved: open ⚒️ Work, My job to send a trade run.';
@@ -25986,7 +25999,7 @@ function workHTML() {
     if (acts.length) {
       h += `<h3 class="sec">${S.job.track === 'thief' ? 'Jobs for the Guild' : 'Special work for your trade'}</h3>`;
       if (S.job.track === 'thief') h += `<div class="heat"><span>Heat ${S.heat || 0}</span><span class="bar" role="img" aria-label="Heat ${S.heat || 0} of 100"><i class="${(S.heat || 0) >= 60 ? 'lo' : (S.heat || 0) >= 30 ? 'md' : 'hi'}" style="width:${S.heat || 0}%"></i></span></div><p class="hint">The hotter you are, the likelier the noose. Heat cools a little every year. Each job uses one deed.</p>`;
-      else h += `<p class="hint">Extra things your trade lets you do: earn silver on the side, raise your standing, or take a risk. Each one <b>uses one of your ${DEEDS_PER_YEAR} deeds</b> for the year (you have ${S.deeds} left), just like actions in Deeds. Your wage is paid anyway when the year ends.</p>`;
+      else h += `<p class="hint">Extra things your trade lets you do: earn silver on the side, raise your standing, or take a risk. Each one <b>uses one of your ${deedsMax()} deeds</b> for the year (you have ${S.deeds} left), just like actions in Deeds. Your wage is paid anyway when the year ends.</p>`;
       for (const d of acts) { const c = deedCost(d); h += btnItem('trade', d.k, d.i, d.n, d.d, S.deeds <= 0 ? 'No deeds left this year' : tradeWhy(d), c ? `${c} silver` : ''); }
     }
     h += btnItem('quit', '', '🚪', S.job.track === 'crown' ? 'Abdicate the throne' : 'Quit your post', TRACKS[S.job.track].vows ? 'Renounce your vows.' : 'Walk away.', true);
@@ -26105,7 +26118,7 @@ function baronyWhy() {
 }
 function deedsHTML() {
   if (!S.alive) return '<div class="empty">The dead do no deeds.</div>';
-  let h = `<p class="hint">You have <b>${S.deeds}</b> of ${DEEDS_PER_YEAR} deeds left this year. Turn the page to renew them.</p>`;
+  let h = `<p class="hint">You have <b>${S.deeds}</b> of ${deedsMax()} deeds left this year. Turn the page to renew them.</p>`;
   let g = '';
   for (const d of DEEDS) {
     if (d.only && !d.only()) continue;
@@ -26417,7 +26430,7 @@ function crownRoadsHTML() {
 function menuHTML() {
   const o = occOfJob();
   let h = '<h3 class="sec">Right now</h3>';
-  h += `<div class="sumbox"><b style="font-size:17px;color:var(--ink)">${esc(displayName())}</b>, age ${S.age}<br>${esc(roleLabel())}${S.job ? ` (${esc(TRACKS[S.job.track].n)})` : ''}. ${S.coin} silver. ${S.alive ? `${S.deeds} of ${DEEDS_PER_YEAR} deeds left this year.` : 'Deceased.'}<br><span class="warn" style="color:var(--ink-2)">${esc(coachText() || 'Your story is over. Begin a new life below, or continue as an heir.')}</span></div>`;
+  h += `<div class="sumbox"><b style="font-size:17px;color:var(--ink)">${esc(displayName())}</b>, age ${S.age}<br>${esc(roleLabel())}${S.job ? ` (${esc(TRACKS[S.job.track].n)})` : ''}. ${S.coin} silver. ${S.alive ? `${S.deeds} of ${deedsMax()} deeds left this year.` : 'Deceased.'}<br><span class="warn" style="color:var(--ink-2)">${esc(coachText() || 'Your story is over. Begin a new life below, or continue as an heir.')}</span></div>`;
   h += btnItem('mainMenu', '', '🏰', 'Main menu', S.alive ? 'Your life is saved. Pick it up again with Continue.' : 'Back to the title screen.', true, '›');
   h += btnItem('confirmNew', '', '🌱', 'Begin a new life', S.alive ? 'Start over with a new character, or make your own. This life ends here.' : 'Start over from birth.', true);
   const am = ambDef();
@@ -26427,7 +26440,7 @@ function menuHTML() {
   if (S.alive) h += trialHTML();
   h += '<h3 class="sec">What each button does</h3>';
   h += btnItem('panel', 'work', '⚒️', 'Work', 'Find a job, do special work for your trade, and climb to better posts. One application a year.', true, '›');
-  h += btnItem('panel', 'deeds', '🎲', 'Deeds', `Your ${DEEDS_PER_YEAR} actions each year: study, pray, court, carouse, train, scheme. The candles on the Deeds ribbon show what is left.`, true, '›');
+  h += btnItem('panel', 'deeds', '🎲', 'Deeds', `Your ${deedsMax()} actions each year: study, pray, court, carouse, train, scheme. The candles on the Deeds ribbon show what is left.`, true, '›');
   h += btnItem('noop', '', '📖', 'Turn the page (bottom-right corner)', 'Ends the year. Wages and rents are paid, living costs are taken, people age, and events happen. Your deeds refill.', true);
   h += btnItem('panel', 'kin', '👪', 'Kin', 'Family, friends, rivals, mentors, apprentices, patrons and secret lovers. Spend time, give gifts, ask for help. Heirs let you play on after death. If you are royal, the line of succession is here too.', true, '›');
   h += btnItem('panel', 'realm', '🗺️', 'Realm', 'The map of the kingdoms, the royal Court (and your own council or household), your Holdings and lands, and your Army.', true, '›');
@@ -26567,7 +26580,7 @@ function render() {
     if (pv != null && pv !== v) { el.classList.remove('up', 'dn'); void el.offsetWidth; el.classList.add(v > pv ? 'up' : 'dn'); }
     prevStats[s.k] = v;
   }
-  $('pips').innerHTML = S.alive ? Array.from({ length: DEEDS_PER_YEAR }, (_, i) => `<i class="cd${i < S.deeds ? ' on' : ''}"></i>`).join('') : '';
+  $('pips').innerHTML = S.alive ? Array.from({ length: deedsMax() }, (_, i) => `<i class="cd${i < S.deeds ? ' on' : ''}"></i>`).join('') : '';
   $('ageBtn').disabled = !S.alive;
   $('nextYr').textContent = S.alive ? `to ${S.year + 1} · age ${S.age + 1}` : 'the book is closed';
   $('arms').setAttribute('style', armsStyle(S.last));
@@ -26661,6 +26674,7 @@ function screenAct(s, el) {
     case 'hall': showHall(S && S.dead && !$('screen').hidden && $('screen').querySelector('.stone') ? 'death' : $('screen').querySelector('.start') ? 'start' : hallFrom, (jget(MKEY, {}).seen || 0) < relicCount() ? 'relics' : 'legends'); break;
     case 'htab': hallTab = el.dataset.v; showHall(); break;
     case 'relic': relicShow(el.dataset.v, false); break;
+    case 'raven': { const m = jget(MKEY, {}); m.raven = ravenOn() ? 0 : 1; jset(MKEY, m); applyRewards(); showHall(); toast(m.raven ? '🐦‍⬛ The raven is back on your arms' : 'The raven has flown off your arms (you keep the extra deed)'); break; }
     case 'rose': { const m = jget(MKEY, {}); m.rose = roseOn() ? 0 : 1; jset(MKEY, m); applyRewards(); showHall(); toast(m.rose ? '🌹 The rose garland is on' : 'The rose garland is off'); break; }
     case 'gild': { const m = jget(MKEY, {}); m.gild = gildOn() ? 0 : 1; jset(MKEY, m); showHall(); toast(m.gild ? '✨ The golden menu is on' : 'The plain menu is back'); break; }
     case 'hallClearGrave': store.set(GKEY, '[]'); showHall(); break;
@@ -26905,6 +26919,22 @@ const RELIC_ART = {
   knot: () => `<path d="M42 27Q50 14 58 27Q50 35 42 27Z" fill="none" stroke="${OL}" stroke-width="5.4"/><path d="M42 27Q50 14 58 27Q50 35 42 27Z" fill="none" stroke="url(#rl-au)" stroke-width="3"/><path d="M50 31V38" stroke="url(#rl-au)" stroke-width="3"/>`
     + `<path d="M50 86C28 70 18 58 18 46Q18 32 32 32Q44 32 50 44Q56 32 68 32Q82 32 82 46C82 58 72 70 50 86Z" fill="url(#rl-rd)" stroke="${OL}" stroke-width="1.8"/><path d="M50 79C32 66 24 56 24 47Q24 38 33 38Q43 38 50 50Q57 38 67 38Q76 38 76 47C76 56 68 66 50 79Z" fill="none" stroke="url(#rl-au)" stroke-width="2.6"/>`
     + `<path d="M29 44Q31 37 38 37" stroke="#fff" stroke-opacity=".6" stroke-width="2.2" fill="none" stroke-linecap="round"/>${pearl(50, 62, 3.4)}${sp(80, 30, 3)}${sp(22, 76, 2)}`,
+  // the Wing of Shadows
+  dagger: () => `<g transform="rotate(-38 50 54)"><path d="M47 14L53 14L54.5 62H45.5Z" fill="url(#rl-ag)" stroke="${OL}" stroke-width="1.3"/><path d="M50 16V60" stroke="#fff" stroke-opacity=".6" stroke-width="1.2"/>`
+    + `<path d="M32 62H68Q70 66 66 67H34Q30 66 32 62Z" fill="url(#rl-au)" stroke="${OL}" stroke-width="1.2"/><rect x="46" y="67" width="8" height="17" rx="2" fill="url(#rl-rd)" stroke="${OL}" stroke-width="1.1"/><path d="M46 71H54M46 75H54M46 79H54" stroke="#5a0820" stroke-width=".9"/>`
+    + `<circle cx="50" cy="88" r="5" fill="url(#rl-au)" stroke="${OL}" stroke-width="1.1"/><circle cx="50" cy="88" r="2.2" fill="url(#rl-rd)"/></g>${sp(76, 28, 3)}${sp(24, 72, 2)}`,
+  blackflag: () => `<path d="M28 14V90" stroke="${OL}" stroke-width="5" stroke-linecap="round"/><path d="M28 14V90" stroke="url(#rl-wd)" stroke-width="3" stroke-linecap="round"/><circle cx="28" cy="13" r="3.4" fill="url(#rl-au)" stroke="${OL}" stroke-width="1"/>`
+    + `<path d="M30 18Q50 12 64 18T86 20V56Q74 52 62 56T30 54Z" fill="#1d1b1f" stroke="${OL}" stroke-width="1.4"/><path d="M34 22Q48 18 58 21" stroke="#fff" stroke-opacity=".18" stroke-width="2" fill="none"/>`
+    + `<circle cx="57" cy="33" r="8" fill="#f1ede2" stroke="${OL}" stroke-width=".9"/><rect x="52.5" y="38" width="9" height="5" rx="1.5" fill="#f1ede2" stroke="${OL}" stroke-width=".8"/><circle cx="54" cy="32.5" r="2" fill="#1d1b1f"/><circle cx="60" cy="32.5" r="2" fill="#1d1b1f"/><path d="M55 41V43M57 41V43M59 41V43" stroke="#1d1b1f" stroke-width=".7"/>`
+    + `<path d="M45 46L69 52M69 46L45 52" stroke="#f1ede2" stroke-width="3" stroke-linecap="round"/><circle cx="76" cy="44" r="2.2" fill="#d9c9a0" stroke="${OL}" stroke-width=".6"/>${sp(16, 30, 2.4)}`,
+  mask: () => `<path d="M14 46Q14 34 30 34Q42 34 50 42Q58 34 70 34Q86 34 86 46Q86 64 68 64Q56 64 50 56Q44 64 32 64Q14 64 14 46Z" fill="#221a2c" stroke="${OL}" stroke-width="1.6"/>`
+    + `<path d="M18 46Q18 38 30 38Q40 38 50 46Q60 38 70 38Q82 38 82 46" fill="none" stroke="url(#rl-au)" stroke-width="2.2"/><path d="M19 52Q24 61 32 60Q44 60 50 52Q56 60 68 60Q76 61 81 52" fill="none" stroke="url(#rl-au)" stroke-width="1.4"/>`
+    + `<path d="M24 48Q31 42 39 48Q31 53 24 48Z" fill="#0a0810"/><path d="M61 48Q69 42 76 48Q69 53 61 48Z" fill="#0a0810"/><path d="M22 41Q28 37 34 38" stroke="#fff" stroke-opacity=".35" stroke-width="1.6" fill="none"/>`
+    + `<path d="M86 44Q94 36 92 26Q86 32 84 40" fill="url(#rl-rd)" stroke="${OL}" stroke-width="1"/><path d="M14 44Q6 36 8 26Q14 32 16 40" fill="url(#rl-rd)" stroke="${OL}" stroke-width="1"/>${pearl(50, 40, 2.6)}${sp(80, 74, 2.6)}`,
+  bow: () => `<path d="M30 12Q72 52 30 92" fill="none" stroke="${OL}" stroke-width="7" stroke-linecap="round"/><path d="M30 12Q72 52 30 92" fill="none" stroke="url(#rl-wd)" stroke-width="4.4" stroke-linecap="round"/><path d="M36 22Q58 46 48 66" stroke="#e8c48a" stroke-opacity=".6" stroke-width="1.2" fill="none"/>`
+    + `<path d="M30 12V92" stroke="#efe6cc" stroke-width="1"/><rect x="44" y="47" width="6" height="11" rx="1.5" fill="url(#rl-rd)" stroke="${OL}" stroke-width=".8"/>`
+    + `<path d="M22 52H86" stroke="${OL}" stroke-width="3.4" stroke-linecap="round"/><path d="M22 52H86" stroke="url(#rl-wd)" stroke-width="1.8" stroke-linecap="round"/><path d="M86 52L78 47V57Z" fill="url(#rl-ag)" stroke="${OL}" stroke-width=".9"/>`
+    + `<path d="M22 52L14 45H24L30 52L24 59H14Z" fill="#3f8236" stroke="${OL}" stroke-width=".9"/><path d="M16 49L26 52L16 55" stroke="#9fd07a" stroke-width=".7" fill="none"/>${sp(76, 24, 2.8)}${sp(70, 84, 2)}`,
 };
 
 const WINGS = [
@@ -26913,31 +26943,37 @@ const WINGS = [
   { k: 'cross', n: 'The Wing of Cross and Quill', m: 'Ink and incense: the quiet roads to power.', c: '#132a55', c2: '#3c6cc4', e: '✒️' },
   { k: 'crown', n: 'The Wing of the Crown', m: 'Every crown was once a ploughshare.', c: '#331548', c2: '#8a4cba', e: '👑' },
   { k: 'heart', n: 'The Wing of the Heart', m: 'Love, children, and the long years together.', c: '#4a1030', c2: '#c4486e', e: '🌹' },
+  { k: 'shadow', n: 'The Wing of Shadows', m: 'What is done in the dark, and never spoken of.', c: '#101b26', c2: '#3f6280', e: '🗡️' },
 ];
 const LOW2 = ['serf', 'peasant'], COMMONS = ['serf', 'peasant', 'craft'];
 const RELICS = [
-  { k: 'fetter', w: 'toil', n: 'The Broken Fetter', from: ['serf'], d: 'Win your freedom.', ok: () => !!S.flags.free && S.cls !== 'serf', lore: 'An iron fetter, snapped clean through. Whoever wore it walked out of the manor gate one spring morning and never once looked back.' },
+  { k: 'fetter', w: 'toil', n: 'The Broken Fetter', from: ['serf'], d: 'Win your freedom before you are 30.', ok: () => !!S.flags.free && S.cls !== 'serf' && S.age < 30, lore: 'An iron fetter, snapped clean through. Whoever wore it walked out of the manor gate one spring morning and never once looked back.' },
   { k: 'hammer', w: 'toil', n: 'The Master’s Hammer', from: LOW2, d: 'Rise to Guild Master or Master Architect.', ok: () => jobIn('guildmaster', 'architect'), lore: 'Carried before the master of the guild on feast days. Its handle is worn smooth by hands that were never born to hold it.' },
-  { k: 'scales', w: 'toil', n: 'The Merchant’s Scales', from: LOW2, d: 'Hold 3,000 silver at once.', ok: () => S.coin >= 3000, lore: 'Gold scales that weighed out a fortune, penny by penny, from a single market stall to a counting house on the quay.' },
-  { k: 'keys', w: 'toil', n: 'The Keys of the Manor', from: LOW2, d: 'Become Lord or Lady of a manor.', ok: () => S.titles.some(t => /^(Lord|Lady) of /.test(t)), lore: 'The keys to a great hall, a mill, and a hundred acres. The tenants bowed to a face they had once seen behind a plough.' },
-  { k: 'spurs', w: 'sword', n: 'The Golden Spurs', from: LOW2, d: 'Be knighted.', ok: () => !!S.flags.knight, lore: 'Only a knight may wear gilt spurs. These were buckled on by a king, onto boots that had walked barefoot as a child.' },
+  { k: 'scales', w: 'toil', n: 'The Merchant’s Scales', from: LOW2, d: 'Hold 6,000 silver at once.', ok: () => S.coin >= 6000, lore: 'Gold scales that weighed out a fortune, penny by penny, from a single market stall to a counting house on the quay.' },
+  { k: 'keys', w: 'toil', n: 'The Keys of the Manor', from: LOW2, d: 'Become Lord or Lady of a manor before you are 45.', ok: () => S.age < 45 && S.titles.some(t => /^(Lord|Lady) of /.test(t)), lore: 'The keys to a great hall, a mill, and a hundred acres. The tenants bowed to a face they had once seen behind a plough.' },
+  { k: 'spurs', w: 'sword', n: 'The Golden Spurs', from: LOW2, d: 'Be knighted before you are 35.', ok: () => !!S.flags.knight && S.age < 35, lore: 'Only a knight may wear gilt spurs. These were buckled on by a king, onto boots that had walked barefoot as a child.' },
   { k: 'banner', w: 'sword', n: 'The Count’s Banner', from: COMMONS, d: 'Hold a county of your own.', ok: () => heldTs().length > 0, lore: 'A banner that flew over a whole county. Its arms were new, and the old families sneered, and none of them dared say it aloud.' },
   { k: 'baton', w: 'sword', n: 'The Captain’s Baton', from: COMMONS, d: 'Command armies as General or Lord High Constable.', ok: () => jobIn('general', 'constable'), lore: 'The staff of command. Ten thousand men moved when it moved, and every one of them knew where its holder had come from.' },
-  { k: 'helm', w: 'sword', n: 'The Conqueror’s Helm', from: LOW2, d: 'Hold five counties at once.', ok: () => heldTs().length >= 5, lore: 'A great helm crowned in gold, battered by a dozen sieges. Five counties bent the knee to the one beneath it.' },
+  { k: 'helm', w: 'sword', n: 'The Conqueror’s Helm', from: LOW2, d: 'Hold seven counties at once.', ok: () => heldTs().length >= 7, lore: 'A great helm crowned in gold, battered by a dozen sieges. Five counties bent the knee to the one beneath it.' },
   { k: 'crozier', w: 'cross', n: 'The Abbot’s Crozier', from: LOW2, d: 'Become Abbot or Abbess, or rise higher in the Church.', ok: () => inTrack('church') && S.job.level >= 3, lore: 'The shepherd’s crook of an abbey. Its holder once herded real sheep, and found the new flock far harder to keep.' },
   { k: 'mitre', w: 'cross', n: 'The Bishop’s Mitre', from: LOW2, d: 'Become a Bishop, or rise higher. Under Historical rules, only men may be bishops.', ok: () => inTrack('church') && S.job.level >= 4, lore: 'White silk and gold thread. Lords knelt to kiss the ring of a peasant’s child, and some of them even meant it.' },
   { k: 'seal', w: 'cross', n: 'The Great Seal', from: COMMONS, d: 'Become Chancellor of the realm.', ok: () => inTrack('chancellor'), lore: 'Whatever this seal touches becomes the law of the land. It was pressed into the wax by a hand that once could not write its own name.' },
   { k: 'heaven', w: 'cross', n: 'The Keys of Heaven', from: ['serf'], d: 'Be elected Pope. Under Historical rules, only men may rise past Abbot.', ok: () => inTrack('church') && S.job.level >= 7, lore: 'The keys of Saint Peter, and the triple crown. A serf’s child sat on the throne of the Fisherman, which was, after all, how it began.' },
-  { k: 'coronet', w: 'crown', n: 'The Baron’s Coronet', from: LOW2, d: 'Be created a Baron or Baroness.', ok: () => isBaron(), lore: 'A plain gold circlet set with pearls, and a summons to sit among the lords of the realm.' },
+  { k: 'coronet', w: 'crown', n: 'The Baron’s Coronet', from: LOW2, d: 'Be created a Baron or Baroness before you are 50.', ok: () => isBaron() && S.age < 50, lore: 'A plain gold circlet set with pearls, and a summons to sit among the lords of the realm.' },
   { k: 'ducal', w: 'crown', n: 'The Ducal Coronet', from: COMMONS, d: 'Become a Duke or Duchess.', ok: () => S.titles.some(t => /^(Duke|Duchess) of /.test(t)), lore: 'Strawberry leaves in gold. Only the king stands higher, and on a bad day for the king, not even he.' },
   { k: 'crown', w: 'crown', n: 'The Ploughman’s Crown', from: LOW2, d: 'Rule a kingdom.', ok: () => !!S.ruling, lore: 'They say it was forged from the iron of a plough and gilded afterwards. Kings who were born to their crowns have never liked this one.' },
   { k: 'orb', w: 'crown', n: 'The Orb of the World', from: ['serf'], d: 'Become Emperor or Empress of the known world.', ok: () => !!S.ruling && !!S.flags.emperor, lore: 'The whole world, held in one hand. The hand had blisters once, from a hoe, in a muddy field nobody remembers.' },
   // the Wing of the Heart: love and family, for any birth (the royal wedding needs a common one). It has its own prize,
   // and stays out of the count for the Golden Age, so a Hall finished before it was added stays finished.
   { k: 'ring', w: 'heart', n: 'The Royal Wedding Ring', from: COMMONS, d: 'Marry a reigning king or queen.', ok: () => !!S.flags.consort || S.kin.some(k => k.sp && k.alive && k.ruler), lore: 'A gold ring with a ruby, slipped onto a hand that once milked cows and carried water. The court never forgave it. The king never regretted it.' },
-  { k: 'cradle', w: 'heart', n: 'The Silver Cradle', from: CLS_ORDER, d: 'Have eight children.', ok: () => S.kin.filter(k => k.ch).length >= 8, lore: 'A silver cradle with a hood, rocked by one mother for eight babies in turn. The runners are worn thin.' },
-  { k: 'tree', w: 'heart', n: 'The Family Tree', from: CLS_ORDER, d: 'Have ten grandchildren.', ok: () => S.kin.filter(k => k.ch).reduce((a, k) => a + (k.nkids || 0), 0) >= 10, lore: 'A tree of gold with a ruby for every grandchild. The branches had to be lengthened twice.' },
+  { k: 'cradle', w: 'heart', n: 'The Silver Cradle', from: CLS_ORDER, d: 'Have ten children.', ok: () => S.kin.filter(k => k.ch).length >= 10, lore: 'A silver cradle with a hood, rocked for ten babies in turn. The runners are worn thin.' },
+  { k: 'tree', w: 'heart', n: 'The Family Tree', from: CLS_ORDER, d: 'Have fifteen grandchildren.', ok: () => S.kin.filter(k => k.ch).reduce((a, k) => a + (k.nkids || 0), 0) >= 15, lore: 'A tree of gold with a ruby for every grandchild. The branches had to be lengthened twice.' },
   { k: 'knot', w: 'heart', n: 'The Lovers’ Locket', from: CLS_ORDER, d: 'Stay married to the same love for 40 years.', ok: () => { const sp = spouse(); if (!sp) return false; if (sp.wy == null) sp.wy = S.year; return S.year - sp.wy >= 40; }, lore: 'A ruby heart on a knotted gold cord. Inside are two locks of hair, one dark and one grey, and a single word in Latin: always.' },
+  // the Wing of Shadows: what is done in the dark. Any birth. Its own prize, the Raven: an extra deed every year.
+  { k: 'dagger', w: 'shadow', n: 'The Golden Dagger', from: CLS_ORDER, d: 'Rise to rule the Thieves’ Guild.', ok: () => inTrack('thief') && S.job.level >= 4, lore: 'A dagger with a gold hilt and a blade nobody has ever seen drawn. Whoever holds it is owed a cut of every purse in the city.' },
+  { k: 'blackflag', w: 'shadow', n: 'The Black Flag', from: CLS_ORDER, d: 'Become a Pirate Captain.', ok: () => jobIn('jb_piratecap'), lore: 'Black wool, a white skull, and a hole from a cannonball that very nearly ended the story. Merchants struck their sails at the sight of it.' },
+  { k: 'mask', w: 'shadow', n: 'The Spymaster’s Mask', from: CLS_ORDER, d: 'Become the realm’s Spymaster.', ok: () => jobIn('spymaster'), lore: 'Black velvet and gold thread. Behind it, someone who knew what every lord in the kingdom had done, and with whom.' },
+  { k: 'bow', w: 'shadow', n: 'The Greenwood Bow', from: CLS_ORDER, d: 'Live ten years as an outlaw.', ok: () => { if (!S.flags.outlaw) return false; const f = S.flags; if (f.olY == null) f.olY = S.year; return S.year - f.olY >= 10; }, lore: 'A yew longbow, rubbed with goose fat and hidden in a hollow oak for ten winters. The sheriff hunted it every one of them.' },
 ];
 const fromText = x => x.from.length === 1 ? 'Born a serf' : x.from.length === 2 ? 'Born a serf or free peasant' : x.from.length >= CLS_ORDER.length ? 'Any birth' : 'Born a commoner';
 const relicArt = (x, big) => `<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"${big ? ' class="big"' : ''}><circle class="rl-halo" cx="50" cy="56" r="46" fill="url(#rl-glow)"/>${RELIC_ART[x.k]()}</svg>`;
@@ -26946,7 +26982,7 @@ const relicsGot = () => jget(CKEY, {});
 // down for good the moment they happen, so adding or changing relics in a later update never takes them away.
 const wonRec = () => (jget(MKEY, {}).won || {});
 const wingNow = (got, w) => RELICS.filter(x => x.w === w).every(x => got[x.k]);
-const RCORE = RELICS.filter(x => x.w !== 'heart');
+const RCORE = RELICS.filter(x => x.w !== 'heart' && x.w !== 'shadow');
 const allNow = got => RCORE.every(x => got[x.k]);
 const wingDone = (got, w) => wingNow(got, w) || !!(wonRec().wings || {})[w];
 const prizeWon = got => allNow(got || relicsGot()) || !!wonRec().prize;
@@ -26986,7 +27022,7 @@ function relicCheck() {
 }
 /* ---------- rarity, niches, and the moment a relic is won ---------- */
 const RAR = { rare: { n: 'Rare', c: '#62b4ff' }, epic: { n: 'Epic', c: '#c983ff' }, legendary: { n: 'Legendary', c: '#ffb53d' }, mythic: { n: 'Mythic', c: '#ff5a76' } };
-const RARITY = { fetter: 'rare', scales: 'rare', hammer: 'epic', keys: 'epic', spurs: 'epic', banner: 'legendary', baton: 'legendary', helm: 'mythic', crozier: 'epic', mitre: 'legendary', seal: 'legendary', heaven: 'mythic', coronet: 'legendary', ducal: 'legendary', crown: 'mythic', orb: 'mythic', ring: 'mythic', cradle: 'epic', tree: 'legendary', knot: 'legendary' };
+const RARITY = { fetter: 'rare', scales: 'rare', hammer: 'epic', keys: 'epic', spurs: 'epic', banner: 'legendary', baton: 'legendary', helm: 'mythic', crozier: 'epic', mitre: 'legendary', seal: 'legendary', heaven: 'mythic', coronet: 'legendary', ducal: 'legendary', crown: 'mythic', orb: 'mythic', ring: 'mythic', cradle: 'epic', tree: 'legendary', knot: 'legendary', dagger: 'legendary', blackflag: 'legendary', mask: 'mythic', bow: 'epic' };
 const rarKey = x => RARITY[x.k] || 'rare';
 const rarOf = x => RAR[rarKey(x)];
 const NICHE_IN = 'M10 134V52Q10 24 50 11Q90 24 90 52V134Z';
@@ -27022,7 +27058,7 @@ function relicReveal(k, mode, extra) {
     const sparks = fresh ? Array.from({ length: 28 }, (_, i) => `<i style="--a:${(i * 360 / 28 + (i % 3) * 7).toFixed(0)}deg;--d:${110 + (i * 37) % 120}px;--t:${(.25 + (i % 7) * .05).toFixed(2)}s;--s:${(.6 + (i % 4) * .25).toFixed(2)}"></i>`).join('') : '';
     let extraH = '';
     if (extra === 'prize') extraH = '<div class="rv-extra prize"><b>Every case in the Hall is full.</b> The sealed reliquary is opening…</div>';
-    else if (extra) { const w = WINGS.find(z => z.k === extra); extraH = `<div class="rv-extra" style="--wc:${w.c};--wc2:${w.c2}"><b>${esc(w.e)} ${esc(w.n)} is complete!</b> ${extra === 'heart' ? 'You have won the Rose Garland: roses on your arms in every life, and every sweetheart you wed starts out fonder of you.' : 'Its banner now hangs over your main menu.'}</div>`; }
+    else if (extra) { const w = WINGS.find(z => z.k === extra); extraH = `<div class="rv-extra" style="--wc:${w.c};--wc2:${w.c2}"><b>${esc(w.e)} ${esc(w.n)} is complete!</b> ${extra === 'heart' ? 'You have won the Rose Garland: roses on your arms in every life, and every sweetheart you wed starts out fonder of you.' : extra === 'shadow' ? 'You have won the Raven: it perches on your arms in every life, and brings you one extra deed every year.' : 'Its banner now hangs over your main menu.'}</div>`; }
     const n = RCORE.filter(r => relicsGot()[r.k]).length, gl = fresh ? GLORY.find(m => m[0] === n) : null;
     if (gl && gl[0] < 16) extraH += `<div class="rv-extra glory"><b>${gl[1]} Reward unlocked: ${esc(gl[2])}</b> ${esc(gl[3])}</div>`;
     const body = g ? `<p class="rv-lore">${esc(x.lore)}</p><p class="rv-who">Won by ${esc(g.who)}, born ${esc(bornAs(g.bc))}, in the year ${g.y}.</p>` : `<p class="rv-lore">The case is barred and chained. Something glints behind the iron.</p><p class="rv-how"><b>How to win it</b>${esc(fromText(x))}, then: ${esc(x.d.charAt(0).toLowerCase() + x.d.slice(1))}</p>`;
@@ -27078,8 +27114,10 @@ function gloryHTML(n) {
   return `<div class="glory"><div class="gl-h"><b>The Path of Glory</b><small>${next ? `${next[0] - n} more relic${next[0] - n > 1 ? 's' : ''} to the next reward` : 'Every reward is yours'}</small></div><ol class="gl-track" style="--p:${gloryPct(n).toFixed(3)}">${GLORY.map(g => { const got = n >= g[0], mys = g[0] === 16 && !got; return `<li class="${got ? 'got' : ''}${next === g ? ' next' : ''}${mys ? ' mys' : ''}"><span class="gl-m" aria-hidden="true">${mys ? '?' : g[1]}</span><b>${g[0]}</b><small>${esc(mys ? 'A mystery' : g[2])}</small></li>`; }).join('')}</ol>${next ? `<p class="gl-next"><b>Next reward:</b> ${esc(next[0] === 16 ? 'the sealed reliquary opens. No one alive knows what it holds.' : `${next[2]}. ${next[3]}`)}</p>` : ''}</div>`;
 }
 const heartWon = () => wingDone(relicsGot(), 'heart');
+const ravenWon = () => wingDone(relicsGot(), 'shadow');
+const ravenOn = () => ravenWon() && jget(MKEY, { raven: 1 }).raven !== 0;
 const roseOn = () => heartWon() && jget(MKEY, { rose: 1 }).rose !== 0;
-function applyRewards() { try { document.documentElement.classList.toggle('gilt-arms', relicCount() >= 8); document.documentElement.classList.toggle('rose-arms', roseOn()); } catch (e) { } }
+function applyRewards() { try { document.documentElement.classList.toggle('gilt-arms', relicCount() >= 8); document.documentElement.classList.toggle('rose-arms', roseOn()); document.documentElement.classList.toggle('raven-arms', ravenOn()); } catch (e) { } }
 applyRewards();
 
 /* ---------- the Hall of Legends screen ---------- */
@@ -27178,13 +27216,14 @@ function wingWinSVG(W, done) {
 }
 function hallRelics() {
   const got = relicsGot(), n = RCORE.filter(x => got[x.k]).length, won = prizeWon(got);
-  let h = `<div class="ch-head"><h2 class="ch-t">The Collection Hall</h2><p class="ch-sub">Sixteen relics, and the only way to win them is to climb. Each one needs a humble birth and a great rise. The Wing of the Heart is won by love and family instead.</p></div>`;
+  let h = `<div class="ch-head"><h2 class="ch-t">The Collection Hall</h2><p class="ch-sub">Sixteen relics, and the only way to win them is to climb. Each one needs a humble birth and a great rise. The Wing of the Heart is won by love and family, and the Wing of Shadows by what is done in the dark.</p></div>`;
   h += `<div class="relq${won ? ' open' : ''}">${reliquarySVG(got, won)}<div class="relq-n"><b>${n}</b><span>of ${RCORE.length} relics</span></div>${won ? `<p class="relq-t"><b>The Golden Age</b>The reliquary stands open. Your main menu now shines with the gold of every crown you won.</p><button class="btn ghost relq-b" data-s="gild">${gildOn() ? '✨ Golden menu: on' : 'Golden menu: off'}</button>` : `<p class="relq-t"><b>The Sealed Reliquary</b>Fill every case in the Hall and it will open. No one alive knows what it holds.</p>`}</div>`;
   h += gloryHTML(relicCount());
   for (const W of WINGS) {
     const xs = RELICS.filter(x => x.w === W.k), wn = xs.filter(x => got[x.k]).length, done = wn === xs.length;
     h += `<section class="wing${done ? ' done' : ''}" style="--wc:${W.c};--wc2:${W.c2}"><div class="wing-h">${wingWinSVG(W, done)}<div class="wing-t"><b>${esc(W.n)}</b><small>${esc(W.m)}</small><span class="wing-pips" aria-hidden="true">${xs.map(x => `<i class="${got[x.k] ? 'on' : ''}" style="--rc:${rarOf(x).c}"></i>`).join('')}</span></div><span class="wc">${wn}<small>/${xs.length}</small></span></div>`;
-    h += W.k === 'heart' ? `<p class="wing-rw">${wingDone(got, 'heart') ? `✦ The Rose Garland is yours: roses on your arms in every life, and every sweetheart you wed starts out fonder of you. ✦</p><p class="wing-rw"><button class="btn ghost relq-b" data-s="rose">${roseOn() ? '🌹 Rose garland: on' : 'Rose garland: off'}</button>` : '🌹 Complete this wing to win the Rose Garland: roses on your arms in every life, and every sweetheart you wed starts out fonder of you.'}</p><div class="rl-grid">`
+    h += W.k === 'shadow' ? `<p class="wing-rw">${wingDone(got, 'shadow') ? `✦ The Raven is yours: it perches on your arms in every life, and brings you one extra deed every year. ✦</p><p class="wing-rw"><button class="btn ghost relq-b" data-s="raven">${ravenOn() ? '🐦‍⬛ Raven on your arms: on' : 'Raven on your arms: off'}</button>` : '🌙 Complete this wing to win the Raven: it perches on your arms in every life, and brings you one extra deed every year.'}</p><div class="rl-grid">`
+      : W.k === 'heart' ? `<p class="wing-rw">${wingDone(got, 'heart') ? `✦ The Rose Garland is yours: roses on your arms in every life, and every sweetheart you wed starts out fonder of you. ✦</p><p class="wing-rw"><button class="btn ghost relq-b" data-s="rose">${roseOn() ? '🌹 Rose garland: on' : 'Rose garland: off'}</button>` : '🌹 Complete this wing to win the Rose Garland: roses on your arms in every life, and every sweetheart you wed starts out fonder of you.'}</p><div class="rl-grid">`
       : `<p class="wing-rw">${done ? '✦ Banner won. It hangs over your main menu. ✦' : '🏳️ Complete this wing to hang its banner over your main menu.'}</p><div class="rl-grid">`;
     h += xs.map(x => { const g = got[x.k], R = rarOf(x); return `<div class="rl-item${g ? ' got' : ' locked'}"><button class="rl-btn" data-s="relic" data-v="${x.k}" aria-label="${esc(x.n)}, ${R.n}${g ? '' : ', not yet won'}">${caseHTML(x, !!g)}</button><div class="rl-plate"><span class="rl-rar" style="--rc:${R.c}">${R.n}</span><b>${esc(x.n)}</b><small>${g ? `${esc(g.who)}, ${g.y}` : esc(fromText(x))}</small></div></div>`; }).join('');
     h += '</div></section>';

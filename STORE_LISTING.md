@@ -61,13 +61,19 @@ No ads, no accounts, no tracking. Plays fully offline. Your saves stay on your d
 
 ## What's new (for this version)
 
-Also in `store/whats_new_1.29.5.txt`, ready to copy. 1.29.2 is already in the App Store with the big catch-up list (everything new since 1.15), so this version only lists what changed since then.
+Also in `store/whats_new_1.30.0.txt`, ready to copy.
 
 ```
-- Knights' helmets now fit properly, and soldiers' eyes show under their helmets.
-- Cooks, smiths and washerwomen wear proper full aprons.
-- The castle laundry is now a real laundry room, with laundresses at their tubs.
-- Fixed small look glitches in several mini-games.
+BIG UPDATE
+- NEW: the Wing of Shadows. Four relics won in the dark: rule the Thieves' Guild, captain a pirate ship, become the Spymaster, and live ten years as an outlaw. Complete it to win the Raven: it perches on your arms and gives you an extra deed every year!
+- NEW: the Wing of the Heart. Four relics won by love and family. Complete it to win the Rose Garland.
+- Relics are a little harder to win, so every one feels earned. Anything you have already won is yours to keep.
+- Every mini-game now sits in a painted gold frame, and the royal hunt and the reefs are redrawn.
+- Scenes have more depth: far blue hills, sunlight, shadows and texture.
+- The king's mistress can still be asked to marry him.
+- The life goal "Wear a crown" is now "Rule a kingdom".
+- Knights' helmets fit, and cooks and smiths wear proper aprons.
+- Bug fixes, including a crash in some indoor scenes during a comet year.
 ```
 
 ## Category
