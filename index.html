@@ -1474,11 +1474,11 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 @keyframes sgBreak{to{transform:translateY(30px);opacity:0}}
 .sg-wind{position:absolute;left:8px;top:6px;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.7);font-size:12.5px;color:#2a1a0c}
 /* the march */
-.g-mr{height:240px;background:#d8c8a0}
-.mr-far,.mr-near{position:absolute;left:0;right:0;text-align:center;font:italic 13px var(--serif);color:#3a2412}
+.g-mr{height:240px;background:radial-gradient(circle,#3c5e2c 0 5px,#4a6e36 5px 7px,transparent 7.5px) 0px 22px/22px 18px repeat-x,radial-gradient(circle,#3c5e2c 0 5px,#4a6e36 5px 7px,transparent 7.5px) 11px 40px/22px 18px repeat-x,radial-gradient(circle,#3c5e2c 0 5px,#4a6e36 5px 7px,transparent 7.5px) 0px 58px/22px 18px repeat-x,radial-gradient(circle,#3c5e2c 0 5px,#4a6e36 5px 7px,transparent 7.5px) 11px 76px/22px 18px repeat-x,linear-gradient(180deg,#5e7a42 0 42%,transparent 42%),repeating-linear-gradient(90deg,#a9b86a 0 26px,#c8b46a 26px 52px,#9aae5e 52px 78px,#b89a62 78px 104px) 0 0/100% 100%,#9ab66a}
+.mr-far,.mr-near{position:absolute;left:0;right:0;text-align:center;font:italic 13px var(--serif);color:#fff6e0;text-shadow:0 1px 2px rgba(0,0,0,.8)}
 .mr-far{top:4px}.mr-near{bottom:4px}
-.mr-river{position:absolute;left:0;right:0;top:44%;height:16%;background:linear-gradient(#5a8aba,#3a6a9a);box-shadow:0 0 0 3px #a8c0d8}
-.mr-ford{position:absolute;top:40%;width:17%;height:24%;margin-left:-8.5%;padding:0;border:2px dashed rgba(255,248,230,.8);border-radius:10px;background:rgba(232,216,170,.45);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.mr-river{position:absolute;left:0;right:0;top:44%;height:16%;background:radial-gradient(ellipse 10px 2px at 12px 6px,rgba(230,246,252,.6),transparent 70%) 0 0/40px 14px,linear-gradient(#5a8aba,#3a6a9a 60%,#2e5a86);box-shadow:0 0 0 2px #c8b387,0 0 0 5px rgba(120,96,60,.5);animation:hoSea 4s linear infinite}
+.mr-ford{position:absolute;top:40%;width:17%;height:24%;margin-left:-8.5%;padding:0;border:2px dashed rgba(255,248,230,.85);border-radius:10px;background:radial-gradient(ellipse 60% 30% at 50% 50%,rgba(232,216,170,.55),rgba(232,216,170,.25));cursor:pointer;-webkit-tap-highlight-color:transparent}
 .mr-ford span{position:absolute;left:0;right:0;bottom:-18px;font-size:11px;color:#3a2412}
 .mr-rider{position:absolute;top:68%;font-style:normal;font-size:26px;transform:translateX(-50%);transition:left .6s ease-in-out}
 .mr-raid{position:absolute;top:10%;font-style:normal;font-size:22px;transform:translateX(-50%);animation:mrRaid linear forwards}
@@ -1522,8 +1522,8 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .mg-b.lb-f{padding:8px 2px}
 .lb-f svg{width:28px;height:21px}
 /* the pilgrim road */
-.g-pr{height:220px;background:#8aa45a}
-.pr-road{position:absolute;left:0;right:0;top:44%;height:16%;background:#c9b48a;box-shadow:0 2px 0 #a8946a,0 -2px 0 #a8946a}
+.g-pr{height:220px;background:radial-gradient(circle,#f3d35a 0 1.2px,transparent 1.6px) 0 0/23px 19px,radial-gradient(circle,#c8402e 0 1.1px,transparent 1.5px) 9px 11px/29px 23px,radial-gradient(circle,#fff 0 1px,transparent 1.4px) 15px 3px/31px 27px,linear-gradient(180deg,#86a456,#7a9a4a 50%,#6e8e40)}
+.pr-road{position:absolute;left:0;right:0;top:44%;height:16%;background:radial-gradient(ellipse 3px 2px,#9a8a6a 60%,transparent 70%) 0 0/37px 13px,linear-gradient(180deg,transparent 22%,rgba(120,96,60,.35) 22% 30%,transparent 30% 70%,rgba(120,96,60,.35) 70% 78%,transparent 78%),#cdb88e;box-shadow:0 2px 0 #a8946a,0 -2px 0 #a8946a}
 .pr-b{position:absolute;width:52px;height:46px;margin:-23px 0 0 -26px}
 .pr-bush{display:grid;place-items:center;width:100%;height:100%;font-size:30px}
 .pr-w{position:absolute;top:36%;left:-8%;width:30px;height:54px;font-style:normal;animation:prWalk 13s linear forwards;pointer-events:none}
@@ -1854,7 +1854,7 @@ button.in-t{cursor:pointer}
 .ar-herald small{display:block;font-size:11.5px;color:var(--ink-2)}
 .ar-herald>b{display:block;font:italic 700 16.5px/1.3 var(--serif);color:#7a1e16}
 .ar-herald p{margin:4px 0 0;font-size:12px;line-height:1.35;color:var(--ink-2)}
-.g-ar{display:flex;justify-content:center;padding:8px;background:radial-gradient(#7a2a2e,#4a1a1e)}
+.g-ar{display:flex;justify-content:center;padding:8px;background:radial-gradient(ellipse at 50% 45%,rgba(255,210,150,.18),transparent 60%),radial-gradient(circle,#d9aa4a 0 1.2px,transparent 1.6px) 0 0/16px 16px,radial-gradient(circle,#d9aa4a 0 .8px,transparent 1.2px) 8px 8px/16px 16px,repeating-linear-gradient(45deg,transparent 0 10px,rgba(0,0,0,.07) 10px 11px),radial-gradient(#7a2a2e,#4a1a1e);box-shadow:0 0 0 1.5px #3a2408,0 0 0 4px #c9993a,0 0 0 5.5px #5a3a10,inset 0 0 0 7px #6b4426,inset 0 0 0 8.5px #c9993a,inset 0 0 26px 6px rgba(0,0,0,.45),0 7px 16px rgba(40,20,4,.35)}
 .ar-sh{display:block;width:156px;height:182px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))}
 .ar-r{cursor:pointer;stroke:rgba(60,40,20,.55);stroke-width:.8;transition:fill .15s}
 .ar-r.pop{animation:arPop .3s ease-out}
@@ -2166,7 +2166,7 @@ button.in-t{cursor:pointer}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.30.6';
+const APP_VERSION = '1.30.7';
 const DEEDS_PER_YEAR = 3;
 // the Raven (the prize of the Wing of Shadows) brings one more deed every year
 const deedsMax = () => DEEDS_PER_YEAR + (typeof ravenWon === 'function' && ravenWon() ? 1 : 0);
@@ -31592,7 +31592,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
     play() {
       const N = 16; let n = 0, bal = 100, ok = 0, wrongs = 0, cur = null, want = '', did = '', over = false, t0 = 0, spirit = 100;
       const go = () => {
-        mgShow(`${mgHead(MG_BY.colt, 'The breaking ring')}<div class="sc g-co" id="co-stage"><svg class="sc-svg" viewBox="0 0 360 150" aria-hidden="true"><rect width="360" height="150" fill="#9ab86a"/><rect y="110" width="360" height="40" fill="#b89a6a"/>${[20, 80, 140, 200, 260, 320].map(x => `<path d="M${x} 60V110" stroke="#6b4226" stroke-width="5"/>`).join('')}<path d="M0 70H360M0 92H360" stroke="#7a5230" stroke-width="4"/><g transform="translate(180 128) scale(2.2)"><g id="co-horse" class="co-h">${rider(Object.assign({}, meLook(), { hat: 'cap', capc: '#3a2a1a' }), '#2a1a0c')}</g></g></svg><div class="co-tell" id="co-tell"></div></div><div class="co-bal"><span>Your seat</span><b><i id="co-bal" style="width:100%"></i></b></div><div class="co-bal co-spr"><span>His spirit</span><b><i id="co-sp" style="width:100%"></i></b></div><div class="mg-two">${mgBtn('m', 'back', '⬇️ Sit back deep', 'co-b')}${mgBtn('m', 'fwd', '⬆️ Lean forward', 'co-b')}</div><div class="cu-hud ex-hud" id="co-hud"></div>`);
+        mgShow(`${mgHead(MG_BY.colt, 'The breaking ring')}<div class="sc g-co" id="co-stage"><svg class="sc-svg" viewBox="0 0 360 150" aria-hidden="true"><defs><linearGradient id="co-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fb2d2"/><stop offset="1" stop-color="#dfe8e4"/></linearGradient></defs><rect width="360" height="150" fill="url(#co-sky)"/><path d="M60 16q6-8 16-4q6-6 14 0q8-2 8 6H60Z" fill="#fbf8ee" opacity=".9"/><path d="M0 56Q70 40 150 50T300 44T360 48V80H0Z" fill="#a9bcc0" opacity=".8"/><path d="M0 66Q90 56 180 62T360 60V110H0Z" fill="#9ab86a"/><g transform="translate(300 64)"><path d="M0 0V-22L22 -36L44 -22V0Z" fill="#8a3a22" stroke="#3a1a0c"/><path d="M-3 -21L22 -39L47 -21" stroke="#4a2a18" stroke-width="3" fill="none"/><path d="M14 0V-14H30V0Z" fill="#3a2012"/><path d="M22 -14V0" stroke="#5a3018"/></g><rect y="110" width="360" height="40" fill="#b89a6a"/><path d="M0 116Q90 112 180 118T360 114" stroke="#9a7a4e" stroke-width="3" fill="none" opacity=".7"/><path d="M30 130q6-3 10 0M120 140q6-3 10 0M220 128q6-3 10 0M300 138q6-3 10 0" stroke="#8a6a40" stroke-width="1.4" fill="none"/>${[20, 80, 140, 200, 260, 320].map(x => `<path d="M${x} 60V112" stroke="#3a2412" stroke-width="7"/><path d="M${x} 60V112" stroke="#7a5230" stroke-width="5"/><path d="M${x - 1.5} 62V110" stroke="#a07a4e" stroke-width="1.2"/>`).join('')}<path d="M0 70H360M0 92H360" stroke="#3a2412" stroke-width="6"/><path d="M0 70H360M0 92H360" stroke="#8a5d34" stroke-width="4"/><path d="M0 69H360M0 91H360" stroke="#b08458" stroke-width="1"/><g transform="translate(180 128) scale(2.2)"><g id="co-horse" class="co-h">${rider(Object.assign({}, meLook(), { hat: 'cap', capc: '#3a2a1a' }), '#2a1a0c')}</g></g></svg><div class="co-tell" id="co-tell"></div></div><div class="co-bal"><span>Your seat</span><b><i id="co-bal" style="width:100%"></i></b></div><div class="co-bal co-spr"><span>His spirit</span><b><i id="co-sp" style="width:100%"></i></b></div><div class="mg-two">${mgBtn('m', 'back', '⬇️ Sit back deep', 'co-b')}${mgBtn('m', 'fwd', '⬆️ Lean forward', 'co-b')}</div><div class="cu-hud ex-hud" id="co-hud"></div>`);
         hud(); move();
       };
       const move = () => {
