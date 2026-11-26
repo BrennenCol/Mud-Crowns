@@ -1096,8 +1096,8 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .pt-mark{stroke:rgba(255,240,200,.6);stroke-width:1.2;stroke-dasharray:5 3}
 .pt-mk{font:italic 600 10px var(--serif);fill:#fff3d6;paint-order:stroke;stroke:rgba(40,24,10,.7);stroke-width:2.4px}
 /* the exchequer */
-.ex{height:214px;background:#3a2410}
-.ex-cloth{position:absolute;inset:8px;border-radius:6px;background:repeating-conic-gradient(#1f3f24 0 25%,#2c5232 0 50%) 0 0/34px 34px;box-shadow:inset 0 0 0 3px #6b4a2e,inset 0 0 22px rgba(0,0,0,.5)}
+.ex{height:214px;background:radial-gradient(ellipse 60% 80% at 10% 0,rgba(255,236,190,.25),transparent 70%),repeating-linear-gradient(90deg,#4a2e18 0 6px,#3a2410 6px 7px,#523420 7px 14px),#3a2410}
+.ex-cloth{position:absolute;inset:8px;border-radius:6px;background:repeating-linear-gradient(0deg,transparent 0 33px,rgba(240,220,170,.35) 33px 34px),repeating-linear-gradient(90deg,transparent 0 33px,rgba(240,220,170,.35) 33px 34px),repeating-conic-gradient(#1f3f24 0 25%,#2c5232 0 50%) 0 0/34px 34px;box-shadow:inset 0 0 0 3px #c9952e,inset 0 0 0 6px #6b4a2e,inset 0 0 22px rgba(0,0,0,.5),0 3px 6px rgba(0,0,0,.45)}
 .ex-chest{position:absolute;left:2px;top:50%;z-index:2;width:62px;text-align:center;transform:translateY(-50%);pointer-events:none}
 .ex-chest svg{width:58px}
 .ex-chest small{display:block;font-size:10px;line-height:1.1;color:#f3d983}
@@ -1424,7 +1424,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 .mt-meter b small{font:600 11.5px/1 var(--serif);color:#1a1208}
 .mt-meter i{position:absolute;top:-3px;bottom:-3px;width:5px;margin-left:-2.5px;border-radius:3px;background:#fff;box-shadow:0 0 0 1.5px #1a1208;animation:cvSwing .9s linear infinite alternate}
 /* joust */
-.g-jo{background:#7fa25a}
+.g-jo{background:#b89a62}
 .jo-run{transition:transform 1.6s linear}
 .jo-fall>g{transform-box:fill-box;transform-origin:50% 100%;animation:joFall .9s ease-in forwards}
 @keyframes joFall{to{transform:rotate(-70deg) translate(-10px,16px);opacity:.75}}
@@ -1434,7 +1434,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 @keyframes joRing{from{transform:scale(2.2);opacity:.3}to{transform:scale(1);opacity:1}}
 .mg-b.jo-strike{padding:14px;font-size:19px}
 /* charge */
-.g-cg{height:250px;background:linear-gradient(#b8d0b0,#7fa25a)}
+.g-cg{height:250px;background:radial-gradient(circle,#3c5e2c 0 5px,#4a6e36 5px 7px,transparent 7.5px) right 0 top 0/18px 22px repeat-y,radial-gradient(ellipse 4px 1.6px,rgba(70,100,40,.55) 60%,transparent 70%) 0 0/23px 17px,radial-gradient(ellipse 3px 1.4px,rgba(150,170,90,.5) 60%,transparent 70%) 9px 8px/31px 21px,linear-gradient(180deg,#a8c09a 0,#94b072 18%,#86a456 40%,#76964a)}
 .cg-zone{position:absolute;left:50%;width:14%;top:0;bottom:0;background:rgba(255,215,106,.22);box-shadow:inset 2px 0 #ffd76a,inset -2px 0 #ffd76a}
 .cg-k{position:absolute;left:22%;width:62px;height:46px;margin-left:-31px;padding:0;border:0;background:none;cursor:pointer;transition:left .1s linear;-webkit-tap-highlight-color:transparent}
 .cg-k svg{width:100%;height:100%}
@@ -1485,7 +1485,7 @@ select.inp{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
 @keyframes mrRaid{to{top:40%}}
 /* palace guard */
 .g-gd{background:#5a2a2a}
-.gd-crowd{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;padding:4px;background:linear-gradient(#7a4a3a,#5a3a2a)}
+.gd-crowd{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;padding:4px;background:linear-gradient(180deg,rgba(0,0,0,.25),transparent 30%),repeating-conic-gradient(#6e4a36 0 25%,#8a6448 0 50%) 0 0/28px 28px}
 .gd-p{height:82px;padding:0;border:0;background:none;cursor:pointer;transform:translateY(var(--fwd,0));transition:transform .6s ease;-webkit-tap-highlight-color:transparent}
 .gd-p svg{width:100%;height:100%}
 .gd-t{opacity:0;transition:opacity .15s}
@@ -2166,7 +2166,7 @@ button.in-t{cursor:pointer}
 'use strict';
 /* ================= Mud & Crowns — engine ================= */
 const KEY = 'mudcrowns.save.v1', GKEY = 'mudcrowns.grave.v1', TKEY = 'mudcrowns.theme', BKEY = 'mudcrowns.save.bak', TOURKEY = 'mudcrowns.tour';
-const APP_VERSION = '1.30.8';
+const APP_VERSION = '1.30.9';
 const DEEDS_PER_YEAR = 3;
 // the Raven (the prize of the Wing of Shadows) brings one more deed every year
 const deedsMax = () => DEEDS_PER_YEAR + (typeof ravenWon === 'function' && ravenWon() ? 1 : 0);
@@ -29480,7 +29480,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       const foeN = `Sir ${pick(NAMES.m)} ${pick(SUR.noble)}`, me = meLook(), myCol = REALM_COL[S.realm] || '#9b1f12', foeCol = pick(['#2f5fa8', '#2f7a3a', '#5a2a6a', '#8a5a1a']);
       let pass = 0, mine = 0, his = 0, aim = null, over = false, fell = '', t0 = 0;
       const ZONES = [[0, 24, '#c9952e', 'Helm'], [24, 72, '#4a7ab8', 'Shield'], [72, 100, '#8a6a4a', 'Body']];
-      const scene = () => `<div class="sc g-jo" id="jo-stage"><svg class="sc-svg" viewBox="0 0 360 170" aria-hidden="true"><rect width="360" height="170" fill="#a9c8e0"/><rect y="40" width="360" height="40" fill="#7a5a3a"/>${Array.from({ length: 18 }, (_, q) => `<rect x="${q * 20 + 2}" y="${44 + (q % 3) * 10}" width="14" height="8" rx="3" fill="${['#9b1f12', '#2f5fa8', '#e2b23c', '#2f7a3a'][q % 4]}"/>`).join('')}<rect y="80" width="360" height="90" fill="#7fa25a"/><rect x="0" y="112" width="360" height="7" fill="#c9a060" stroke="#6b4a2e"/>${[20, 80, 140, 200, 260, 320].map(x => `<path d="M${x} 112V124" stroke="#6b4a2e" stroke-width="3"/>`).join('')}<g id="jo-me" class="jo-run" style="transform:translate(40px,140px)">${rider(me, '#e8e0d0', myCol, true)}</g><g id="jo-foe" class="jo-run" style="transform:translate(320px,108px) scaleX(-1)">${rider({ robe: foeCol }, '#3a2a1a', foeCol, true)}</g><g id="jo-fx"></g></svg></div>`;
+      const scene = () => `<div class="sc g-jo" id="jo-stage"><svg class="sc-svg" viewBox="0 0 360 170" aria-hidden="true"><defs><linearGradient id="jo-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fa6cc"/><stop offset="1" stop-color="#d8e4e4"/></linearGradient><linearGradient id="jo-sand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8c290"/><stop offset="1" stop-color="#b89a62"/></linearGradient></defs><rect width="360" height="170" fill="url(#jo-sky)"/>${[30, 120, 210, 300].map((x, q) => `<path d="M${x} 24V4" stroke="#4a3a2a" stroke-width="1.2"/><path d="M${x} 4L${x + 14} 8L${x} 12Z" fill="${['#9b1f12', '#2f5fa8', '#e2b23c', '#2f7a3a'][q % 4]}"/>`).join('')}${Array.from({ length: 12 }, (_, q) => `<path d="M${q * 30} 26H${q * 30 + 30}L${q * 30 + 30} 38Q${q * 30 + 15} 44 ${q * 30} 38Z" fill="${q % 2 ? '#f3ecdc' : '#9b1f12'}" stroke="#5a2a14" stroke-width=".6"/>`).join('')}<path d="M0 26H360" stroke="#5a3a1e" stroke-width="2"/><rect y="38" width="360" height="42" fill="#7a5a3a"/>${[0, 1, 2].map(r => `<path d="M0 ${48 + r * 11}H360" stroke="#5a3a22" stroke-width="2"/>`).join('')}${[0, 60, 120, 180, 240, 300, 359].map(x => `<path d="M${x} 38V80" stroke="#4a2e18" stroke-width="3"/>`).join('')}${Array.from({ length: 26 }, (_, q) => { const x = q * 14 + 6, y = 46 + (q % 3) * 11; return `<path d="M${x - 4} ${y + 8}Q${x} ${y + 1} ${x + 4} ${y + 8}Z" fill="${['#9b1f12', '#2f5fa8', '#e2b23c', '#2f7a3a', '#5c2a6e'][q % 5]}"/><circle cx="${x}" cy="${y}" r="2.6" fill="${['#f2c9a4', '#d9a77c', '#b07a52'][q % 3]}"/>`; }).join('')}<rect y="80" width="360" height="90" fill="url(#jo-sand)"/><path d="M0 80H360" stroke="#7a5a3a" stroke-width="2"/><path d="M20 140q8-3 16 0M90 156q8-3 16 0M170 134q8-3 16 0M250 152q8-3 16 0M320 138q8-3 16 0" stroke="#a8884e" stroke-width="1.2" fill="none"/><rect x="0" y="111" width="360" height="9" fill="#e8d8b0" stroke="#5a3a1e"/>${Array.from({ length: 12 }, (_, q) => `<rect x="${q * 30}" y="111" width="15" height="9" fill="#9b1f12"/>`).join('')}${[20, 80, 140, 200, 260, 320].map(x => `<path d="M${x} 120V128" stroke="#5a3a1e" stroke-width="4"/>`).join('')}<g id="jo-me" class="jo-run" style="transform:translate(40px,140px)">${rider(me, '#e8e0d0', myCol, true)}</g><g id="jo-foe" class="jo-run" style="transform:translate(320px,108px) scaleX(-1)">${rider({ robe: foeCol }, '#3a2a1a', foeCol, true)}</g><g id="jo-fx"></g></svg></div>`;
       const go = () => { mgShow(`${mgHead(MG_BY.joust, `Against ${foeN}`, 0, 3)}${scene()}<div class="cu-hud ex-hud" id="jo-hud"></div><div class="sc-say" id="jo-say"></div><div id="jo-act"></div>`); hud(); next(); };
       const hud = () => mgSet('jo-hud', `<span>You <b>${mine}</b></span><span>${esc(foeN)} <b>${his}</b></span>`);
       const next = () => {
@@ -29754,7 +29754,7 @@ ACT.feats = () => { closeSheet(); showHall('app', 'seals'); };
       const round = () => {
         r++; if (r >= ROUNDS) return end(); busy = false; steps = 0;
         crowd = Array.from({ length: 10 }, () => ({ look: Object.assign(randFolk(null, true), { mood: 'calm' }) })); ax = R(0, 9);
-        mgShow(`${mgHead(MG_BY.guard, 'The audience chamber', r, ROUNDS)}<div class="sc g-gd" id="gd-stage"><svg class="sc-svg" viewBox="0 0 360 70" aria-hidden="true"><rect width="360" height="70" fill="#5a2a2a"/><path d="M150 70V20Q180 0 210 20V70Z" fill="#7a1e16" stroke="#e2b23c" stroke-width="2"/><g transform="translate(180 66) scale(1.2)">${fig(king)}</g></svg><div class="gd-crowd" id="gd-crowd">${crowd.map((c, j) => `<button type="button" class="gd-p" id="gd${j}" data-mg="p" data-v="${j}" style="--row:${j < 5 ? 0 : 1}"><svg viewBox="-16 -58 32 62" aria-hidden="true">${fig(c.look)}<g class="gd-t knife"><path d="M8 -20L14 -28" stroke="#e8eef4" stroke-width="2"/><circle cx="14" cy="-28" r="2" fill="#fff"/></g><g class="gd-t eye"><rect x="-4.6" y="-38" width="9.2" height="3.2" fill="${c.look.skin}"/><circle cx="-1.2" cy="-36.4" r=".95" fill="#1a1208"/><circle cx="3.4" cy="-36.4" r=".95" fill="#1a1208"/></g><g class="gd-t cough"><text x="5" y="-38" font-size="8">💨</text></g><g class="gd-t bow"><text x="6" y="-44" font-size="8">🙇</text></g></svg></button>`).join('')}</div></div><div class="sc-say" id="gd-say"><p>Watch the crowd. Tap the one you are sure of.</p></div>`);
+        mgShow(`${mgHead(MG_BY.guard, 'The audience chamber', r, ROUNDS)}<div class="sc g-gd" id="gd-stage"><svg class="sc-svg" viewBox="0 0 360 70" aria-hidden="true"><rect width="360" height="70" fill="#5e3a2c"/>${Array.from({ length: 9 }, (_, q) => `<path d="M${q * 40 + 20} 0V70" stroke="#3a2016" stroke-width="1.4"/>`).join('')}<path d="M8 6H118V58H8Z" fill="#2f4f7a" stroke="#c9952e" stroke-width="2"/><path d="M242 6H352V58H242Z" fill="#2f4f7a" stroke="#c9952e" stroke-width="2"/>${[[30, 22], [64, 36], [98, 22], [264, 22], [298, 36], [332, 22]].map(([x, y]) => `<text x="${x}" y="${y}" text-anchor="middle" font-size="10" fill="#e2b23c">⚜</text>`).join('')}<path d="M138 4H222L214 14H146Z" fill="#9b1f12" stroke="#5a1008"/><path d="M146 14H214" stroke="#e2b23c" stroke-width="1.6"/><path d="M150 70V20Q180 0 210 20V70Z" fill="#7a1e16" stroke="#e2b23c" stroke-width="2"/><g transform="translate(180 66) scale(1.2)">${fig(king)}</g></svg><div class="gd-crowd" id="gd-crowd">${crowd.map((c, j) => `<button type="button" class="gd-p" id="gd${j}" data-mg="p" data-v="${j}" style="--row:${j < 5 ? 0 : 1}"><svg viewBox="-16 -58 32 62" aria-hidden="true">${fig(c.look)}<g class="gd-t knife"><path d="M8 -20L14 -28" stroke="#e8eef4" stroke-width="2"/><circle cx="14" cy="-28" r="2" fill="#fff"/></g><g class="gd-t eye"><rect x="-4.6" y="-38" width="9.2" height="3.2" fill="${c.look.skin}"/><circle cx="-1.2" cy="-36.4" r=".95" fill="#1a1208"/><circle cx="3.4" cy="-36.4" r=".95" fill="#1a1208"/></g><g class="gd-t cough"><text x="5" y="-38" font-size="8">💨</text></g><g class="gd-t bow"><text x="6" y="-44" font-size="8">🙇</text></g></svg></button>`).join('')}</div></div><div class="sc-say" id="gd-say"><p>Watch the crowd. Tap the one you are sure of.</p></div>`);
         tick();
       };
       const tick = () => {
